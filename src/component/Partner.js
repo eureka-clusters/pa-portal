@@ -8,9 +8,7 @@ export default function Download(props) {
 
     const {accessToken} = useContext(UserContext);
 
-    console.log(props.filter)
-
     return (
-        <h1>Project</h1>
+        <h1>Partner</h1>
     );
 }

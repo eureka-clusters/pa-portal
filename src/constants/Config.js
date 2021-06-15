@@ -1,5 +1,5 @@
 const config = {
-    SERVER_URI: 'https://dev1.itea4.org'
+    SERVER_URI: 'https://dev.backend.eureka-clusters.eu'
 }
 
 export default config;

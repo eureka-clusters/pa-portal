@@ -11,9 +11,11 @@ export default function Statistics(props) {
 
     const serverUri = Config.SERVER_URI;
 
-    const { accessToken } = useContext(UserContext);
+    // const { accessToken } = useContext(UserContext);
 
-    const [loading, setLoading] = useState(true);
+    const accessToken = 'ad6c6e07b76e8f2c1ac9e0283f193302b2e91fc3e579830eb7f68089306e7e0b';
+
+    const [loading, setLoading] = useState(false);
     const [results, setResults] = useState([]);
     const [facets, setFacets] = useState([]);
     const [output, setOutput] = useState(1);
@@ -146,7 +148,7 @@ export default function Statistics(props) {
     }
 
     if (loading) {
-        return 'Loading';
+        return 'Loading 1234';
     }
     if (errors) {
         return 'Error';
