@@ -1,14 +1,16 @@
-import React, {useContext} from 'react';
+import React, { useContext } from 'react';
 import Config from "../constants/Config";
-import {UserContext} from "../context/UserContext";
+import { UserContext } from "../context/UserContext";
 
 export default function Project(props) {
 
-    const serverUri = Config.SERVER_URI;
-
-    const {accessToken} = useContext(UserContext);
+    const { accessToken, refreshToken, hasUser } = useContext(UserContext);
 
     return (
-        <h1>Project</h1>
+        <React.Fragment>
+            <h1>Project {accessToken} test {refreshToken}</h1>
+
+            <div>{hasUser && <p>Logged In</p>}</div>
+        </React.Fragment>
     );
 }

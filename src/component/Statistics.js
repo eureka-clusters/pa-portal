@@ -11,9 +11,7 @@ export default function Statistics(props) {
 
     const serverUri = Config.SERVER_URI;
 
-    // const { accessToken } = useContext(UserContext);
-
-    const accessToken = 'ad6c6e07b76e8f2c1ac9e0283f193302b2e91fc3e579830eb7f68089306e7e0b';
+    const { accessToken } = useContext(UserContext);
 
     const [loading, setLoading] = useState(false);
     const [results, setResults] = useState([]);
@@ -34,6 +32,8 @@ export default function Statistics(props) {
         year: [],
     });
 
+    console.log(accessToken);
+
     useEffect(() => {
         if (!accessToken || !output) {
             return null;
@@ -42,7 +42,7 @@ export default function Statistics(props) {
         updateResults();
 
         setLoading(false);
-    }, [accessToken, output, serverUri, filter]);
+    }, [accessToken, output, setLoading]);
 
     const updateResults = () => {
         fetch(serverUri + '/api/statistics/facets?output=' + output + '&filter=' + btoa(JSON.stringify(filter)),

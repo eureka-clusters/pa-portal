@@ -6,6 +6,8 @@ import { BrowserRouter, Route, Link } from 'react-router-dom';
 import Switch from "react-bootstrap/Switch";
 import Project from "./component/Project";
 import Login from "./component/Login";
+import Logout from "./component/Logout";
+import Callback from "./component/Callback";
 import Partner from "./component/Partner";
 import './App.scss';
 
@@ -16,33 +18,45 @@ ReactDOM.render(
         <UserContextProvider>
             <BrowserRouter>
                 <header>
-                    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-                        <div class="container">
-                            <a class="navbar-brand" href="#">PA Report Portal</a>
-                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                                <span class="navbar-toggler-icon"></span>
+                    <nav className="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+                        <div className="container">
+                            <a className="navbar-brand" href="/">PA Report Portal</a>
+                            <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                                <span className="navbar-toggler-icon"></span>
                             </button>
-                            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                                    <li class="nav-item">
-                                        <Link to="/statistics" class="nav-link active" aria-current="page">Statistics</Link>
+                            <div className="collapse navbar-collapse" id="navbarSupportedContent">
+                                <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+                                    <li className="nav-item">
+                                        <Link to="/statistics" className="nav-link active" aria-current="page">Statistics</Link>
                                     </li>
-                                    <li class="nav-item">
-                                        <Link to="/projects" class="nav-link">Project</Link>
+                                    <li className="nav-item">
+                                        <Link to="/projects" className="nav-link">Project</Link>
                                     </li>
-                                    <li class="nav-item">
-                                        <Link to="/partners" class="nav-link">Partners</Link>
+                                    <li className="nav-item">
+                                        <Link to="/partners" className="nav-link">Partners</Link>
+                                    </li>
+                                    <li className="nav-item">
+                                        <Link to="/login" className="nav-link">Login</Link>
+                                    </li>
+                                    <li className="nav-item">
+                                        <Link to="/logout" className="nav-link">Logout</Link>
                                     </li>
                                 </ul>
                             </div>
                         </div>
                     </nav>
                 </header>
-                <main class="flex-shrink-0">
-                    <div class="container">
+                <main className="flex-shrink-0">
+                    <div className="container">
                         <Switch>
                             <Route path='/login'
                                 render={props => <Login {...props} />}
+                            />
+                            <Route path='/logout'
+                                render={props => <Logout {...props} />}
+                            />
+                            <Route path='/callback/:code'
+                                render={props => <Callback {...props} />}
                             />
                             <Route path='/statistics'
                                 render={props => <Statistics {...props} />}
@@ -56,9 +70,9 @@ ReactDOM.render(
                         </Switch>
                     </div>
                 </main>
-                <footer class="footer mt-auto py-3 bg-light">
-                    <div class="container">
-                        <span class="text-muted">Copyright ITEA & Celtic-Next</span>
+                <footer className="footer mt-auto py-3 bg-light">
+                    <div className="container">
+                        <span className="text-muted">Copyright ITEA & Celtic-Next</span>
                     </div>
                 </footer>
             </BrowserRouter>

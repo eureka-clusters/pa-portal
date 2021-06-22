@@ -1,20 +1,29 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 
 export const UserContext = React.createContext({});
 
-export const UserContextProvider = (props) => {
+export const UserContextProvider = ({ children }) => {
 
     const [accessToken, setAccessToken] = useState(null);
-    const domContainer = document.getElementById('root')
-
-    useEffect(() => {
-        setAccessToken(domContainer.dataset.accesstoken);
-    }, [domContainer])
+    const [hasUser, setHasUser] = useState(false);
+    const [refreshToken, setRefreshToken] = useState(null);
 
     return (
         <UserContext.Provider
-            value={{accessToken: accessToken}}>
-            {props.children}
+            value={{
+                accessToken: accessToken,
+                refreshToken: refreshToken,
+                hasUser: hasUser,
+                setHasUser,
+                setAccessToken,
+                setRefreshToken,
+                logout: () => {
+                    setHasUser(false);
+                    setAccessToken(null);
+                    setRefreshToken(null);
+                }
+            }}>
+            {children}
         </UserContext.Provider>
     )
 };
