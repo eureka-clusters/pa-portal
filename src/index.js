@@ -55,7 +55,7 @@ ReactDOM.render(
                             <Route path='/logout'
                                 render={props => <Logout {...props} />}
                             />
-                            <Route path='/callback/:code'
+                            <Route path='/callback'
                                 render={props => <Callback {...props} />}
                             />
                             <Route path='/statistics'

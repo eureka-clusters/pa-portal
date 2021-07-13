@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 export const UserContext = React.createContext({});
 
@@ -14,9 +14,11 @@ export const UserContextProvider = ({ children }) => {
                 accessToken: accessToken,
                 refreshToken: refreshToken,
                 hasUser: hasUser,
-                setHasUser,
-                setAccessToken,
-                setRefreshToken,
+                setBearerToken: (bearerToken) => {
+                    setAccessToken(bearerToken.access_token);
+                    setRefreshToken(bearerToken.refresh_token);
+                    setHasUser(true)
+                },
                 logout: () => {
                     setHasUser(false);
                     setAccessToken(null);

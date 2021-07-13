@@ -1,27 +1,28 @@
-import React, { useContext, useEffect } from 'react';
-import Config from "../constants/Config";
+import React, { useContext, useState } from 'react';
 import { UserContext } from "../context/UserContext";
+import GetAccessToken from '../function/GetAccessToken';
 
 export default function Callback(props) {
 
-    const { setAccessToken, setRefreshToken, setHasUser } = useContext(UserContext);
+    const { accessToken, refreshToken } = useContext(UserContext);
 
-    const token = atob(props.match.params.code);
-    
-    const accessToken = JSON.parse(token)['access_token'];
-    const refreshToken = JSON.parse(token)['refresh_token'];
+    const [loggedIn, setLoggedIn] = useState(false);
 
-    useEffect(() => {
-        setAccessToken(accessToken);
-        setRefreshToken(refreshToken);
-        setHasUser(true);
-    }, [accessToken, refreshToken, setAccessToken, setRefreshToken, setHasUser]);
+    const authorizationCode = props.location.search.replace('?code=', '');
+
+    if (!loggedIn) {
+        console.log('test: ', authorizationCode);
+        GetAccessToken(authorizationCode);
+
+        setLoggedIn(true);
+    }
 
     return (
+        loggedIn &&
         <div className="container">
             <pre>
-           {token}
-           </pre>
+                {accessToken} and {refreshToken}
+            </pre>
         </div>
     );
 }
