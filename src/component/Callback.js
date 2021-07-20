@@ -11,9 +11,7 @@ export default function Callback(props) {
     useEffect(() => {
         const authorizationCode = props.location.search.replace('?code=', '');
 
-        GetAccessToken(authorizationCode).then(bearerToken => setBearerToken(bearerToken));
-
-        
+        GetAccessToken(authorizationCode).then(bearerToken => setBearerToken(bearerToken));       
 
     }, [props.location.search, setBearerToken]);
 
