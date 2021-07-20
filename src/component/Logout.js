@@ -1,5 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import { UserContext } from "../context/UserContext";
+import { Redirect } from 'react-router';
 
 export default function Logout(props) {
 
@@ -9,13 +10,5 @@ export default function Logout(props) {
         logout();
     });
 
-
-    return (
-        <div className="container">
-            <div className="jumbotron">
-                <h1 className="display-4">Welcome to Eureka Clusters Backend</h1>
-            </div>
-            You have logged out successfully
-        </div>
-    );
+    return <Redirect to="/login" />
 }
