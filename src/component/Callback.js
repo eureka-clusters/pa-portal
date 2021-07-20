@@ -1,28 +1,21 @@
-import React, { useContext, useState } from 'react';
+import { useContext, useEffect} from 'react';
 import { UserContext } from "../context/UserContext";
+import { Redirect } from 'react-router';
 import GetAccessToken from '../function/GetAccessToken';
+
 
 export default function Callback(props) {
 
-    const { accessToken, refreshToken } = useContext(UserContext);
+    const { setBearerToken } = useContext(UserContext);
 
-    const [loggedIn, setLoggedIn] = useState(false);
+    useEffect(() => {
+        const authorizationCode = props.location.search.replace('?code=', '');
 
-    const authorizationCode = props.location.search.replace('?code=', '');
+        GetAccessToken(authorizationCode).then(bearerToken => setBearerToken(bearerToken));
 
-    if (!loggedIn) {
-        console.log('test: ', authorizationCode);
-        GetAccessToken(authorizationCode);
+        
 
-        setLoggedIn(true);
-    }
+    }, [props.location.search, setBearerToken]);
 
-    return (
-        loggedIn &&
-        <div className="container">
-            <pre>
-                {accessToken} and {refreshToken}
-            </pre>
-        </div>
-    );
+    return <Redirect to="/statistics" />
 }

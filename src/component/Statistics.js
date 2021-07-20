@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Container, Form, Button } from "react-bootstrap";
+import { Form, Button } from "react-bootstrap";
 import Config from "../constants/Config";
 import { UserContext } from "../context/UserContext";
 import BootstrapSwitchButton from "bootstrap-switch-button-react";
@@ -31,8 +31,6 @@ export default function Statistics(props) {
         primary_cluster_method: 'or',
         year: [],
     });
-
-    console.log(accessToken);
 
     useEffect(() => {
         if (!accessToken || !output) {

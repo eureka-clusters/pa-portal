@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-import Config from "../constants/Config";
 import { UserContext } from "../context/UserContext";
 
 export default function Project(props) {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Button } from "react-bootstrap";
+import { Table } from "react-bootstrap";
 import NumberFormat from "react-number-format";
 import { Link } from "react-router-dom";
 

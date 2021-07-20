@@ -9,6 +9,7 @@ export default function Logout(props) {
         logout();
     });
 
+
     return (
         <div className="container">
             <div className="jumbotron">

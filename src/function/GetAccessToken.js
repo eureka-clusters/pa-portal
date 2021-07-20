@@ -1,16 +1,10 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { UserContext } from "../context/UserContext";
 import Config from "../constants/Config";
 
-export default function GetAccessToken(accessCode) {
+export default async function GetAccessToken(accessCode) {
 
     const serverUri = Config.SERVER_URI;
 
-    const { setBearerToken } = useContext(UserContext);
-
-    console.log('test');
-
-    fetch(
+    const res = await fetch(
         serverUri + '/oauth',
         {
             method: 'POST',
@@ -26,5 +20,10 @@ export default function GetAccessToken(accessCode) {
                 'code': accessCode
             })
         }
-    ).then((res) => res.json()).then((res) => setBearerToken(res));
-}
+    );
+
+    let result = await res.json();    
+
+    return result;
+    
+} 
