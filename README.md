@@ -2,6 +2,9 @@
 
 Johan van der Heide (johan.van.der.heide@itea3.org)
 
+**Create a copy of the .env.exaple to .env.production.local and change required settings:**
+### `cp .env.example .env.production.local`
+
 ## Available Scripts
 
 In the project directory, you can run:
