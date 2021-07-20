@@ -82,15 +82,13 @@ export default function Statistics(props) {
                     'Authorization': 'Bearer ' + accessToken
                 }
             }
-        ).then(response => {
-            response.blob().then(blob => {
-                let url = window.URL.createObjectURL(blob);
-                let a = document.createElement('a');
-                a.href = url;
-                a.download = 'Download.xlsx';
-                a.click();
-            });
-            //window.location.href = response.url;
+        ).then((res) => res.json()).then((res) => {
+            let extension = res.extension;
+            let mimetype = res.mimetype;
+            var a = document.createElement("a"); //Create <a>
+            a.href = "data:" + mimetype +";base64," + res.download;
+            a.download = 'Download' + extension; //File name Here
+            a.click(); //Downloaded file
         });
     }
 
