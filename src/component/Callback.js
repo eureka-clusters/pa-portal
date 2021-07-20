@@ -17,7 +17,10 @@ export default function Callback(props) {
     useEffect(() => {
         GetAccessToken(authorizationCode).then(bearerToken => {
             setBearerToken(bearerToken);
-            setState(true);
+
+            // not sure which is correct both are working
+            //setState(true);
+            setState({notLoaded: false});
         });
     }, [authorizationCode]);
 
@@ -32,11 +35,25 @@ export default function Callback(props) {
         }
     }
 
-    //if (!accessToken) { // doesn't work?
+    // doesn't work
+    // if (!accessToken) { // doesn't work?
+    //     console.log('accessToken', accessToken);
+    //     return <LoadingComponent /> // -or- return <div/>
+    // }
+
+    // doesn't work?
+    // if (accessToken === null) { 
+    //     console.log('accessToken', accessToken);
+    //     return <LoadingComponent /> // -or- return <div/>
+    // }
+
+    
     if (state.notLoaded) {
+        console.log('state', state);
         //return some loading component(s) or (nothing to avoid flicker)
         return <LoadingComponent /> // -or- return <div/>
         //return <div />
     }
+    console.log('state', state);
     return <Redirect to='/statistics' />
 }
