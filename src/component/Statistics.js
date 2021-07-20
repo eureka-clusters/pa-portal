@@ -80,15 +80,15 @@ export default function Statistics(props) {
                     'Authorization': 'Bearer ' + accessToken
                 }
             }
-        ).then(response => {
-            response.blob().then(blob => {
-                let url = window.URL.createObjectURL(blob);
-                let a = document.createElement('a');
-                a.href = url;
-                a.download = 'Download.xlsx';
-                a.click();
-            });
-            //window.location.href = response.url;
+        ).then((res) => res.json()).then((res) => {
+            let extension = res.extension;
+            let mimetype = res.mimetype;
+            const link = document.createElement('a'); //Create <a>
+            document.body.appendChild(link);  // append the link to body
+            link.href = "data:" + mimetype +";base64," + res.download; // add the base64 encoded download via href
+            link.download = 'Download' + extension; //File name Here
+            link.click(); //initiate file download
+            document.body.removeChild(link); // remove the link from document.body
         });
     }
 
