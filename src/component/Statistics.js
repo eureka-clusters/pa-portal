@@ -85,10 +85,12 @@ export default function Statistics(props) {
         ).then((res) => res.json()).then((res) => {
             let extension = res.extension;
             let mimetype = res.mimetype;
-            var a = document.createElement("a"); //Create <a>
-            a.href = "data:" + mimetype +";base64," + res.download;
-            a.download = 'Download' + extension; //File name Here
-            a.click(); //Downloaded file
+            const link = document.createElement('a'); //Create <a>
+            document.body.appendChild(link);  // append the link to body
+            link.href = "data:" + mimetype +";base64," + res.download; // add the base64 encoded download via href
+            link.download = 'Download' + extension; //File name Here
+            link.click(); //initiate file download
+            document.body.removeChild(link); // remove the link from document.body
         });
     }
 
