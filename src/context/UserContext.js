@@ -5,7 +5,7 @@ export const UserContext = React.createContext({});
 export const UserContextProvider = ({ children }) => {
 
     const [accessToken, setAccessToken] = useState(localStorage.getItem('accessToken'));
-    const [hasUser, setHasUser] = useState(localStorage.getItem('hasUser'));
+    const [hasUser, setHasUser] = useState(localStorage.getItem('hasUser') === 'false' ? false : true);
     const [refreshToken, setRefreshToken] = useState(localStorage.getItem('refreshToken'));
 
     return (
@@ -22,9 +22,7 @@ export const UserContextProvider = ({ children }) => {
 
                     setAccessToken(bearerToken.access_token);
                     setRefreshToken(bearerToken.refresh_token);
-                    setHasUser(true)
-
-                    
+                    setHasUser(true);
                 },
                 logout: () => {
                     setHasUser(false);

@@ -22,8 +22,7 @@ export default async function GetAccessToken(accessCode) {
         }
     );
 
-    let result = await res.json();    
+    let result = await res.json();
 
-    return result;
-    
-} 
+    return result;    
+}
