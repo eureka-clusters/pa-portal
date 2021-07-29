@@ -2,12 +2,12 @@ import React, { useContext } from 'react';
 import { BrowserRouter, Route, Link } from 'react-router-dom';
 import { UserContext } from "../../context/UserContext";
 import Switch from "react-bootstrap/Switch";
-import Statistics from "./../Statistics";
-import Project from "./../Project";
-import Login from "./../Login";
-import Logout from "./../Logout";
-import Callback from "./../Callback";
-import Partner from "./../Partner";
+import Statistics from "../Statistics/Statistics";
+import Project from "../Projects/Project";
+import Login from "../Login/Login";
+import Logout from "../Logout/Logout";
+import Callback from "../Callback/Callback";
+import Partner from "../Partners/Partner";
 
 export default function Navigation() {
     const { hasUser } = useContext(UserContext);

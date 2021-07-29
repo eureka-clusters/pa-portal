@@ -1,12 +1,14 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form, Button } from "react-bootstrap";
-import Config from "../constants/Config";
-import { UserContext } from "../context/UserContext";
+import Config from "../../constants/Config";
+
+import { useAuth } from "../../context/UserContext";
+
 import BootstrapSwitchButton from "bootstrap-switch-button-react";
-import ProjectTable from "./partial/ProjectTable";
-import PartnerTable from "./partial/PartnerTable";
-import ResultChart from "./partial/ResultChart";
-import downloadBase64File from "../function/DownloadBase64";
+import ProjectTable from "./ProjectTable";
+import PartnerTable from "./PartnerTable";
+import ResultChart from "./ResultChart";
+import downloadBase64File from "../../function/DownloadBase64";
 
 
 
@@ -14,8 +16,14 @@ export default function Statistics(props) {
 
     const serverUri = Config.SERVER_URI;
 
-    const { accessToken } = useContext(UserContext);
+    let auth = useAuth();
+    console.log('auth.user in statistics', auth.user);
+    console.log('auth.accessToken in statistics', auth.accessToken);
+    
 
+
+    const accessToken = auth.accessToken;
+    
     const [loading, setLoading] = useState(false);
     const [results, setResults] = useState([]);
     const [facets, setFacets] = useState([]);
