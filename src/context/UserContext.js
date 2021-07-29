@@ -1,5 +1,6 @@
-import React, { useContext, createContext, useState } from "react";
+import React, { useContext, createContext, useState, useEffect } from "react";
 import GetAccessToken from '../function/GetAccessToken';
+import GetAccessTokenFromRefreshToken from '../function/GetAccessTokenFromRefreshToken';
 import {
     useLocation,
     useHistory
@@ -7,6 +8,7 @@ import {
 import { useReducer } from 'react'
 
 const authContext = createContext();
+
 
 const OAuth = {
     isAuthenticated: false,
@@ -21,6 +23,10 @@ const OAuth = {
     authorize(authorizationCode, cb) {
         console.log('authorizationCode in custom oauth', authorizationCode);
         return GetAccessToken(authorizationCode);
+    },
+    refresh(refreshToken, cb) {
+        console.log('Use the refresh token', refreshToken);
+        return GetAccessTokenFromRefreshToken(refreshToken);
     },
 };
 
@@ -38,8 +44,25 @@ export function ProvideAuth({ children }) {
 // Hook for child components to get the auth object ...
 // ... and re-render when it changes.
 export const useAuth = () => {
-    return useContext(authContext);
+
+    let context = useContext(authContext);
+
+    let isAuthValid = context.checkAuthExpire();
+
+   
+
+    useEffect(() => {       
+        console.log("Token is valid: ", isAuthValid);
+        if (!isAuthValid && typeof context.refreshToken !== 'undefined' && context.refreshToken !== null) {
+            console.log("Refresh token 2: ", typeof context.refreshToken);
+            context.LoginWithRefreshToken(context.refreshToken, () => {
+            });
+        }
+    }, [isAuthValid, context]);
+
+    return context;
 };
+
 
 function localStorageParse(type) {
     if (!isNaN(type)) {
@@ -57,8 +80,8 @@ function useProvideAuth() {
     //const [user, setUser] = useState(localStorageParse(localStorage.getItem('user')));
     // const [user, setUser] = useState(localStorage.getItem('user'));
     // const [refreshToken, setRefreshToken] = useState(localStorage.getItem('refreshToken'));
-    const [redirect, setRedirect] = useState(localStorage.getItem('redirect')); 
-    
+    const [redirect, setRedirect] = useState(localStorage.getItem('redirect'));
+
     const [state, setState] = useReducer(
         (state, newState) => ({ ...state, ...newState }),
         {
@@ -142,11 +165,9 @@ function useProvideAuth() {
             user: 'user',
         });
 
-        checkAuthExpire();
+        //@Benjamin, don't think we need it here, we get it from the service
+        //checkAuthExpire();
     };
-
-    
-    
 
 
     const checkAuthExpire = () => {
@@ -160,9 +181,19 @@ function useProvideAuth() {
         return (compare.getTime() >= current.getTime()) ? true : false;
     };
 
-    const loginWithAuthorizationCode = (authorizationCode, cb) => {
+    const LoginWithAuthorizationCode = (authorizationCode, cb) => {
         return OAuth
             .authorize(authorizationCode)    // or call GetAccessToken(authorizationCode) directly
+            .then((bearerToken) => {
+                setBearerToken(bearerToken);
+            }).then(() => {
+                typeof cb == "function" && cb();
+            });
+    };
+
+    const LoginWithRefreshToken = (refreshToken, cb) => {
+        return OAuth
+            .refresh(refreshToken)    // or call GetAccessToken(authorizationCode) directly
             .then((bearerToken) => {
                 setBearerToken(bearerToken);
             }).then(() => {
@@ -194,15 +225,15 @@ function useProvideAuth() {
         // localStorage.setItem('user', null);
         // localStorage.setItem('authExpire', null);
         // localStorage.setItem('redirect', null);
-        
 
-     
+
+
 
         typeof cb == "function" && cb();
     };
 
     // Return the user object and auth methods
-    
+
     return {
         state,
         user,
@@ -211,7 +242,8 @@ function useProvideAuth() {
         redirect,
         RedirectAfterLogin,
         SaveRedirect,
-        loginWithAuthorizationCode,
+        LoginWithAuthorizationCode,
+        LoginWithRefreshToken,
         checkAuthExpire,
         authExpire,
         accessToken,

@@ -16,7 +16,7 @@ export default function Callback(props) {
     const [authorizationCode, setAuthorizationCode] = useState(null);
 
     useEffect(() => {
-        auth.loginWithAuthorizationCode(authorizationCode, () => {
+        auth.LoginWithAuthorizationCode(authorizationCode, () => {
             //console.log('callback after authorize');
             
             // I can't use the hook to redirect
@@ -43,14 +43,15 @@ export default function Callback(props) {
     */
 
     // Warning React Hook useEffect has a missing dependency: 'auth'. Either include it or remove the dependency array
-    // but when i include it i get multiple oauth requests again...
+    // but when i include it i get multiple oauth requests again... (@benjamin: confirmed.... i don't get it)
     useEffect(() => {
         let params = queryString.parse(props.location.search);
-        auth.loginWithAuthorizationCode(params.code, () => {
-            // console.log('callback after loginWithAuthorizationCode', auth.redirect);
+        auth.LoginWithAuthorizationCode(params.code, () => {
+            // console.log('callback after LoginWithAuthorizationCode', auth.redirect);
             history.replace(auth.redirect);
         });
     }, [props.location.search, history]);
+
 
 
     // perhaps don't use useEffect for checking the authorization code checking?
@@ -62,8 +63,8 @@ export default function Callback(props) {
     //         setAuthorizationCode(params.code);
 
     //         if (!auth.user) {
-    //             auth.loginWithAuthorizationCode(params.code, () => {
-    //                 // console.log('callback after loginWithAuthorizationCode', auth.redirect);
+    //             auth.LoginWithAuthorizationCode(params.code, () => {
+    //                 // console.log('callback after LoginWithAuthorizationCode', auth.redirect);
     //                 history.replace(auth.redirect);
     //             });
     //         }
