@@ -47,9 +47,7 @@ export const useAuth = () => {
 
     let context = useContext(authContext);
 
-    let isAuthValid = context.checkAuthExpire();
-
-   
+    let isAuthValid = context.checkAuthExpire();   
 
     useEffect(() => {       
         console.log("Token is valid: ", isAuthValid);

@@ -30,7 +30,7 @@ const ProjectTable = ({ results }) => {
                             <tr>
                                 <td><small className={'text-muted'}>{result.id}</small></td>
                                 <td>{result.projectNumber}</td>
-                                <td><Link to={`/project/${result.projectName}`}>{result.projectName}</Link></td>
+                                <td><Link to={`/project/${result.identifier}/${result.projectName}`}>{result.projectName}</Link></td>
                                 <td>{result.primaryCluster}</td>
                                 <td>{result.secondaryCluster}</td>
                                 <td>{result.projectStatus}</td>
