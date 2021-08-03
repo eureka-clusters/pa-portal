@@ -205,7 +205,7 @@ const ProtectedPage = () => {
 
                 <br />
                 <Button onClick={() => setRefetch(!refetch)}>refetch</Button> normal fetch example<br />
-                <Button onClick={() => setRefetch2(!refetch2)}>refetch2</Button> Load the data via axios <br />
+                <Button onClick={() => setRefetch2(!refetch2)}>refetch2</Button> Load the data via axios (currently executes 2 request for testing reasons)<br />
 
                 <br />
                 <span>Possible issues invalidate before clicking. Both examples generate multiple AccessTokens </span> <br />
