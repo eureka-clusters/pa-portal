@@ -6,6 +6,17 @@ import {
     useHistory
 } from "react-router-dom";
 import { useReducer } from 'react'
+import moment from 'moment';
+import Moment from 'react-moment';
+
+
+
+export const KEY_EXPIRES_IN = 'authExpire'
+export const KEY_ACCESS_TOKEN = 'accessToken';
+export const KEY_REFRESH_TOKEN = 'refreshToken';
+export const KEY_USER_STATE = 'user';
+export const KEY_REDIRECT = 'redirect';
+
 
 const authContext = createContext();
 
@@ -45,22 +56,20 @@ export function ProvideAuth({ children }) {
 // ... and re-render when it changes.
 export const useAuth = () => {
 
-    let context = useContext(authContext);
+    return useContext(authContext);
 
-    let isAuthValid = context.checkAuthExpire();
+    // let context = useContext(authContext);
+    // let isAuthValid = context.checkAuthExpire();
+    // useEffect(() => {
+    //     console.log("Token is valid: ", isAuthValid);
+    //     if (!isAuthValid && typeof context.refreshToken !== 'undefined' && context.refreshToken !== null) {
+    //         console.log("Refresh token 2: ", typeof context.refreshToken);
+    //         context.LoginWithRefreshToken(context.refreshToken, () => {
+    //         });
+    //     }
+    // }, [isAuthValid, context]);
 
-   
-
-    useEffect(() => {       
-        console.log("Token is valid: ", isAuthValid);
-        if (!isAuthValid && typeof context.refreshToken !== 'undefined' && context.refreshToken !== null) {
-            console.log("Refresh token 2: ", typeof context.refreshToken);
-            context.LoginWithRefreshToken(context.refreshToken, () => {
-            });
-        }
-    }, [isAuthValid, context]);
-
-    return context;
+    // return context;
 };
 
 
@@ -75,12 +84,9 @@ function localStorageParse(type) {
 
 // Provider hook that creates auth object and handles state
 function useProvideAuth() {
-    // const [accessToken, setAccessToken] = useState(localStorage.getItem('accessToken'));
-    // const [authExpire, setAuthExpire] = useState(localStorageParse(localStorage.getItem('authExpire')));
-    //const [user, setUser] = useState(localStorageParse(localStorage.getItem('user')));
-    // const [user, setUser] = useState(localStorage.getItem('user'));
-    // const [refreshToken, setRefreshToken] = useState(localStorage.getItem('refreshToken'));
     const [redirect, setRedirect] = useState(localStorage.getItem('redirect'));
+    //let storage = window.sessionStorage;
+    let storage = localStorage;
 
     const [state, setState] = useReducer(
         (state, newState) => ({ ...state, ...newState }),
@@ -100,31 +106,93 @@ function useProvideAuth() {
     const authExpire = state.authExpire;
     const user = state.user;
 
+    const isExpired = (exp) => {
+        if (exp === undefined) {
+            return false;
+        }
+        // console.log('moment', moment().unix());
+        // console.log('moment2', moment.unix(Number(exp)).unix());
+        return moment().unix() > moment.unix(Number(exp)).unix();
+    };
 
+    const getRefreshToken = () => {
+        return storage.getItem(KEY_REFRESH_TOKEN);
+    }
 
-    // localStorage is needed it doesn't work without
-    //const [redirect, setRedirect] = useState(null);
+    const getExpirationDate = () => {
+        return storage.getItem(KEY_EXPIRES_IN);
+    }
 
+    const getAccessToken = () => {
+        return storage.getItem(KEY_ACCESS_TOKEN);
+    }
 
-    // @johan does localStorage doesn't work in different tabs?
-    // i can login in one tab and another tab is still not logged in
-    console.log('user in useProvideAuth by useState', user, typeof user);
-    console.log('localStorage.getItem(\'user\')', localStorage.getItem('user'));
+    // with async
+    async function UseRefreshToken(cb) {
+        const refreshToken = getRefreshToken();
+        console.log('UseRefreshToken called');
+        await OAuth
+            .refresh(refreshToken)    // or call GetAccessToken(authorizationCode) directly
+            .then((bearerToken) => {
+                console.log('UseRefreshToken new bearerToken', bearerToken);
+                setBearerToken(bearerToken);
+            }).then(() => {
+                typeof cb == "function" && cb();
+            });
+
+        //const accessToken = storage.getItem(KEY_ACCESS_TOKEN);
+        return getAccessToken();
+    }
+
+    function getToken() {
+        if (isExpired(getExpirationDate())) {
+            console.log('isExpired');
+            const updatedToken = UseRefreshToken();
+            console.log('updatedToken', updatedToken);
+            return getAccessToken();
+        }
+        return getAccessToken();
+    };
+    
+
+    // without async
+    // function UseRefreshToken(cb) {
+    //     const refreshToken = getRefreshToken();
+    //     console.log('UseRefreshToken called');
+    //     OAuth
+    //         .refresh(refreshToken)    // or call GetAccessToken(authorizationCode) directly
+    //         .then((bearerToken) => {
+    //             console.log('UseRefreshToken new bearerToken', bearerToken);
+    //             setBearerToken(bearerToken);
+    //         }).then(() => {
+    //             typeof cb == "function" && cb();
+    //         });
+
+    //     //const accessToken = storage.getItem(KEY_ACCESS_TOKEN);
+    //     return getAccessToken();
+    // }
+
+    // function getToken() {
+    //     if (isExpired(getExpirationDate())) {
+    //         console.log('isExpired');
+    //         const updatedToken = UseRefreshToken();
+    //         console.log('updatedToken', updatedToken);
+    //         return getAccessToken();
+    //     }
+    //     return getAccessToken();
+    // };
 
     const signin = cb => {
         return OAuth.signin(() => {
-            // setUser("user");
             setState({
                 user: 'user',
             });
-
             cb();
         });
     };
 
     const signout = cb => {
         return OAuth.signout(() => {
-            // setUser(null);
             setState({
                 user: null,
             });
@@ -150,25 +218,44 @@ function useProvideAuth() {
     }
 
     const setBearerToken = (bearerToken) => {
-        console.log('bearerToken', bearerToken);
-        localStorage.setItem('refreshToken', bearerToken.refresh_token);
-        localStorage.setItem('accessToken', bearerToken.access_token);
-        localStorage.setItem('user', true);
-        let newAuthExpire = new Date().getTime() + bearerToken.expires_in * 1000;
-        //  console.log('newAuthExpire', newAuthExpire, new Date(newAuthExpire));
-        localStorage.setItem('authExpire', newAuthExpire);
+        // console.log('bearerToken', bearerToken);
+        if (bearerToken.status != 400) {
+            console.info('set tokens to storage', bearerToken);
+            localStorage.setItem('refreshToken', bearerToken.refresh_token);
+            localStorage.setItem('accessToken', bearerToken.access_token);
+            localStorage.setItem('user', true);
+            //let newAuthExpire = new Date().getTime() + bearerToken.expires_in * 1000;
 
-        setState({
-            accessToken: bearerToken.access_token,
-            refreshToken: bearerToken.refresh_token,
-            authExpire: newAuthExpire,
-            user: 'user',
-        });
+            let newAuthExpire = moment().add(bearerToken.expires_in, 's').unix();
+
+            //newAuthExpire = new Date().getTime() + 1000 * 1000;
+
+            // console.log('newAuthExpire', newAuthExpire, new Date(newAuthExpire));
+            localStorage.setItem('authExpire', newAuthExpire);
+
+            setState({
+                accessToken: bearerToken.access_token,
+                refreshToken: bearerToken.refresh_token,
+                authExpire: newAuthExpire,
+                user: 'user',
+            });
+        } else {
+            // error handling 
+            //title: "invalid_grant", status: 400, detail: "Invalid refresh token"
+            // console.log(bearerToken.status, bearerToken.detail, bearerToken.title);
+        }
+
 
         //@Benjamin, don't think we need it here, we get it from the service
         //checkAuthExpire();
     };
 
+    /*
+    set expire time to a past value for testing to thest the oauth refresh
+    */
+    const invalidateToken = () => {
+        localStorage.setItem('authExpire', moment().unix());
+    };
 
     const checkAuthExpire = () => {
         var current = new Date();
@@ -248,6 +335,11 @@ function useProvideAuth() {
         authExpire,
         accessToken,
         refreshToken,
+        invalidateToken,
+        getToken,
+        //getAccessToken,
+        getRefreshToken,
+        UseRefreshToken,
         logout
     };
 }
