@@ -16,6 +16,8 @@ import Logout from "./Logout/Logout";
 import Project  from "./Project/Project";
 import Partner from "./Partner/Partner";
 import Statistics from "./Statistics/Statistics";
+import ProtectedPage from "./partial/ProtectedPage";
+
 import { createBrowserHistory } from 'history';
 
 
@@ -45,23 +47,6 @@ function PublicPage() {
 
 function HomePage() {
     return <h3>Home</h3>;
-}
-
-function ProtectedPage() {
-    let auth = useAuth();
-    let expire = new Date(auth.authExpire); 
-    
-    return (
-        <div>
-            <h3>Protected page with user "{auth.user}"</h3>
-            <p>
-                auth will expire in "{expire.toString()}" <br />
-                checkAuthExpire result "{auth.checkAuthExpire().toString()}" <br />
-                AccessToken "{auth.accessToken}" <br />
-                RefreshToken "{auth.refreshToken}" <br />
-            </p>
-        </div>
-    );
 }
 
 function LoginPage() {

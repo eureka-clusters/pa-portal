@@ -55,47 +55,25 @@ export function ProvideAuth({ children }) {
 // Hook for child components to get the auth object ...
 // ... and re-render when it changes.
 export const useAuth = () => {
-
     return useContext(authContext);
-
-    // let context = useContext(authContext);
-    // let isAuthValid = context.checkAuthExpire();
-    // useEffect(() => {
-    //     console.log("Token is valid: ", isAuthValid);
-    //     if (!isAuthValid && typeof context.refreshToken !== 'undefined' && context.refreshToken !== null) {
-    //         console.log("Refresh token 2: ", typeof context.refreshToken);
-    //         context.LoginWithRefreshToken(context.refreshToken, () => {
-    //         });
-    //     }
-    // }, [isAuthValid, context]);
-
-    // return context;
 };
-
-
-function localStorageParse(type) {
-    if (!isNaN(type)) {
-        return typeof type == 'string' ? JSON.parse(type) : type;
-    } else {
-        return type;
-    }
-}
-
 
 // Provider hook that creates auth object and handles state
 function useProvideAuth() {
     const [redirect, setRedirect] = useState(localStorage.getItem('redirect'));
+
+    // we could use different storage  (session / localStorage)
     //let storage = window.sessionStorage;
     let storage = localStorage;
 
     const [state, setState] = useReducer(
         (state, newState) => ({ ...state, ...newState }),
         {
-            user: localStorage.getItem('user'),
-            refreshToken: localStorage.getItem('refreshToken'),
-            accessToken: localStorage.getItem('accessToken'),
-            authExpire: localStorageParse(localStorage.getItem('authExpire')),
-            redirect: localStorage.getItem('redirect'),
+            user: storage.getItem('user'),
+            refreshToken: storage.getItem(KEY_REFRESH_TOKEN),
+            accessToken: storage.getItem(KEY_ACCESS_TOKEN),
+            authExpire: storage.getItem(KEY_EXPIRES_IN),
+            redirect: storage.getItem('redirect'),
             loading: false
         }
     );
@@ -128,7 +106,9 @@ function useProvideAuth() {
     }
 
     // with async
-    async function UseRefreshToken(cb) {
+    // async function UseRefreshToken(cb) {
+    const UseRefreshToken = async (cb) => {
+
         const refreshToken = getRefreshToken();
         console.log('UseRefreshToken called');
         await OAuth
@@ -139,48 +119,20 @@ function useProvideAuth() {
             }).then(() => {
                 typeof cb == "function" && cb();
             });
-
-        //const accessToken = storage.getItem(KEY_ACCESS_TOKEN);
         return getAccessToken();
     }
 
-    function getToken() {
+    // which way of defining the function is better?
+    // async function getToken() {   
+    const getToken = async () => {
         if (isExpired(getExpirationDate())) {
             console.log('isExpired');
-            const updatedToken = UseRefreshToken();
+            const updatedToken = await UseRefreshToken();
             console.log('updatedToken', updatedToken);
             return getAccessToken();
         }
         return getAccessToken();
     };
-    
-
-    // without async
-    // function UseRefreshToken(cb) {
-    //     const refreshToken = getRefreshToken();
-    //     console.log('UseRefreshToken called');
-    //     OAuth
-    //         .refresh(refreshToken)    // or call GetAccessToken(authorizationCode) directly
-    //         .then((bearerToken) => {
-    //             console.log('UseRefreshToken new bearerToken', bearerToken);
-    //             setBearerToken(bearerToken);
-    //         }).then(() => {
-    //             typeof cb == "function" && cb();
-    //         });
-
-    //     //const accessToken = storage.getItem(KEY_ACCESS_TOKEN);
-    //     return getAccessToken();
-    // }
-
-    // function getToken() {
-    //     if (isExpired(getExpirationDate())) {
-    //         console.log('isExpired');
-    //         const updatedToken = UseRefreshToken();
-    //         console.log('updatedToken', updatedToken);
-    //         return getAccessToken();
-    //     }
-    //     return getAccessToken();
-    // };
 
     const signin = cb => {
         return OAuth.signin(() => {
@@ -211,7 +163,7 @@ function useProvideAuth() {
         let { from } = location.state || { from: { pathname: "/" } };
 
         if (from.pathname && from.pathname !== '/login' && from.pathname !== '/callback') {
-            localStorage.setItem('redirect', from.pathname);
+            storage.setItem(KEY_REDIRECT, from.pathname);
             //redirect = from.pathname;
             //setRedirect(from.pathname);
         }
@@ -221,53 +173,34 @@ function useProvideAuth() {
         // console.log('bearerToken', bearerToken);
         if (bearerToken.status != 400) {
             console.info('set tokens to storage', bearerToken);
-            localStorage.setItem('refreshToken', bearerToken.refresh_token);
-            localStorage.setItem('accessToken', bearerToken.access_token);
-            localStorage.setItem('user', true);
-            //let newAuthExpire = new Date().getTime() + bearerToken.expires_in * 1000;
+            let newAuthExpire = moment().add(Number(bearerToken.expires_in), 's').unix();
+            console.log('newAuthExpire', newAuthExpire, new Date(newAuthExpire));
 
-            let newAuthExpire = moment().add(bearerToken.expires_in, 's').unix();
-
-            //newAuthExpire = new Date().getTime() + 1000 * 1000;
-
-            // console.log('newAuthExpire', newAuthExpire, new Date(newAuthExpire));
-            localStorage.setItem('authExpire', newAuthExpire);
+            storage.setItem(KEY_REFRESH_TOKEN, bearerToken.refresh_token);
+            storage.setItem(KEY_ACCESS_TOKEN, bearerToken.access_token);
+            storage.setItem(KEY_USER_STATE, true);
+            storage.setItem(KEY_EXPIRES_IN, newAuthExpire);
 
             setState({
                 accessToken: bearerToken.access_token,
                 refreshToken: bearerToken.refresh_token,
                 authExpire: newAuthExpire,
-                user: 'user',
+                user: true,
             });
         } else {
             // error handling 
             //title: "invalid_grant", status: 400, detail: "Invalid refresh token"
-            // console.log(bearerToken.status, bearerToken.detail, bearerToken.title);
+            console.error(bearerToken.status, bearerToken.detail, bearerToken.title);
         }
-
-
-        //@Benjamin, don't think we need it here, we get it from the service
-        //checkAuthExpire();
     };
 
     /*
     set expire time to a past value for testing to thest the oauth refresh
     */
     const invalidateToken = () => {
-        localStorage.setItem('authExpire', moment().unix());
+        storage.setItem(KEY_EXPIRES_IN, moment().unix());
     };
-
-    const checkAuthExpire = () => {
-        var current = new Date();
-        var compare = new Date(state.authExpire);
-
-        // console.log('compare', compare);
-        // console.log('current', current);
-        // console.log('compare.getTime()', compare.getTime());
-        // console.log('current.getTime()', current.getTime());
-        return (compare.getTime() >= current.getTime()) ? true : false;
-    };
-
+    
     const LoginWithAuthorizationCode = (authorizationCode, cb) => {
         return OAuth
             .authorize(authorizationCode)    // or call GetAccessToken(authorizationCode) directly
@@ -289,33 +222,18 @@ function useProvideAuth() {
     };
 
     const logout = (cb) => {
-        // setUser(null);
-        // setAccessToken(null);
-        // setRefreshToken(null);
-
         setState({
             accessToken: null,
             refreshToken: null,
             user: null,
         });
 
-
         // remove the items localStorage.setItem('user', null); would be (string) "null"
-        localStorage.removeItem('refreshToken');
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('user');
-        localStorage.removeItem('authExpire');
-        localStorage.removeItem('redirect');
-
-        // localStorage.setItem('refreshToken', null);
-        // localStorage.setItem('accessToken', null);
-        // localStorage.setItem('user', null);
-        // localStorage.setItem('authExpire', null);
-        // localStorage.setItem('redirect', null);
-
-
-
-
+        storage.removeItem(KEY_REFRESH_TOKEN);
+        storage.removeItem(KEY_ACCESS_TOKEN);
+        storage.removeItem(KEY_USER_STATE);
+        storage.removeItem(KEY_EXPIRES_IN);
+        storage.removeItem(KEY_REDIRECT);
         typeof cb == "function" && cb();
     };
 
@@ -331,7 +249,6 @@ function useProvideAuth() {
         SaveRedirect,
         LoginWithAuthorizationCode,
         LoginWithRefreshToken,
-        checkAuthExpire,
         authExpire,
         accessToken,
         refreshToken,

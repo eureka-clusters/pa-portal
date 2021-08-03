@@ -28,12 +28,6 @@ export default function Project(props) {
             Description: {project.description}<br />
             Label date: {project.labelDate}<br />
             Project: {project.name}<br />
-
-            {/* User = {auth.user}<br />
-            AccessToken = {auth.accessToken} <br />
-            RefreshToken = {auth.refreshToken} <br />            
-
-            Expire = {auth.checkAuthExpire() ? 'valid' : 'invalid'} <br /> */}
         </React.Fragment>
     );
 }
