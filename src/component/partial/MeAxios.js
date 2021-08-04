@@ -1,14 +1,10 @@
 // ./MeAxios.js
 import React from 'react';
 import { apiStates, useApiAxios } from '../../function/useApiAxios'
-import Config from "../../constants/Config";
-
 
 export const MeAxios = () => {
 
-    const serverUri = Config.SERVER_URI;
     const url = '/me';
-
     const { state, error, data } = useApiAxios(url);
 
     switch (state) {
