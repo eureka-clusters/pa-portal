@@ -17,6 +17,7 @@ import Project  from "./Project/Project";
 import Partner from "./Partner/Partner";
 import Statistics from "./Statistics/Statistics";
 import ProtectedPage from "./partial/ProtectedPage";
+import PublicPage from "./partial/PublicPage";
 
 import { createBrowserHistory } from 'history';
 
@@ -41,9 +42,7 @@ function AccountPage() {
     return <h3>Account page currently in PageRoutes.js user = "{auth.user}"</h3>;
 }
 
-function PublicPage() {
-    return <h3>Public</h3>;
-}
+
 
 function HomePage() {
     return <h3>Home</h3>;
