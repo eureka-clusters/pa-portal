@@ -1,15 +1,13 @@
 // ./Me.js
 import React from 'react';
-import { apiStates, useApi } from '../../function/useApi'
-import Config from "../../constants/Config";
-
+import { apiStates, Api } from '../../function/Api'
+import Button from 'react-bootstrap/Button';
+import PrintObject from '../../function/react-print-object';
 
 export const Me = () => {
+    const [url, setUrl] = React.useState('/me');
 
-    const serverUri = Config.SERVER_URI;
-    const url = serverUri + '/api/me';
-
-    const { state, error, data } = useApi(url);
+    const { state, error, data, load } = Api(url);
 
     switch (state) {
         case apiStates.ERROR:
@@ -17,13 +15,23 @@ export const Me = () => {
         case apiStates.SUCCESS:
             return (
                 <React.Fragment>
+                    <p>Debug:</p>
+                    <PrintObject value={data} />
                     <p>Data:</p>
                     <ul>
                         <li>{data.first_name}</li>
                         <li>{data.last_name}</li>
                         <li>{data.email}</li>
                     </ul>
-                    
+                    <Button onClick={() => load()}>reload current url load() </Button>
+                    &nbsp;
+                    <Button onClick={() => load('/me2')}>load with url load('/me2')</Button>
+                    &nbsp;
+                    <Button onClick={() => setUrl('/me2')}>set url via component state setUrl('/me2')</Button>
+                    &nbsp;
+                    <Button onClick={() => setUrl('/me3')}>set url via component state setUrl('/me3')</Button>
+
+                    &nbsp;
                 </React.Fragment>
             );
         default:

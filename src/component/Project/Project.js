@@ -1,33 +1,36 @@
 import React, {useEffect, useState} from 'react';
-import GetProjectData from '../../function/GetProjectData';
+import { apiStates, Api } from '../../function/Api'
+import Button from 'react-bootstrap/Button'
+import PrintObject from '../../function/react-print-object'
 
-import { useAuth } from "../../context/UserContext";
-
-const LoadingComponent = () => <div> Loading project... </div>
 
 export default function Project(props) {
 
-    const [project, setProject] = useState(null)
-    const [loading, setLoading] = useState(true)
+    //'/api/view/project/' + identifier,
+    const identifier = props.match.params.identifier;
+    const [url, setUrl] = React.useState('/view/project/' + identifier);
 
-    let auth = useAuth();
+    const { state, error, data, load } = Api(url);
 
-    useEffect(() => {
-        GetProjectData(props.match.params.identifier, auth.accessToken).then((res)=>setProject(res)).then(() => setLoading(false));
-        
-    }, [auth.accessToken, props]);
+    switch (state) {
+        case apiStates.ERROR:
+            return <p>ERROR: {error || 'General error'}</p>;
+        case apiStates.SUCCESS:
+            return (
+                <React.Fragment>
+                    <p>Debug:</p>
+                    <PrintObject value={data} />
 
+                    <h1>Project Page</h1>
+                    Project: {data.name}<br />
+                    Description: {data.description}
+                    <br />
 
-    if (loading) { return <LoadingComponent /> }
-    
-    return (
-        <React.Fragment>
-            <h1>Project Page</h1>
-
-            Project: {project.name}<br />
-            Description: {project.description}<br />
-            Label date: {project.labelDate}<br />
-            Project: {project.name}<br />
-        </React.Fragment>
-    );
+                    Label date: {data.labelDate}<br />
+                    Project: {data.name}<br />
+                </React.Fragment>
+            );
+        default:
+            return <p>Loading project...</p>;
+    }
 }

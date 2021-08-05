@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import React from 'react';
 import { useAuth } from "../context/UserContext";
 import Config from "../constants/Config";
 import axios from 'axios';
@@ -9,16 +9,16 @@ export const apiStates = {
     ERROR: 'ERROR'
 }
 
-export const useApiAxios = url => {
+export const Api = url => {
 
     let auth = useAuth();
 
-    const [hookState, setHookState] = useState({
+    const [hookState, setHookState] = React.useState({
         state: apiStates.LOADING,
         error: '',
         data: []
-    })
-  
+    });
+    
     const createInstance = async () => {
         const serverUri = Config.SERVER_URI;
         let accessToken = await auth.getToken();
@@ -36,10 +36,15 @@ export const useApiAxios = url => {
         return instance;
     };
 
-    useEffect(() => {
+    const load = (directurl) => {
+        if (directurl !== undefined) {
+            url = directurl; 
+        }
+
         const setPartData = partialData => {
             setHookState(hookState => (hookState = { ...hookState, ...partialData }))
         }
+        
         setPartData({
             state: apiStates.LOADING
         })
@@ -48,7 +53,7 @@ export const useApiAxios = url => {
             axios.get(url, {
                 // settings could be overwritten
                 // timeout: 1000
-            })  
+            })
             .then(response => {
                 setPartData({
                     state: apiStates.SUCCESS,
@@ -63,6 +68,11 @@ export const useApiAxios = url => {
                 })
             })
         })
-    }, [url])
-    return hookState
+    };
+
+    React.useEffect(() => {
+        load();
+    }, [url]);
+    
+    return { ...hookState, load: load };
 }

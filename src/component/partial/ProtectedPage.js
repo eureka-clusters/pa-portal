@@ -5,6 +5,8 @@ import Button from 'react-bootstrap/Button'
 import { useAuth } from "../../context/UserContext";
 import Config from "../../constants/Config";
 
+import { Me } from "./Me";
+
 import axios from 'axios';
 
 
@@ -188,6 +190,8 @@ const ProtectedPage = () => {
 
     return (
         <div>
+            render me Component:
+            <Me />
             <h3>Protected page with user "{auth.user}"</h3>
             <p>
                 AccessToken "{auth.accessToken}" <br />
