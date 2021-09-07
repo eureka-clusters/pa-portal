@@ -19,9 +19,6 @@ export default function Statistics(props) {
     let auth = useAuth();
     console.log('auth.user in statistics', auth.user);
     console.log('auth.accessToken in statistics', auth.accessToken);
-    console.log('full auth', auth);
-    
-
 
     const accessToken = auth.accessToken;
     

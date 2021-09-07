@@ -155,15 +155,9 @@ export const PageRoutes = () => {
             <PrivateRoute path='/project/:identifier/:projectName'
                 render={props => <Project {...props} />}
             />
-            
-            {/* <PrivateRoute path='/partner'
+            <PrivateRoute path='/partner/:identifier/:partnerName'
                 render={props => <Partner {...props} />}
-            />  */}
-
-            <PrivateRoute path='/partner'>
-                <Partner/>
-            </PrivateRoute>
-
+            />
 
             <Route path="/404" component={GenericNotFound} />
             <Redirect to="/404" />

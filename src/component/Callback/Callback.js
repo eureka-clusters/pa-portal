@@ -47,30 +47,36 @@ export default function Callback(props) {
     useEffect(() => {
         let params = queryString.parse(props.location.search);
         auth.LoginWithAuthorizationCode(params.code, () => {
+
+            console.log('auth in cb', auth);
+            console.log('auth.state', auth.state);
+
             // console.log('callback after LoginWithAuthorizationCode', auth.redirect);
-            history.replace(auth.redirect);
+            if (auth.redirect !== undefined && auth.redirect !== null) {
+                history.replace(auth.redirect);
+            } else {
+                history.replace('/');
+            }
+           
+        }).then(() => {
+            console.log('auth in then', auth);
+            console.log('auth.state', auth.state);
+            console.log('auth.state.errorMessage', auth.state.errorMessage);
+    
+            if(auth.state.errorMessage) {
+                console.log('auth.state.errorMessage', auth.state.errorMessage);
+                return (<h3 className="error"> {auth.state.errorMessage} </h3>);
+            }
+            return (<div> this is a test</div>);
         });
+        
+        
     }, [props.location.search, history]);
 
 
+    if (auth.state.errorMessage) {
+        throw new Error(auth.state.errorMessage);
+    }
 
-    // perhaps don't use useEffect for checking the authorization code checking?
-    // => 2x outh call 
-    // let params = queryString.parse(props.location.search);
-    // if (params.code) {
-    //     if (authorizationCode !== params.code) {
-    //         console.log('setAuthorizationCode code changed', params.code);
-    //         setAuthorizationCode(params.code);
-
-    //         if (!auth.user) {
-    //             auth.LoginWithAuthorizationCode(params.code, () => {
-    //                 // console.log('callback after LoginWithAuthorizationCode', auth.redirect);
-    //                 history.replace(auth.redirect);
-    //             });
-    //         }
-    //     } else {
-    //         console.log('setAuthorizationCode code not changed', params.code);
-    //     }
-    // }
     return <LoadingComponent />
 }
