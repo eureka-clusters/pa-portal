@@ -10,8 +10,6 @@ import PartnerTable from "./PartnerTable";
 import ResultChart from "./ResultChart";
 import downloadBase64File from "../../function/DownloadBase64";
 
-
-
 export default function Statistics(props) {
 
     const serverUri = Config.SERVER_URI;

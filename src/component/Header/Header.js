@@ -19,7 +19,7 @@ export default function Header(props) {
                         <Nav>
                             <Nav.Link as={NavLink} to='/' exact>Home</Nav.Link>
                             <Nav.Link as={NavLink} to='/statistics'>Statistics</Nav.Link>
-                            <Nav.Link as={NavLink} to='/project'>Projects</Nav.Link>
+                            <Nav.Link as={NavLink} to='/projects'>Projects</Nav.Link>
                             <Nav.Link as={NavLink} to='/partner'>Partners</Nav.Link>
 
                             {/* test links */}

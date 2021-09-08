@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { apiStates, Api } from '../../function/Api'
-import Button from 'react-bootstrap/Button'
+import Moment from 'react-moment';
 import PrintObject from '../../function/react-print-object'
 
 
@@ -22,12 +22,16 @@ export default function Project(props) {
                     <PrintObject value={data} />
 
                     <h1>Project Page</h1>
-                    Project: {data.name}<br />
-                    Description: {data.description}
-                    <br />
-
-                    Label date: {data.labelDate}<br />
-                    Project: {data.name}<br />
+                    <dl>
+                        <dt>Project</dt><dd>{data.name}</dd>
+                        <dt>Description</dt><dd>{data.description}</dd>
+                        <dt>Label date</dt><dd><Moment format="DD-MM-YYYY">{data.labelDate}</Moment></dd>
+                        <dt>Project</dt><dd>{data.name}</dd>
+                        <dt>Technical Area</dt><dd>{data.technicalArea}</dd>
+                        <dt>Programme</dt><dd>{data.programme}</dd>
+                        <dt>Programme Call</dt><dd>{data.programmeCall}</dd>
+                        <dt>Primary Cluster</dt><dd>{data.primaryCluster}</dd>
+                    </dl>
                 </React.Fragment>
             );
         default:

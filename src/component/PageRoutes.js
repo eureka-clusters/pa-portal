@@ -13,14 +13,16 @@ import { useAuth } from "../context/UserContext";
 import Login from "./Login/Login";
 import Callback from "./Callback/Callback";
 import Logout from "./Logout/Logout";
-import Project  from "./Project/Project";
+import Project  from "./Project";
+
+import Projects from "./Projects";
 import Partner from "./Partner/Partner";
-import Statistics from "./Statistics/Statistics";
+import Partners from "./Partners";
+import Statistics from "./Statistics";
 import ProtectedPage from "./partial/ProtectedPage";
 import PublicPage from "./partial/PublicPage";
 
 import { createBrowserHistory } from 'history';
-
 
 // const GenericNotFound = () => {
 function GenericNotFound() {
@@ -152,13 +154,16 @@ export const PageRoutes = () => {
             <PrivateRoute path='/statistics'
                 render={props => <Statistics {...props} />}
             />
+             <PrivateRoute path='/projects'
+                render={props => <Projects {...props} />}
+            />
             <PrivateRoute path='/project/:identifier/:projectName'
                 render={props => <Project {...props} />}
             />
             
-            {/* <PrivateRoute path='/partner'
-                render={props => <Partner {...props} />}
-            />  */}
+            <PrivateRoute path='/partner'
+                render={props => <Partners {...props} />}
+            /> 
 
             <PrivateRoute path='/partner'>
                 <Partner/>
