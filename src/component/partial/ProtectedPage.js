@@ -21,7 +21,6 @@ const ProtectedPage = () => {
     const [refetch2, setRefetch2] = useState(false);
     const [refetch3, setRefetch3] = useState(false);
     const [refetch4, setRefetch4] = useState(false);
-    
 
     const getApi = async () => {
         const serverUri = Config.SERVER_URI;
@@ -188,6 +187,10 @@ const ProtectedPage = () => {
         })();
     }, [refetch2]);
 
+
+
+
+
     return (
         <div>
             render me Component:
@@ -216,6 +219,10 @@ const ProtectedPage = () => {
                 <Button onClick={() => setRefetch3(!refetch3)}>refetch3</Button>  Possible issue of the auth.getToken() is used in the same useeffect call<br />
 
                 <Button onClick={() => setRefetch4(!refetch4)}>refetch4</Button>  Possible issue of the auth.getToken() is used in the multipe useeffect calls<br />
+
+
+                <br />
+                <Button onClick={() => auth.test()}>auth.test();</Button>  auth.test()<br />
 
                 <br />
                 <Button onClick={refreshPage}>Reload page</Button><br />

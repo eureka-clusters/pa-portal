@@ -1,6 +1,5 @@
 import React, { useContext, createContext, useState, useEffect } from "react";
-import GetAccessToken from '../function/GetAccessToken';
-import GetAccessTokenFromRefreshToken from '../function/GetAccessTokenFromRefreshToken';
+
 import {
     useLocation,
     useHistory
@@ -8,8 +7,8 @@ import {
 import { useReducer } from 'react'
 import moment from 'moment';
 import Moment from 'react-moment';
-
-
+// import { authStates, OAuth2 } from '../function/OAuth2';
+import { OAuth2 } from '../function/OAuth2';
 
 export const KEY_EXPIRES_IN = 'authExpire'
 export const KEY_ACCESS_TOKEN = 'accessToken';
@@ -19,27 +18,6 @@ export const KEY_REDIRECT = 'redirect';
 
 
 const authContext = createContext();
-
-
-const OAuth = {
-    isAuthenticated: false,
-    signin(cb) {
-        OAuth.isAuthenticated = true;
-        setTimeout(cb, 2000); // fake async
-    },
-    signout(cb) {
-        OAuth.isAuthenticated = false;
-        setTimeout(cb, 100);
-    },
-    authorize(authorizationCode, cb) {
-        console.log('authorizationCode in custom oauth', authorizationCode);
-        return GetAccessToken(authorizationCode);
-    },
-    refresh(refreshToken, cb) {
-        console.log('Use the refresh token', refreshToken);
-        return GetAccessTokenFromRefreshToken(refreshToken);
-    },
-};
 
 // Provider component that wraps your app and makes auth object ...
 // ... available to any child component that calls useAuth().
@@ -60,6 +38,7 @@ export const useAuth = () => {
 
 // Provider hook that creates auth object and handles state
 function useProvideAuth() {
+
     const [redirect, setRedirect] = useState(localStorage.getItem('redirect'));
 
     // we could use different storage  (session / localStorage)
@@ -74,7 +53,8 @@ function useProvideAuth() {
             accessToken: storage.getItem(KEY_ACCESS_TOKEN),
             authExpire: storage.getItem(KEY_EXPIRES_IN),
             redirect: storage.getItem('redirect'),
-            loading: false
+            loading: false,
+            errorMessage: null
         }
     );
 
@@ -84,12 +64,29 @@ function useProvideAuth() {
     const authExpire = state.authExpire;
     const user = state.user;
 
+    const test = async (cb) => {
+        let refreshToken = getRefreshToken();
+        await OAuth2
+            .RefreshRequest(refreshToken)    // or call GetAccessToken(authorizationCode) directly
+            .then((bearerToken) => {
+                console.log('UseRefreshToken new bearerToken', bearerToken);
+                setBearerToken(bearerToken);
+            }).then(() => {
+                typeof cb == "function" && cb();
+            }).catch((error) => {
+                //  on errors of the refesh request we have to logout the user as no new accesstoken+refreshtoken could be generated.
+                console.log('catch error in UseRefreshToken logout user', error);
+                logout();
+            });
+        return getAccessToken();
+    }
+
     const isExpired = (exp) => {
         if (exp === undefined) {
             return false;
         }
-        // console.log('moment', moment().unix());
-        // console.log('moment2', moment.unix(Number(exp)).unix());
+        // console.debug('moment', moment().unix());
+        // console.debug('moment2', moment.unix(Number(exp)).unix());
         return moment().unix() > moment.unix(Number(exp)).unix();
     };
 
@@ -105,19 +102,18 @@ function useProvideAuth() {
         return storage.getItem(KEY_ACCESS_TOKEN);
     }
 
-    // with async
-    // async function UseRefreshToken(cb) {
     const UseRefreshToken = async (cb) => {
-
-        const refreshToken = getRefreshToken();
-        console.log('UseRefreshToken called');
-        await OAuth
-            .refresh(refreshToken)    // or call GetAccessToken(authorizationCode) directly
+        let refreshToken = getRefreshToken();
+        await OAuth2
+            .RefreshRequest(refreshToken)    // or call GetAccessToken(authorizationCode) directly
             .then((bearerToken) => {
-                console.log('UseRefreshToken new bearerToken', bearerToken);
+                console.debug('UseRefreshToken new bearerToken', bearerToken);
                 setBearerToken(bearerToken);
             }).then(() => {
                 typeof cb == "function" && cb();
+            }).catch((error) => {
+                console.debug('catch error in UseRefreshToken logout user', error);
+                logout();
             });
         return getAccessToken();
     }
@@ -126,31 +122,14 @@ function useProvideAuth() {
     // async function getToken() {   
     const getToken = async () => {
         if (isExpired(getExpirationDate())) {
-            console.log('isExpired');
+            console.debug('getToken isExpired:');
             const updatedToken = await UseRefreshToken();
-            console.log('updatedToken', updatedToken);
+            console.debug('getToken updatedToken:', updatedToken);
             return getAccessToken();
         }
         return getAccessToken();
     };
 
-    const signin = cb => {
-        return OAuth.signin(() => {
-            setState({
-                user: 'user',
-            });
-            cb();
-        });
-    };
-
-    const signout = cb => {
-        return OAuth.signout(() => {
-            setState({
-                user: null,
-            });
-            cb();
-        });
-    };
 
     const RedirectAfterLogin = () => {
         console.log('RedirectAfterLogin', redirect);
@@ -170,27 +149,27 @@ function useProvideAuth() {
     }
 
     const setBearerToken = (bearerToken) => {
-        // console.log('bearerToken', bearerToken);
+        console.debug('setBearerToken bearerToken', bearerToken);
         if (bearerToken.status != 400) {
-            console.info('set tokens to storage', bearerToken);
-            let newAuthExpire = moment().add(Number(bearerToken.expires_in), 's').unix();
-            console.log('newAuthExpire', newAuthExpire, new Date(newAuthExpire));
+            let newAuthExpire = moment().add(Number(bearerToken.expires_in), 's');
+            console.debug('newAuthExpire in setBearerToken', newAuthExpire.format('LLL'));
 
             storage.setItem(KEY_REFRESH_TOKEN, bearerToken.refresh_token);
             storage.setItem(KEY_ACCESS_TOKEN, bearerToken.access_token);
             storage.setItem(KEY_USER_STATE, true);
-            storage.setItem(KEY_EXPIRES_IN, newAuthExpire);
+            storage.setItem(KEY_EXPIRES_IN, newAuthExpire.unix());
 
             setState({
                 accessToken: bearerToken.access_token,
                 refreshToken: bearerToken.refresh_token,
-                authExpire: newAuthExpire,
+                authExpire: newAuthExpire.unix(),
                 user: true,
             });
         } else {
-            // error handling 
+            // error handling (errors should be catched)
             //title: "invalid_grant", status: 400, detail: "Invalid refresh token"
             console.error(bearerToken.status, bearerToken.detail, bearerToken.title);
+            throw new Error("Bad Bearer Token from server");
         }
     };
 
@@ -201,26 +180,27 @@ function useProvideAuth() {
         storage.setItem(KEY_EXPIRES_IN, moment().unix());
     };
     
-    const LoginWithAuthorizationCode = (authorizationCode, cb) => {
-        return OAuth
-            .authorize(authorizationCode)    // or call GetAccessToken(authorizationCode) directly
+    const LoginWithAuthorizationCode = async (authorizationCode, cb) => {
+        await OAuth2
+            // .AuthorizeRequest(authorizationCode + 'test') // just a test to create some error
+            .AuthorizeRequest(authorizationCode)
             .then((bearerToken) => {
+                console.debug('LoginWithAuthorizationCode new bearerToken', bearerToken);
                 setBearerToken(bearerToken);
             }).then(() => {
                 typeof cb == "function" && cb();
+            }).catch((err) => {
+                console.debug('catch error in LoginWithAuthorizationCode', err);
+                //@johan error message exists here 
+                setState({ errorMessage: err.message });
+                // but couldn't set to the state??
+                console.log('get errorMessage from state', state.errorMessage);
+                return false;
             });
-    };
+        return getAccessToken();
+    }
 
-    const LoginWithRefreshToken = (refreshToken, cb) => {
-        return OAuth
-            .refresh(refreshToken)    // or call GetAccessToken(authorizationCode) directly
-            .then((bearerToken) => {
-                setBearerToken(bearerToken);
-            }).then(() => {
-                typeof cb == "function" && cb();
-            });
-    };
-
+    
     const logout = (cb) => {
         setState({
             accessToken: null,
@@ -237,26 +217,26 @@ function useProvideAuth() {
         typeof cb == "function" && cb();
     };
 
+    
+
     // Return the user object and auth methods
 
     return {
         state,
         user,
-        signin,
-        signout,
         redirect,
         RedirectAfterLogin,
         SaveRedirect,
         LoginWithAuthorizationCode,
-        LoginWithRefreshToken,
         authExpire,
         accessToken,
         refreshToken,
         invalidateToken,
         getToken,
-        //getAccessToken,
+        getAccessToken,
         getRefreshToken,
         UseRefreshToken,
+        test,
         logout
     };
 }

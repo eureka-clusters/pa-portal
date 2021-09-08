@@ -37,8 +37,13 @@ const PartnerTable = ({ results, filter }) => {
                                 <tr className={!result.active ? 'table-danger': null}>
                                     <td><small className={'text-muted'}>{result.id}</small></td>
                                     <td>{result.projectNumber}</td>
-                                    <td><Link to={`/project/${result.projectName}`}>{result.projectName}</Link></td>
-                                    <td><Link to={`/partner/${result.id}`}>{result.partner}</Link></td>
+                                    {/* <td><Link to={`/project/${result.projectName}`}>{result.projectName}</Link></td> */}
+                                    <td><Link to={`/project/${result.identifier}/${result.projectName}`}>{result.projectName}</Link></td>
+
+
+                                    <td><Link to={`/partner/${result.partnerIdentifier}/${result.partner}`}>{result.partner}</Link></td>
+                                    
+                                    {/* <td><Link to={`/partner/${result.id}`}>{result.partner}</Link></td> */}
                                     <td>{result.country}</td>
                                     <td>{result.partnerType}</td>
                                     {!hasYearFilter && <>
