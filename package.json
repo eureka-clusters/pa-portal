@@ -23,6 +23,7 @@
     "react-number-format": "^4.5.2",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^4.0.3",
+    "react-string-replace": "^0.4.4",
     "sass": "^1.34.1",
     "web-vitals": "^1.0.1"
   },
