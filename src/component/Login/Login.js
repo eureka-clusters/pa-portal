@@ -48,7 +48,7 @@ export default function Login(props) {
                 </div>
             </div>
             <div className="d-flex flex-row bd-highlight mb-3">
-                <div className="p-2 bd-highlight"><a className="btn btn-primary btn-lg" href={serverUri + '/oauth2/login/via/itea.html/client_id=' + CLIENT_ID}>Login via ITEA Office</a></div>
+                <div className="p-2 bd-highlight"><a className="btn btn-primary btn-lg" href={serverUri + '/oauth2/login/via/itea.html?client_id=' + CLIENT_ID}>Login via ITEA Office</a></div>
                 <div className="p-2 bd-highlight"><a className="btn btn-primary btn-lg" href={serverUri + '/oauth2/login/via/celtic.html?client_id=' + CLIENT_ID}>Login via Celtic</a></div>
                 <div className="p-2 bd-highlight"><a className="btn btn-primary btn-lg" href={serverUri + '/oauth2/login/via/penta.html?client_id=' + CLIENT_ID}>Login via Penta-Euripides</a></div>
             </div>
