@@ -2,7 +2,7 @@ import React from 'react';
 import { Breadcrumb } from "react-bootstrap";
 import replace from 'react-string-replace';
 
-// Tree structure of all pages still needs harmonising of all dynamic valriable names like projectIdentifier or projectName
+// Tree structure of all pages still needs harmonising of all dynamic variable names like projectIdentifier or projectName
 var tree = {
     name: 'Root',
     children: [

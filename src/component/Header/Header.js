@@ -18,9 +18,15 @@ export default function Header(props) {
                     <Navbar.Collapse id="navbar-dark-example">
                         <Nav>
                             <Nav.Link as={NavLink} to='/' exact>Home</Nav.Link>
-                            <Nav.Link as={NavLink} to='/statistics'>Statistics</Nav.Link>
-                            <Nav.Link as={NavLink} to='/projects'>Projects</Nav.Link>
-                            <Nav.Link as={NavLink} to='/partner'>Partners</Nav.Link>
+
+                            <NavDropdown
+                                id="nav-dropdown-dark-example"
+                                title="Statistics"
+                            >   
+                                <NavDropdown.Item as={NavLink} to='/statistics/projects'>Projects</NavDropdown.Item>
+                                <NavDropdown.Item as={NavLink} to='/statistics/partners'>Partners</NavDropdown.Item>
+                            </NavDropdown>
+
 
                             {/* test links */}
                             <NavDropdown

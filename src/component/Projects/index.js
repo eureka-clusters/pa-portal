@@ -21,13 +21,16 @@ export default function Projects(props) {
                     <h1>Projects</h1>
 
                     <h2>Debug</h2>
-                    <PrintObject value={data} />
+                    {/* <PrintObject value={data} /> */}
 
-                    <Table size="sm">
+                    <Table size="sm" striped>
                         <thead>
                             <tr>
                                 <th>Number</th>
                                 <th>Name</th>
+                                <th>Title</th>
+                                <td>Primary cluster</td>
+                                <td>Secondary cluster</td>
                             </tr>
                         </thead>
                         <tbody>
@@ -35,6 +38,9 @@ export default function Projects(props) {
                                 <tr>
                                     <td>{project.number} </td>
                                     <td><Link to={`/project/${project.identifier}/${project.name}`}>{project.name}</Link></td>
+                                    <td>{project.title}</td>
+                                    <td>{project.primaryCluster}</td>
+                                    <td>{project.secondaryCluster}</td>
                                 </tr>
                             ))}
 

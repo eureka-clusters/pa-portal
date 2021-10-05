@@ -12,5 +12,3 @@ export default async function downloadBase64File(mimetype, base64Data, fileName)
     downloadLink.click();  //initiate file download
     // document.body.removeChild(downloadLink); // remove the link from document.body
 }
-
-

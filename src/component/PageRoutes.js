@@ -18,7 +18,9 @@ import Project  from "./Project";
 import Projects from "./Projects";
 import Partner from "./Partner/Partner";
 import Partners from "./Partners";
-import Statistics from "./Statistics";
+// import Statistics from "./Statistics";
+import ProjectStatistics2 from "./Statistics/Projects"
+import PartnerStatistics from "./Statistics/Partners"
 import ProtectedPage from "./partial/ProtectedPage";
 import PublicPage from "./partial/PublicPage";
 
@@ -151,8 +153,11 @@ export const PageRoutes = () => {
             <PrivateRoute path='/account'
                 render={props => <AccountPage {...props} />}
             />
-            <PrivateRoute path='/statistics'
-                render={props => <Statistics {...props} />}
+            <PrivateRoute path='/statistics/projects'
+                render={props => <ProjectStatistics2 {...props} />}
+            />
+            <PrivateRoute path='/statistics/partners'
+                render={props => <PartnerStatistics {...props} />}
             />
              <PrivateRoute path='/projects'
                 render={props => <Projects {...props} />}
