@@ -85,7 +85,7 @@ export default function ProjectStatistics(props) {
                     </div>
                     <div className={'col-10'}>
 
-                        <ProjectTable filter={filter} />
+                        {/* <ProjectTable filter={filter} /> */}
 
                         <Button onClick={downloadExcel}>Download</Button>
                     </div>

@@ -6,12 +6,11 @@ import { Link } from "react-router-dom";
 
 const ProjectTable = (props) => {
 
-    const [resultUrl, setResultUrl] = useState(null);
+    const [resultUrl, setResultUrl] = useState('/statistics/results/project?filter=' + btoa(JSON.stringify(props.filter)));
 
     //We need to inject the props here, as stated here: https://stackoverflow.com/a/57742889/733224
     //useEffect only responds to prop or state changes
     useEffect(() => {
-        console.log('UseEffect Hook',btoa(JSON.stringify(props.filter)));
         setResultUrl('/statistics/results/project?filter=' + btoa(JSON.stringify(props.filter)));
 
     }, [props]);
@@ -20,7 +19,7 @@ const ProjectTable = (props) => {
 
     switch (state) {
         case apiStates.ERROR:
-            return <p>ERROR: {error || 'General error'}</p>;
+            return <p>ERROR: {error || 'General error'} <br /><br />Filter used <code className={'pb-2 text-muted'}>{btoa(JSON.stringify(props.filter))}</code></p>;
         case apiStates.SUCCESS:
             return (
                 <React.Fragment>
@@ -69,6 +68,9 @@ const ProjectTable = (props) => {
                             }
                         </tbody>
                     </Table>
+
+                    <code className={'pb-2 text-muted'}>{btoa(JSON.stringify(props.filter))}</code>
+                    <br></br>
                 </React.Fragment>
             );
         default:
