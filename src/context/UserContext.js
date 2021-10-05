@@ -1,12 +1,12 @@
-import React, { useContext, createContext, useState, useEffect } from "react";
-
+import React, { useContext, createContext } from "react";
+import useState from 'react-usestateref';
 import {
     useLocation,
     useHistory
 } from "react-router-dom";
 import { useReducer } from 'react'
 import moment from 'moment';
-import Moment from 'react-moment';
+// import Moment from 'react-moment';
 // import { authStates, OAuth2 } from '../function/OAuth2';
 import { OAuth2 } from '../function/OAuth2';
 
@@ -15,6 +15,7 @@ export const KEY_ACCESS_TOKEN = 'accessToken';
 export const KEY_REFRESH_TOKEN = 'refreshToken';
 export const KEY_USER_STATE = 'user';
 export const KEY_REDIRECT = 'redirect';
+
 
 
 const authContext = createContext();
@@ -52,17 +53,31 @@ function useProvideAuth() {
             refreshToken: storage.getItem(KEY_REFRESH_TOKEN),
             accessToken: storage.getItem(KEY_ACCESS_TOKEN),
             authExpire: storage.getItem(KEY_EXPIRES_IN),
-            redirect: storage.getItem('redirect'),
+            redirect: storage.getItem(KEY_REDIRECT),
             loading: false,
             errorMessage: null
         }
     );
+
+    // state for current running refresh via refreshToken
+    const [isRefreshing, setIsRefreshing, isRefreshing_ref] = useState(false);
 
     // for direct access
     const accessToken = state.accessToken;
     const refreshToken = state.refreshToken;
     const authExpire = state.authExpire;
     const user = state.user;
+
+
+    function __delay__(timer) {
+        return new Promise(resolve => {
+            timer = timer || 2000;
+            setTimeout(function () {
+                resolve();
+            }, timer);
+        });
+    };
+
 
     const test = async (cb) => {
         let refreshToken = getRefreshToken();
@@ -118,17 +133,41 @@ function useProvideAuth() {
         return getAccessToken();
     }
 
-    // which way of defining the function is better?
-    // async function getToken() {   
     const getToken = async () => {
+        console.log(['isRefreshing_ref', isRefreshing_ref.current]);
+        if (isRefreshing_ref.current) {
+            console.log('is currently refreshing token wait!');
+            await waitForRefreshFinish();
+        }
+
         if (isExpired(getExpirationDate())) {
             console.debug('getToken isExpired:');
+            setIsRefreshing(true);
+            console.log(['isRefreshing_ref after setting true', isRefreshing_ref.current]);
+
             const updatedToken = await UseRefreshToken();
             console.debug('getToken updatedToken:', updatedToken);
-            return getAccessToken();
+
+            // test delay by 3 seconds if the second request to getTokenTest2 really waits.
+            await __delay__(3000);
         }
+        setIsRefreshing(false);
+        console.log(['isRefreshing_ref after setting false', isRefreshing_ref.current]);
+
         return getAccessToken();
     };
+
+    const waitForRefreshFinish = async () => {
+        if (isRefreshing_ref.current == true) {
+            console.log('waitForRefreshFinish: isRefreshing_ref.current = true wait for another 100 ms ', isRefreshing_ref.current);
+            // delay for 100ms before rechecking
+            await __delay__(100);
+            await waitForRefreshFinish();
+        } else {
+            console.log('waitForRefreshFinish: isRefreshing_ref.current = false ', isRefreshing_ref.current);
+            return true;
+        }
+    }
 
 
     const RedirectAfterLogin = () => {
