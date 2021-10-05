@@ -134,6 +134,14 @@ const ProtectedPage = () => {
             let accessToken = await auth.getToken();
             console.log('accessToken 2 in refetch 3', accessToken);
         })();
+        (async () => {
+            let accessToken = await auth.getToken();
+            console.log('accessToken 3 in refetch 3', accessToken);
+        })();
+        (async () => {
+            let accessToken = await auth.getToken();
+            console.log('accessToken 4 in refetch 3', accessToken);
+        })();
     }, [refetch3]);
 
     useEffect(() => {
@@ -147,6 +155,20 @@ const ProtectedPage = () => {
         (async function fetchData() {
             let accessToken = await auth.getToken();
             console.log('accessToken 1 in refetch4', accessToken);
+        })();
+    }, [refetch4]);
+
+    useEffect(() => {
+        (async function fetchData() {
+            let accessToken = await auth.getToken();
+            console.log('accessToken 3 in refetch4', accessToken);
+        })();
+    }, [refetch4]);
+
+    useEffect(() => {
+        (async function fetchData() {
+            let accessToken = await auth.getToken();
+            console.log('accessToken 4 in refetch4', accessToken);
         })();
     }, [refetch4]);
 
@@ -219,10 +241,6 @@ const ProtectedPage = () => {
                 <Button onClick={() => setRefetch3(!refetch3)}>refetch3</Button>  Possible issue of the auth.getToken() is used in the same useeffect call<br />
 
                 <Button onClick={() => setRefetch4(!refetch4)}>refetch4</Button>  Possible issue of the auth.getToken() is used in the multipe useeffect calls<br />
-
-
-                <br />
-                <Button onClick={() => auth.test()}>auth.test();</Button>  auth.test()<br />
 
                 <br />
                 <Button onClick={refreshPage}>Reload page</Button><br />
