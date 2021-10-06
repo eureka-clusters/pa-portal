@@ -47,7 +47,7 @@ const ProjectTable = (props) => {
                                     <tr>
                                         <td><small className={'text-muted'}>{result.id}</small></td>
                                         <td>{result.number}</td>
-                                        <td><Link to={`/project/${result.id}/${result.name}`}>{result.name}</Link></td>
+                                        <td><Link to={`/project/${result.identifier}/${result.name}`}>{result.name}</Link></td>
                                         <td>{result.primaryCluster}</td>
                                         <td>{result.secondaryCluster}</td>
                                         <td>{result.status}</td>
