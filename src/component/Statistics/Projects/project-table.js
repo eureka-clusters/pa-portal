@@ -4,25 +4,22 @@ import { apiStates, Api } from '../../../function/Api';
 import NumberFormat from "react-number-format";
 import { Link } from "react-router-dom";
 
-const ProjectTable = (props) => {
+const ProjectTable = ({ filter, updateFilter, updateHash, updateResults }) => {
 
-    const [resultUrl, setResultUrl] = useState('/statistics/results/project?filter=' + btoa(JSON.stringify(props.filter)));
-
-    //We need to inject the props here, as stated here: https://stackoverflow.com/a/57742889/733224
-    //useEffect only responds to prop or state changes
-    useEffect(() => {
-        setResultUrl('/statistics/results/project?filter=' + btoa(JSON.stringify(props.filter)));
-
-    }, [props]);
-
+    const [resultUrl, setResultUrl] = useState('/statistics/results/project?filter=' + btoa(JSON.stringify(filter)));
     const { state, error, data, load } = Api(resultUrl);
+
+    useEffect(() => {
+        setResultUrl('/statistics/results/project?filter=' + btoa(JSON.stringify(filter)));
+    }, [filter]);
 
     switch (state) {
         case apiStates.ERROR:
-            return <p>ERROR: {error || 'General error'} <br /><br />Filter used <code className={'pb-2 text-muted'}>{btoa(JSON.stringify(props.filter))}</code></p>;
+            return <p>ERROR: {error || 'General error'} <br /><br />Filter used <code className={'pb-2 text-muted'}>{btoa(JSON.stringify(filter))}</code></p>;
         case apiStates.SUCCESS:
             return (
                 <React.Fragment>
+                    <div>{JSON.stringify(filter)}</div>
                     <h2>Projects</h2>
                     <Table size={'sm'} striped hover>
                         <thead>
@@ -69,7 +66,7 @@ const ProjectTable = (props) => {
                         </tbody>
                     </Table>
 
-                    <code className={'pb-2 text-muted'}>{btoa(JSON.stringify(props.filter))}</code>
+                    <code className={'pb-2 text-muted'}>{btoa(JSON.stringify(filter))}</code>
                     <br></br>
                 </React.Fragment>
             );

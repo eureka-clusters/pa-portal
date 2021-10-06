@@ -3,6 +3,7 @@ import { Form, Button } from "react-bootstrap";
 
 import ProjectTable from "./project-table";
 import ProjectFacets from './project-facets';
+import { faToiletPaperSlash } from '@fortawesome/free-solid-svg-icons';
 
 
 export default function ProjectStatistics(props) {
@@ -40,26 +41,34 @@ export default function ProjectStatistics(props) {
 
     const updateFilter = (event) => {
         const target = event.target;
-
         var name = target.name;
         var value = target.value;
-
+        var updatedValues = {};
+        // console.log(['name', name]);
+        // console.log(['value', value]);
+        // console.log(['target.type', target.type]);
         if (target.type === 'checkbox') {
+
+            // if i don't use slice() it will set the value directly to the filter but is triggered only after setFilter is called even with empty updatedValues?
+            var currentValue = filter[name].slice();
+            // var currentValue = filter[name];
             if (target.checked) {
-                filter[name].push(value);
+                currentValue.push(value);
             } else {
-                const index = filter[name].indexOf(value);
-                filter[name].splice(index, 1);
+                const index = currentValue.indexOf(value);
+                currentValue.splice(index, 1);
             }
+            updatedValues[name] = currentValue;
         } else {
-            filter[name] = value;
+            faToiletPaperSlash[name] = value;
         }
-
-        updateResults();
-        updateHash();
+        // console.log(['updatedValues', updatedValues]);
+        // updatedValues = {};
+        // updatedValues = { country:['Austria', 'Germany'], country_method: 'and', organisation_type_method: 'and' };
+        setFilter(prevState => ({
+            ...prevState, ...updatedValues
+        }))
     }
-
-
 
     const updateResults = () => { }
 
@@ -71,6 +80,7 @@ export default function ProjectStatistics(props) {
         setHash(btoa(JSON.stringify(filter)))
     }
 
+   
     return (
         <React.Fragment>
             <Form>
@@ -80,7 +90,7 @@ export default function ProjectStatistics(props) {
                     </div>
                 </div>
                 <div className={'row'}>
-                    <div className={'col-2'}>
+                    <div className={'col-2'}>   
                         <ProjectFacets filter={filter} updateFilter={updateFilter} updateHash={updateHash} updateResults={updateResults} />
                     </div>
                     <div className={'col-10'}>
