@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, Button } from "react-bootstrap";
-
 import ProjectTable from "./project-table";
 import ProjectFacets from './project-facets';
 
@@ -36,35 +35,10 @@ export default function ProjectStatistics(props) {
         //     downloadBase64File(mimetype, res.download, 'Download' + extension);
         // });
     }
-
-
-    const updateFilterJohan = (event) => {
-        const target = event.target;
-
-        var name = target.name;
-        var value = target.value;
-
-        if (target.type === 'checkbox') {
-            if (target.checked) {
-                filter[name].push(value);
-            } else {
-                const index = filter[name].indexOf(value);
-                filter[name].splice(index, 1);
-            }
-        } else {
-            filter[name] = value;
-        }
-
-        // or we trigger the filter update afterwards with nothing.
-        setFilter(prevState => ({
-            ...prevState, ...{}
-        }))
-
-        updateResults();
-        updateHash();
-    }
-
-
+    
+    useEffect(() => {
+        getFilterfromHash();
+    }, []);
 
     const updateFilter = (event) => {
         const target = event.target;
@@ -73,7 +47,8 @@ export default function ProjectStatistics(props) {
         var updatedValues = {};
       
         if (target.type === 'checkbox') { 
-            var currentValue = filter[name].slice(); // slice is required otherwise currentValue would be reference to filter[name] and any modifitcation will change filter directly
+            // slice is required otherwise currentValue would be reference to filter[name] and any modifitcation will change filter directly
+            var currentValue = filter[name].slice(); 
             if (target.checked) {
                 currentValue.push(value);
             } else {
@@ -84,10 +59,6 @@ export default function ProjectStatistics(props) {
         } else {
             updatedValues[name] = value;
         }
-
-        // console.log(['updatedValues', updatedValues]);
-        // updatedValues = {};
-        // updatedValues = { country:['Austria', 'Germany'], country_method: 'and', organisation_type_method: 'and' };
         setFilter(prevState => ({
             ...prevState, ...updatedValues
         }))
@@ -96,6 +67,15 @@ export default function ProjectStatistics(props) {
 
     const updateResults = () => { }
 
+    const getFilterfromHash = () => {
+        var hash = atob(props.location.hash.substring(1));
+        if(hash) {
+            setFilter(prevState => ({
+                ...prevState, ...JSON.parse(hash)
+            }))
+        }
+    }
+    
     const updateHash = () => {
         props.history.push({
             'hash': btoa(JSON.stringify(filter))

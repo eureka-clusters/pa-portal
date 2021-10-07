@@ -9,9 +9,10 @@ import { Link } from "react-router-dom";
 const ProjectFacets = ({ filter, updateFilter, updateResults, updateHash }) => {
 
     const [facetUrl, setFacetUrl] = React.useState('/statistics/facets/project?filter=' + btoa(JSON.stringify(filter)));
+    
     const { state, error, data, load } = Api(facetUrl);
 
-   const updateCountryMethod = (event) => {
+    const updateCountryMethod = (event) => {
         filter['country_method'] = event ? 'and' : 'or';
         updateResults();
         updateHash();
@@ -46,7 +47,6 @@ const ProjectFacets = ({ filter, updateFilter, updateResults, updateHash }) => {
                 <>
                     <fieldset>
                         <legend><small>Countries</small></legend>
-
                         <BootstrapSwitchButton checked={filter['country_method'] === 'and'}
                             size="sm"
                             onlabel={"and"}
@@ -58,7 +58,11 @@ const ProjectFacets = ({ filter, updateFilter, updateResults, updateHash }) => {
                             <div key={i}>
                                 <Form.Check type={'checkbox'} id={`check-country-${i}`}>
                                     <Form.Check.Input name="country" value={country['country']}
-                                        onChange={updateFilter} />
+                                        onChange={updateFilter}
+                                        defaultChecked={
+                                            filter['country'].indexOf(country['country']) > -1
+                                        }
+                                        />
                                     <Form.Check.Label>{country['country']} ({country['amount']})</Form.Check.Label>
                                 </Form.Check>
                             </div>
