@@ -7,7 +7,25 @@ export default function ProjectStatistics(props) {
 
     const [hash, setHash] = useState(true);
 
-    const [filter, setFilter] = useState({
+   
+
+
+    const getFilterfromHash = (setFilterMethod, useAsFilter = false) => {
+        if (props.location.hash) {
+            var hash = atob(props.location.hash.substring(1));
+            var newFilter = JSON.parse(hash);
+            console.log(['filter from hash', newFilter]);
+            if (useAsFilter && typeof setFilterMethod == "function") {
+                console.log('filter set');
+                setFilterMethod(prevState => ({
+                    ...prevState, ...newFilter
+                }))
+            }
+            return newFilter;
+        }
+    }
+
+    const defaultFilter = {
         country: [],
         country_method: 'or',
         organisation_type: [],
@@ -17,7 +35,30 @@ export default function ProjectStatistics(props) {
         primary_cluster: [],
         primary_cluster_method: 'or',
         year: [],
-    });
+    };
+
+    const getDefaultFilter = () => {
+        // return defaultFilter;
+        let merged = { ...defaultFilter, ...getFilterfromHash() };
+        console.log(['merged new filter', merged]);
+        return merged;
+    }
+
+    // const [filter, setFilter] = useState(defaultFilter);
+    const [filter, setFilter] = useState(() => getDefaultFilter());
+
+    // const [filter, setFilter] = useState({
+    //     country: [],
+    //     country_method: 'or',
+    //     organisation_type: [],
+    //     organisation_type_method: 'or',
+    //     project_status: [],
+    //     project_status_method: 'or',
+    //     primary_cluster: [],
+    //     primary_cluster_method: 'or',
+    //     year: [],
+    // });
+
 
     const downloadExcel = () => {
         // fetch(serverUri + '/api/statistics/download/' + output + '/' + btoa(JSON.stringify(filter)),
@@ -36,9 +77,9 @@ export default function ProjectStatistics(props) {
         // });
     }
 
-    useEffect(() => {
-        getFilterfromHash();
-    }, []);
+    // useEffect(() => {
+    //     getFilterfromHash(setFilter, true);
+    // }, []);
 
     const updateFilter = (event) => {
         const target = event.target;
@@ -67,23 +108,15 @@ export default function ProjectStatistics(props) {
 
     const updateResults = () => { }
 
-    const getFilterfromHash = () => {
-        if (props.location.hash) {
-            var hash = atob(props.location.hash.substring(1));
-            setFilter(prevState => ({
-                ...prevState, ...JSON.parse(hash)
-            }))
-        }
-    }
     
     const updateHash = () => {
         props.history.push({
             'hash': btoa(JSON.stringify(filter))
         });
 
-        setHash(btoa(JSON.stringify(filter)))
+        setHash(btoa(JSON.stringify(filter)));
+        getFilterfromHash();
     }
-
    
     return (
         <React.Fragment>
