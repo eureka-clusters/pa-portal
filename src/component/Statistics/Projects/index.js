@@ -35,7 +35,7 @@ export default function ProjectStatistics(props) {
         //     downloadBase64File(mimetype, res.download, 'Download' + extension);
         // });
     }
-    
+
     useEffect(() => {
         getFilterfromHash();
     }, []);
@@ -68,8 +68,8 @@ export default function ProjectStatistics(props) {
     const updateResults = () => { }
 
     const getFilterfromHash = () => {
-        var hash = atob(props.location.hash.substring(1));
-        if(hash) {
+        if (props.location.hash) {
+            var hash = atob(props.location.hash.substring(1));
             setFilter(prevState => ({
                 ...prevState, ...JSON.parse(hash)
             }))
