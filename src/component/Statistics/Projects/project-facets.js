@@ -6,7 +6,7 @@ import BootstrapSwitchButton from "bootstrap-switch-button-react";
 import { apiStates, Api } from '../../../function/Api';
 import { Link } from "react-router-dom";
 
-const ProjectFacets = ({ filter, setFilter, updateFilter, updateResults, updateHash }) => {
+const ProjectFacets = ({ filter, setFilter, updateFilter, updateHash, setDoUpdateHash }) => {
 
     const [facetUrl, setFacetUrl] = React.useState('/statistics/facets/project?filter=' + btoa(JSON.stringify(filter)));
     
@@ -20,9 +20,7 @@ const ProjectFacets = ({ filter, setFilter, updateFilter, updateResults, updateH
         setFilter(prevState => ({
             ...prevState, ...updatedValues
         }))
-
-        updateResults();
-        updateHash();
+        setDoUpdateHash(1);
     }
 
     const updateOrganisationTypeMethod = (event) => {
@@ -33,9 +31,7 @@ const ProjectFacets = ({ filter, setFilter, updateFilter, updateResults, updateH
         setFilter(prevState => ({
             ...prevState, ...updatedValues
         }))
-
-        updateResults();
-        updateHash();
+        setDoUpdateHash(1);
     }
 
     const updateProjectStatusMethod = (event) => {
@@ -46,9 +42,7 @@ const ProjectFacets = ({ filter, setFilter, updateFilter, updateResults, updateH
         setFilter(prevState => ({
             ...prevState, ...updatedValues
         }))
-
-        updateResults();
-        updateHash();
+        setDoUpdateHash(1);
     }
 
     const updatePrimaryClusterMethod = (event) => {
@@ -59,9 +53,7 @@ const ProjectFacets = ({ filter, setFilter, updateFilter, updateResults, updateH
         setFilter(prevState => ({
             ...prevState, ...updatedValues
         }))
-
-        updateResults();
-        updateHash();
+        setDoUpdateHash(1);
     }
 
     switch (state) {
