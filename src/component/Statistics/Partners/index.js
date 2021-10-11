@@ -43,28 +43,32 @@ export default function PartnerStatistics(props) {
 
     const updateFilter = (event) => {
         const target = event.target;
-
         var name = target.name;
         var value = target.value;
+        var updatedValues = {};
 
         if (target.type === 'checkbox') {
+            var currentValue = filter[name].slice(); // slice is required otherwise currentValue would be reference to filter[name] and any modifitcation will change filter directly
             if (target.checked) {
-                filter[name].push(value);
+                currentValue.push(value);
             } else {
-                const index = filter[name].indexOf(value);
-                filter[name].splice(index, 1);
+                const index = currentValue.indexOf(value);
+                currentValue.splice(index, 1);
             }
+            updatedValues[name] = currentValue;
         } else {
-            filter[name] = value;
+            updatedValues[name] = value;
         }
 
-        updateResults();
+        // console.log(['updatedValues', updatedValues]);
+        // updatedValues = {};
+        // updatedValues = { country:['Austria', 'Germany'], country_method: 'and', organisation_type_method: 'and' };
+        setFilter(prevState => ({
+            ...prevState, ...updatedValues
+        }))
         updateHash();
     }
 
-
-
-    const updateResults = () => { }
 
     const updateHash = () => {
         props.history.push({
@@ -84,7 +88,7 @@ export default function PartnerStatistics(props) {
                 </div>
                 <div className={'row'}>
                     <div className={'col-2'}>
-                        <PartnerFacets filter={filter} />
+                        <PartnerFacets filter={filter} updateFilter={updateFilter} updateHash={updateHash} />
                     </div>
                     <div className={'col-10'}>
 

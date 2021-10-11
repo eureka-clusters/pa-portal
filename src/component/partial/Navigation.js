@@ -84,7 +84,6 @@ export default function Navigation() {
                     <Route path='/logout'
                         render={props => <Logout {...props} />}
                     />
-
                     <Route path='/statistics'
                         render={props => <Statistics {...props} />}
                     />

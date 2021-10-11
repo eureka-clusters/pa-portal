@@ -45,10 +45,10 @@ const ProjectTable = ({ filter, updateFilter, updateHash, updateResults }) => {
                                         <td><small className={'text-muted'}>{result.id}</small></td>
                                         <td>{result.number}</td>
                                         <td><Link to={`/project/${result.identifier}/${result.name}`}>{result.name}</Link></td>
-                                        <td>{result.primaryCluster}</td>
-                                        <td>{result.secondaryCluster}</td>
-                                        <td>{result.status}</td>
-                                        <td>{result.latestVersionType}</td>
+                                        <td>{result.primaryCluster.name}</td>
+                                        <td>{result.secondaryCluster && result.secondaryCluster.name}</td>
+                                        <td>{result.status.status}</td>
+                                        <td>{result.latestVersion.type.type}</td>
                                         <td className={'text-monospace text-right'}><NumberFormat
                                             value={result.latestVersionTotalCosts}
                                             thousandSeparator={' '}

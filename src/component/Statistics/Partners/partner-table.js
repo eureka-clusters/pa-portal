@@ -1,14 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Table } from "react-bootstrap";
 import { apiStates, Api } from '../../../function/Api';
 import NumberFormat from "react-number-format";
 import { Link } from "react-router-dom";
 
-const PartnerTable = ({ filter, hasYearFilter }) => {
+const PartnerTable = ({ filter }) => {
 
     const [resultUrl, setResultUrl] = React.useState('/statistics/results/partner?filter=' + btoa(JSON.stringify(filter)));
-
     const { state, error, data, load } = Api(resultUrl);
+
+    useEffect(() => {
+        setResultUrl('/statistics/results/partner?filter=' + btoa(JSON.stringify(filter)));
+    }, [filter]);
+
+    const hasYearFilter = filter.year.length > 0;
 
     switch (state) {
         case apiStates.ERROR:
@@ -16,12 +21,12 @@ const PartnerTable = ({ filter, hasYearFilter }) => {
         case apiStates.SUCCESS:
             return (
                 <React.Fragment>
+                    <pre>{JSON.stringify(filter)}</pre>
                     <h2>Partners</h2>
                     <Table size={'sm'} striped hover>
                         <thead>
                             <tr>
                                 <th></th>
-                                <th>Number</th>
                                 <th>Project</th>
                                 <th>Partner</th>
                                 <th>Country</th>
@@ -41,18 +46,17 @@ const PartnerTable = ({ filter, hasYearFilter }) => {
                             {data._embedded.results.map((result, i) => {
                                 return (
                                     <React.Fragment key={i}>
-                                        <tr className={!result.active ? 'table-danger': null}>
+                                        <tr className={!result.isActive ? 'table-danger' : null}>
                                             <td><small className={'text-muted'}>{result.id}</small></td>
-                                            <td>{result.project.name}</td>
                                             {/* <td><Link to={`/project/${result.projectName}`}>{result.projectName}</Link></td> */}
                                             <td><Link to={`/project/${result.project.identifier}/${result.project.name}`}>{result.project.name}</Link></td>
-        
-        
+
+
                                             <td><Link to={`/partner/${result.id}/${result.organisation.name}`}>{result.organisation.name}</Link></td>
-                                            
+
                                             {/* <td><Link to={`/partner/${result.id}`}>{result.partner}</Link></td> */}
-                                            <td>{result.country}</td>
-                                            <td>{result.partnerType}</td>
+                                            <td>{result.organisation.country.country}</td>
+                                            <td>{result.organisation.type.type}</td>
                                             {!hasYearFilter && <>
                                                 <td className={'text-monospace text-right'}><NumberFormat
                                                     value={result.latestVersionCosts}
@@ -86,8 +90,11 @@ const PartnerTable = ({ filter, hasYearFilter }) => {
                             }
                         </tbody>
                     </Table>
+
+                    <code className={'pb-2 text-muted'}>{btoa(JSON.stringify(filter))}</code>
+                    <br></br>
                 </React.Fragment>
-            );            
+            );
         default:
             return <p>Loading data...</p>;
     }

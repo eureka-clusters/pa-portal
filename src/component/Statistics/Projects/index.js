@@ -37,35 +37,6 @@ export default function ProjectStatistics(props) {
         // });
     }
 
-
-    const updateFilterJohan = (event) => {
-        const target = event.target;
-
-        var name = target.name;
-        var value = target.value;
-
-        if (target.type === 'checkbox') {
-            if (target.checked) {
-                filter[name].push(value);
-            } else {
-                const index = filter[name].indexOf(value);
-                filter[name].splice(index, 1);
-            }
-        } else {
-            filter[name] = value;
-        }
-
-        // or we trigger the filter update afterwards with nothing.
-        setFilter(prevState => ({
-            ...prevState, ...{}
-        }))
-
-        updateResults();
-        updateHash();
-    }
-
-
-
     const updateFilter = (event) => {
         const target = event.target;
         var name = target.name;
@@ -94,8 +65,6 @@ export default function ProjectStatistics(props) {
         updateHash();
     }
 
-    const updateResults = () => { }
-
     const updateHash = () => {
         props.history.push({
             'hash': btoa(JSON.stringify(filter))
@@ -115,7 +84,7 @@ export default function ProjectStatistics(props) {
                 </div>
                 <div className={'row'}>
                     <div className={'col-2'}>   
-                        <ProjectFacets filter={filter} updateFilter={updateFilter} updateHash={updateHash} updateResults={updateResults} />
+                        <ProjectFacets filter={filter} updateFilter={updateFilter} updateHash={updateHash} />
                     </div>
                     <div className={'col-10'}>
 

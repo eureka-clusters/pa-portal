@@ -6,44 +6,28 @@ import BootstrapSwitchButton from "bootstrap-switch-button-react";
 import { apiStates, Api } from '../../../function/Api';
 import { Link } from "react-router-dom";
 
-const PartnerFacets = ({ filter }) => {
+const PartnerFacets = ({ filter, updateFilter, updateHash }) => {
 
     const [facetUrl, setFacetUrl] = React.useState('/statistics/facets/partner?filter=' + btoa(JSON.stringify(filter)));
     const { state, error, data, load } = Api(facetUrl);
 
-    const updateResults = e => {
-
-    }
-
-    const updateHash = e => {
-
-    }
-
-    const updateFilter =  e => {
-        
-    }
-
     const updateCountryMethod = (event) => {
         filter['country_method'] = event ? 'and' : 'or';
-        updateResults();
         updateHash();
     }
 
     const updateOrganisationTypeMethod = (event) => {
         filter['organisation_type_method'] = event ? 'and' : 'or';
-        updateResults();
         updateHash();
     }
 
     const updateProjectStatusMethod = (event) => {
         filter['project_status_method'] = event ? 'and' : 'or';
-        updateResults();
         updateHash();
     }
 
     const updatePrimaryClusterMethod = (event) => {
         filter['primary_cluster_method'] = event ? 'and' : 'or';
-        updateResults();
         updateHash();
     }
 
@@ -87,12 +71,12 @@ const PartnerFacets = ({ filter }) => {
                             onstyle={'primary'}
                             offstyle={'secondary'} onChange={updateOrganisationTypeMethod} />
         
-                        {facetData[1] && facetData[1].map((partnerType, i) => (
+                        {facetData[1] && facetData[1].map((organisationType, i) => (
                             <div key={i}>
                                 <Form.Check type={'checkbox'} id={`check-type-${i}`}>
-                                    <Form.Check.Input name="partner_type" value={partnerType['organisationType']}
+                                    <Form.Check.Input name="organisation_type" value={organisationType['organisationType']}
                                         onChange={updateFilter} />
-                                    <Form.Check.Label>{partnerType['organisationType']} ({partnerType['amount']})</Form.Check.Label>
+                                    <Form.Check.Label>{organisationType['organisationType']} ({organisationType['amount']})</Form.Check.Label>
                                 </Form.Check>
                             </div>
                         ))}
