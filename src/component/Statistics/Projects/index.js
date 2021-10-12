@@ -1,4 +1,7 @@
-import React, { useState, useEffect } from 'react';
+// import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
+import useState from 'react-usestateref';
+
 import { Form, Button } from "react-bootstrap";
 import ProjectTable from "./project-table";
 import ProjectFacets from './project-facets';
@@ -49,9 +52,7 @@ export default function ProjectStatistics(props) {
         return merged;
     }
 
-    const [filter, setFilter] = useState(() => getDefaultFilter());
-    const [doUpdateHash, setDoUpdateHash] = useState(0);
-
+    const [filter, setFilter, filter_ref] = useState(() => getDefaultFilter());
     // const [filter, setFilter] = useState(defaultFilter);
     // const [filter, setFilter] = useState({
     //     country: [],
@@ -83,27 +84,12 @@ export default function ProjectStatistics(props) {
         // });
     }
 
-    // update Hash when filter is changed.
-    // useEffect(() => {
-    //     // action on update of filter
-    //     updateHash()
-    // }, [filter]);
-
-    useEffect(() => {
-        console.log(['doUpdateHash', doUpdateHash]);
-        if (doUpdateHash) {
-            updateHash()
-            setDoUpdateHash(0);
-        }
-    }, [doUpdateHash]);
-
     // update the filter depending on the hash in the url
     useEffect(() => {
         getFilterfromHash(setFilter, true);
     }, [props.location.hash]);
 
 
-    
     const updateFilter = (event) => {
         const target = event.target;
         var name = target.name;
@@ -127,17 +113,20 @@ export default function ProjectStatistics(props) {
             ...prevState, ...updatedValues
         }))
 
-        setDoUpdateHash(1);
+        updateHash();
     }
 
-   
+    const updateResults = () => { }
 
+    
     const updateHash = () => {
         console.log('filter', filter.country);
+        console.log('filter_ref.current', filter_ref.current.country);
         props.history.push({
-            'hash': btoa(JSON.stringify(filter))
+            'hash': btoa(JSON.stringify(filter_ref.current))
         });
-        setHash(btoa(JSON.stringify(filter)));
+
+        setHash(btoa(JSON.stringify(filter_ref.current)));
     }
    
     return (
@@ -150,7 +139,7 @@ export default function ProjectStatistics(props) {
                 </div>
                 <div className={'row'}>
                     <div className={'col-4'}>   
-                        <ProjectFacets filter={filter} setFilter={setFilter} updateFilter={updateFilter} updateHash={updateHash} setDoUpdateHash={setDoUpdateHash} />
+                        <ProjectFacets filter={filter} setFilter={setFilter} updateFilter={updateFilter} updateHash={updateHash} updateResults={updateResults} />
                     </div>
                     <div className={'col-8'}>
 
