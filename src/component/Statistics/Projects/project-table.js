@@ -1,22 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { Table } from "react-bootstrap";
-import { apiStates, Api } from '../../../function/Api';
+import { apiStates, Api, getFilter } from '../../../function/Api';
 import NumberFormat from "react-number-format";
 import { Link } from "react-router-dom";
 
 const ProjectTable = ({ filter, updateFilter, updateHash, updateResults }) => {
 
-    const [resultUrl, setResultUrl] = useState('/statistics/results/project?filter=' + btoa(JSON.stringify(filter)));
+   
+
+
+    const [resultUrl, setResultUrl] = useState('/statistics/results/project?filter=' + getFilter(filter));
     const { state, error, data, load } = Api(resultUrl);
 
     useEffect(() => {
-        setResultUrl('/statistics/results/project?filter=' + btoa(JSON.stringify(filter)));
+        setResultUrl('/statistics/results/project?filter=' + getFilter(filter));
     }, [filter]);
+
 
     switch (state) {
         case apiStates.ERROR:
-            return <p>ERROR: {error || 'General error'} <br /><br />Filter used <code className={'pb-2 text-muted'}>{btoa(JSON.stringify(filter))}</code></p>;
+            return <p>ERROR: {error || 'General error'} <br /><br />Filter used <code className={'pb-2 text-muted'}>{getFilter(filter)}</code></p>;
         case apiStates.SUCCESS:
+            // return (
+            // <div>{JSON.stringify(data._embedded.results)}</div>
+            // );
+
             return (
                 <React.Fragment>
                     <div>{JSON.stringify(filter)}</div>
@@ -45,10 +53,10 @@ const ProjectTable = ({ filter, updateFilter, updateHash, updateResults }) => {
                                         <td><small className={'text-muted'}>{result.id}</small></td>
                                         <td>{result.number}</td>
                                         <td><Link to={`/project/${result.identifier}/${result.name}`}>{result.name}</Link></td>
-                                        <td>{result.primaryCluster}</td>
-                                        <td>{result.secondaryCluster}</td>
-                                        <td>{result.status}</td>
-                                        <td>{result.latestVersionType}</td>
+                                        <td>{result.primaryCluster && result.primaryCluster.name}</td>
+                                        <td>{result.secondaryCluster && result.secondaryCluster.name}</td>
+                                        <td>{result.status && result.status.status}</td>
+                                        <td>{result.latestVersion && result.latestVersion.type && result.latestVersion.type.type}</td>
                                         <td className={'text-monospace text-right'}><NumberFormat
                                             value={result.latestVersionTotalCosts}
                                             thousandSeparator={' '}
@@ -66,7 +74,7 @@ const ProjectTable = ({ filter, updateFilter, updateHash, updateResults }) => {
                         </tbody>
                     </Table>
 
-                    <code className={'pb-2 text-muted'}>{btoa(JSON.stringify(filter))}</code>
+                    <code className={'pb-2 text-muted'}>{getFilter(filter)}</code>
                     <br></br>
                 </React.Fragment>
             );

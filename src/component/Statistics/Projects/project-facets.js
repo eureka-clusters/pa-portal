@@ -3,12 +3,12 @@ import React from 'react';
 import { Form, Button } from "react-bootstrap";
 import NumberFormat from "react-number-format";
 import BootstrapSwitchButton from "bootstrap-switch-button-react";
-import { apiStates, Api } from '../../../function/Api';
+import { apiStates, Api, getFilter } from '../../../function/Api';
 import { Link } from "react-router-dom";
 
 const ProjectFacets = ({ filter, setFilter, updateFilter, updateResults, updateHash }) => {
 
-    const [facetUrl, setFacetUrl] = React.useState('/statistics/facets/project?filter=' + btoa(JSON.stringify(filter)));
+    const [facetUrl, setFacetUrl] = React.useState('/statistics/facets/project?filter=' + getFilter(filter));
     
     const { state, error, data, load } = Api(facetUrl);
 
@@ -66,7 +66,12 @@ const ProjectFacets = ({ filter, setFilter, updateFilter, updateResults, updateH
 
     switch (state) {
         case apiStates.ERROR:
-            return <p>ERROR: {error || 'General error'}</p>;
+            return (
+                <>
+                    <p>ERROR: {error || 'General error'}</p>
+                    <div>{JSON.stringify(filter)}</div>
+                </>
+            );
         case apiStates.SUCCESS:
 
             let facetData = data._embedded.facets;

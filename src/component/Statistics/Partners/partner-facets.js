@@ -3,12 +3,12 @@ import React from 'react';
 import { Form, Button } from "react-bootstrap";
 import NumberFormat from "react-number-format";
 import BootstrapSwitchButton from "bootstrap-switch-button-react";
-import { apiStates, Api } from '../../../function/Api';
+import { apiStates, Api, getFilter } from '../../../function/Api';
 import { Link } from "react-router-dom";
 
 const PartnerFacets = ({ filter }) => {
 
-    const [facetUrl, setFacetUrl] = React.useState('/statistics/facets/partner?filter=' + btoa(JSON.stringify(filter)));
+    const [facetUrl, setFacetUrl] = React.useState('/statistics/facets/partner?filter=' + getFilter(filter));
     const { state, error, data, load } = Api(facetUrl);
 
     const updateResults = e => {

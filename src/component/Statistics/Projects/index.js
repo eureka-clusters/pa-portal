@@ -6,6 +6,8 @@ import { Form, Button } from "react-bootstrap";
 import ProjectTable from "./project-table";
 import ProjectFacets from './project-facets';
 import queryString from 'query-string';
+import { getFilter } from '../../../function/Api';
+
 
 export default function ProjectStatistics(props) {
 
@@ -118,15 +120,13 @@ export default function ProjectStatistics(props) {
 
     const updateResults = () => { }
 
-    
-    const updateHash = () => {
-        console.log('filter', filter.country);
-        console.log('filter_ref.current', filter_ref.current.country);
-        props.history.push({
-            'hash': btoa(JSON.stringify(filter_ref.current))
-        });
 
-        setHash(btoa(JSON.stringify(filter_ref.current)));
+    const updateHash = () => {
+        var hash = getFilter(filter_ref.current);
+        props.history.push({
+            'hash': hash
+        });
+        setHash(hash);
     }
    
     return (

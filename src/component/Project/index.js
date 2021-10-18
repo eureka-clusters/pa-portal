@@ -172,10 +172,10 @@ export default function Project(props) {
                         <dd className="col-sm-9">{data.name}</dd>
 
                         <dt className="col-sm-3">Status:</dt>
-                        <dd className="col-sm-9">{data.status}</dd>
+                        <dd className="col-sm-9">{data.status && data.status.status}</dd>
 
                         <dt className="col-sm-3">Primary Cluster:</dt>
-                        <dd className="col-sm-9">{data.primaryCluster}</dd>
+                        <dd className="col-sm-9">{data.primaryCluster && data.primaryCluster.name}</dd>
 
                         <dt className="col-sm-3">Programme:</dt>
                         <dd className="col-sm-9">{data.programme}</dd>

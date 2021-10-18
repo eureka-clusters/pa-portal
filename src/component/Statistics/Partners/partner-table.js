@@ -1,14 +1,15 @@
 import React from 'react';
 import { Table } from "react-bootstrap";
-import { apiStates, Api } from '../../../function/Api';
+import { apiStates, Api, getFilter} from '../../../function/Api';
 import NumberFormat from "react-number-format";
 import { Link } from "react-router-dom";
 
 const PartnerTable = ({ filter, hasYearFilter }) => {
 
-    const [resultUrl, setResultUrl] = React.useState('/statistics/results/partner?filter=' + btoa(JSON.stringify(filter)));
+    const [resultUrl, setResultUrl] = React.useState('/statistics/results/partner?filter=' + getFilter(filter));
 
     const { state, error, data, load } = Api(resultUrl);
+
 
     switch (state) {
         case apiStates.ERROR:
