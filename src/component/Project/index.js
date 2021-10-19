@@ -3,6 +3,7 @@ import { apiStates, Api } from '../../function/Api'
 import Moment from 'react-moment';
 import PrintObject from '../../function/react-print-object'
 import { Breadcrumb } from "react-bootstrap";
+import PartnerTable from './partner-table';
 import moment from 'moment';
 
 export default function Project(props) {
@@ -202,6 +203,7 @@ export default function Project(props) {
                             </details>
                         </dd>
                     </dl>
+                    <PartnerTable project={data}/>
                 </React.Fragment>
             );
         default:
