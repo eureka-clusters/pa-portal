@@ -39,8 +39,8 @@ export default function Projects(props) {
                                     <td>{project.number} </td>
                                     <td><Link to={`/project/${project.identifier}/${project.name}`}>{project.name}</Link></td>
                                     <td>{project.title}</td>
-                                    <td>{project.primaryCluster}</td>
-                                    <td>{project.secondaryCluster}</td>
+                                    <td>{project.primaryCluster && project.primaryCluster.name}</td>
+                                    <td>{project.secondaryCluster && project.secondaryCluster.name}</td>
                                 </tr>
                             ))}
 

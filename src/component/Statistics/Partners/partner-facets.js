@@ -3,33 +3,13 @@ import React from 'react';
 import { Form, Button } from "react-bootstrap";
 import NumberFormat from "react-number-format";
 import BootstrapSwitchButton from "bootstrap-switch-button-react";
-import { apiStates, Api } from '../../../function/Api';
+import { apiStates, Api, getFilter } from '../../../function/Api';
 import { Link } from "react-router-dom";
 
 const PartnerFacets = ({ filter, updateFilter, updateHash }) => {
 
-    const [facetUrl, setFacetUrl] = React.useState('/statistics/facets/partner?filter=' + btoa(JSON.stringify(filter)));
+    const [facetUrl, setFacetUrl] = React.useState('/statistics/facets/partner?filter=' + getFilter(filter));
     const { state, error, data, load } = Api(facetUrl);
-
-    const updateCountryMethod = (event) => {
-        filter['country_method'] = event ? 'and' : 'or';
-        updateHash();
-    }
-
-    const updateOrganisationTypeMethod = (event) => {
-        filter['organisation_type_method'] = event ? 'and' : 'or';
-        updateHash();
-    }
-
-    const updateProjectStatusMethod = (event) => {
-        filter['project_status_method'] = event ? 'and' : 'or';
-        updateHash();
-    }
-
-    const updatePrimaryClusterMethod = (event) => {
-        filter['primary_cluster_method'] = event ? 'and' : 'or';
-        updateHash();
-    }
 
     switch (state) {
         case apiStates.ERROR:
@@ -42,13 +22,6 @@ const PartnerFacets = ({ filter, updateFilter, updateHash }) => {
                 <>
                     <fieldset>
                         <legend><small>Countries</small></legend>
-        
-                        <BootstrapSwitchButton checked={filter['country_method'] === 'and'}
-                            size="sm"
-                            onlabel={"and"}
-                            offlabel={"or"}
-                            onstyle={'primary'}
-                            offstyle={'secondary'} onChange={updateCountryMethod} />
         
                         {facetData[0] && facetData[0].map((country, i) => (
                             <div key={i}>
@@ -63,14 +36,7 @@ const PartnerFacets = ({ filter, updateFilter, updateHash }) => {
         
                     <fieldset>
                         <legend><small>Organisation type</small></legend>
-        
-                        <BootstrapSwitchButton checked={filter['partner_type_method'] === 'and'}
-                            size="sm"
-                            onlabel={"and"}
-                            offlabel={"or"}
-                            onstyle={'primary'}
-                            offstyle={'secondary'} onChange={updateOrganisationTypeMethod} />
-        
+               
                         {facetData[1] && facetData[1].map((organisationType, i) => (
                             <div key={i}>
                                 <Form.Check type={'checkbox'} id={`check-type-${i}`}>
@@ -85,13 +51,6 @@ const PartnerFacets = ({ filter, updateFilter, updateHash }) => {
                     <fieldset>
                         <legend><small>Project Status</small></legend>
         
-                        <BootstrapSwitchButton checked={filter['project_status_method'] === 'and'}
-                            size="sm"
-                            onlabel={"and"}
-                            offlabel={"or"}
-                            onstyle={'primary'}
-                            offstyle={'secondary'} onChange={updateProjectStatusMethod} />
-        
                         {facetData[2] && facetData[2].map((projectStatus, i) => (
                             <div key={i}>
                                 <Form.Check type={'checkbox'} id={`check-project-status-${i}`}>
@@ -105,12 +64,6 @@ const PartnerFacets = ({ filter, updateFilter, updateHash }) => {
         
                     <fieldset>
                         <legend><small>Primary Cluster</small></legend>
-                        <BootstrapSwitchButton checked={filter['primary_cluster_method'] === 'and'}
-                            size="sm"
-                            onlabel={"and"}
-                            offlabel={"or"}
-                            onstyle={'primary'}
-                            offstyle={'secondary'} onChange={updatePrimaryClusterMethod} />
         
                         {facetData[3] && facetData[3].map((primaryCluster, i) => (
                             <div key={i}>

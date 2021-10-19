@@ -1,19 +1,19 @@
 import React, { useEffect } from 'react';
 import { Table } from "react-bootstrap";
-import { apiStates, Api } from '../../../function/Api';
+import { apiStates, Api, getFilter} from '../../../function/Api';
 import NumberFormat from "react-number-format";
 import { Link } from "react-router-dom";
 
 const PartnerTable = ({ filter }) => {
 
-    const [resultUrl, setResultUrl] = React.useState('/statistics/results/partner?filter=' + btoa(JSON.stringify(filter)));
+    const [resultUrl, setResultUrl] = React.useState('/statistics/results/partner?filter=' + getFilter(filter));
+
     const { state, error, data, load } = Api(resultUrl);
+    const hasYearFilter = filter.year.length > 0;
 
     useEffect(() => {
-        setResultUrl('/statistics/results/partner?filter=' + btoa(JSON.stringify(filter)));
+        setResultUrl('/statistics/results/partner?filter=' + getFilter(filter));
     }, [filter]);
-
-    const hasYearFilter = filter.year.length > 0;
 
     switch (state) {
         case apiStates.ERROR:

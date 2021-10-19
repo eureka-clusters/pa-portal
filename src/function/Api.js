@@ -3,6 +3,9 @@ import { useAuth } from "../context/UserContext";
 import Config from "../constants/Config";
 import axios from 'axios';
 
+export { getFilter } from './FilterFunctions';
+
+
 export const apiStates = {
     LOADING: 'LOADING',
     SUCCESS: 'SUCCESS',
@@ -40,7 +43,7 @@ export const Api = url => {
         if (directurl !== undefined) {
             url = directurl; 
         }
-
+        
         const setPartData = partialData => {
             setHookState(hookState => (hookState = { ...hookState, ...partialData }))
         }
