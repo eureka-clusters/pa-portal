@@ -25,7 +25,7 @@ export default function Project(props) {
                     <PrintObject value={data} />
 
                     <BreadcrumbTree current="project_detail" data={data} />
-                    <h1>Project Pag 122e</h1>
+                    <h1>Project Page</h1>
 
                     <dl className="row">
                         <dt className="col-sm-3">Project:</dt>
