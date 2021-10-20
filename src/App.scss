@@ -4,4 +4,8 @@ main > .container {
   padding: 60px 15px 15px;
 }
 
+p.api-error {
+    white-space: pre;
+} 
+
 @import "~bootstrap/scss/bootstrap";

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Table } from "react-bootstrap";
-import { apiStates, Api } from '../../function/Api';
+import { apiStates, Api, ApiError } from '../../function/Api';
 import NumberFormat from "react-number-format";
 import { Link } from "react-router-dom";
 
@@ -16,7 +16,7 @@ const PartnerTable = ({ project }) => {
 
     switch (state) {
         case apiStates.ERROR:
-            return <p>ERROR: {error || 'General error'}</p>;
+            return <ApiError error={error} />
         case apiStates.SUCCESS:
             return (
                 <React.Fragment>

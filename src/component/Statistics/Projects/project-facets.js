@@ -3,7 +3,8 @@ import React from 'react';
 import { Form, Button } from "react-bootstrap";
 import NumberFormat from "react-number-format";
 import BootstrapSwitchButton from "bootstrap-switch-button-react";
-import { apiStates, Api, getFilter } from '../../../function/Api';
+import { apiStates, Api, getFilter, ApiError } from '../../../function/Api';
+
 import { Link } from "react-router-dom";
 
 const ProjectFacets = ({ filter, setFilter, updateFilter, updateResults, updateHash }) => {
@@ -42,7 +43,7 @@ const ProjectFacets = ({ filter, setFilter, updateFilter, updateResults, updateH
         case apiStates.ERROR:
             return (
                 <>
-                    <p>ERROR: {error || 'General error'}</p>
+                    <ApiError error={error} />
                     <div>{JSON.stringify(filter)}</div>
                 </>
             );

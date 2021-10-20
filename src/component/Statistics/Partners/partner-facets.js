@@ -3,7 +3,7 @@ import React from 'react';
 import { Form, Button } from "react-bootstrap";
 import NumberFormat from "react-number-format";
 import BootstrapSwitchButton from "bootstrap-switch-button-react";
-import { apiStates, Api, getFilter } from '../../../function/Api';
+import { apiStates, Api, getFilter, ApiError } from '../../../function/Api';
 import { Link } from "react-router-dom";
 
 const PartnerFacets = ({ filter, updateFilter, updateHash }) => {
@@ -13,7 +13,7 @@ const PartnerFacets = ({ filter, updateFilter, updateHash }) => {
 
     switch (state) {
         case apiStates.ERROR:
-            return <p>ERROR: {error || 'General error'}</p>;
+            return <ApiError error={error} />;
         case apiStates.SUCCESS:
             
             let facetData = data._embedded.facets;

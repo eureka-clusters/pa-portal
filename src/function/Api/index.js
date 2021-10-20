@@ -1,9 +1,10 @@
 import React from 'react';
-import { useAuth } from "../context/UserContext";
-import Config from "../constants/Config";
+import { useAuth } from "../../context/UserContext";
+import Config from "../../constants/Config";
 import axios from 'axios';
 
 export { getFilter } from './FilterFunctions';
+export { ApiError } from './ApiError.js';
 
 
 export const apiStates = {
@@ -29,7 +30,7 @@ export const Api = url => {
 
         const instance = axios.create({
             baseURL: serverUri + '/api',
-            timeout: 1000,
+            timeout: 5000,
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
@@ -63,12 +64,41 @@ export const Api = url => {
                     data: response.data
                 })
             })
-            .catch((error) => {
-                console.error(error)
-                setPartData({
-                    state: apiStates.ERROR,
-                    error: 'fetch failed'
-                })
+
+            .catch(function (error) {
+                // setPartData({
+                //     state: apiStates.ERROR,
+                //     error: (error.response &&
+                //         error.response.data &&
+                //         error.response.data.message) ||
+                //         error.message ||
+                //         error.toString()
+                // });
+
+                if (error.response) {
+                    // Request made and server responded
+                    console.log(error.response.data);
+                    // console.log(error.response.status);
+                    // console.log(error.response.headers);
+                    setPartData({
+                        state: apiStates.ERROR,
+                        error: error.response.data.title + ' ' + error.response.data.status +'\n'+ error.response.data.detail
+                    });
+                } else if (error.request) {
+                    // The request timed out
+                    console.log(error.request);
+                    setPartData({
+                        state: apiStates.ERROR,
+                        error: 'The request timed out'
+                    });
+                } else {
+                    // Something happened in setting up the request that triggered an Error
+                    console.log('Error', error.message);
+                    setPartData({
+                        state: apiStates.ERROR,
+                        error: 'Something happened in setting up the request that triggered an Error'
+                    });
+                }
             })
         })
     };
