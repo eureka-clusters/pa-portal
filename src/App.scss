@@ -5,7 +5,11 @@ main > .container {
 }
 
 p.api-error {
-    white-space: pre;
+  white-space: pre;
 } 
 
+pre.debug {
+  --bs-text-opacity: 1;
+  color: #6c757d !important;
+}
 @import "~bootstrap/scss/bootstrap";

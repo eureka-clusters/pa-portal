@@ -26,13 +26,10 @@ const ProjectTable = ({ filter, updateFilter, updateHash, updateResults }) => {
                 </>
             );
         case apiStates.SUCCESS:
-            // return (
-            // <div>{JSON.stringify(data._embedded.results)}</div>
-            // );
-
             return (
                 <React.Fragment>
-                    <div>{JSON.stringify(filter)}</div>
+                    <pre className='debug'>{JSON.stringify(filter, undefined, 2)}</pre>
+                    {/* <pre className='debug'>{JSON.stringify(data._embedded.results, undefined, 2)}</pre> */}
                     <h2>Projects</h2>
                     <Table size={'sm'} striped hover>
                         <thead>
@@ -79,8 +76,8 @@ const ProjectTable = ({ filter, updateFilter, updateHash, updateResults }) => {
                         </tbody>
                     </Table>
 
-                    <code className={'pb-2 text-muted'}>{getFilter(filter)}</code>
-                    <br></br>
+                    {/* <code className={'pb-2 text-muted'}>{getFilter(filter)}</code> */}
+                    
                 </React.Fragment>
             );
         default:

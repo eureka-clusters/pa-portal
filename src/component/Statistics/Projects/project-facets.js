@@ -44,7 +44,7 @@ const ProjectFacets = ({ filter, setFilter, updateFilter, updateResults, updateH
             return (
                 <>
                     <ApiError error={error} />
-                    <div>{JSON.stringify(filter)}</div>
+                    <pre className='debug'>{JSON.stringify(filter, undefined, 2)}</pre>
                 </>
             );
         case apiStates.SUCCESS:
@@ -53,7 +53,7 @@ const ProjectFacets = ({ filter, setFilter, updateFilter, updateResults, updateH
 
             return (
                 <>
-                    <div>{JSON.stringify(filter)}</div>
+                    <pre className='debug'>{JSON.stringify(filter, undefined, 2)}</pre>
                     <fieldset>
                         <legend><small>Countries</small></legend>
                         <BootstrapSwitchButton checked={filter['country_method'] === 'and'}

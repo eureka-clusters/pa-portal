@@ -21,7 +21,7 @@ const PartnerTable = ({ filter }) => {
         case apiStates.SUCCESS:
             return (
                 <React.Fragment>
-                    <pre>{JSON.stringify(filter)}</pre>
+                    <pre className='debug'>{JSON.stringify(filter, undefined, 2)}</pre>
                     <h2>Partners</h2>
                     <Table size={'sm'} striped hover>
                         <thead>
