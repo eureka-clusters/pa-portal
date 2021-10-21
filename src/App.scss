@@ -4,4 +4,12 @@ main > .container {
   padding: 60px 15px 15px;
 }
 
+p.api-error {
+  white-space: pre;
+} 
+
+pre.debug {
+  --bs-text-opacity: 1;
+  color: #6c757d !important;
+}
 @import "~bootstrap/scss/bootstrap";

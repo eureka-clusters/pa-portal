@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Table } from "react-bootstrap";
-import { apiStates, Api, getFilter} from '../../../function/Api';
+import { apiStates, Api, getFilter, ApiError } from '../../../function/Api';
 import NumberFormat from "react-number-format";
 import { Link } from "react-router-dom";
 
@@ -17,11 +17,11 @@ const PartnerTable = ({ filter }) => {
 
     switch (state) {
         case apiStates.ERROR:
-            return <p>ERROR: {error || 'General error'}</p>;
+            return <ApiError error={error} />
         case apiStates.SUCCESS:
             return (
                 <React.Fragment>
-                    <pre>{JSON.stringify(filter)}</pre>
+                    <pre className='debug'>{JSON.stringify(filter, undefined, 2)}</pre>
                     <h2>Partners</h2>
                     <Table size={'sm'} striped hover>
                         <thead>

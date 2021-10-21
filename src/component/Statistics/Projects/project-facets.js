@@ -3,7 +3,8 @@ import React from 'react';
 import { Form, Button } from "react-bootstrap";
 import NumberFormat from "react-number-format";
 import BootstrapSwitchButton from "bootstrap-switch-button-react";
-import { apiStates, Api, getFilter } from '../../../function/Api';
+import { apiStates, Api, getFilter, ApiError } from '../../../function/Api';
+
 import { Link } from "react-router-dom";
 
 const ProjectFacets = ({ filter, setFilter, updateFilter, updateResults, updateHash }) => {
@@ -42,8 +43,8 @@ const ProjectFacets = ({ filter, setFilter, updateFilter, updateResults, updateH
         case apiStates.ERROR:
             return (
                 <>
-                    <p>ERROR: {error || 'General error'}</p>
-                    <div>{JSON.stringify(filter)}</div>
+                    <ApiError error={error} />
+                    <pre className='debug'>{JSON.stringify(filter, undefined, 2)}</pre>
                 </>
             );
         case apiStates.SUCCESS:
@@ -52,7 +53,7 @@ const ProjectFacets = ({ filter, setFilter, updateFilter, updateResults, updateH
 
             return (
                 <>
-                    <div>{JSON.stringify(filter)}</div>
+                    <pre className='debug'>{JSON.stringify(filter, undefined, 2)}</pre>
                     <fieldset>
                         <legend><small>Countries</small></legend>
                         <BootstrapSwitchButton checked={filter['country_method'] === 'and'}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Table } from "react-bootstrap";
-import { apiStates, Api, getFilter } from '../../../function/Api';
+import { apiStates, Api, getFilter, ApiError } from '../../../function/Api';
 import NumberFormat from "react-number-format";
 import { Link } from "react-router-dom";
 
@@ -16,15 +16,17 @@ const ProjectTable = ({ filter, updateFilter, updateHash, updateResults }) => {
 
     switch (state) {
         case apiStates.ERROR:
-            return <p>ERROR: {error || 'General error'} <br /><br />Filter used <code className={'pb-2 text-muted'}>{getFilter(filter)}</code></p>;
+            return (
+                <>
+                    <ApiError error={error} />
+                    <br /><br />Filter used <code className={'pb-2 text-muted'}>{getFilter(filter)}</code>
+                </>
+            );
         case apiStates.SUCCESS:
-            // return (
-            // <div>{JSON.stringify(data._embedded.results)}</div>
-            // );
-
             return (
                 <React.Fragment>
-                    <div>{JSON.stringify(filter)}</div>
+                    <pre className='debug'>{JSON.stringify(filter, undefined, 2)}</pre>
+                    {/* <pre className='debug'>{JSON.stringify(data._embedded.results, undefined, 2)}</pre> */}
                     <h2>Projects</h2>
                     <Table size={'sm'} striped hover>
                         <thead>
@@ -71,8 +73,8 @@ const ProjectTable = ({ filter, updateFilter, updateHash, updateResults }) => {
                         </tbody>
                     </Table>
 
-                    <code className={'pb-2 text-muted'}>{getFilter(filter)}</code>
-                    <br></br>
+                    {/* <code className={'pb-2 text-muted'}>{getFilter(filter)}</code> */}
+                    
                 </React.Fragment>
             );
         default:

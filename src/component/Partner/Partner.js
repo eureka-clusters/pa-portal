@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { apiStates, Api } from '../../function/Api'
+import { apiStates, Api, getFilter, ApiError } from '../../function/Api';
 import Button from 'react-bootstrap/Button'
 import PrintObject from '../../function/react-print-object'
 import { Link } from "react-router-dom";
@@ -35,7 +35,7 @@ export default function Partner(props) {
 
     switch (state) {
         case apiStates.ERROR:
-            return <p>ERROR: {error || 'General error'}</p>;
+            return <ApiError error={error} />
         case apiStates.SUCCESS:
             return (
                 <React.Fragment>

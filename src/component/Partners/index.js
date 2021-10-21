@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Table } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { apiStates, Api } from '../../function/Api'
+import { apiStates, Api, ApiError } from '../../function/Api';
 import PrintObject from '../../function/react-print-object';
 
 export default function Partners(props) {
@@ -12,7 +12,7 @@ export default function Partners(props) {
 
     switch (state) {
         case apiStates.ERROR:
-            return <p>ERROR: {error || 'General error'}</p>;
+            return <ApiError error={error} />
         case apiStates.SUCCESS:
             return (
                 <React.Fragment>
