@@ -4,14 +4,14 @@ import { apiStates, Api, ApiError } from '../../function/Api';
 import NumberFormat from "react-number-format";
 import { Link } from "react-router-dom";
 
-const PartnerTable = ({ project }) => {
+const PartnerTable = ({ organisation }) => {
 
-    const [resultUrl, setResultUrl] = React.useState('list/partner?project=' + project.identifier);
+    const [resultUrl, setResultUrl] = React.useState('list/partner?organisation=' + organisation.id);
     const { state, error, data, load } = Api(resultUrl);
 
     useEffect(() => {
-        setResultUrl('list/partner?project=' + project.identifier);
-    }, [project]);
+        setResultUrl('list/partner?organisation=' + organisation.id);
+    }, [organisation]);
 
 
     switch (state) {
@@ -26,6 +26,7 @@ const PartnerTable = ({ project }) => {
                         <thead>
                             <tr>
                                 <th></th>
+                                <th>Project</th>
                                 <th>Partner</th>
                                 <th>Country</th>
                                 <th>Type</th>
@@ -39,6 +40,8 @@ const PartnerTable = ({ project }) => {
                                     <React.Fragment key={i}>
                                         <tr className={!result.isActive ? 'table-danger' : null}>
                                             <td><small className={'text-muted'}>{result.id}</small></td>
+                                            {/* <td><Link to={`/project/${result.projectName}`}>{result.projectName}</Link></td> */}
+                                            <td><Link to={`/project/${result.project.identifier}/${result.project.name}`}>{result.project.name}</Link></td>
                                             <td><Link to={`/partner/${result.id}/${result.organisation.name}`}>{result.organisation.name}</Link></td>
 
                                             {/* <td><Link to={`/partner/${result.id}`}>{result.partner}</Link></td> */}

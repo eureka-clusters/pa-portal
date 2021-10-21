@@ -4,9 +4,9 @@ import { Link } from 'react-router-dom';
 import { apiStates, Api, ApiError } from '../../function/Api';
 import PrintObject from '../../function/react-print-object';
 
-export default function Partners(props) {
+export default function Organisations(props) {
 
-    const [url, setUrl] = React.useState('/list/partner');
+    const [url, setUrl] = React.useState('/list/organisation');
 
     const { state, error, data, load } = Api(url);
 
@@ -16,7 +16,7 @@ export default function Partners(props) {
         case apiStates.SUCCESS:
             return (
                 <React.Fragment>
-                    <h1>partners</h1>
+                    <h1>Organisations</h1>
 
                     <Table size="sm">
                         <thead>
@@ -27,11 +27,11 @@ export default function Partners(props) {
                             </tr>
                         </thead>
                         <tbody>
-                            {data._embedded.partner.map((partner) => (
+                            {data._embedded.organisation.map((organisation) => (
                                 <tr>
-                                    <td><Link to={`/partner/${partner.identifier}/${partner.name}`}>{partner.name}</Link></td>
-                                    <td>{partner.type}</td>
-                                    <td>{partner.country}</td>
+                                    <td><Link to={`/organisation/${organisation.id}/${organisation.name}`}>{organisation.name}</Link></td>
+                                    <td>{organisation.type}</td>
+                                    <td>{organisation.country}</td>
                                 </tr>
                             ))}
 

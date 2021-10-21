@@ -21,8 +21,6 @@ export default function Project(props) {
         case apiStates.SUCCESS:
             return (
                 <React.Fragment>
-                    <p>Debug:</p>
-                    <PrintObject value={data} />
 
                     <BreadcrumbTree current="project_detail" data={data} />
                     <h1>Project Page</h1>
@@ -43,6 +41,10 @@ export default function Project(props) {
                         <dt className="col-sm-3">Coordinator:</dt>
                         <dd className="col-sm-9">{String(data.coordinator)}</dd>
 
+
+                        <dt className="col-sm-3">Project leader:</dt>
+                        <dd className="col-sm-9">{String(data.projectLeader.first_name)} {String(data.projectLeader.last_name)} ({String(data.projectLeader.email)})</dd>
+
                         <dt className="col-sm-3">TechnicalArea:</dt>
                         <dd className="col-sm-9">{data.technicalArea}</dd>
                        
@@ -53,6 +55,12 @@ export default function Project(props) {
                             localized: {moment(data.labelDate).format('LLL')}
                             <br />
                         </dd>
+
+                        <dt className="col-sm-3">Total costs:</dt>
+                        <dd className="col-sm-9">{data.latestVersionTotalCosts}</dd>
+
+                        <dt className="col-sm-3">Total effort:</dt>
+                        <dd className="col-sm-9">{data.latestVersionTotalEffort}</dd>
                         
                         <dt className="col-sm-3">Description:</dt>
                         <dd className="col-sm-9">

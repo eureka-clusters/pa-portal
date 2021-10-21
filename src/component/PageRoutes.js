@@ -13,12 +13,12 @@ import { useAuth } from "../context/UserContext";
 import Login from "./Login/Login";
 import Callback from "./Callback/Callback";
 import Logout from "./Logout/Logout";
-import Project  from "./Project";
+import Project from "./Project";
 
 import Projects from "./Projects";
-import Partner from "./Partner/Partner";
-import Partners from "./Partners";
-// import Statistics from "./Statistics";
+import Partner from "./Partner";
+import Organisations from "./Organisations";
+import Organisation from "./Organisation"
 import ProjectStatistics2 from "./Statistics/Projects"
 import PartnerStatistics from "./Statistics/Partners"
 import ProtectedPage from "./partial/ProtectedPage";
@@ -159,20 +159,20 @@ export const PageRoutes = () => {
             <PrivateRoute path='/statistics/partners'
                 render={props => <PartnerStatistics {...props} />}
             />
-             <PrivateRoute path='/projects'
+            <PrivateRoute path='/projects'
                 render={props => <Projects {...props} />}
             />
             <PrivateRoute path='/project/:identifier/:projectName'
                 render={props => <Project {...props} />}
             />
-            
-            <PrivateRoute path='/partner'
-                render={props => <Partners {...props} />}
-            /> 
 
-            <PrivateRoute path='/partner'>
-                <Partner/>
-            </PrivateRoute>
+            <PrivateRoute path='/organisations'
+                render={props => <Organisations {...props} />}
+            />
+
+            <PrivateRoute path='/organisation/:identifier/:organisationName'
+                render={props => <Organisation {...props} />}
+            />
 
             <PrivateRoute path='/partner/:identifier/:partnerName'
                 render={props => <Partner {...props} />}
