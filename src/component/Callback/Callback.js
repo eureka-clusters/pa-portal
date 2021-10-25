@@ -69,7 +69,7 @@ export default function Callback(props) {
         });
         
         
-    }, [props.location.search, history, auth]);
+    }, [props.location.search, history]);
 
 
     if (auth.state.errorMessage) {
