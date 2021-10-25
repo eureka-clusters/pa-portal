@@ -1,4 +1,3 @@
-import React from 'react';
 import Config from "../constants/Config";
 import axios from 'axios';
 

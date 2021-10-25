@@ -13,14 +13,18 @@ import { useAuth } from "../context/UserContext";
 import Login from "./Login/Login";
 import Callback from "./Callback/Callback";
 import Logout from "./Logout/Logout";
-import Project from "./Project";
 
 import Projects from "./Projects";
-import Partner from "./Partner";
+import Project from "./Project";
+
 import Organisations from "./Organisations";
 import Organisation from "./Organisation"
-import ProjectStatistics2 from "./Statistics/Projects"
+
+import ProjectStatistics from "./Statistics/Projects"
 import PartnerStatistics from "./Statistics/Partners"
+
+import Partner from "./Partner";
+
 import ProtectedPage from "./partial/ProtectedPage";
 import PublicPage from "./partial/PublicPage";
 
@@ -154,11 +158,12 @@ export const PageRoutes = () => {
                 render={props => <AccountPage {...props} />}
             />
             <PrivateRoute path='/statistics/projects'
-                render={props => <ProjectStatistics2 {...props} />}
+                render={props => <ProjectStatistics {...props} />}
             />
             <PrivateRoute path='/statistics/partners'
                 render={props => <PartnerStatistics {...props} />}
             />
+
             <PrivateRoute path='/projects'
                 render={props => <Projects {...props} />}
             />

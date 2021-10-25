@@ -1,10 +1,11 @@
 import './App.scss';
-import Header from './component/Header/Header';
-import Footer from './component/Footer/Footer';
-import Content from './component/Content/Content';
+
+import Header from './component/Header';
+import Footer from './component/Footer';
+
+import Content from './component/Content';
 import { ProvideAuth } from "./context/UserContext.js";
 import React from "react";
-
 
 class ErrorBoundary extends React.Component {
   state = { error: null, errorInfo: null };

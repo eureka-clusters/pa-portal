@@ -18,7 +18,7 @@ export default function Organisations(props) {
                 <React.Fragment>
                     <h1>Organisations</h1>
 
-                    <Table size="sm">
+                    <Table size="sm" striped>
                         <thead>
                             <tr>
                                 <th>Name</th>
@@ -30,8 +30,8 @@ export default function Organisations(props) {
                             {data._embedded.organisation.map((organisation) => (
                                 <tr>
                                     <td><Link to={`/organisation/${organisation.id}/${organisation.name}`}>{organisation.name}</Link></td>
-                                    <td>{organisation.type}</td>
-                                    <td>{organisation.country}</td>
+                                    <td>{organisation.type.type}</td>
+                                    <td>{organisation.country.country}</td>
                                 </tr>
                             ))}
 

@@ -1,9 +1,10 @@
-import './Header.scss';
 import React from 'react';
 import { NavLink } from 'react-router-dom'
 import { Navbar, Nav, NavDropdown, Container } from 'react-bootstrap';
 import { useAuth } from "../../context/UserContext";
 import Button from 'react-bootstrap/Button'
+
+import './Header.scss';
 
 export default function Header(props) {
     // Get auth state and re-render anytime it changes
@@ -27,6 +28,8 @@ export default function Header(props) {
                                 <NavDropdown.Item as={NavLink} to='/statistics/partners'>Partners</NavDropdown.Item>
                             </NavDropdown>
 
+                            <Nav.Link as={NavLink} to='/projects' exact>Projects</Nav.Link>
+                            <Nav.Link as={NavLink} to='/organisations' exact>Organisations</Nav.Link>
 
                             {/* test links */}
                             <NavDropdown
