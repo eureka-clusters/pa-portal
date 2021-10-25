@@ -1,15 +1,11 @@
 import React from 'react';
 
-import { Form, Button } from "react-bootstrap";
-import NumberFormat from "react-number-format";
-import BootstrapSwitchButton from "bootstrap-switch-button-react";
+import { Form } from "react-bootstrap";
 import { apiStates, Api, getFilter, ApiError } from '../../../function/Api';
-import { Link } from "react-router-dom";
 
 const PartnerFacets = ({ filter, updateFilter, updateHash }) => {
 
-    const [facetUrl, setFacetUrl] = React.useState('/statistics/facets/partner?filter=' + getFilter(filter));
-    const { state, error, data, load } = Api(facetUrl);
+    const { state, error, data } = Api('/statistics/facets/partner?filter=' + getFilter(filter));
 
     switch (state) {
         case apiStates.ERROR:

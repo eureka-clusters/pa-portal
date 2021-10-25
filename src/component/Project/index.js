@@ -1,8 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { apiStates, Api, ApiError } from '../../function/Api';
-import Moment from 'react-moment';
-import PrintObject from '../../function/react-print-object'
-import { Breadcrumb } from "react-bootstrap";
 import PartnerTable from './partner-table';
 import BreadcrumbTree from '../partial/BreadcrumbTree'
 import moment from 'moment';
@@ -11,9 +8,8 @@ export default function Project(props) {
 
     //'/api/view/project/' + identifier,
     const identifier = props.match.params.identifier;
-    const [url, setUrl] = React.useState('/view/project/' + identifier);
 
-    const { state, error, data, load } = Api(url);
+    const { state, error, data } = Api('/view/project/' + identifier);
 
     switch (state) {
         case apiStates.ERROR:

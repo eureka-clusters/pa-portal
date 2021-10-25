@@ -1,17 +1,13 @@
 import React from 'react';
 
-import { Form, Button } from "react-bootstrap";
-import NumberFormat from "react-number-format";
+import { Form } from "react-bootstrap";
 import BootstrapSwitchButton from "bootstrap-switch-button-react";
 import { apiStates, Api, getFilter, ApiError } from '../../../function/Api';
 
-import { Link } from "react-router-dom";
 
 const ProjectFacets = ({ filter, setFilter, updateFilter, updateResults, updateHash }) => {
-
-    const [facetUrl, setFacetUrl] = React.useState('/statistics/facets/project?filter=' + getFilter(filter));
-    
-    const { state, error, data, load } = Api(facetUrl);
+  
+    const { state, error, data } = Api('/statistics/facets/project?filter=' + getFilter(filter));
 
     const updateCountryMethod = (event) => {
         // filter['country_method'] = event ? 'and' : 'or';

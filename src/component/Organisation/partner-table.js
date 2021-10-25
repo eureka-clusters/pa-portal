@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table } from "react-bootstrap";
 import { apiStates, Api, ApiError } from '../../function/Api';
 import NumberFormat from "react-number-format";
@@ -6,13 +6,12 @@ import { Link } from "react-router-dom";
 
 const PartnerTable = ({ organisation }) => {
 
-    const [resultUrl, setResultUrl] = React.useState('list/partner?organisation=' + organisation.id);
-    const { state, error, data, load } = Api(resultUrl);
+    const [resultUrl, setResultUrl] = useState('list/partner?organisation=' + organisation.id);
+    const { state, error, data } = Api(resultUrl);
 
     useEffect(() => {
         setResultUrl('list/partner?organisation=' + organisation.id);
     }, [organisation]);
-
 
     switch (state) {
         case apiStates.ERROR:

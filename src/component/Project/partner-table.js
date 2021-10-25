@@ -7,12 +7,11 @@ import { Link } from "react-router-dom";
 const PartnerTable = ({ project }) => {
 
     const [resultUrl, setResultUrl] = React.useState('list/partner?project=' + project.identifier);
-    const { state, error, data, load } = Api(resultUrl);
+    const { state, error, data } = Api(resultUrl);
 
     useEffect(() => {
         setResultUrl('list/partner?project=' + project.identifier);
     }, [project]);
-
 
     switch (state) {
         case apiStates.ERROR:

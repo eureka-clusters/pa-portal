@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Form, Button } from "react-bootstrap";
 
 import PartnerTable from "./partner-table";
@@ -9,7 +9,7 @@ import PartnerFacets from './partner-facets';
 
 export default function PartnerStatistics(props) {
 
-    const [hash, setHash] = useState(true);
+    //const [hash, setHash] = useState(true);
 
     const [filter, setFilter] = useState({
         country: [],
@@ -75,7 +75,7 @@ export default function PartnerStatistics(props) {
             'hash': btoa(JSON.stringify(filter))
         });
 
-        setHash(btoa(JSON.stringify(filter)))
+        //setHash(btoa(JSON.stringify(filter)))
     }
 
     return (

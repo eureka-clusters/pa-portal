@@ -5,13 +5,10 @@ import useState from 'react-usestateref';
 import { Form, Button } from "react-bootstrap";
 import ProjectTable from "./project-table";
 import ProjectFacets from './project-facets';
-import queryString from 'query-string';
 import { getFilter } from '../../../function/Api';
 
 
 export default function ProjectStatistics(props) {
-
-    const [hash, setHash] = useState(true);
 
     const defaultFilter = {
         country: [],
@@ -113,7 +110,6 @@ export default function ProjectStatistics(props) {
         props.history.push({
             'hash': hash
         });
-        setHash(hash);
     }
    
     return (

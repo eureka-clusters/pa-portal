@@ -1,7 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { apiStates, Api, getFilter, ApiError } from '../../function/Api';
-import Button from 'react-bootstrap/Button'
-import PrintObject from '../../function/react-print-object'
+import React from 'react';
+import { apiStates, Api,  ApiError } from '../../function/Api';
 import { Link } from "react-router-dom";
 import { Breadcrumb } from "react-bootstrap";
 
@@ -12,11 +10,11 @@ export const SiteMap = ({ hrefIn }) => {
     ];
     return (
         <Breadcrumb>
-            {items.map((item) =>
+            {items.map((item, key) =>
                 item.href === hrefIn ? (
-                    <Breadcrumb.Item active>{item.name}</Breadcrumb.Item>
+                    <Breadcrumb.Item key={key} active>{item.name}</Breadcrumb.Item>
                 ) : (
-                    <Breadcrumb.Item linkProps={{ to: item.href }} linkAs={Link}>
+                    <Breadcrumb.Item key={key} linkProps={{ to: item.href }} linkAs={Link}>
                         {item.name}
                     </Breadcrumb.Item>
                 )
@@ -29,9 +27,8 @@ export default function Partner(props) {
 
     //'/api/view/project/' + identifier,
     const identifier = props.match.params.identifier;
-    const [url, setUrl] = React.useState('/view/partner/' + identifier);
 
-    const { state, error, data, load } = Api(url);
+    const { state, error, data } = Api('/view/partner/' + identifier);
 
     switch (state) {
         case apiStates.ERROR:

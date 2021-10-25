@@ -1,13 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Table } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { apiStates, Api, ApiError } from '../../function/Api';
 
 export default function Organisations(props) {
 
-    const [url, setUrl] = React.useState('/list/organisation');
-
-    const { state, error, data, load } = Api(url);
+    const { state, error, data } = Api('/list/organisation');
 
     switch (state) {
         case apiStates.ERROR:

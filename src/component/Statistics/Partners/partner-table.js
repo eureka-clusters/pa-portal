@@ -8,7 +8,7 @@ const PartnerTable = ({ filter }) => {
 
     const [resultUrl, setResultUrl] = React.useState('/statistics/results/partner?filter=' + getFilter(filter));
 
-    const { state, error, data, load } = Api(resultUrl);
+    const { state, error, data } = Api(resultUrl);
     const hasYearFilter = filter.year.length > 0;
 
     useEffect(() => {

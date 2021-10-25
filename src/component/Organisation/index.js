@@ -11,11 +11,11 @@ export const SiteMap = ({ hrefIn }) => {
     ];
     return (
         <Breadcrumb>
-            {items.map((item) =>
+            {items.map((item, key) =>
                 item.href === hrefIn ? (
-                    <Breadcrumb.Item active>{item.name}</Breadcrumb.Item>
+                    <Breadcrumb.Item key={key} active>{item.name}</Breadcrumb.Item>
                 ) : (
-                    <Breadcrumb.Item linkProps={{ to: item.href }} linkAs={Link}>
+                    <Breadcrumb.Item key={key} linkProps={{ to: item.href }} linkAs={Link}>
                         {item.name}
                     </Breadcrumb.Item>
                 )
@@ -26,12 +26,8 @@ export const SiteMap = ({ hrefIn }) => {
 
 export default function Organisation(props) {
 
-    //'/api/view/project/' + identifier,
     const identifier = props.match.params.identifier;
-    
-    const url = '/view/organisation/' + identifier;
-
-    const { state, error, data, load } = Api(url);
+    const { state, error, data } = Api('/view/organisation/' + identifier);
 
     switch (state) {
         case apiStates.ERROR:
