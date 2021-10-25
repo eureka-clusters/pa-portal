@@ -105,6 +105,7 @@ export const Api = url => {
 
     React.useEffect(() => {
         load();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [url]);
     
     return { ...hookState, load: load };

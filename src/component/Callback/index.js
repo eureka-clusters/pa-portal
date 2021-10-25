@@ -68,7 +68,7 @@ export default function Callback(props) {
             return (<div> this is a test</div>);
         });
         
-        
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.location.search, history]);
 
 

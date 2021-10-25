@@ -73,6 +73,7 @@ export default function ProjectStatistics(props) {
     // update the filter depending on the hash in the url
     useEffect(() => {
         getFilterFromHash(setFilter, true);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.location.hash]);
 
 

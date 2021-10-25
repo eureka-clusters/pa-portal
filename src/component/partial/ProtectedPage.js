@@ -1,5 +1,5 @@
 
-import React, { useContext, createContext, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 import Button from 'react-bootstrap/Button'
 import { useAuth } from "../../context/UserContext";
@@ -121,6 +121,7 @@ const ProtectedPage = () => {
         //     .catch((error) => console.error(error))
         //     .finally(() => setLoading(false));
         // });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [refetch]);
     
     // possible problem if the same useEffect is called multiple times (perhaps in Statistics?)
@@ -142,6 +143,7 @@ const ProtectedPage = () => {
             let accessToken = await auth.getToken();
             console.log('accessToken 4 in refetch 3', accessToken);
         })();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [refetch3]);
 
     useEffect(() => {
@@ -149,6 +151,7 @@ const ProtectedPage = () => {
             let accessToken = await auth.getToken();
             console.log('accessToken 2 in refetch4', accessToken);
         })();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [refetch4]);
 
     useEffect(() => {
@@ -156,6 +159,7 @@ const ProtectedPage = () => {
             let accessToken = await auth.getToken();
             console.log('accessToken 1 in refetch4', accessToken);
         })();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [refetch4]);
 
     useEffect(() => {
@@ -163,6 +167,7 @@ const ProtectedPage = () => {
             let accessToken = await auth.getToken();
             console.log('accessToken 3 in refetch4', accessToken);
         })();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [refetch4]);
 
     useEffect(() => {
@@ -170,6 +175,7 @@ const ProtectedPage = () => {
             let accessToken = await auth.getToken();
             console.log('accessToken 4 in refetch4', accessToken);
         })();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [refetch4]);
 
     useEffect(() => {
@@ -207,6 +213,7 @@ const ProtectedPage = () => {
             .catch((error) => console.error(error))
             .finally(() => setLoading(false));
         })();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [refetch2]);
 
 

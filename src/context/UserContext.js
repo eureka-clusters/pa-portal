@@ -158,7 +158,7 @@ function useProvideAuth() {
     };
 
     const waitForRefreshFinish = async () => {
-        if (isRefreshing_ref.current == true) {
+        if (isRefreshing_ref.current === true) {
             console.log('waitForRefreshFinish: isRefreshing_ref.current = true wait for another 100 ms ', isRefreshing_ref.current);
             // delay for 100ms before rechecking
             await __delay__(100);
@@ -189,7 +189,7 @@ function useProvideAuth() {
 
     const setBearerToken = (bearerToken) => {
         console.debug('setBearerToken bearerToken', bearerToken);
-        if (bearerToken.status != 400) {
+        if (bearerToken.status !== 400) {
             let newAuthExpire = moment().add(Number(bearerToken.expires_in), 's');
             console.debug('newAuthExpire in setBearerToken', newAuthExpire.format('LLL'));
 
@@ -213,7 +213,7 @@ function useProvideAuth() {
     };
 
     /*
-    set expire time to a past value for testing to thest the oauth refresh
+    set expire time to a past value for testing to test the oauth refresh
     */
     const invalidateToken = () => {
         storage.setItem(KEY_EXPIRES_IN, moment().unix());
