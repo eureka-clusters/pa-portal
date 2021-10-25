@@ -108,7 +108,7 @@ function BreadcrumbTree({ current, data, linkCurrent = false }) {
 
     // function to substitute texts parameters
     const substituteTexts = (str, data) => {
-        const reg = /\{([a-z|A-Z|0-9|\.]+)\}/g;
+        const reg = /\{([a-z|A-Z|0-9|.]+)\}/g;
         var output = replace(str, reg, prop => data[prop]);
         // replacedText = reactStringReplace(str, reg, (match, i) => (
         //     <a key={match + i} href={match}>{match}</a>
@@ -122,7 +122,7 @@ function BreadcrumbTree({ current, data, linkCurrent = false }) {
             {
                 breadcrumbs.map(breadcrumbitem => {
                     // current item should not be linked => set active = true which removes the link
-                    if (current == breadcrumbitem.name && linkCurrent == false) {
+                    if (current === breadcrumbitem.name && linkCurrent === false) {
                         breadcrumbitem.active = true;
                         delete breadcrumbitem.href;
                     }

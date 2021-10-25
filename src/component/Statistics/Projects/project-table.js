@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 const ProjectTable = ({ filter, updateFilter, updateHash, updateResults }) => {
 
     const [resultUrl, setResultUrl] = useState('/statistics/results/project?filter=' + getFilter(filter));
-    const { state, error, data, load } = Api(resultUrl);
+    const { state, error, data } = Api(resultUrl);
 
     useEffect(() => {
         setResultUrl('/statistics/results/project?filter=' + getFilter(filter));
