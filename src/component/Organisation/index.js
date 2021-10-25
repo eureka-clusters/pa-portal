@@ -1,7 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { apiStates, Api, getFilter, ApiError } from '../../function/Api';
-import Button from 'react-bootstrap/Button'
-import PrintObject from '../../function/react-print-object'
+import React from 'react';
+import { apiStates, Api, ApiError } from '../../function/Api';
 import { Link } from "react-router-dom";
 import { Breadcrumb } from "react-bootstrap";
 import PartnerTable from './partner-table';
@@ -30,7 +28,8 @@ export default function Organisation(props) {
 
     //'/api/view/project/' + identifier,
     const identifier = props.match.params.identifier;
-    const [url, setUrl] = React.useState('/view/organisation/' + identifier);
+    
+    const url = '/view/organisation/' + identifier;
 
     const { state, error, data, load } = Api(url);
 

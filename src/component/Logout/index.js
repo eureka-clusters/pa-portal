@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useAuth } from "../../context/UserContext";
 import { Redirect } from 'react-router';
 

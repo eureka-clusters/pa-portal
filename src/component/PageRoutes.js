@@ -10,9 +10,9 @@ import {
 
 import { useAuth } from "../context/UserContext";
 
-import Login from "./Login/Login";
-import Callback from "./Callback/Callback";
-import Logout from "./Logout/Logout";
+import Login from "./Login";
+import Callback from "./Callback";
+import Logout from "./Logout";
 
 import Projects from "./Projects";
 import Project from "./Project";
@@ -103,28 +103,6 @@ function PrivateRoute({ children, ...props }) {
                 pathname: "/login",
                 state: { from: location }
             }}
-        />
-    );
-
-    // but they aren't working with the code from the tutorial
-    // when "logined" they aren't rendered
-    // when you specify the routes with <PrivateRoute></PrivateRoute> instead of <PrivateRoute /> the code is working
-    // i am not sure how the children prop is used in the code and where this code gets his "location"
-    return (
-        <Route
-            {...props}
-            render={({ location }) =>
-                auth.user ? (
-                    children
-                ) : (
-                    <Redirect
-                        to={{
-                            pathname: "/login",
-                            state: { from: location }
-                        }}
-                    />
-                )
-            }
         />
     );
 }

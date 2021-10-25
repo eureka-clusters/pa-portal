@@ -4,9 +4,9 @@ import { UserContext } from "../../context/UserContext";
 import Switch from "react-bootstrap/Switch";
 import Statistics from "../Statistics/Statistics";
 import Project from "../Projects/Project";
-import Login from "../Login/Login";
-import Logout from "../Logout/Logout";
-import Callback from "../Callback/Callback";
+import Login from "../Login";
+import Logout from "../Logout";
+import Callback from "../Callback";
 import Partner from "../Partners/Partner";
 
 export default function Navigation() {
