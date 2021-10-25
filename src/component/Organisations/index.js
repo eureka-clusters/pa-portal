@@ -27,8 +27,8 @@ export default function Organisations(props) {
                             </tr>
                         </thead>
                         <tbody>
-                            {data._embedded.organisation.map((organisation) => (
-                                <tr>
+                            {data._embedded.organisation.map((organisation, key) => (
+                                <tr key={key}>
                                     <td><Link to={`/organisation/${organisation.id}/${organisation.name}`}>{organisation.name}</Link></td>
                                     <td>{organisation.type.type}</td>
                                     <td>{organisation.country.country}</td>

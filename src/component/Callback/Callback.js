@@ -1,4 +1,4 @@
-import React, {useEffect, useState } from 'react';
+import React, {useEffect } from 'react';
 import { useAuth } from "../../context/UserContext";
 import queryString from 'query-string';
 import { useHistory } from "react-router-dom";
@@ -6,10 +6,8 @@ import { useHistory } from "react-router-dom";
 const LoadingComponent = () => <div> Waiting for login... </div>
 
 export default function Callback(props) {
-
-   
+  
     const auth = useAuth();
-    const [authorizationCode, setAuthorizationCode] = useState(null);
     let history = useHistory();
 
     /*
@@ -71,7 +69,7 @@ export default function Callback(props) {
         });
         
         
-    }, [props.location.search, history]);
+    }, [props.location.search, history, auth]);
 
 
     if (auth.state.errorMessage) {
