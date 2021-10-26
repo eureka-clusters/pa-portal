@@ -6,10 +6,9 @@ import moment from 'moment';
 
 export default function Project(props) {
 
-    //'/api/view/project/' + identifier,
-    const identifier = props.match.params.identifier;
+    const slug = props.match.params.slug;
 
-    const { state, error, data } = Api('/view/project/' + identifier);
+    const { state, error, data } = Api('/view/project/' + slug);
 
     switch (state) {
         case apiStates.ERROR:
@@ -34,16 +33,17 @@ export default function Project(props) {
                         <dt className="col-sm-3">Programme:</dt>
                         <dd className="col-sm-9">{data.programme}</dd>
 
-                        <dt className="col-sm-3">Coordinator:</dt>
-                        <dd className="col-sm-9">{String(data.coordinator)}</dd>
-
+                        {data.coordinator && <>
+                            <dt className="col-sm-3">Coordinator:</dt>
+                            <dd className="col-sm-9">{String(data.coordinator.organisation)}<br />{String(data.coordinator.technicalContact.full_name)} ({String(data.coordinator.technicalContact.email)})</dd>
+                        </>}
 
                         <dt className="col-sm-3">Project leader:</dt>
-                        <dd className="col-sm-9">{String(data.projectLeader.first_name)} {String(data.projectLeader.last_name)} ({String(data.projectLeader.email)})</dd>
+                        <dd className="col-sm-9">{String(data.projectLeader.full_name)} ({String(data.projectLeader.email)})</dd>
 
                         <dt className="col-sm-3">TechnicalArea:</dt>
                         <dd className="col-sm-9">{data.technicalArea}</dd>
-                       
+
                         <dt className="col-sm-3">Label date:</dt>
                         <dd className="col-sm-9">
                             {data.labelDate}
@@ -57,7 +57,7 @@ export default function Project(props) {
 
                         <dt className="col-sm-3">Total effort:</dt>
                         <dd className="col-sm-9">{data.latestVersionTotalEffort}</dd>
-                        
+
                         <dt className="col-sm-3">Description:</dt>
                         <dd className="col-sm-9">
                             <details>
@@ -66,7 +66,7 @@ export default function Project(props) {
                             </details>
                         </dd>
                     </dl>
-                    <PartnerTable project={data}/>
+                    <PartnerTable project={data} />
                 </React.Fragment>
             );
         default:

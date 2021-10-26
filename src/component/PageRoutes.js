@@ -145,7 +145,7 @@ export const PageRoutes = () => {
             <PrivateRoute path='/projects'
                 render={props => <Projects {...props} />}
             />
-            <PrivateRoute path='/project/:identifier/:projectName'
+            <PrivateRoute path='/project/:slug'
                 render={props => <Project {...props} />}
             />
 
@@ -153,11 +153,11 @@ export const PageRoutes = () => {
                 render={props => <Organisations {...props} />}
             />
 
-            <PrivateRoute path='/organisation/:identifier/:organisationName'
+            <PrivateRoute path='/organisation/:slug'
                 render={props => <Organisation {...props} />}
             />
 
-            <PrivateRoute path='/partner/:identifier/:partnerName'
+            <PrivateRoute path='/partner/:slug'
                 render={props => <Partner {...props} />}
             />
 

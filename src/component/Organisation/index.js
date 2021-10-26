@@ -26,8 +26,8 @@ export const SiteMap = ({ hrefIn }) => {
 
 export default function Organisation(props) {
 
-    const identifier = props.match.params.identifier;
-    const { state, error, data } = Api('/view/organisation/' + identifier);
+    const slug = props.match.params.slug;
+    const { state, error, data } = Api('/view/organisation/' + slug);
 
     switch (state) {
         case apiStates.ERROR:
@@ -43,8 +43,6 @@ export default function Organisation(props) {
                         <Breadcrumb.Item active>{data.name}</Breadcrumb.Item>
                     </Breadcrumb>
 
-
-                    {/* //@Johan, do you have an idea how can we could have a component where we could give variables like projectname + identifier to generate the breadcrumbs more dynamically? */}
                     <SiteMap hrefIn="/organisation" />
 
                     <h1>{data.name}</h1>

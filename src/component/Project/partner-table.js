@@ -6,11 +6,11 @@ import { Link } from "react-router-dom";
 
 const PartnerTable = ({ project }) => {
 
-    const [resultUrl, setResultUrl] = React.useState('list/partner?project=' + project.identifier);
+    const [resultUrl, setResultUrl] = React.useState('list/partner?project=' + project.slug);
     const { state, error, data } = Api(resultUrl);
 
     useEffect(() => {
-        setResultUrl('list/partner?project=' + project.identifier);
+        setResultUrl('list/partner?project=' + project.slug);
     }, [project]);
 
     switch (state) {
@@ -38,7 +38,7 @@ const PartnerTable = ({ project }) => {
                                     <React.Fragment key={i}>
                                         <tr className={!result.isActive ? 'table-danger' : null}>
                                             <td><small className={'text-muted'}>{result.id}</small></td>
-                                            <td><Link to={`/partner/${result.id}/${result.organisation.name}`}>{result.organisation.name}</Link></td>
+                                            <td><Link to={`/partner/${result.slug}`}>{result.organisation.name}</Link></td>
 
                                             {/* <td><Link to={`/partner/${result.id}`}>{result.partner}</Link></td> */}
                                             <td>{result.organisation.country.country}</td>

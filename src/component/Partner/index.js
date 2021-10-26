@@ -8,9 +8,9 @@ import BreadcrumbTree from '../partial/BreadcrumbTree'
 export default function Partner(props) {
 
     //'/api/view/project/' + identifier,
-    const identifier = props.match.params.identifier;
+    const slug = props.match.params.slug;
 
-    const { state, error, data } = Api('/view/partner/' + identifier);
+    const { state, error, data } = Api('/view/partner/' + slug);
 
     switch (state) {
         case apiStates.ERROR:
@@ -27,7 +27,7 @@ export default function Partner(props) {
                     <dl className="row">
 
                     <dt className="col-sm-3">Organisation:</dt>
-                        <dd className="col-sm-9"><Link to={`/organisation/${data.organisation.id}/${data.organisation.name}`}>{data.organisation.name}</Link></dd>
+                        <dd className="col-sm-9"><Link to={`/organisation/${data.organisation.slug}`}>{data.organisation.name}</Link></dd>
 
                         <dt className="col-sm-3">Type:</dt>
                         <dd className="col-sm-9">{data.organisation.type.type}</dd>
@@ -46,7 +46,7 @@ export default function Partner(props) {
 
                         <dt className="col-sm-3">Technical contact:</dt>
                         <dd className="col-sm-9">
-                            {String(data.technicalContact.first_name)} {String(data.technicalContact.last_name)} (<a href={`mailto:${data.technicalContact.email}`}>{data.technicalContact.email}</a>)
+                            {String(data.technicalContact.full_name)} (<a href={`mailto:${data.technicalContact.email}`}>{data.technicalContact.email}</a>)
                         </dd>
 
                         <dt className="col-sm-3">Total costs (latest version)</dt>
@@ -58,11 +58,11 @@ export default function Partner(props) {
 
                     
                         <dt className="col-sm-3">Project:</dt>
-                        <dd className="col-sm-9"><Link to={`/project/${data.project.identifier}/${data.project.name}`}>{data.project.name}</Link></dd>
+                        <dd className="col-sm-9"><Link to={`/project/${data.project.slug}`}>{data.project.name}</Link></dd>
 
                         <dt className="col-sm-3">Project leader</dt>
                         <dd className="col-sm-9">
-                            {String(data.project.projectLeader.first_name)} {String(data.project.projectLeader.last_name)} (<a href={`mailto:${data.project.projectLeader.email}`}>{data.project.projectLeader.email}</a>)
+                            {String(data.project.projectLeader.full_name)} (<a href={`mailto:${data.project.projectLeader.email}`}>{data.project.projectLeader.email}</a>)
                         </dd>
                     </dl>
 

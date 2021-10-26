@@ -24,9 +24,9 @@ export default function Partners(props) {
                             </tr>
                         </thead>
                         <tbody>
-                            {data._embedded.partner.map((partner) => (
-                                <tr>
-                                    <td><Link to={`/partner/${partner.identifier}/${partner.name}`}>{partner.name}</Link></td>
+                            {data._embedded.partner.map((partner, i) => (
+                                <tr key={i}>
+                                    <td><Link to={`/partner/${partner.slug}`}>{partner.name}</Link></td>
                                     <td>{partner.type}</td>
                                     <td>{partner.country}</td>
                                 </tr>

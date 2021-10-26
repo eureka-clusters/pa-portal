@@ -51,7 +51,7 @@ const ProjectTable = ({ filter, updateFilter, updateHash, updateResults }) => {
                                     <tr>
                                         <td><small className={'text-muted'}>{result.id}</small></td>
                                         <td>{result.number}</td>
-                                        <td><Link to={`/project/${result.identifier}/${result.name}`}>{result.name}</Link></td>
+                                        <td><Link to={`/project/${result.slug}`}>{result.name}</Link></td>
                                         <td>{result.primaryCluster && result.primaryCluster.name}</td>
                                         <td>{result.secondaryCluster && result.secondaryCluster.name}</td>
                                         <td>{result.status && result.status.status}</td>

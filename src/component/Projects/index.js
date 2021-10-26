@@ -34,7 +34,7 @@ export default function Projects(props) {
                             {data._embedded.project.map((project) => (
                                 <tr>
                                     <td>{project.number} </td>
-                                    <td><Link to={`/project/${project.identifier}/${project.name}`}>{project.name}</Link></td>
+                                    <td><Link to={`/project/${project.slug}`}>{project.name}</Link></td>
                                     <td>{project.title}</td>
                                     <td>{project.primaryCluster && project.primaryCluster.name}</td>
                                     <td>{project.secondaryCluster && project.secondaryCluster.name}</td>

@@ -6,11 +6,11 @@ import { Link } from "react-router-dom";
 
 const PartnerTable = ({ organisation }) => {
 
-    const [resultUrl, setResultUrl] = useState('list/partner?organisation=' + organisation.id);
+    const [resultUrl, setResultUrl] = useState('list/partner?organisation=' + organisation.slug);
     const { state, error, data } = Api(resultUrl);
 
     useEffect(() => {
-        setResultUrl('list/partner?organisation=' + organisation.id);
+        setResultUrl('list/partner?organisation=' + organisation.slug);
     }, [organisation]);
 
     switch (state) {
@@ -40,8 +40,8 @@ const PartnerTable = ({ organisation }) => {
                                         <tr className={!result.isActive ? 'table-danger' : null}>
                                             <td><small className={'text-muted'}>{result.id}</small></td>
                                             {/* <td><Link to={`/project/${result.projectName}`}>{result.projectName}</Link></td> */}
-                                            <td><Link to={`/project/${result.project.identifier}/${result.project.name}`}>{result.project.name}</Link></td>
-                                            <td><Link to={`/partner/${result.id}/${result.organisation.name}`}>{result.organisation.name}</Link></td>
+                                            <td><Link to={`/project/${result.project.slug}`}>{result.project.name}</Link></td>
+                                            <td><Link to={`/partner/${result.slug}`}>{result.organisation.name}</Link></td>
 
                                             {/* <td><Link to={`/partner/${result.id}`}>{result.partner}</Link></td> */}
                                             <td>{result.organisation.country.country}</td>
