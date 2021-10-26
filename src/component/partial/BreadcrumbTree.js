@@ -27,7 +27,7 @@ var tree = {
                             displayname: 'Projectdetail: {name}',
                             // href: '/project/{projectIdentifier}/{projectName}',
                             //href: '/project/{name}/{name}',
-                            href: '/project/{projectIdentifier}/{projectName}',
+                            href: '/project/{slug}',
                             children: [
                                 {
                                     name: 'project_partner',
@@ -45,7 +45,7 @@ var tree = {
                         {
                             name: 'partner_detail',
                             // href: '/partner/{project.identifier}/{organisation.name}',
-                            href: '/partner/{id}/{organisation.name}',
+                            href: '/partner/{slug}',
                             displayname: 'Partner: {organisation.name}',
                         },
                     ]
