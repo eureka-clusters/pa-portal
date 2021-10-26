@@ -1,6 +1,6 @@
 import React from 'react';
 import { Breadcrumb } from "react-bootstrap";
-import replace from 'react-string-replace';
+import reactStringReplace from 'react-string-replace';
 
 // Tree structure of all pages still needs harmonising of all dynamic variable names like projectIdentifier or projectName
 var tree = {
@@ -44,8 +44,9 @@ var tree = {
                     children: [
                         {
                             name: 'partner_detail',
-                            href: '/partner/{projectIdentifier}/{partneridentifier}',
-                            displayname: 'Partner: {name}',
+                            // href: '/partner/{project.identifier}/{organisation.name}',
+                            href: '/partner/{id}/{organisation.name}',
+                            displayname: 'Partner: {organisation.name}',
                         },
                     ]
                 },
@@ -71,6 +72,8 @@ var tree = {
 
 /*
 possibilities to set data
+
+data.project.identifier
 <BreadcrumbTree current="project_detail" data={data} />
 <BreadcrumbTree current="project_partner" data={{projectIdentifier :'some value', projectName:'some other value'}} />
 <BreadcrumbTree current="project_partner" data={{projectIdentifier: data.projectIdentifier, projectName: data.projectName }} />
@@ -109,11 +112,26 @@ function BreadcrumbTree({ current, data, linkCurrent = false }) {
     // function to substitute texts parameters
     const substituteTexts = (str, data) => {
         const reg = /\{([a-z|A-Z|0-9|.]+)\}/g;
-        var output = replace(str, reg, prop => data[prop]);
-        // replacedText = reactStringReplace(str, reg, (match, i) => (
-        //     <a key={match + i} href={match}>{match}</a>
-        // ));
+        
+        // version which works with child objects like {organisation.name}
+        var output = reactStringReplace(str, reg, (match, i) => (
+            fetchFromObject(data, match)
+        ));
         return output.join('');
+    }
+
+
+    function fetchFromObject(obj, prop) {
+        if (typeof obj === 'undefined') {
+            return false;
+        }
+
+        var _index = prop.indexOf('.')
+        if (_index > -1) {
+            return fetchFromObject(obj[prop.substring(0, _index)], prop.substr(_index + 1));
+        }
+
+        return obj[prop];
     }
 
 

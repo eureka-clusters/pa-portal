@@ -2,26 +2,8 @@ import React from 'react';
 import { apiStates, Api,  ApiError } from '../../function/Api';
 import { Link } from "react-router-dom";
 import { Breadcrumb } from "react-bootstrap";
-
-export const SiteMap = ({ hrefIn }) => {
-    const items = [
-        { href: "/projects", name: "Projects" },
-        { href: "/partner", name: "Partner" },
-    ];
-    return (
-        <Breadcrumb>
-            {items.map((item, key) =>
-                item.href === hrefIn ? (
-                    <Breadcrumb.Item key={key} active>{item.name}</Breadcrumb.Item>
-                ) : (
-                    <Breadcrumb.Item key={key} linkProps={{ to: item.href }} linkAs={Link}>
-                        {item.name}
-                    </Breadcrumb.Item>
-                )
-            )}
-        </Breadcrumb>
-    );
-};
+import BreadcrumbTree from '../partial/BreadcrumbTree'
+// import PrintObject from '../../function/react-print-object';
 
 export default function Partner(props) {
 
@@ -36,19 +18,9 @@ export default function Partner(props) {
         case apiStates.SUCCESS:
             return (
                 <React.Fragment>
-                    {/* <p>Debug:</p>
-                    <PrintObject value={data} /> */}
-
-                    <Breadcrumb>
-                        <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
-                        <Breadcrumb.Item href={`/projects`}>Projects</Breadcrumb.Item>
-                        <Breadcrumb.Item href={`/project/${data.project.projectIdentifier}/${data.project.name}`}>{data.project.name}</Breadcrumb.Item>
-                        <Breadcrumb.Item active>{data.organisation.name}</Breadcrumb.Item>
-                    </Breadcrumb>
-
-
-                    {/* //@Johan, do you have an idea how can we could have a component where we could give variables like projectname + identifier to generate the breadcrumbs more dynamically? */}
-                    <SiteMap hrefIn="/partner" />
+                    {/* <p>Debug:</p><PrintObject value={data} /> */}
+                    
+                    <BreadcrumbTree current="partner_detail" data={data} linkCurrent={true}/>
 
                     <h1>{data.organisation.name} in {data.project.name}</h1>
 
