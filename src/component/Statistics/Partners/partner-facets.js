@@ -94,7 +94,7 @@ const PartnerFacets = ({ filter, setFilter, updateFilter, updateResults, updateH
         
                     <fieldset>
                         <legend><small>Primary Cluster</small></legend>
-        
+
                         {facetData[3] && facetData[3].map((primaryCluster, i) => (
                             <div key={i}>
                                 <Form.Check type={'checkbox'} id={`check-primary-cluster-${i}`}>
@@ -119,11 +119,11 @@ const PartnerFacets = ({ filter, setFilter, updateFilter, updateResults, updateH
                             <div key={i}>
                                 <Form.Check type={'checkbox'} id={`check-year-${i}`}>
                                     <Form.Check.Input
-                                        name="primary_cluster"
+                                        name="year"
                                         value={year['year']}
                                         onChange={updateFilter}
                                         checked={
-                                            filter['year'].indexOf(year['year']) > -1
+                                            filter['year'].indexOf(year['year'].toString()) > -1
                                         }
                                     />
                                     <Form.Check.Label>{year['year']}</Form.Check.Label>
