@@ -111,6 +111,23 @@ function BreadcrumbTree({ current, data, linkCurrent = false }) {
 
     // initial find the breadcrumbs from the path which should be rendered.
     useEffect(() => {
+
+        // function to return the objects of the requested path
+        function findPath({ children = [], ...object }, name) {
+            var result;
+            if (object.name === name) return object;
+            return children.some(o => result = findPath(o, name)) && Object.assign({}, object, { children: [result] });
+        }
+
+        // function to flatten the array
+        function flatten(array, result = []) {
+            for (const { children, ...other } of array) {
+                result.push(other);
+                if (children) flatten(children, result);
+            }
+            return result;
+        }
+        
         let breadcrumbPath = findPath(tree, current);
 
         if(breadcrumbPath.children !== undefined) {
@@ -118,21 +135,7 @@ function BreadcrumbTree({ current, data, linkCurrent = false }) {
         }
     }, [current]);
     
-    // function to return the objects of the requested path
-    function findPath({ children = [], ...object }, name) {
-        var result;
-        if (object.name === name) return object;
-        return children.some(o => result = findPath(o, name)) && Object.assign({}, object, { children: [result] });
-    }
-
-    // function to flatten the array
-    function flatten(array, result = []) {
-        for (const { children, ...other } of array) {
-            result.push(other);
-            if (children) flatten(children, result);
-        }
-        return result;
-    }
+   
 
     // function to substitute texts parameters
     const substituteTexts = (str, data) => {
