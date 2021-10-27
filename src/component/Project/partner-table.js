@@ -48,11 +48,15 @@ const PartnerTable = ({ project }) => {
                                                 thousandSeparator={' '}
                                                 displayType={'text'}
                                                 prefix={'€ '} /></td>
-                                            <td className={'text-monospace text-right'}><NumberFormat
-                                                value={result.latestVersionEffort}
-                                                thousandSeparator={' '}
-                                                displayType={'text'}
-                                            /></td>
+                                            <td className={'text-monospace text-right'}>
+                                                <NumberFormat
+                                                    value={result.latestVersionEffort}
+                                                    thousandSeparator={' '}
+                                                    displayType={'text'}
+                                                    decimalScale={2}
+                                                    fixedDecimalScale={true}
+                                                />
+                                            </td>
 
                                         </tr>
                                     </React.Fragment>)

@@ -2,6 +2,7 @@ import React from 'react';
 import { apiStates, Api, ApiError } from '../../function/Api';
 import PartnerTable from './partner-table';
 import BreadcrumbTree from '../partial/BreadcrumbTree'
+import NumberFormat from "react-number-format";
 import moment from 'moment';
 
 export default function Project(props) {
@@ -16,8 +17,15 @@ export default function Project(props) {
         case apiStates.SUCCESS:
             return (
                 <React.Fragment>
+                    {/* <pre className='debug'>{JSON.stringify(data, undefined, 2)}</pre> */}
 
-                    <BreadcrumbTree current="project_detail" data={data} />
+                    <BreadcrumbTree current="project" data={{
+                        ...data, ...{
+                            project_name: data.name,
+                            project_slug: data.slug,
+                        }
+                    }} linkCurrent={true} />
+
                     <h1>Project Page</h1>
 
                     <dl className="row">
@@ -53,10 +61,20 @@ export default function Project(props) {
                         </dd>
 
                         <dt className="col-sm-3">Total costs:</dt>
-                        <dd className="col-sm-9">{data.latestVersionTotalCosts}</dd>
+                        <dd className="col-sm-9"><NumberFormat
+                            value={data.latestVersionTotalCosts}
+                            thousandSeparator={' '}
+                            displayType={'text'}
+                            prefix={'€ '} /></dd>
 
                         <dt className="col-sm-3">Total effort:</dt>
-                        <dd className="col-sm-9">{data.latestVersionTotalEffort}</dd>
+                        <dd className="col-sm-9"><NumberFormat
+                            value={data.latestVersionTotalEffort}
+                            thousandSeparator={' '}
+                            displayType={'text'}
+                            decimalScale={2}
+                            fixedDecimalScale={true}
+                        /></dd>
 
                         <dt className="col-sm-3">Description:</dt>
                         <dd className="col-sm-9">

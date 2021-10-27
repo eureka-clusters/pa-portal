@@ -1,28 +1,9 @@
 import React from 'react';
 import { apiStates, Api, ApiError } from '../../function/Api';
 import { Link } from "react-router-dom";
-import { Breadcrumb } from "react-bootstrap";
 import PartnerTable from './partner-table';
+import BreadcrumbTree from '../partial/BreadcrumbTree'
 
-export const SiteMap = ({ hrefIn }) => {
-    const items = [
-        { href: "/projects", name: "Projects" },
-        { href: "/organisation", name: "Organisation" },
-    ];
-    return (
-        <Breadcrumb>
-            {items.map((item, key) =>
-                item.href === hrefIn ? (
-                    <Breadcrumb.Item key={key} active>{item.name}</Breadcrumb.Item>
-                ) : (
-                    <Breadcrumb.Item key={key} linkProps={{ to: item.href }} linkAs={Link}>
-                        {item.name}
-                    </Breadcrumb.Item>
-                )
-            )}
-        </Breadcrumb>
-    );
-};
 
 export default function Organisation(props) {
 
@@ -35,15 +16,8 @@ export default function Organisation(props) {
         case apiStates.SUCCESS:
             return (
                 <React.Fragment>
-                    {/* <p>Debug:</p>
-                    <PrintObject value={data} /> */}
-
-                    <Breadcrumb>
-                        <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
-                        <Breadcrumb.Item active>{data.name}</Breadcrumb.Item>
-                    </Breadcrumb>
-
-                    <SiteMap hrefIn="/organisation" />
+                    {/* <p>Debug:</p><PrintObject value={data} /> */}
+                    <BreadcrumbTree current="organisation" data={data} linkCurrent={false} />
 
                     <h1>{data.name}</h1>
 

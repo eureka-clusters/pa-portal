@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState} from 'react';
 import { Breadcrumb } from "react-bootstrap";
 import reactStringReplace from 'react-string-replace';
 
@@ -18,38 +18,56 @@ var tree = {
                     href: "/statistics",
                 },
                 {
+                    name: 'organisations',
+                    displayname: "Organisations",
+                    href: "/organisations",
+                    children: [
+                        {
+                            name: 'organisation',
+                            displayname: 'Organisation: {name}',
+                            href: '/organisation/{slug}',
+                        },
+                    ]
+                },
+                {
                     name: 'projects',
                     displayname: "Projects",
                     href: "/projects",
                     children: [
                         {
-                            name: 'project_detail',
-                            displayname: 'Projectdetail: {name}',
-                            // href: '/project/{projectIdentifier}/{projectName}',
-                            //href: '/project/{name}/{name}',
-                            href: '/project/{slug}',
+                            name: 'project',
+                            // href: '/project/{slug}',
+                            // displayname: 'Project: {name}',
+                            // href: '/project/{project.slug}',
+                            // displayname: 'Project: {project.name}',
+
+                            href: '/project/{project_slug}',
+                            displayname: 'Project: {project_name}',
                             children: [
                                 {
-                                    name: 'project_partner',
-                                    displayname: "Partner: {name}",
+                                    name: 'partner',
+                                    // displayname: "Partner: {organisation.name}",
+                                    // href: '/partner/{organisation.slug}',
+
+                                    displayname: "Partner: {partner_name}",
+                                    href: '/partner/{partner_slug}',
                                 },
                             ]
                         },
                     ]
                 },
-                {
-                    name: 'partners',
-                    displayname: 'Partners',
-                    href: "/partners",
-                    children: [
-                        {
-                            name: 'partner_detail',
-                            // href: '/partner/{project.identifier}/{organisation.name}',
-                            href: '/partner/{slug}',
-                            displayname: 'Partner: {organisation.name}',
-                        },
-                    ]
-                },
+                // {
+                //     name: 'partners',
+                //     displayname: 'Partners',
+                //     href: "/partners",
+                //     children: [
+                //         {
+                //             name: 'partner',
+                //             displayname: 'Partner: {organisation.name}',
+                //             href: '/partner/{slug}',
+                //         },
+                //     ]
+                // },
                 {
                     name: 'something_else'
                 }
@@ -89,9 +107,16 @@ link the current entry
 // function BreadcrumbTree({ children, ...props }) {
 function BreadcrumbTree({ current, data, linkCurrent = false }) {
 
-    // let breadcrumbPath = findPath(tree, 'project_partner');
-    let breadcrumbPath = findPath(tree, current);
-    let breadcrumbs = flatten(breadcrumbPath.children);
+    const [breadcrumbs, setBreadcrumbs] = useState([]);
+
+    // initial find the breadcrumbs from the path which should be rendered.
+    useEffect(() => {
+        let breadcrumbPath = findPath(tree, current);
+
+        if(breadcrumbPath.children !== undefined) {
+            setBreadcrumbs(flatten(breadcrumbPath.children));
+        }
+    }, [current]);
     
     // function to return the objects of the requested path
     function findPath({ children = [], ...object }, name) {
@@ -111,7 +136,7 @@ function BreadcrumbTree({ current, data, linkCurrent = false }) {
 
     // function to substitute texts parameters
     const substituteTexts = (str, data) => {
-        const reg = /\{([a-z|A-Z|0-9|.]+)\}/g;
+        const reg = /\{([a-z|A-Z|0-9|_|.]+)\}/g;
         
         // version which works with child objects like {organisation.name}
         var output = reactStringReplace(str, reg, (match, i) => (
@@ -130,12 +155,13 @@ function BreadcrumbTree({ current, data, linkCurrent = false }) {
         if (_index > -1) {
             return fetchFromObject(obj[prop.substring(0, _index)], prop.substr(_index + 1));
         }
-
         return obj[prop];
     }
 
 
     return (
+        <>
+        {/* <pre className='debug'>{JSON.stringify(data, undefined, 2)}</pre> */}
         <Breadcrumb>
             {
                 breadcrumbs.map(breadcrumbitem => {
@@ -146,15 +172,15 @@ function BreadcrumbTree({ current, data, linkCurrent = false }) {
                     }
 
                     if (breadcrumbitem.href !== undefined) {
-                        console.log('href before', breadcrumbitem.href);
+                        // console.log('href before', breadcrumbitem.href);
                         breadcrumbitem.href = substituteTexts(breadcrumbitem.href, data)
-                        console.log('href after ', breadcrumbitem.href);
+                        // console.log('href after ', breadcrumbitem.href);
                     } 
 
                     if (breadcrumbitem.displayname !== undefined) {
-                        // console.log('displayname before', breadcrumbitem.displayname);
+                        console.log('displayname before', breadcrumbitem.displayname);
                         breadcrumbitem.displayname = substituteTexts(breadcrumbitem.displayname, data);
-                        // console.log('displayname after', breadcrumbitem.displayname);
+                        console.log('displayname after', breadcrumbitem.displayname);
                     }
 
                     // not sure if i shouldn't use this instead so leave this here as backup
@@ -164,6 +190,7 @@ function BreadcrumbTree({ current, data, linkCurrent = false }) {
                 })
             }
         </Breadcrumb>
+        </>
     )
 }
 

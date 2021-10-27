@@ -13,7 +13,8 @@ export default function Partners(props) {
         case apiStates.SUCCESS:
             return (
                 <React.Fragment>
-                    <h1>partners</h1>
+                    {/* @johan is this page still used? */}
+                    <h1>Partners</h1>
 
                     <Table size="sm">
                         <thead>

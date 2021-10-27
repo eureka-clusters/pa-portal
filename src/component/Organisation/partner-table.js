@@ -55,6 +55,8 @@ const PartnerTable = ({ organisation }) => {
                                                 value={result.latestVersionEffort}
                                                 thousandSeparator={' '}
                                                 displayType={'text'}
+                                                decimalScale={2}
+                                                fixedDecimalScale={true}
                                             /></td>
 
                                         </tr>

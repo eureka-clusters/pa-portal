@@ -1,9 +1,8 @@
 import React from 'react';
 import { apiStates, Api,  ApiError } from '../../function/Api';
 import { Link } from "react-router-dom";
-import { Breadcrumb } from "react-bootstrap";
 import BreadcrumbTree from '../partial/BreadcrumbTree'
-// import PrintObject from '../../function/react-print-object';
+import NumberFormat from "react-number-format";
 
 export default function Partner(props) {
 
@@ -18,9 +17,15 @@ export default function Partner(props) {
         case apiStates.SUCCESS:
             return (
                 <React.Fragment>
-                    {/* <p>Debug:</p><PrintObject value={data} /> */}
-                    
-                    <BreadcrumbTree current="partner_detail" data={data} linkCurrent={true}/>
+                    {/* <pre className='debug'>{JSON.stringify(data, undefined, 2)}</pre> */}
+
+                    <BreadcrumbTree current="partner" data={{ ...data, ...{ 
+                        project_name: data.project.name,
+                        project_slug: data.project.slug,
+                        partner_name: data.organisation.name,
+                        partner_slug: data.slug
+                    }
+                    }} linkCurrent={true}/>
 
                     <h1>{data.organisation.name} in {data.project.name}</h1>
 
@@ -50,13 +55,23 @@ export default function Partner(props) {
                         </dd>
 
                         <dt className="col-sm-3">Total costs (latest version)</dt>
-                        <dd className="col-sm-9">{data.latestVersionCosts}</dd>
+                        <dd className="col-sm-9"><NumberFormat
+                            value={data.latestVersionCosts}
+                            thousandSeparator={' '}
+                            displayType={'text'}
+                            prefix={'€ '} /></dd>
 
 
                         <dt className="col-sm-3">Total effort (latest version)</dt>
-                        <dd className="col-sm-9">{data.latestVersionEffort}</dd>
+                        <dd className="col-sm-9"><NumberFormat
+                            value={data.latestVersionEffort}
+                            thousandSeparator={' '}
+                            displayType={'text'}
+                            decimalScale={2}
+                            fixedDecimalScale={true}
+                        /></dd>
 
-                    
+                                            
                         <dt className="col-sm-3">Project:</dt>
                         <dd className="col-sm-9"><Link to={`/project/${data.project.slug}`}>{data.project.name}</Link></dd>
 

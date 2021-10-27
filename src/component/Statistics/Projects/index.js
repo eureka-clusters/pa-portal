@@ -99,7 +99,6 @@ export default function ProjectStatistics(props) {
         setFilter(prevState => ({
             ...prevState, ...updatedValues
         }))
-
         updateHash();
     }
 

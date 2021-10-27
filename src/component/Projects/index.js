@@ -2,7 +2,7 @@ import React from 'react';
 import { Table } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { apiStates, Api, ApiError } from '../../function/Api';
-
+import BreadcrumbTree from '../partial/BreadcrumbTree'
 import './projects.scss';
 
 export default function Projects(props) {
@@ -15,11 +15,9 @@ export default function Projects(props) {
         case apiStates.SUCCESS:
             return (
                 <React.Fragment>
+                    <BreadcrumbTree current="projects" data={data} linkCurrent={false} />
+                    {/* <pre className='debug'>{JSON.stringify(data, undefined, 2)}</pre> */}
                     <h1>Projects</h1>
-
-                    <h2>Debug</h2>
-                    {/* <PrintObject value={data} /> */}
-
                     <Table size="sm" striped>
                         <thead>
                             <tr>

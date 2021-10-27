@@ -23,7 +23,10 @@ const PartnerTable = ({ filter }) => {
                 <React.Fragment>
                     <pre className='debug'>{JSON.stringify(filter, undefined, 2)}</pre>
                     <h2>Partners</h2>
-                    <Table size={'sm'} striped hover>
+                    <Table className="caption-top" size={'sm'} striped hover>
+                        <caption>
+                            List of Partners: <span className="float-end">Displaying {data._embedded.results.length} results.</span>
+                        </caption>
                         <thead>
                             <tr>
                                 <th></th>
@@ -66,6 +69,8 @@ const PartnerTable = ({ filter }) => {
                                                 <td className={'text-monospace text-right'}><NumberFormat
                                                     value={result.latestVersionEffort}
                                                     thousandSeparator={' '}
+                                                    decimalScale={2}
+                                                    fixedDecimalScale={true}
                                                     displayType={'text'}
                                                 /></td>
                                             </>
@@ -80,6 +85,8 @@ const PartnerTable = ({ filter }) => {
                                                 <td className={'text-monospace text-right'}><NumberFormat
                                                     value={result.latestVersionEffortInYear}
                                                     thousandSeparator={' '}
+                                                    decimalScale={2}
+                                                    fixedDecimalScale={true}
                                                     displayType={'text'}
                                                 /></td>
                                             </>
@@ -90,7 +97,7 @@ const PartnerTable = ({ filter }) => {
                             }
                         </tbody>
                     </Table>
-
+                
                     <code className={'pb-2 text-muted'}>{btoa(JSON.stringify(filter))}</code>
                     <br></br>
                 </React.Fragment>

@@ -4,7 +4,6 @@ import { Form } from "react-bootstrap";
 import BootstrapSwitchButton from "bootstrap-switch-button-react";
 import { apiStates, Api, getFilter, ApiError } from '../../../function/Api';
 
-
 const ProjectFacets = ({ filter, setFilter, updateFilter, updateResults, updateHash }) => {
   
     const { state, error, data } = Api('/statistics/facets/project?filter=' + getFilter(filter));
@@ -72,9 +71,6 @@ const ProjectFacets = ({ filter, setFilter, updateFilter, updateResults, updateH
                                         checked ={
                                             filter['country'].indexOf(country['country']) > -1
                                         }
-                                        // defaultChecked={
-                                        //     filter['country'].indexOf(country['country']) > -1
-                                        // }
                                     />
                                     <Form.Check.Label>{country['country']} ({country['amount']})</Form.Check.Label>
                                 </Form.Check>

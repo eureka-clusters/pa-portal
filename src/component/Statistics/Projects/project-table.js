@@ -65,6 +65,8 @@ const ProjectTable = ({ filter, updateFilter, updateHash, updateResults }) => {
                                             value={result.latestVersionTotalEffort}
                                             thousandSeparator={' '}
                                             displayType={'text'}
+                                            decimalScale={2}
+                                            fixedDecimalScale={true}
                                         /></td>
                                     </tr>
                                 </React.Fragment>
