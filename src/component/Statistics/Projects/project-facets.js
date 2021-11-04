@@ -48,7 +48,7 @@ const ProjectFacets = ({ filter, setFilter, updateFilter, updateResults, updateH
 
             return (
                 <>
-                    <pre className='debug'>{JSON.stringify(filter, undefined, 2)}</pre>
+                    {/* <pre className='debug'>{JSON.stringify(filter, undefined, 2)}</pre> */}
                     <fieldset>
                         <legend><small>Countries</small></legend>
                         <BootstrapSwitchButton checked={filter['country_method'] === 'and'}

@@ -72,7 +72,7 @@ function TableFilter({ props, defaultFilter}) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.location.hash]);
 
-    const test = (
+    const filtertest = (
         <>
             <h1>TableFilter</h1>
             {/* <pre className='debug'>{JSON.stringify(props, undefined, 2)}</pre> */}
@@ -81,7 +81,7 @@ function TableFilter({ props, defaultFilter}) {
         </>
     );
     
-    return { test, getDefaultFilter, getFilterFromHash, updateHash, updateFilter, filter, setFilter };
+    return { filtertest, getDefaultFilter, getFilterFromHash, updateHash, updateFilter, filter, setFilter };
 }
 
 export default TableFilter;

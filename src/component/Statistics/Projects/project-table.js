@@ -1,10 +1,66 @@
 import React, { useState, useEffect } from 'react';
-import { Table } from "react-bootstrap";
 import { apiStates, Api, getFilter, ApiError } from '../../../function/Api';
-import NumberFormat from "react-number-format";
 import { Link } from "react-router-dom";
+import DataTable from '../../DataTableBase';
+import { CostsFormat, EffortFormat } from '../../../function/utils';
 
 const ProjectTable = ({ filter, updateFilter, updateHash, updateResults }) => {
+
+    const columns = [
+        {
+            id: 'number',
+            name: 'Number',
+            selector: row => row.number,
+            sortable: true,
+        },
+        {
+            id: 'name',
+            name: 'Name',
+            selector: row => row.name,
+            format: row => <Link to={`/project/${row.slug}`}>{row.name}</Link>,
+            sortable: true,
+        },
+        {
+            id: 'primaryCluster',
+            name: 'Primary Cluster',
+            selector: row => row.primaryCluster ? row.primaryCluster.name : '',
+            sortable: true,
+        },
+        {
+            id: 'secondaryCluster',
+            name: 'Secondary Cluster',
+            selector: row => row.secondaryCluster ? row.secondaryCluster.name : '',
+            sortable: true,
+        },
+        {
+            id: 'status',
+            name: 'Status',
+            selector: row => row.status ? row.status.status : '',
+            sortable: true,
+        },
+        {
+            id: 'latestVersion',
+            name: 'Latest version',
+            selector: row => row.latestVersion && row.latestVersion.type ? row.latestVersion.type.type : '',
+            sortable: true,
+        },
+        {
+            id: 'latestVersionTotalCosts',
+            name: 'Total Costs',
+            selector: row => row.latestVersionTotalCosts,
+            format: row => <CostsFormat value={row.latestVersionTotalCosts} />,
+            sortable: true,
+            reorder: true
+        },
+        {
+            id: 'latestVersionTotalEffort',
+            name: 'Total Effort',
+            selector: row => row.latestVersionTotalEffort,
+            format: row => <EffortFormat value={row.latestVersionTotalEffort} />,
+            sortable: true,
+        },
+    ];
+
 
     const [resultUrl, setResultUrl] = useState('/statistics/results/project?filter=' + getFilter(filter));
     const { state, error, data } = Api(resultUrl);
@@ -25,58 +81,15 @@ const ProjectTable = ({ filter, updateFilter, updateHash, updateResults }) => {
         case apiStates.SUCCESS:
             return (
                 <React.Fragment>
-                    <pre className='debug'>{JSON.stringify(filter, undefined, 2)}</pre>
+                    {/* <pre className='debug'>{JSON.stringify(filter, undefined, 2)}</pre> */}
                     {/* <pre className='debug'>{JSON.stringify(data._embedded.results, undefined, 2)}</pre> */}
                     <h2>Projects</h2>
-                    <Table size={'sm'} striped hover>
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th>Number</th>
-                                <th>Name</th>
-                                <th>Primary Cluster</th>
-                                <th>Secondary Cluster</th>
-                                <th>Status</th>
-                                <th>Latest version</th>
-                                <th className={'text-right'}>Total Costs</th>
-                                <th className={'text-right'}>Total Effort</th>
-                            </tr>
-                        </thead>
-                        <tfoot>
-                            <tr><td colSpan={9} /></tr>
-                        </tfoot>
-                        <tbody>
-                            {data._embedded.results.map((result, i) => {
-                                return <React.Fragment key={i}>
-                                    <tr>
-                                        <td><small className={'text-muted'}>{result.id}</small></td>
-                                        <td>{result.number}</td>
-                                        <td><Link to={`/project/${result.slug}`}>{result.name}</Link></td>
-                                        <td>{result.primaryCluster && result.primaryCluster.name}</td>
-                                        <td>{result.secondaryCluster && result.secondaryCluster.name}</td>
-                                        <td>{result.status && result.status.status}</td>
-                                        <td>{result.latestVersion && result.latestVersion.type && result.latestVersion.type.type}</td>
-                                        <td className={'text-monospace text-right'}><NumberFormat
-                                            value={result.latestVersionTotalCosts}
-                                            thousandSeparator={' '}
-                                            displayType={'text'}
-                                            prefix={'€ '} /></td>
-                                        <td className={'text-monospace text-right'}><NumberFormat
-                                            value={result.latestVersionTotalEffort}
-                                            thousandSeparator={' '}
-                                            displayType={'text'}
-                                            decimalScale={2}
-                                            fixedDecimalScale={true}
-                                        /></td>
-                                    </tr>
-                                </React.Fragment>
-                            })
-                            }
-                        </tbody>
-                    </Table>
-
-                    {/* <code className={'pb-2 text-muted'}>{getFilter(filter)}</code> */}
-                    
+                    <DataTable
+                        // title="Projects"
+                        keyField= "number"
+                        columns={columns}
+                        data={data._embedded.results}
+                    />
                 </React.Fragment>
             );
         default:

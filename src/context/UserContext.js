@@ -149,7 +149,7 @@ function useProvideAuth() {
             console.debug('getToken updatedToken:', updatedToken);
 
             // test delay by 3 seconds if the second request to getTokenTest2 really waits.
-            await __delay__(3000);
+            // await __delay__(3000);
         }
         setIsRefreshing(false);
         console.log(['isRefreshing_ref after setting false', isRefreshing_ref.current]);
