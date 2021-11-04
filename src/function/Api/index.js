@@ -7,11 +7,18 @@ export { getFilter } from './FilterFunctions';
 export { ApiError } from './ApiError.js';
 
 
+
 export const apiStates = {
     LOADING: 'LOADING',
     SUCCESS: 'SUCCESS',
     ERROR: 'ERROR'
 }
+
+export const getServerUri = () => {
+    const serverUri = Config.SERVER_URI;
+    console.log(['serverUri', serverUri]);
+    return serverUri;
+};
 
 export const Api = url => {
 
@@ -24,7 +31,7 @@ export const Api = url => {
     });
     
     const createInstance = async () => {
-        const serverUri = Config.SERVER_URI;
+        const serverUri = getServerUri();
         let accessToken = await auth.getToken();
         console.log('accessToken used in getApi', accessToken);
 
@@ -41,13 +48,15 @@ export const Api = url => {
     };
 
     const load = (directurl) => {
-        if (directurl !== undefined) {
-            url = directurl; 
-        }
-        
+
         const setPartData = partialData => {
             setHookState(hookState => (hookState = { ...hookState, ...partialData }))
         }
+
+        if (directurl !== undefined) {
+            url = directurl; 
+        }
+
         
         setPartData({
             state: apiStates.LOADING
@@ -100,7 +109,9 @@ export const Api = url => {
                     });
                 }
             })
+            
         })
+    
     };
 
     React.useEffect(() => {
@@ -108,5 +119,5 @@ export const Api = url => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [url]);
     
-    return { ...hookState, load: load };
+    return { ...hookState, load: load};
 }
