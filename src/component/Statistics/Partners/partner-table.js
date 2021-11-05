@@ -22,14 +22,14 @@ const PartnerTable = ({ filter }) => {
             id: 'project',
             name: 'Project',
             selector: row => row.project.name,
-            format: row => <Link to={`/project/${row.project.slug}`}>{row.project.name}</Link>,
+            format: row => <Link to={`/project/${row.project.slug}`} title={row.project.name} >{row.project.name}</Link>,
             sortable: true,
         },
         {
             id: 'partner',
             name: 'Partner',
             selector: row => row.organisation.name,
-            format: row => <Link to={`/partner/${row.slug}`}>{row.organisation.name}</Link>,
+            format: row => <Link to={`/partner/${row.slug}`} title={row.organisation.name} >{row.organisation.name}</Link>,
             sortable: true,
         },
         {
@@ -87,7 +87,6 @@ const PartnerTable = ({ filter }) => {
             sortable: true,
             omit: !hasYearFilter
         },
-     
     ];
 
 
@@ -107,16 +106,17 @@ const PartnerTable = ({ filter }) => {
             return (
                 <React.Fragment>
                     {/* <pre className='debug'>{JSON.stringify(filter, undefined, 2)}</pre> */}
-                    <h2>Partners</h2>
+                    {/* <pre className='debug'>{JSON.stringify(data, undefined, 2)}</pre> */}
                     <DataTable
-                        // title="Projects"
-                        keyField="number"
+                        title="Partners"
+                        keyField="id"
                         columns={columns}
                         data={data._embedded.results}
                         paginationPerPage={50}  // overwrite the default paginationPerPage setting
                         paginationRowsPerPageOptions={[10, 15, 20, 25, 30, 50, 100, 200]}
                     />
 
+                    <h2>Partners</h2>
                     <Table className="caption-top" size={'sm'} striped hover>
                         <caption>
                             List of Partners: <span className="float-end">Displaying {data._embedded.results.length} results.</span>
