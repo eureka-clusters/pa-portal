@@ -17,7 +17,7 @@ const ProjectTable = ({ filter, updateFilter, updateHash, updateResults }) => {
             id: 'name',
             name: 'Name',
             selector: row => row.name,
-            format: row => <Link to={`/project/${row.slug}`}>{row.name}</Link>,
+            format: row => <Link to={`/project/${row.slug}`} title={row.name} >{row.name}</Link>,
             sortable: true,
         },
         {
@@ -85,8 +85,8 @@ const ProjectTable = ({ filter, updateFilter, updateHash, updateResults }) => {
                     {/* <pre className='debug'>{JSON.stringify(data._embedded.results, undefined, 2)}</pre> */}
                     <h2>Projects</h2>
                     <DataTable
-                        // title="Projects"
-                        keyField= "number"
+                        title="Projects"
+                        keyField="number"
                         columns={columns}
                         data={data._embedded.results}
                     />

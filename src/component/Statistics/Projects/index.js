@@ -63,10 +63,10 @@ export default function ProjectStatistics(props) {
                     </div>
                 </div>
                 <div className={'row'}>
-                    <div className={'col-4'}>   
+                    <div className={'col-2'}>   
                         <ProjectFacets filter={filter} setFilter={setFilter} updateFilter={updateFilter} updateHash={updateHash} updateResults={updateResults} />
                     </div>
-                    <div className={'col-8'}>
+                    <div className={'col-10'}>
 
                         <ProjectTable filter={filter} />
                         

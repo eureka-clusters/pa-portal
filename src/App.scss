@@ -12,4 +12,27 @@ pre.debug {
   --bs-text-opacity: 1;
   color: #6c757d !important;
 }
+
+
+// only needed for custom-table.js in statistics/projects
+/* 
+.sort {
+  text-decoration: underline;
+}
+.ascending::after {
+  content: '▲';
+}
+.descending::after {
+  content: '▼';
+}
+*/
+
+
+// set through dataTable customStyles
+// .rdt_TableHeader {
+//   padding-left: 0px !important;
+//   min-height: unset!important; 
+// }
+
+
 @import "~bootstrap/scss/bootstrap";
