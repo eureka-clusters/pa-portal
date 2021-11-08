@@ -7,7 +7,6 @@ import Content from './component/Content';
 import {ProvideAuth} from "./context/UserContext.js";
 
 import './App.scss';
-
 interface State {
     error: Error | null,
     errorInfo: ErrorInfo | null
