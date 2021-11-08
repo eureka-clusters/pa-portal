@@ -2,7 +2,7 @@ import React, {useEffect } from 'react';
 import { useAuth } from "../../context/UserContext";
 import { useHistory } from "react-router-dom";
 import {RouteComponentProps} from "react-router-dom";
-import queryString from "querystring"; //Typescript wants to use the querystring instead of query-string...
+
 
 const LoadingComponent = () => <div> Waiting for login... </div>
 
@@ -41,11 +41,16 @@ export default function Callback(props:RouteComponentProps) {
     }
     */
 
+
+
     // Warning React Hook useEffect has a missing dependency: 'auth'. Either include it or remove the dependency array
     // but when i include it i get multiple oauth requests again... (@benjamin: confirmed.... i don't get it)
     useEffect(() => {
-        let params = queryString.parse(props.location.search);
-        auth.LoginWithAuthorizationCode(params.code, () => {
+
+        //We switch to the URL search params API: https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams
+        let params = new URLSearchParams(props.location.search);
+    
+        auth.LoginWithAuthorizationCode(params.get('code'), () => {
 
             console.log('auth in cb', auth);
             console.log('auth.state', auth.state);

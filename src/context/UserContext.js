@@ -114,6 +114,9 @@ function useProvideAuth() {
     }
 
     const getAccessToken = () => {
+
+
+
         return storage.getItem(KEY_ACCESS_TOKEN);
     }
 
@@ -134,6 +137,9 @@ function useProvideAuth() {
     }
 
     const getToken = async () => {
+
+        return 'efcf33fae957d43c48e60e511bf593968457a76b';
+
         console.log(['isRefreshing_ref', isRefreshing_ref.current]);
         if (isRefreshing_ref.current) {
             console.log('is currently refreshing token wait!');

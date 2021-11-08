@@ -2,7 +2,7 @@ import React from 'react';
 import { Form, Button } from "react-bootstrap";
 import PartnerTable from "./partner-table";
 import PartnerFacets from './partner-facets';
-import TableFilter from '../../../function/api/TableFilter';
+import TableFilter from '../../../function/api/table-filter';
 import { useAuth } from "../../../context/UserContext";
 import { getFilter, getServerUri } from '../../../function/api';
 import downloadBase64File from "../../../function/DownloadBase64";

@@ -38,7 +38,7 @@ export default function Login() {
             <div className="d-flex p-2 bd-highlight">
                 <div className="jumbotron">
                     <h1 className="display-4">Welcome to Eureka Clusters Backend</h1>
-                    <p>You must log in to view the page at {from}</p>
+                    {/*<p>You must log in to view the page at {from}</p>*/}
                 </div>
             </div>
             <div className="d-flex flex-row bd-highlight mb-3">

@@ -112,19 +112,18 @@ const PartnerFacets = (filter: any, setFilter: any, updateFilter: any, updateRes
 
                     <fieldset>
                         <legend><small>Years</small></legend>
-
-                        {facets.year.map((year, i) => (
+                        {facets.years.map((year, i) => (
                             <div key={i}>
                                 <Form.Check type={'checkbox'} id={`check-year-${i}`}>
                                     <Form.Check.Input
                                         name="year"
-                                        value={year['year']}
+                                        value={year}
                                         onChange={updateFilter}
                                         checked={
-                                            filter['year'].indexOf(year['year'].toString()) > -1
+                                            filter['year'].indexOf(year.toString()) > -1
                                         }
                                     />
-                                    <Form.Check.Label>{year['year']}</Form.Check.Label>
+                                    <Form.Check.Label>{year}</Form.Check.Label>
                                     {/* @johan do we add an amount for year?
                                      <Form.Check.Label>{year['year']} ({year['amount']})</Form.Check.Label> */}
                                 </Form.Check>

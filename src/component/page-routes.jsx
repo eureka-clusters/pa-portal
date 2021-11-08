@@ -13,8 +13,8 @@ import Project from "./project";
 import Organisations from "./organisations";
 import Organisation from "./organisation"
 
-import ProjectStatistics from "./Statistics/Projects"
-import PartnerStatistics from "./Statistics/Partners"
+import ProjectStatistics from "./statistics/projects"
+import PartnerStatistics from "./statistics/partners"
 
 import Partner from "./partner";
 

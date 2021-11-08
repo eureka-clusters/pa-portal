@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {FC} from 'react';
 import {Table} from "react-bootstrap";
 import {ApiError, apiStates} from '../../function/api';
 import NumberFormat from "react-number-format";
@@ -9,7 +9,11 @@ import {GetPartners} from "../../function/api/get-partners";
 import {Partner} from "../../interface/project/partner";
 import {Organisation} from "../../interface/organisation";
 
-const PartnerTable = ({organisation: Organisation}) => {
+interface Props {
+    organisation: Organisation
+}
+
+const PartnerTable: FC<Props> = ({organisation}) => {
 
     const columns = [
         {
@@ -67,7 +71,7 @@ const PartnerTable = ({organisation: Organisation}) => {
 
 
     // const [resultUrl, setResultUrl] = useState('list/partner?organisation=' + organisation.slug);
-    const {state, error, partners} = GetPartners(null, organisation);
+    const {state, error, partners} = GetPartners(undefined, organisation);
 
     // useEffect(() => {
     //     setResultUrl('list/partner?organisation=' + organisation.slug);
@@ -104,7 +108,7 @@ const PartnerTable = ({organisation: Organisation}) => {
                         {partners.map((result, i) => {
                             return (
                                 <React.Fragment key={i}>
-                                    <tr className={!result.isActive ? 'table-danger' : null}>
+                                    <tr className={!result.isActive ? 'table-danger' : ''}>
                                         <td><small className={'text-muted'}>{result.id}</small></td>
                                         {/* <td><Link to={`/project/${result.projectName}`}>{result.projectName}</Link></td> */}
                                         <td><Link to={`/project/${result.project.slug}`}>{result.project.name}</Link>

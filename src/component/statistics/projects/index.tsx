@@ -1,14 +1,14 @@
 import React from 'react';
-import { Form, Button } from "react-bootstrap";
+import {Button, Form} from "react-bootstrap";
 import ProjectTable from "./project-table";
 import ProjectFacets from './project-facets';
 import TableFilter from '../../../function/api/table-filter';
-import { useAuth } from "../../../context/UserContext";
-import { apiStates, Api, getFilter, ApiError, GetToken, getServerUri } from '../../../function/api';
+import {useAuth} from "../../../context/UserContext";
+import {getFilter, getServerUri} from '../../../function/api';
 import downloadBase64File from "../../../function/DownloadBase64";
 // useToggle only for testing a togglebutton
-import { useToggle } from '../../../function/utils';
-import { DownloadButton } from './download-excel';
+import {useToggle} from '../../../function/utils';
+import {DownloadButton} from './download-excel';
 import {RouteComponentProps} from "react-router-dom";
 
 //Create the interface to identify the slug
@@ -16,7 +16,8 @@ interface MatchParams {
     slug: string
 }
 
-interface Props extends RouteComponentProps<MatchParams> {}
+interface Props extends RouteComponentProps<MatchParams> {
+}
 
 export default function ProjectStatistics(props: Props) {
 
@@ -36,7 +37,7 @@ export default function ProjectStatistics(props: Props) {
         year: [],
     };
 
-    const { filtertest, updateHash, updateFilter, filter, setFilter  } = TableFilter({ props, defaultFilter});
+    const {filtertest, updateHash, updateFilter, filter, setFilter} = TableFilter({props, defaultFilter});
 
     const downloadExcel = async () => {
         var serverUri = getServerUri();
@@ -60,7 +61,7 @@ export default function ProjectStatistics(props: Props) {
 
     const updateResults = () => {
     }
-  
+
     return (
         <React.Fragment>
             {/* {filtertest} */}
@@ -71,21 +72,24 @@ export default function ProjectStatistics(props: Props) {
                     </div>
                 </div>
                 <div className={'row'}>
-                    <div className={'col-2'}>   
-                        <ProjectFacets filter={filter} setFilter={setFilter} updateFilter={updateFilter} updateHash={updateHash} updateResults={updateResults} />
+                    <div className={'col-2'}>
+                        <ProjectFacets filter={filter} setFilter={setFilter} updateFilter={updateFilter}
+                                       updateHash={updateHash} updateResults={updateResults}/>
                     </div>
                     <div className={'col-10'}>
 
-                        <ProjectTable filter={filter} />
-                        
+                        <ProjectTable filter={filter}/>
+
                         {/*<Button onClick={setIsTextChanged}>{isTextChanged ? 'Toggled' : 'Click to Toggle'}</Button> // simple toggle button*/}
-                        <br /><br />
+                        <br/><br/>
 
-                        <DownloadButton filter={filter} /> (test with the download button with status opens download 2x <br />the download also starts if togglebutton is clicked and download not reseted)
-                        <br /><br />
+                        <DownloadButton filter={filter}/> (test with the download button with status opens download
+                        2x <br/>the download also starts if togglebutton is clicked and download not reseted)
+                        <br/><br/>
 
-                        <Button onClick={downloadExcel}>Export to Excel</Button> // normal export via using fetch (could this mean no error handling?)
-                        
+                        <Button onClick={downloadExcel}>Export to Excel</Button> // normal export via using fetch (could
+                        this mean no error handling?)
+
                     </div>
                 </div>
             </Form>

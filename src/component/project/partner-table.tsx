@@ -7,7 +7,7 @@ import DataTable from '../DataTableBase';
 import {CostsFormat, EffortFormat} from '../../function/utils';
 import {Project} from "../../interface/project";
 import {Partner} from "../../interface/project/partner";
-import GetPartners from "../../function/api/get-partners";
+import {GetPartners} from "../../function/api/get-partners";
 
 interface Props {
     project: Project

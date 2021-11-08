@@ -1,7 +1,6 @@
-import React from 'react';
-import { useCallback, useState, useEffect } from 'react';
-import { Button } from "react-bootstrap";
-import { apiStates, Api, getFilter, ApiError } from '../../../function/api';
+import React, {useCallback, useEffect, useState} from 'react';
+import {Button} from "react-bootstrap";
+import {Api, ApiError, apiStates, getFilter} from '../../../function/api';
 // import downloadBase64File from "../../../function/DownloadBase64";
 
 
@@ -14,13 +13,14 @@ export const useDownload = (initialState = false) => {
     return [state, toggle]
 }
 
-export function DownloadButton({ filter}) {
+export function DownloadButton(filter) {
+
     const [startDownload, setStartDownload] = useDownload();
 
-    const test = () => {
-        setStartDownload(true)
-        setStartDownload(false);
-    }
+    // const test = () => {
+    //     setStartDownload(true)
+    //     setStartDownload(false);
+    // }
 
     // test to set back the download button with useEffect, button is only short labled started, api is requested but download isn't done...
     useEffect(() => {
@@ -44,19 +44,20 @@ export function DownloadButton({ filter}) {
     return (
         <>
             <p>download button with status</p>
-            <Button onClick={() => setStartDownload(true)}>{DownloadStatus()}</Button>
+            <Button onClick={setStartDownload(true)}>{DownloadStatus()}</Button>
 
             {/* doesn't work button state isn't changed download never starts */}
-            {/* <Button onClick={() => { setStartDownload(true); setStartDownload(false)}}>{DownloadStatus()}</Button> */} 
+            {/* <Button onClick={() => { setStartDownload(true); setStartDownload(false)}}>{DownloadStatus()}</Button> */}
             {/* <Button onClick={() => { test() }}>{DownloadStatus()}</Button> */}
 
             <pre className='debug'>{JSON.stringify(startDownload, undefined, 2)}</pre>
-            {startDownload && <DownloadExcel filter={filter} startDownload={startDownload} setStartDownload={setStartDownload} />}
+            {startDownload &&
+                <DownloadExcel filter={filter} startDownload={startDownload} setStartDownload={setStartDownload}/>}
         </>
     )
 }
 
-const DownloadExcel = ({ filter, startDownload, setStartDownload }) => {
+const DownloadExcel = ({filter, startDownload, setStartDownload}) => {
 
     function downloadBase64File(contentType, base64Data, fileName) {
         console.log('downloadBase64File');
@@ -66,7 +67,7 @@ const DownloadExcel = ({ filter, startDownload, setStartDownload }) => {
         downloadLink.download = fileName;
         downloadLink.click();
     }
-    
+
     // doesn't work as the Api (with its useState couldn't be called in a hook)
     // const downloadExcel = () => {
     //     const { state, error, data } = Api(resultUrl);
@@ -94,13 +95,13 @@ const DownloadExcel = ({ filter, startDownload, setStartDownload }) => {
     // return (
     //     <Button onClick={downloadExcel}>Download</Button>
     // )
-    
-    
+
+
     const [resultUrl, setResultUrl] = useState('/statistics/download/project/' + getFilter(filter));
 
-    
-    const { state, error, data } = Api(resultUrl);
-   
+
+    const {state, error, data} = Api(resultUrl);
+
     // useEffect(() => {
     //     setResultUrl('/statistics/download/project/1/' + getFilter(filter));
     // }, [filter]);
@@ -110,8 +111,8 @@ const DownloadExcel = ({ filter, startDownload, setStartDownload }) => {
         case apiStates.ERROR:
             return (
                 <>
-                    <ApiError error={error} />
-                    <br /><br />Filter used <code className={'pb-2 text-muted'}>{getFilter(filter)}</code>
+                    <ApiError error={error}/>
+                    <br/><br/>Filter used <code className={'pb-2 text-muted'}>{getFilter(filter)}</code>
                 </>
             );
         case apiStates.SUCCESS:
@@ -126,7 +127,6 @@ const DownloadExcel = ({ filter, startDownload, setStartDownload }) => {
             // setStartDownload(false); 
             // setStartDownload(toggled => !toggled);
             // setStartDownload(toggled => false);
-
 
 
             // return; // produces error Nothing was returned from render. This usually means a return statement is missing. Or, to render nothing, return null.
