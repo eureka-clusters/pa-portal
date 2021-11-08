@@ -6,29 +6,34 @@ import TableFilter from '../../../function/api/TableFilter';
 import { useAuth } from "../../../context/UserContext";
 import { getFilter, getServerUri } from '../../../function/api';
 import downloadBase64File from "../../../function/DownloadBase64";
+import {RouteComponentProps} from "react-router-dom";
 // import ResultChart from "./ResultChart";
 
-export default function PartnerStatistics(props) {
+//Create the interface to identify the slug
+interface MatchParams {
+    slug: string
+}
+
+interface Props extends RouteComponentProps<MatchParams> {
+}
+
+export default function PartnerStatistics(props: Props) {
     
     let auth = useAuth();
 
     const defaultFilter = {
         country: [],
-        country_method: 'or',            // @johan are these required on the backend? as "and" makes no sence here
         organisation_type: [],
-        organisation_type_method: 'or',  // @johan are these required on the backend? as "and" makes no sence here
         project_status: [],
-        project_status_method: 'or',     // @johan are these required on the backend? as "and" makes no sence here
         primary_cluster: [],
-        primary_cluster_method: 'or',    // @johan are these required on the backend? as "and" makes no sence here
         year: [],
     };
 
     const { filtertest, updateHash, updateFilter, filter, setFilter } = TableFilter({ props, defaultFilter });
 
     const downloadExcel = async () => {
-        var serverUri = getServerUri();
-        var hash = getFilter(filter);
+        const serverUri = getServerUri();
+        const hash = getFilter(filter);
         let accessToken = await auth.getToken();
         fetch(serverUri + '/api/statistics/download/partner/' + hash,
             {

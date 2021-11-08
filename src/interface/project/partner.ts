@@ -12,5 +12,8 @@ export interface Partner {
     technicalContact: Contact,
     organisation: Organisation,
     latestVersionCosts: number,
-    latestVersionEffort: number
+    latestVersionEffort: number,
+    year?: number
+    latestVersionCostsInYear?: number
+    latestVersionEffortInYear?: number
 }

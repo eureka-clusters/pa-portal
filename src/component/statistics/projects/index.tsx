@@ -9,8 +9,16 @@ import downloadBase64File from "../../../function/DownloadBase64";
 // useToggle only for testing a togglebutton
 import { useToggle } from '../../../function/utils';
 import { DownloadButton } from './download-excel';
+import {RouteComponentProps} from "react-router-dom";
 
-export default function ProjectStatistics(props) {
+//Create the interface to identify the slug
+interface MatchParams {
+    slug: string
+}
+
+interface Props extends RouteComponentProps<MatchParams> {}
+
+export default function ProjectStatistics(props: Props) {
 
     let auth = useAuth();
 
@@ -70,7 +78,7 @@ export default function ProjectStatistics(props) {
 
                         <ProjectTable filter={filter} />
                         
-                        <Button onClick={setIsTextChanged}>{isTextChanged ? 'Toggled' : 'Click to Toggle'}</Button> // simple toggle button
+                        {/*<Button onClick={setIsTextChanged}>{isTextChanged ? 'Toggled' : 'Click to Toggle'}</Button> // simple toggle button*/}
                         <br /><br />
 
                         <DownloadButton filter={filter} /> (test with the download button with status opens download 2x <br />the download also starts if togglebutton is clicked and download not reseted)

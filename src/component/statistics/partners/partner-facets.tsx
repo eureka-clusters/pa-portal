@@ -1,19 +1,19 @@
 import React from 'react';
 
-import { Form } from "react-bootstrap";
-import BootstrapSwitchButton from "bootstrap-switch-button-react";
-import { apiStates, Api, getFilter, ApiError } from '../../../function/api';
+import {Form} from "react-bootstrap";
+import {ApiError, apiStates, getFilter} from '../../../function/api';
+import {GetFacets} from "../../../function/api/statistics/partner/get-facets";
 
-const PartnerFacets = ({ filter, setFilter, updateFilter, updateResults, updateHash }) => {
+const PartnerFacets = (filter: any, setFilter: any, updateFilter: any, updateResults: any, updateHash: any) => {
 
-    const { state, error, data } = Api('/statistics/facets/partner?filter=' + getFilter(filter));
+    const {state, error, facets} = GetFacets(getFilter(filter));
 
-    const updateOrganisationTypeMethod = (event) => {
+    const updateOrganisationTypeMethod = (event: any) => {
         // filter['organisation_type_method'] = event ? 'and' : 'or';
-        var updatedValues = {
+        let updatedValues = {
             organisation_type_method: (event ? 'and' : 'or')
         };
-        setFilter(prevState => ({
+        setFilter((prevState: any) => ({
             ...prevState, ...updatedValues
         }))
 
@@ -24,98 +24,96 @@ const PartnerFacets = ({ filter, setFilter, updateFilter, updateResults, updateH
 
     switch (state) {
         case apiStates.ERROR:
-            return <ApiError error={error} />;
+            return <ApiError error={error}/>;
         case apiStates.SUCCESS:
-            
-            let facetData = data._embedded.facets;
 
             return (
                 <>
                     {/* <pre className='debug'>{JSON.stringify(filter, undefined, 2)}</pre> */}
                     <fieldset>
                         <legend><small>Countries</small></legend>
-                       
-                        {facetData[0] && facetData[0].map((country, i) => (
+
+                        {facets.countries.map((country, i) => (
                             <div key={i}>
                                 <Form.Check type={'checkbox'} id={`check-country-${i}`}>
                                     <Form.Check.Input
                                         name="country"
-                                        value={country['country']}
+                                        value={country['name']}
                                         onChange={updateFilter}
                                         checked={
-                                            filter['country'].indexOf(country['country']) > -1
+                                            filter['country'].indexOf(country['name']) > -1
                                         }
                                     />
-                                    <Form.Check.Label>{country['country']} ({country['amount']})</Form.Check.Label>
+                                    <Form.Check.Label>{country['name']} ({country['amount']})</Form.Check.Label>
                                 </Form.Check>
                             </div>
                         ))}
                     </fieldset>
-        
+
                     <fieldset>
                         <legend><small>Organisation type</small></legend>
-               
-                        {facetData[1] && facetData[1].map((partnerType, i) => (
+
+                        {facets.organisationTypes.map((organisationType, i) => (
                             <div key={i}>
                                 <Form.Check type={'checkbox'} id={`check-type-${i}`}>
                                     <Form.Check.Input
                                         name="organisation_type"
-                                        value={partnerType['organisationType']}
+                                        value={organisationType['name']}
                                         onChange={updateFilter}
                                         checked={
-                                            filter['organisation_type'].indexOf(partnerType['organisationType']) > -1
+                                            filter['organisation_type'].indexOf(organisationType['name']) > -1
                                         }
                                     />
-                                    <Form.Check.Label>{partnerType['organisationType']} ({partnerType['amount']})</Form.Check.Label>
+                                    <Form.Check.Label>{organisationType['name']} ({organisationType['amount']})</Form.Check.Label>
                                 </Form.Check>
                             </div>
                         ))}
                     </fieldset>
-        
+
                     <fieldset>
                         <legend><small>Project Status</small></legend>
 
-                        {facetData[2] && facetData[2].map((projectStatus, i) => (
+                        {facets.projectStatus.map((projectStatus, i) => (
                             <div key={i}>
                                 <Form.Check type={'checkbox'} id={`check-project-status-${i}`}>
                                     <Form.Check.Input
                                         name="project_status"
-                                        value={projectStatus['projectStatus']}
+                                        value={projectStatus['name']}
                                         onChange={updateFilter}
                                         checked={
-                                            filter['project_status'].indexOf(projectStatus['projectStatus']) > -1
+                                            filter['project_status'].indexOf(projectStatus['name']) > -1
                                         }
                                     />
-                                    <Form.Check.Label>{projectStatus['projectStatus']} ({projectStatus['amount']})</Form.Check.Label>
+                                    <Form.Check.Label>{projectStatus['name']} ({projectStatus['amount']})</Form.Check.Label>
                                 </Form.Check>
                             </div>
                         ))}
                     </fieldset>
-        
+
                     <fieldset>
                         <legend><small>Primary Cluster</small></legend>
 
-                        {facetData[3] && facetData[3].map((primaryCluster, i) => (
+                        {facets.primaryClusters.map((primaryCluster, i) => (
                             <div key={i}>
                                 <Form.Check type={'checkbox'} id={`check-primary-cluster-${i}`}>
                                     <Form.Check.Input
                                         name="primary_cluster"
-                                        value={primaryCluster['primaryCluster']}
+                                        value={primaryCluster['name']}
                                         onChange={updateFilter}
                                         checked={
-                                            filter['primary_cluster'].indexOf(primaryCluster['primaryCluster']) > -1
+                                            filter['primary_cluster'].indexOf(primaryCluster['name']) > -1
                                         }
                                     />
-                                    <Form.Check.Label>{primaryCluster['primaryCluster']} ({primaryCluster['amount']})</Form.Check.Label>
+                                    <Form.Check.Label>{primaryCluster['name']} ({primaryCluster['amount']})</Form.Check.Label>
                                 </Form.Check>
                             </div>
                         ))}
                     </fieldset>
-        
+
                     <fieldset>
                         <legend><small>Years</small></legend>
-                        
-                        {facetData[4] && facetData[4].map((year, i) => (
+
+                        {facets.year.map((year, i) => (
                             <div key={i}>
                                 <Form.Check type={'checkbox'} id={`check-year-${i}`}>
                                     <Form.Check.Input
@@ -140,7 +138,7 @@ const PartnerFacets = ({ filter, setFilter, updateFilter, updateResults, updateH
             return <p>Loading data...</p>;
     }
 
-    
+
 }
 
 export default PartnerFacets;

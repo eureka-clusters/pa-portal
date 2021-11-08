@@ -1,72 +1,78 @@
-import React, { useState, useEffect } from 'react';
-import { apiStates, Api, getFilter, ApiError } from '../../../function/api';
-import { Link } from "react-router-dom";
+import React, {FC, useEffect} from 'react';
+import {ApiError, apiStates, getFilter} from '../../../function/api';
+import {Link} from "react-router-dom";
 import DataTable from '../../DataTableBase';
-import { CostsFormat, EffortFormat } from '../../../function/utils';
+import {CostsFormat, EffortFormat} from '../../../function/utils';
+import {GetResults} from "../../../function/api/statistics/project/get-results";
+import {Project} from "../../../interface/project";
 
-const ProjectTable = ({ filter, updateFilter, updateHash, updateResults }) => {
+interface Props {
+    filter: any
+}
+
+const ProjectTable: FC<Props> = ({filter}) => {
 
     const columns = [
         {
             id: 'number',
             name: 'Number',
-            selector: row => row.number,
+            selector: (project: Project) => project.number,
             sortable: true,
         },
         {
             id: 'name',
             name: 'Name',
-            selector: row => row.name,
-            format: row => <Link to={`/project/${row.slug}`} title={row.name} >{row.name}</Link>,
+            selector: (project: Project) => project.name,
+            format: (project: Project) => <Link to={`/project/${project.slug}`}
+                                                title={project.name}>{project.name}</Link>,
             sortable: true,
         },
         {
             id: 'primaryCluster',
             name: 'Primary Cluster',
-            selector: row => row.primaryCluster ? row.primaryCluster.name : '',
+            selector: (project: Project) => project.primaryCluster ? project.primaryCluster.name : '',
             sortable: true,
         },
         {
             id: 'secondaryCluster',
             name: 'Secondary Cluster',
-            selector: row => row.secondaryCluster ? row.secondaryCluster.name : '',
+            selector: (project: Project) => project.secondaryCluster ? project.secondaryCluster.name : '',
             sortable: true,
         },
         {
             id: 'status',
             name: 'Status',
-            selector: row => row.status ? row.status.status : '',
+            selector: (project: Project) => project.status ? project.status.status : '',
             sortable: true,
         },
         {
             id: 'latestVersion',
             name: 'Latest version',
-            selector: row => row.latestVersion && row.latestVersion.type ? row.latestVersion.type.type : '',
+            selector: (project: Project) => project.latestVersion && project.latestVersion.type ? project.latestVersion.type.type : '',
             sortable: true,
         },
         {
             id: 'latestVersionTotalCosts',
             name: 'Total Costs',
-            selector: row => row.latestVersionTotalCosts,
-            format: row => <CostsFormat value={row.latestVersionTotalCosts} />,
+            selector: (project: Project) => project.latestVersionTotalCosts,
+            format: (project: Project) => <CostsFormat value={project.latestVersionTotalCosts}/>,
             sortable: true,
             reorder: true
         },
         {
             id: 'latestVersionTotalEffort',
             name: 'Total Effort',
-            selector: row => row.latestVersionTotalEffort,
-            format: row => <EffortFormat value={row.latestVersionTotalEffort} />,
+            selector: (project: Project) => project.latestVersionTotalEffort,
+            format: (project: Project) => <EffortFormat value={project.latestVersionTotalEffort}/>,
             sortable: true,
         },
     ];
 
 
-    const [resultUrl, setResultUrl] = useState('/statistics/results/project?filter=' + getFilter(filter));
-    const { state, error, data } = Api(resultUrl);
+    const {state, error, projects} = GetResults(getFilter(filter))
 
     useEffect(() => {
-        setResultUrl('/statistics/results/project?filter=' + getFilter(filter));
+        // const {state, error, projects} = GetResults(getFilter(filter))
     }, [filter]);
 
 
@@ -74,8 +80,8 @@ const ProjectTable = ({ filter, updateFilter, updateHash, updateResults }) => {
         case apiStates.ERROR:
             return (
                 <>
-                    <ApiError error={error} />
-                    <br /><br />Filter used <code className={'pb-2 text-muted'}>{getFilter(filter)}</code>
+                    <ApiError error={error}/>
+                    <br/><br/>Filter used <code className={'pb-2 text-muted'}>{getFilter(filter)}</code>
                 </>
             );
         case apiStates.SUCCESS:
@@ -88,7 +94,7 @@ const ProjectTable = ({ filter, updateFilter, updateHash, updateResults }) => {
                         title="Projects"
                         keyField="number"
                         columns={columns}
-                        data={data._embedded.results}
+                        data={projects}
                     />
                 </React.Fragment>
             );

@@ -7,6 +7,7 @@ import DataTable from '../DataTableBase';
 import {CostsFormat, EffortFormat} from '../../function/utils';
 import {GetPartners} from "../../function/api/get-partners";
 import {Partner} from "../../interface/project/partner";
+import {Organisation} from "../../interface/organisation";
 
 const PartnerTable = ({organisation: Organisation}) => {
 
