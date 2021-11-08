@@ -1,12 +1,13 @@
 import React, {ErrorInfo} from "react";
 
-import Header from './component/Header';
-import Footer from './component/Footer';
+import Header from './component/header';
+import Footer from './component/footer';
+import Content from './component/content';
 
-import Content from './component/Content';
 import {ProvideAuth} from "./context/UserContext.js";
 
 import './App.scss';
+
 interface State {
     error: Error | null,
     errorInfo: ErrorInfo | null
@@ -46,7 +47,7 @@ function App() {
         <div className="App">
             <ErrorBoundary>
                 <ProvideAuth>
-                    <Header name="Some Header"/>
+                    <Header/>
                     <Content/>
                     <Footer/>
                 </ProvideAuth>

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Table } from "react-bootstrap";
-import { apiStates, Api, getFilter, ApiError } from '../../../function/Api';
+import { apiStates, Api, getFilter, ApiError } from '../../../function/api';
 import NumberFormat from "react-number-format";
 import { Link } from "react-router-dom";
 import DataTable from '../../DataTableBase';

@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Form } from "react-bootstrap";
 import BootstrapSwitchButton from "bootstrap-switch-button-react";
-import { apiStates, Api, getFilter, ApiError } from '../../../function/Api';
+import { apiStates, Api, getFilter, ApiError } from '../../../function/api';
 
 const PartnerFacets = ({ filter, setFilter, updateFilter, updateResults, updateHash }) => {
 

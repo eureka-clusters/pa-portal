@@ -2,9 +2,9 @@ import React from 'react';
 import { Form, Button } from "react-bootstrap";
 import ProjectTable from "./project-table";
 import ProjectFacets from './project-facets';
-import TableFilter from '../../../function/Api/TableFilter';
+import TableFilter from '../../../function/api/table-filter';
 import { useAuth } from "../../../context/UserContext";
-import { apiStates, Api, getFilter, ApiError, GetToken, getServerUri } from '../../../function/Api';
+import { apiStates, Api, getFilter, ApiError, GetToken, getServerUri } from '../../../function/api';
 import downloadBase64File from "../../../function/DownloadBase64";
 // useToggle only for testing a togglebutton
 import { useToggle } from '../../../function/utils';

@@ -2,9 +2,9 @@ import React from 'react';
 import { Form, Button } from "react-bootstrap";
 import PartnerTable from "./partner-table";
 import PartnerFacets from './partner-facets';
-import TableFilter from '../../../function/Api/TableFilter';
+import TableFilter from '../../../function/api/TableFilter';
 import { useAuth } from "../../../context/UserContext";
-import { getFilter, getServerUri } from '../../../function/Api';
+import { getFilter, getServerUri } from '../../../function/api';
 import downloadBase64File from "../../../function/DownloadBase64";
 // import ResultChart from "./ResultChart";
 

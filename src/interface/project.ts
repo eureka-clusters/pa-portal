@@ -2,6 +2,7 @@ import {Contact} from "./contact";
 import {Version} from "./project/version";
 import {Cluster} from "./cluster";
 import {Status} from "./project/status";
+import {Coordinator} from "./project/coordinator";
 
 export interface Project {
     slug: string,
@@ -9,9 +10,10 @@ export interface Project {
     name: string,
     title: string,
     description: string,
-    coordinator: Contact,
+    coordinator: Coordinator,
     projectLeader: Contact,
     latestVersion: Version,
+    technicalArea: string,
     programme: string,
     programmeCall: string,
     primaryCluster: Cluster,

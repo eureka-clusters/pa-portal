@@ -1,6 +1,6 @@
 // ./Me.js
 import React from 'react';
-import { apiStates, Api } from '../../function/Api'
+import { apiStates, Api } from '../../function/api'
 import Button from 'react-bootstrap/Button';
 import PrintObject from '../../function/react-print-object';
 
