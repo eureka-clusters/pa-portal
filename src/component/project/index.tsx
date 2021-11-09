@@ -53,12 +53,12 @@ export default function Project(props: Props) {
 
                         {project.coordinator && <>
                             <dt className="col-sm-3">Coordinator:</dt>
-                            <dd className="col-sm-9">{String(project.coordinator.organisation)}<br/>{String(project.coordinator.technicalContact.full_name)} ({String(project.coordinator.technicalContact.email)})
+                            <dd className="col-sm-9">{String(project.coordinator.organisation)}<br/>{String(project.coordinator.technicalContact.fullName)} ({String(project.coordinator.technicalContact.email)})
                             </dd>
                         </>}
 
                         <dt className="col-sm-3">Project leader:</dt>
-                        <dd className="col-sm-9">{String(project.projectLeader.full_name)} ({String(project.projectLeader.email)})</dd>
+                        <dd className="col-sm-9">{String(project.projectLeader.fullName)} ({String(project.projectLeader.email)})</dd>
 
                         <dt className="col-sm-3">TechnicalArea:</dt>
                         <dd className="col-sm-9">{project.technicalArea}</dd>

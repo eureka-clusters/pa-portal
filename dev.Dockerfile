@@ -1,5 +1,5 @@
 # pull official base image
-FROM node:16-alpine3.14
+FROM node:16
 
 # set working directory
 WORKDIR /app
@@ -8,16 +8,16 @@ WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
 
 # install app dependencies
-COPY package.json ./
-COPY package-lock.json ./
-RUN npm install --silent
-RUN npm install react-scripts@3.4.1 -g --silent
+COPY package.json /app
+
+RUN npm install
+RUN npm add typescript
 
 #set the ownership of the cache folder
 RUN mkdir node_modules/.cache && chmod -R 777 node_modules/.cache
 
 # add app
-COPY ./src ./
+COPY . /app
 
 # start app
 CMD ["npm", "start"]

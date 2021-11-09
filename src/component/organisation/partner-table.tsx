@@ -19,7 +19,7 @@ const PartnerTable: FC<Props> = ({organisation}) => {
         {
             id: 'id',
             name: 'Id',
-            selector: (partner: Partner) => partner.id,
+            selector: (row: Partner) => row.id,
             sortable: true,
         },
         {

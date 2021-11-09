@@ -17,3 +17,17 @@ export interface Partner {
     latestVersionCostsInYear?: number
     latestVersionEffortInYear?: number
 }
+
+export interface PartnerYear {
+    id: number,
+    slug: string,
+    project: Project,
+    isActive: boolean,
+    isSelfFunded: boolean,
+    isCoordinator: boolean,
+    technicalContact: Contact,
+    organisation: Organisation,
+    year: number
+    latestVersionCostsInYear: number
+    latestVersionEffortInYear: number
+}

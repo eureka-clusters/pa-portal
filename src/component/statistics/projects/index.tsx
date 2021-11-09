@@ -37,7 +37,7 @@ export default function ProjectStatistics(props: Props) {
         year: [],
     };
 
-    const {filtertest, updateHash, updateFilter, filter, setFilter} = TableFilter({props, defaultFilter});
+    const { updateHash, updateFilter, filter, setFilter} = TableFilter({props, defaultFilter});
 
     const downloadExcel = async () => {
         var serverUri = getServerUri();
@@ -64,7 +64,6 @@ export default function ProjectStatistics(props: Props) {
 
     return (
         <React.Fragment>
-            {/* {filtertest} */}
             <Form>
                 <div className={'row'}>
                     <div className={'col-12'}>

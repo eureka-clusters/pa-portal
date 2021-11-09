@@ -45,7 +45,7 @@ function AccountPage() {
 
 
 function HomePage() {
-    return <h3>Home</h3>;
+    return <h3>Home Docker</h3>;
 }
 
 function LoginPage() {

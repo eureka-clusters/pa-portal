@@ -29,7 +29,7 @@ export default function PartnerStatistics(props: Props) {
         year: [],
     };
 
-    const { filtertest, updateHash, updateFilter, filter, setFilter } = TableFilter({ props, defaultFilter });
+    const { updateHash, updateFilter, filter, setFilter } = TableFilter({ props, defaultFilter });
 
     const downloadExcel = async () => {
         const serverUri = getServerUri();
@@ -56,7 +56,6 @@ export default function PartnerStatistics(props: Props) {
 
     return (
         <React.Fragment>
-            {/* {filtertest} */}
             <Form>
                 <div className={'row'}>
                     <div className={'col-12'}>

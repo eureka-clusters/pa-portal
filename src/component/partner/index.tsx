@@ -62,7 +62,7 @@ export default function Partner(props: Props) {
 
                         <dt className="col-sm-3">Technical contact:</dt>
                         <dd className="col-sm-9">
-                            {String(partner.technicalContact.full_name)} (<a
+                            {String(partner.technicalContact.fullName)} (<a
                             href={`mailto:${partner.technicalContact.email}`}>{partner.technicalContact.email}</a>)
                         </dd>
 
@@ -90,7 +90,7 @@ export default function Partner(props: Props) {
 
                         <dt className="col-sm-3">Project leader</dt>
                         <dd className="col-sm-9">
-                            {String(partner.project.projectLeader.full_name)} (<a
+                            {String(partner.project.projectLeader.fullName)} (<a
                             href={`mailto:${partner.project.projectLeader.email}`}>{partner.project.projectLeader.email}</a>)
                         </dd>
                     </dl>
