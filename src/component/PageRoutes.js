@@ -8,7 +8,7 @@ import {
 
 // import Switch from "react-bootstrap/Switch";
 
-import { useAuth } from "../context/UserContext";
+import { useAuth } from "context/UserContext";
 
 import Login from "./Login";
 import Callback from "./Callback";

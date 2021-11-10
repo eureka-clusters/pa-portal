@@ -1,26 +1,10 @@
 import React from 'react';
-
 import { Form } from "react-bootstrap";
-import BootstrapSwitchButton from "bootstrap-switch-button-react";
-import { apiStates, Api, getFilter, ApiError } from '../../../function/Api';
+import { apiStates, Api, getFilter, ApiError } from 'function/Api';
 
 const PartnerFacets = ({ filter, setFilter, updateFilter, updateResults, updateHash }) => {
 
     const { state, error, data } = Api('/statistics/facets/partner?filter=' + getFilter(filter));
-
-    const updateOrganisationTypeMethod = (event) => {
-        // filter['organisation_type_method'] = event ? 'and' : 'or';
-        var updatedValues = {
-            organisation_type_method: (event ? 'and' : 'or')
-        };
-        setFilter(prevState => ({
-            ...prevState, ...updatedValues
-        }))
-
-        updateResults();
-        updateHash();
-    }
-
 
     switch (state) {
         case apiStates.ERROR:

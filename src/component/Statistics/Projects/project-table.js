@@ -3,6 +3,7 @@ import { apiStates, Api, getFilter, ApiError } from '../../../function/Api';
 import { Link } from "react-router-dom";
 import DataTable from '../../DataTableBase';
 import { CostsFormat, EffortFormat } from '../../../function/utils';
+import ResultChart from "../ResultChart";
 
 const ProjectTable = ({ filter, updateFilter, updateHash, updateResults }) => {
 
@@ -85,11 +86,13 @@ const ProjectTable = ({ filter, updateFilter, updateHash, updateResults }) => {
                     {/* <pre className='debug'>{JSON.stringify(data._embedded.results, undefined, 2)}</pre> */}
                     <h2>Projects</h2>
                     <DataTable
-                        title="Projects"
+                        // title="Projects"
                         keyField="number"
                         columns={columns}
                         data={data._embedded.results}
                     />
+
+                    <ResultChart results={data._embedded.results} />
                 </React.Fragment>
             );
         default:

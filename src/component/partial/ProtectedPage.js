@@ -2,8 +2,8 @@
 import React, { useState, useEffect } from "react";
 
 import Button from 'react-bootstrap/Button'
-import { useAuth } from "../../context/UserContext";
-import Config from "../../constants/Config";
+import { useAuth } from "context/UserContext";
+import Config from "constants/Config";
 
 import { Me } from "./Me";
 
@@ -15,12 +15,17 @@ const ProtectedPage = () => {
     const serverUri = Config.SERVER_URI;
     const url = serverUri + '/api/me';
     
+    // eslint-disable-next-line no-unused-vars
     const [isLoading, setLoading] = useState(true);
     const [data, setData] = useState([]);
     const [refetch, setRefetch] = useState(false);
     const [refetch2, setRefetch2] = useState(false);
     const [refetch3, setRefetch3] = useState(false);
     const [refetch4, setRefetch4] = useState(false);
+
+
+    
+
 
     const getApi = async () => {
         const serverUri = Config.SERVER_URI;

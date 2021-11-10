@@ -1,6 +1,6 @@
 import React from 'react';
-import { useAuth } from "../../context/UserContext";
-import Config from "../../constants/Config";
+import { useAuth } from "context/UserContext";
+import Config from "constants/Config";
 import axios from 'axios';
 
 export { getFilter } from './FilterFunctions';
@@ -16,7 +16,6 @@ export const apiStates = {
 
 export const getServerUri = () => {
     const serverUri = Config.SERVER_URI;
-    console.log(['serverUri', serverUri]);
     return serverUri;
 };
 
@@ -33,8 +32,7 @@ export const Api = url => {
     const createInstance = async () => {
         const serverUri = getServerUri();
         let accessToken = await auth.getToken();
-        console.log('accessToken used in getApi', accessToken);
-
+        
         const instance = axios.create({
             baseURL: serverUri + '/api',
             timeout: 5000,

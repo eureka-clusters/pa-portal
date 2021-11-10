@@ -8,15 +8,16 @@ import { useReducer } from 'react'
 import moment from 'moment';
 // import Moment from 'react-moment';
 // import { authStates, OAuth2 } from '../function/OAuth2';
-import { OAuth2 } from '../function/OAuth2';
+import { getServerUri } from 'function/Api';
+import { OAuth2 } from 'function/OAuth2';
+
 
 export const KEY_EXPIRES_IN = 'authExpire'
 export const KEY_ACCESS_TOKEN = 'accessToken';
 export const KEY_REFRESH_TOKEN = 'refreshToken';
 export const KEY_USER_STATE = 'user';
+export const KEY_USER_INFO = 'userInfo';
 export const KEY_REDIRECT = 'redirect';
-
-
 
 const authContext = createContext();
 
@@ -39,27 +40,29 @@ export const useAuth = () => {
 
 // Provider hook that creates auth object and handles state
 function useProvideAuth() {
-
-    const [redirect, setRedirect] = useState(localStorage.getItem('redirect'));
-
     // we could use different storage  (session / localStorage)
     //let storage = window.sessionStorage;
     let storage = localStorage;
 
+    // const [redirect, setRedirect] = useState(storage.getItem(KEY_REDIRECT));
+
     const [state, setState] = useReducer(
         (state, newState) => ({ ...state, ...newState }),
         {
-            user: storage.getItem('user'),
+            //user: storage.getItem('user') ? JSON.parse(storage.getItem('user')) : null,
+            user: storage.getItem(KEY_USER_STATE),
+            userInfo: storage.getItem(KEY_USER_INFO) ? JSON.parse(storage.getItem(KEY_USER_INFO)) : null,
             refreshToken: storage.getItem(KEY_REFRESH_TOKEN),
             accessToken: storage.getItem(KEY_ACCESS_TOKEN),
             authExpire: storage.getItem(KEY_EXPIRES_IN),
-            redirect: storage.getItem(KEY_REDIRECT),
+            redirect: storage.getItem(KEY_REDIRECT),  // has to be an independed useState
             loading: false,
             errorMessage: null
         }
     );
 
     // state for current running refresh via refreshToken
+    // eslint-disable-next-line no-unused-vars
     const [isRefreshing, setIsRefreshing, isRefreshing_ref] = useState(false);
 
     // for direct access
@@ -67,6 +70,8 @@ function useProvideAuth() {
     const refreshToken = state.refreshToken;
     const authExpire = state.authExpire;
     const user = state.user;
+    const userInfo = state.userInfo;
+    const redirect = state.redirect;
 
 
     function __delay__(timer) {
@@ -78,30 +83,10 @@ function useProvideAuth() {
         });
     };
 
-
-    const test = async (cb) => {
-        let refreshToken = getRefreshToken();
-        await OAuth2
-            .RefreshRequest(refreshToken)    // or call GetAccessToken(authorizationCode) directly
-            .then((bearerToken) => {
-                console.log('UseRefreshToken new bearerToken', bearerToken);
-                setBearerToken(bearerToken);
-            }).then(() => {
-                typeof cb == "function" && cb();
-            }).catch((error) => {
-                //  on errors of the refesh request we have to logout the user as no new accesstoken+refreshtoken could be generated.
-                console.log('catch error in UseRefreshToken logout user', error);
-                logout();
-            });
-        return getAccessToken();
-    }
-
     const isExpired = (exp) => {
         if (exp === undefined) {
             return false;
         }
-        // console.debug('moment', moment().unix());
-        // console.debug('moment2', moment.unix(Number(exp)).unix());
         return moment().unix() > moment.unix(Number(exp)).unix();
     };
 
@@ -122,56 +107,51 @@ function useProvideAuth() {
         await OAuth2
             .RefreshRequest(refreshToken)    // or call GetAccessToken(authorizationCode) directly
             .then((bearerToken) => {
-                console.debug('UseRefreshToken new bearerToken', bearerToken);
+                // console.debug('UseRefreshToken new bearerToken', bearerToken);
                 setBearerToken(bearerToken);
             }).then(() => {
                 typeof cb == "function" && cb();
             }).catch((error) => {
-                console.debug('catch error in UseRefreshToken logout user', error);
+                // console.debug('catch error in UseRefreshToken logout user', error);
                 logout();
             });
         return getAccessToken();
     }
 
     const getToken = async () => {
-        console.log(['isRefreshing_ref', isRefreshing_ref.current]);
+        // console.log(['isRefreshing_ref', isRefreshing_ref.current]);
         if (isRefreshing_ref.current) {
-            console.log('is currently refreshing token wait!');
+            // console.log('is currently refreshing token wait!');
             await waitForRefreshFinish();
         }
 
         if (isExpired(getExpirationDate())) {
-            console.debug('getToken isExpired:');
+            // console.debug('getToken isExpired:');
             setIsRefreshing(true);
-            console.log(['isRefreshing_ref after setting true', isRefreshing_ref.current]);
-
-            const updatedToken = await UseRefreshToken();
-            console.debug('getToken updatedToken:', updatedToken);
+            // console.log(['isRefreshing_ref after setting true', isRefreshing_ref.current]);
+            await UseRefreshToken();
 
             // test delay by 3 seconds if the second request to getTokenTest2 really waits.
             // await __delay__(3000);
         }
         setIsRefreshing(false);
-        console.log(['isRefreshing_ref after setting false', isRefreshing_ref.current]);
-
+        // console.log(['isRefreshing_ref after setting false', isRefreshing_ref.current]);
         return getAccessToken();
     };
 
     const waitForRefreshFinish = async () => {
         if (isRefreshing_ref.current === true) {
-            console.log('waitForRefreshFinish: isRefreshing_ref.current = true wait for another 100 ms ', isRefreshing_ref.current);
+            // console.log('waitForRefreshFinish: isRefreshing_ref.current = true wait for another 100 ms ', isRefreshing_ref.current);
             // delay for 100ms before rechecking
             await __delay__(100);
             await waitForRefreshFinish();
         } else {
-            console.log('waitForRefreshFinish: isRefreshing_ref.current = false ', isRefreshing_ref.current);
+            // console.log('waitForRefreshFinish: isRefreshing_ref.current = false ', isRefreshing_ref.current);
             return true;
         }
     }
 
-
     const RedirectAfterLogin = () => {
-        console.log('RedirectAfterLogin', redirect);
         let history = useHistory();
         history.replace(redirect);
     }
@@ -182,16 +162,22 @@ function useProvideAuth() {
 
         if (from.pathname && from.pathname !== '/login' && from.pathname !== '/callback') {
             storage.setItem(KEY_REDIRECT, from.pathname);
-            //redirect = from.pathname;
-            //setRedirect(from.pathname);
+            // store the state
+            // i can't either set the state or the redirect. i can only store it in the local storage.
+
+
+            // setRedirect(prev => from.pathname);
+            // setState({
+            //     redirect: from.pathname,
+            // });
         }
     }
 
     const setBearerToken = (bearerToken) => {
-        console.debug('setBearerToken bearerToken', bearerToken);
+        // console.debug('setBearerToken bearerToken', bearerToken);
         if (bearerToken.status !== 400) {
             let newAuthExpire = moment().add(Number(bearerToken.expires_in), 's');
-            console.debug('newAuthExpire in setBearerToken', newAuthExpire.format('LLL'));
+            // console.debug('newAuthExpire in setBearerToken', newAuthExpire.format('LLL'));
 
             storage.setItem(KEY_REFRESH_TOKEN, bearerToken.refresh_token);
             storage.setItem(KEY_ACCESS_TOKEN, bearerToken.access_token);
@@ -202,8 +188,10 @@ function useProvideAuth() {
                 accessToken: bearerToken.access_token,
                 refreshToken: bearerToken.refresh_token,
                 authExpire: newAuthExpire.unix(),
-                user: true,
+                user: "true",
             });
+
+            getUserInfo();
         } else {
             // error handling (errors should be catched)
             //title: "invalid_grant", status: 400, detail: "Invalid refresh token"
@@ -221,22 +209,39 @@ function useProvideAuth() {
     
     const LoginWithAuthorizationCode = async (authorizationCode, cb) => {
         await OAuth2
-            // .AuthorizeRequest(authorizationCode + 'test') // just a test to create some error
             .AuthorizeRequest(authorizationCode)
             .then((bearerToken) => {
-                console.debug('LoginWithAuthorizationCode new bearerToken', bearerToken);
+                // console.debug('LoginWithAuthorizationCode new bearerToken', bearerToken);
                 setBearerToken(bearerToken);
             }).then(() => {
                 typeof cb == "function" && cb();
             }).catch((err) => {
                 console.debug('catch error in LoginWithAuthorizationCode', err);
-                //@johan error message exists here 
                 setState({ errorMessage: err.message });
-                // but couldn't set to the state??
-                console.log('get errorMessage from state', state.errorMessage);
                 return false;
             });
         return getAccessToken();
+    }
+
+
+    const getUserInfo = async () => {
+        var serverUri = getServerUri();
+        let accessToken = await getToken();
+        fetch(serverUri + '/api/me',
+            {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + accessToken
+                }
+            }
+        ).then((res) => res.json()).then((res) => {
+            storage.setItem(KEY_USER_INFO, JSON.stringify(res));
+            setState({
+                userInfo: res,
+            });
+        });
     }
 
     
@@ -245,12 +250,14 @@ function useProvideAuth() {
             accessToken: null,
             refreshToken: null,
             user: null,
+            userInfo: null,
         });
 
         // remove the items localStorage.setItem('user', null); would be (string) "null"
         storage.removeItem(KEY_REFRESH_TOKEN);
         storage.removeItem(KEY_ACCESS_TOKEN);
         storage.removeItem(KEY_USER_STATE);
+        storage.removeItem(KEY_USER_INFO);
         storage.removeItem(KEY_EXPIRES_IN);
         storage.removeItem(KEY_REDIRECT);
         typeof cb == "function" && cb();
@@ -263,6 +270,7 @@ function useProvideAuth() {
     return {
         state,
         user,
+        userInfo,
         redirect,
         RedirectAfterLogin,
         SaveRedirect,
@@ -275,7 +283,6 @@ function useProvideAuth() {
         getAccessToken,
         getRefreshToken,
         UseRefreshToken,
-        test,
         logout
     };
 }

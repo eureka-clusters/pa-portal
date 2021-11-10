@@ -1,5 +1,5 @@
 import React from 'react';
-import { useCallback, useState, useEffect } from 'react';
+import { useCallback, useState } from 'react';
 import NumberFormat from "react-number-format"
 
 export const useToggle = (initialState = false) => {
@@ -18,11 +18,9 @@ export const CostsFormat = (props) => {
             thousandSeparator={' '}
             displayType={'text'}
             prefix={'€ '}
-            displayType={'text'}
         />
     )
 }
-
 
 export const EffortFormat = (props) => {
     return (

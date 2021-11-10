@@ -1,11 +1,8 @@
 import React from 'react';
-import { Table } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { apiStates, Api, ApiError } from '../../function/Api';
-import BreadcrumbTree from '../partial/BreadcrumbTree';
-import DataTable from '../DataTableBase';
-import { CostsFormat, EffortFormat } from '../../function/utils';
-
+import { apiStates, Api, ApiError } from 'function/Api';
+import BreadcrumbTree from 'component/partial/BreadcrumbTree';
+import DataTable from 'component/DataTableBase';
 
 export default function Organisations(props) {
 
@@ -49,34 +46,13 @@ export default function Organisations(props) {
                 <React.Fragment>
                     {/* <pre className='debug'>{JSON.stringify(data, undefined, 2)}</pre> */}
                     <BreadcrumbTree current="organisations" data={data} linkCurrent={false} />
-
+                    <h1>Organisations</h1>
                     <DataTable
-                        title="Organisations"
+                        // title="Organisations"
                         keyField="id"
                         columns={columns}
                         data={data._embedded.organisation}
                     />
-
-                    <h1>Organisations</h1>
-                    <Table size="sm" striped>
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Type</th>
-                                <th>Country</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {data._embedded.organisation.map((organisation, key) => (
-                                <tr key={key}>
-                                    <td><Link to={`/organisation/${organisation.slug}`}>{organisation.name}</Link></td>
-                                    <td>{organisation.type.type}</td>
-                                    <td>{organisation.country.country}</td>
-                                </tr>
-                            ))}
-
-                        </tbody>
-                    </Table>
                 </React.Fragment>
             );
         default:

@@ -5,11 +5,12 @@ const ResultChart = ({ results }) => {
 
     //Do some stupid data formatting
     var $data = [
-        ['Project', 'Costs']   ];
+        ['Project', 'Costs']
+    ];
 
     results.forEach(element => {
         $data.push([
-            element.projectName,
+            element.name,
             element.latestVersionTotalCosts
         ]);
     });
@@ -17,16 +18,18 @@ const ResultChart = ({ results }) => {
     return (
         <React.Fragment>
             <h2>Chart</h2>
-
             <Chart
-                width={1000}
-                height={800}
+                // width={1000}
+                // height={800}
+                width="100%"
+                // height={800}
+                height="400px"
+
                 chartType="ColumnChart"
                 loader={<div>Loading Chart</div>}
                 data={$data}
                 options={{
                     title: 'Costs',
-                    chartArea: { width: '80%' },
                     hAxis: {
                         title: 'Project',
                         minValue: 0,
@@ -34,6 +37,8 @@ const ResultChart = ({ results }) => {
                     vAxis: {
                         title: 'Costs',
                     },
+                    // For the legend to fit, we make the chart area smaller
+                    chartArea: { width: '50%', height: '70%' },
                 }}
                 legendToggle
             />

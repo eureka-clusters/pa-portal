@@ -1,5 +1,4 @@
 import React from "react";
-
 export default class PrintObject extends React.PureComponent {
     render() {
         return (

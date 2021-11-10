@@ -4,17 +4,19 @@ import ProjectTable from "./project-table";
 import ProjectFacets from './project-facets';
 import TableFilter from '../../../function/Api/TableFilter';
 import { useAuth } from "../../../context/UserContext";
-import { apiStates, Api, getFilter, ApiError, GetToken, getServerUri } from '../../../function/Api';
+import { getFilter, getServerUri } from '../../../function/Api';
 import downloadBase64File from "../../../function/DownloadBase64";
+import BreadcrumbTree from '../../partial/BreadcrumbTree'
+
 // useToggle only for testing a togglebutton
-import { useToggle } from '../../../function/utils';
-import { DownloadButton } from './download-excel';
+// import { useToggle } from '../../../function/utils';
+// import { DownloadButton } from './download-excel';
 
 export default function ProjectStatistics(props) {
 
     let auth = useAuth();
 
-    const [isTextChanged, setIsTextChanged] = useToggle();
+    // const [isTextChanged, setIsTextChanged] = useToggle();
 
     const defaultFilter = {
         country: [],
@@ -28,7 +30,7 @@ export default function ProjectStatistics(props) {
         year: [],
     };
 
-    const { filtertest, updateHash, updateFilter, filter, setFilter  } = TableFilter({ props, defaultFilter});
+    const { updateHash, updateFilter, filter, setFilter  } = TableFilter({ props, defaultFilter});
 
     const downloadExcel = async () => {
         var serverUri = getServerUri();
@@ -55,10 +57,10 @@ export default function ProjectStatistics(props) {
   
     return (
         <React.Fragment>
-            {/* {filtertest} */}
             <Form>
                 <div className={'row'}>
                     <div className={'col-12'}>
+                        <BreadcrumbTree current="statistics-projects" linkCurrent={true} />
                         <h1>Project statistics</h1>
                     </div>
                 </div>
@@ -70,14 +72,11 @@ export default function ProjectStatistics(props) {
 
                         <ProjectTable filter={filter} />
                         
-                        <Button onClick={setIsTextChanged}>{isTextChanged ? 'Toggled' : 'Click to Toggle'}</Button> // simple toggle button
-                        <br /><br />
-
-                        <DownloadButton filter={filter} /> (test with the download button with status opens download 2x <br />the download also starts if togglebutton is clicked and download not reseted)
-                        <br /><br />
-
-                        <Button onClick={downloadExcel}>Export to Excel</Button> // normal export via using fetch (could this mean no error handling?)
+                        <Button onClick={downloadExcel}>Export to Excel</Button>
                         
+
+                        {/* <Button onClick={setIsTextChanged}>{isTextChanged ? 'Toggled' : 'Click to Toggle'}</Button> // simple toggle button
+                        <DownloadButton filter={filter} /> (test with the download button with status opens download 2x <br />the download also starts if togglebutton is clicked and download not reseted) */}
                     </div>
                 </div>
             </Form>

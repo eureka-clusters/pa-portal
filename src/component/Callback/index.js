@@ -46,8 +46,8 @@ export default function Callback(props) {
         let params = queryString.parse(props.location.search);
         auth.LoginWithAuthorizationCode(params.code, () => {
 
-            console.log('auth in cb', auth);
-            console.log('auth.state', auth.state);
+            // console.log('auth in cb', auth);
+            // console.log('auth.state', auth.state);
 
             // console.log('callback after LoginWithAuthorizationCode', auth.redirect);
             if (auth.redirect !== undefined && auth.redirect !== null) {
@@ -57,12 +57,12 @@ export default function Callback(props) {
             }
            
         }).then(() => {
-            console.log('auth in then', auth);
-            console.log('auth.state', auth.state);
-            console.log('auth.state.errorMessage', auth.state.errorMessage);
+            // console.log('auth in then', auth);
+            // console.log('auth.state', auth.state);
+            // console.log('auth.state.errorMessage', auth.state.errorMessage);
     
             if(auth.state.errorMessage) {
-                console.log('auth.state.errorMessage', auth.state.errorMessage);
+                // console.log('auth.state.errorMessage', auth.state.errorMessage);
                 return (<h3 className="error"> {auth.state.errorMessage} </h3>);
             }
             return (<div> this is a test</div>);

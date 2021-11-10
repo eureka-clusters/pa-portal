@@ -2,10 +2,11 @@ import React from 'react';
 import { Form, Button } from "react-bootstrap";
 import PartnerTable from "./partner-table";
 import PartnerFacets from './partner-facets';
-import TableFilter from '../../../function/Api/TableFilter';
-import { useAuth } from "../../../context/UserContext";
-import { getFilter, getServerUri } from '../../../function/Api';
-import downloadBase64File from "../../../function/DownloadBase64";
+import TableFilter from 'function/Api/TableFilter';
+import { useAuth } from "context/UserContext";
+import { getFilter, getServerUri } from 'function/Api';
+import downloadBase64File from "function/DownloadBase64";
+import BreadcrumbTree from 'component/partial/BreadcrumbTree'
 // import ResultChart from "./ResultChart";
 
 export default function PartnerStatistics(props) {
@@ -24,7 +25,7 @@ export default function PartnerStatistics(props) {
         year: [],
     };
 
-    const { filtertest, updateHash, updateFilter, filter, setFilter } = TableFilter({ props, defaultFilter });
+    const { updateHash, updateFilter, filter, setFilter } = TableFilter({ props, defaultFilter });
 
     const downloadExcel = async () => {
         var serverUri = getServerUri();
@@ -51,10 +52,10 @@ export default function PartnerStatistics(props) {
 
     return (
         <React.Fragment>
-            {/* {filtertest} */}
             <Form>
                 <div className={'row'}>
                     <div className={'col-12'}>
+                        <BreadcrumbTree current="statistics-partners" linkCurrent={true} />
                         <h1>Partner statistics</h1>
                     </div>
                 </div>
@@ -66,7 +67,8 @@ export default function PartnerStatistics(props) {
 
                         <PartnerTable filter={filter} />
 
-                        <Button onClick={downloadExcel}>Download</Button>
+                        <Button onClick={downloadExcel}>Export to Excel</Button>
+
                     </div>
                 </div>
             </Form>

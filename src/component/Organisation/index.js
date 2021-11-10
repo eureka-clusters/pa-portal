@@ -1,9 +1,8 @@
 import React from 'react';
-import { apiStates, Api, ApiError } from '../../function/Api';
+import { apiStates, Api, ApiError } from 'function/Api';
 import { Link } from "react-router-dom";
 import PartnerTable from './partner-table';
-import BreadcrumbTree from '../partial/BreadcrumbTree'
-
+import BreadcrumbTree from 'component/partial/BreadcrumbTree'
 
 export default function Organisation(props) {
 
@@ -34,7 +33,9 @@ export default function Organisation(props) {
 
                     </dl>
 
+
                     <PartnerTable organisation={data} />
+                    
 
                 </React.Fragment>
             );

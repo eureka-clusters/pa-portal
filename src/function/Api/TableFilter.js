@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import useState from 'react-usestateref';
-import { getFilter} from '../Api';
+import { getFilter} from 'function/Api';
 
 function TableFilter({ props, defaultFilter}) {
 
@@ -8,7 +8,7 @@ function TableFilter({ props, defaultFilter}) {
         if (props.location.hash) {
             var hash = atob(props.location.hash.substring(1));
             var newFilter = JSON.parse(hash);
-            console.log(['filter from hash', newFilter]);
+            // console.log(['filter from hash', newFilter]);
             if (useAsFilter && typeof setFilterMethod == "function") {
                 // console.log('filter set');
                 setFilterMethod(prevState => ({
@@ -71,17 +71,8 @@ function TableFilter({ props, defaultFilter}) {
         getFilterFromHash(setFilter, true);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.location.hash]);
-
-    const filtertest = (
-        <>
-            <h1>TableFilter</h1>
-            {/* <pre className='debug'>{JSON.stringify(props, undefined, 2)}</pre> */}
-            {/* <pre className='debug'>{JSON.stringify(defaultFilter, undefined, 2)}</pre> */}
-            <pre className='debug'>{JSON.stringify(filter, undefined, 2)}</pre>
-        </>
-    );
     
-    return { filtertest, getDefaultFilter, getFilterFromHash, updateHash, updateFilter, filter, setFilter };
+    return { getDefaultFilter, getFilterFromHash, updateHash, updateFilter, filter, setFilter };
 }
 
 export default TableFilter;

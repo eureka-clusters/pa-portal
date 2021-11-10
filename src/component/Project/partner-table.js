@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react';
-import { Table } from "react-bootstrap";
 import { apiStates, Api, ApiError } from '../../function/Api';
-import NumberFormat from "react-number-format";
 import { Link } from "react-router-dom";
 import DataTable from '../DataTableBase';
 import { CostsFormat, EffortFormat } from '../../function/utils';
+import OrganisationTypeChart from './charts/organisation-type-chart';
+import OrganisationCountryChart from './charts/country-chart';
+import BudgetByOrganisationTypeChart from './charts/budget-by-organisation-type-chart';
+
 
 const PartnerTable = ({ project }) => {
 
@@ -42,7 +44,6 @@ const PartnerTable = ({ project }) => {
             selector: row => row.organisation && row.organisation.type ? row.organisation.type.type : '',
             sortable: true,
         },
-
         {
             id: 'partner_costs',
             name: 'Partner Costs',
@@ -74,58 +75,19 @@ const PartnerTable = ({ project }) => {
             return (
                 <React.Fragment>
                     {/* <pre className='debug'>{JSON.stringify(data, undefined, 2)}</pre> */}
+                    <h2>Partners</h2>
                     <DataTable
-                        title="Partners"
+                        // title="Partners"
                         keyField="id"
                         columns={columns}
                         data={data._embedded.partner}
                         pagination={false}
                     />
 
-                    <h2>Partners</h2>
-                    <Table size={'sm'} striped hover>
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th>Partner</th>
-                                <th>Country</th>
-                                <th>Type</th>
-                                <th className={'text-right'}>Partner Costs</th>
-                                <th className={'text-right'}>Partner Effort</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {data._embedded.partner.map((result, i) => {
-                                return (
-                                    <React.Fragment key={i}>
-                                        <tr className={!result.isActive ? 'table-danger' : null}>
-                                            <td><small className={'text-muted'}>{result.id}</small></td>
-                                            <td><Link to={`/partner/${result.slug}`}>{result.organisation.name}</Link></td>
-
-                                            {/* <td><Link to={`/partner/${result.id}`}>{result.partner}</Link></td> */}
-                                            <td>{result.organisation.country.country}</td>
-                                            <td>{result.organisation.type.type}</td>
-                                            <td className={'text-monospace text-right'}><NumberFormat
-                                                value={result.latestVersionCosts}
-                                                thousandSeparator={' '}
-                                                displayType={'text'}
-                                                prefix={'€ '} /></td>
-                                            <td className={'text-monospace text-right'}>
-                                                <NumberFormat
-                                                    value={result.latestVersionEffort}
-                                                    thousandSeparator={' '}
-                                                    displayType={'text'}
-                                                    decimalScale={2}
-                                                    fixedDecimalScale={true}
-                                                />
-                                            </td>
-
-                                        </tr>
-                                    </React.Fragment>)
-                            })
-                            }
-                        </tbody>
-                    </Table>
+                    <OrganisationTypeChart results={data._embedded.partner} />
+                    <OrganisationCountryChart results={data._embedded.partner} />
+                    <BudgetByOrganisationTypeChart results={data._embedded.partner} />
+                    
                 </React.Fragment>
             );
         default:

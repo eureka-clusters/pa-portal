@@ -1,6 +1,6 @@
 import React from 'react';
-import Config from "../../constants/Config";
-import { useAuth } from "../../context/UserContext";
+import Config from "constants/Config";
+import { useAuth } from "context/UserContext";
 import {
     useHistory,
     useLocation

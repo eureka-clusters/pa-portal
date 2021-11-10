@@ -16,6 +16,28 @@ var tree = {
                     name: 'statistics',
                     displayname: "Statistics",
                     href: "/statistics",
+                    children: [
+                        // {
+                        //     name: 'statistics-projects',
+                        //     displayname: 'Projects',
+                        //     href: '/statistics/projects',
+                        // },
+                        // {
+                        //     name: 'statistics-partners',
+                        //     displayname: 'Partners',
+                        //     href: '/statistics/partners',
+                        // },
+                    ]
+                },
+                {
+                    name: 'statistics-projects',
+                    displayname: 'Project statistics',
+                    href: '/statistics/projects',
+                },
+                {
+                    name: 'statistics-partners',
+                    displayname: 'Partner statistics',
+                    href: '/statistics/partners',
                 },
                 {
                     name: 'organisations',
@@ -181,9 +203,9 @@ function BreadcrumbTree({ current, data, linkCurrent = false }) {
                     } 
 
                     if (breadcrumbitem.displayname !== undefined) {
-                        console.log('displayname before', breadcrumbitem.displayname);
+                        // console.log('displayname before', breadcrumbitem.displayname);
                         breadcrumbitem.displayname = substituteTexts(breadcrumbitem.displayname, data);
-                        console.log('displayname after', breadcrumbitem.displayname);
+                        // console.log('displayname after', breadcrumbitem.displayname);
                     }
 
                     // not sure if i shouldn't use this instead so leave this here as backup

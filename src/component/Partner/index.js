@@ -1,7 +1,7 @@
 import React from 'react';
-import { apiStates, Api,  ApiError } from '../../function/Api';
+import { apiStates, Api,  ApiError } from 'function/Api';
 import { Link } from "react-router-dom";
-import BreadcrumbTree from '../partial/BreadcrumbTree'
+import BreadcrumbTree from 'component/partial/BreadcrumbTree'
 import NumberFormat from "react-number-format";
 
 export default function Partner(props) {

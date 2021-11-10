@@ -1,7 +1,7 @@
 import React from 'react';
-import { apiStates, Api, ApiError } from '../../function/Api';
+import { apiStates, Api, ApiError } from 'function/Api';
 import PartnerTable from './partner-table';
-import BreadcrumbTree from '../partial/BreadcrumbTree'
+import BreadcrumbTree from 'component/partial/BreadcrumbTree'
 import NumberFormat from "react-number-format";
 import moment from 'moment';
 
@@ -53,12 +53,7 @@ export default function Project(props) {
                         <dd className="col-sm-9">{data.technicalArea}</dd>
 
                         <dt className="col-sm-3">Label date:</dt>
-                        <dd className="col-sm-9">
-                            {data.labelDate}
-                            <br />
-                            localized: {moment(data.labelDate).format('LLL')}
-                            <br />
-                        </dd>
+                        <dd className="col-sm-9">{moment(data.labelDate).format('LLL')}</dd>
 
                         <dt className="col-sm-3">Total costs:</dt>
                         <dd className="col-sm-9"><NumberFormat

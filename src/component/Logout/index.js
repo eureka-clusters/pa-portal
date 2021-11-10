@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useAuth } from "../../context/UserContext";
+import { useAuth } from "context/UserContext";
 import { Redirect } from 'react-router';
 
 export default function Logout(props) {
