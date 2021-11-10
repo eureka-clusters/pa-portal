@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  web: #https://gist.github.com/przbadu/4a62a5fc5f117cda1ed5dc5409bd4ac1
+    build:
+      context: .
+      target: build
+    image: pa-portal-cli
+    container_name: pa-portal-cli
+    volumes:
+      - .:/app
+
+  app:
+    container_name: pa-portal-dev
+    image: pa-portal-dev
+    build:
+      context: .
+      target: development
+    volumes:
+      - ./src:/app/src
+    labels:
+      - traefik.enable=true
+      - traefik.http.services.pa-portal-app.loadbalancer.server.port=3000
+      - traefik.http.routers.pa-portal-app.service=pa-portal-app
+      - traefik.http.routers.pa-portal-app.rule=Host(`pa-portal.docker.localhost`)
+      - traefik.http.routers.pa-portal-app.entrypoints=node
+    networks:
+      - web
+
+networks:
+  web:
+    external: true

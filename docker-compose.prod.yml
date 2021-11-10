@@ -1,0 +1,9 @@
+version: "3.8"
+
+services:
+  app:
+    container_name: pa-portal-prod
+    image: pa-portal-prod
+    build:
+      context: .
+      target: production
