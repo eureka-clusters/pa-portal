@@ -12,3 +12,10 @@ THis command installs dependency all dependencies on the host machine
 docker compose -f docker-compose.dev.yml run web yarn install
 ```
 
+When something is changed in the root of the application (for example different env params, run)
+
+```shell
+docker compose -f docker-compose.dev.yml up --force-recreate --build
+```
+
+As the root of the app is not mounted in the container (only /src)

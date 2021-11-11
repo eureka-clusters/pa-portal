@@ -1,5 +1,5 @@
 import React from 'react';
-import {useAuth} from "../../context/UserContext";
+import {UseAuth} from "../../context/UserContext";
 import axios from 'axios';
 import {apiStates, getServerUri} from "./index";
 import {Project} from "../../interface/project";
@@ -15,7 +15,7 @@ interface ProjectState {
 
 export const GetProject = (slug: string) => {
 
-    let auth = useAuth();
+    let auth = UseAuth();
     const serverUri = getServerUri();
     let accessToken = auth.getToken();
 

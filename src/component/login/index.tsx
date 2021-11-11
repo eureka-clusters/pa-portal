@@ -1,6 +1,6 @@
 import React from 'react';
-import Config from "../../constants/Config";
-import {useAuth} from "../../context/UserContext";
+import Config from "../../constants/config";
+import {UseAuth} from "../../context/UserContext";
 import {useHistory, useLocation} from "react-router-dom";
 
 export default function Login() {
@@ -10,7 +10,7 @@ export default function Login() {
 
     let history = useHistory();
     let location = useLocation();
-    let auth = useAuth();
+    let auth = UseAuth();
 
     let from = location.state;
 

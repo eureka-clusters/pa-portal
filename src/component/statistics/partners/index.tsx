@@ -3,7 +3,7 @@ import { Form, Button } from "react-bootstrap";
 import PartnerTable from "./partner-table";
 import PartnerFacets from './partner-facets';
 import TableFilter from '../../../function/api/table-filter';
-import { useAuth } from "../../../context/UserContext";
+import { UseAuth } from "../../../context/UserContext";
 import { getFilter, getServerUri } from '../../../function/api';
 import downloadBase64File from "../../../function/DownloadBase64";
 import {RouteComponentProps} from "react-router-dom";
@@ -19,7 +19,7 @@ interface Props extends RouteComponentProps<MatchParams> {
 
 export default function PartnerStatistics(props: Props) {
     
-    let auth = useAuth();
+    let auth = UseAuth();
 
     const defaultFilter = {
         country: [],

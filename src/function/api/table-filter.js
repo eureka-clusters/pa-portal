@@ -2,6 +2,8 @@ import React, {useEffect} from 'react';
 import useState from 'react-usestateref';
 import {getFilter} from '../api';
 
+//For now quite impossible to convert to TS as all params and objects are everywhere
+
 function TableFilter({props, defaultFilter}) {
 
     const getFilterFromHash = (setFilterMethod, useAsFilter = false) => {

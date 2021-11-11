@@ -1,5 +1,5 @@
 import React from 'react';
-import {useAuth} from "../../context/UserContext";
+import {UseAuth} from "../../context/UserContext";
 import axios from 'axios';
 import {apiStates, getServerUri} from "./index";
 import {Project} from "../../interface/project";
@@ -21,9 +21,7 @@ interface ProjectState {
 
 export const GetProjects = () => {
 
-    let auth = useAuth();
-    const serverUri = getServerUri();
-    let accessToken = auth.getToken();
+
 
     const [hookState, setHookState] = React.useState<ProjectState>({
         state: apiStates.LOADING,
@@ -32,6 +30,11 @@ export const GetProjects = () => {
     });
 
     const createInstance = async () => {
+
+        let auth = UseAuth();
+        const serverUri = getServerUri();
+        let accessToken = auth.getToken();
+
         return axios.create({
             baseURL: serverUri + '/api',
             timeout: 5000,

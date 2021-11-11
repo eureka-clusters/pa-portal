@@ -16,12 +16,10 @@ export const KEY_REFRESH_TOKEN = 'refreshToken';
 export const KEY_USER_STATE = 'user';
 export const KEY_REDIRECT = 'redirect';
 
-
-
 const authContext = createContext();
 
 // Provider component that wraps your app and makes auth object ...
-// ... available to any child component that calls useAuth().
+// ... available to any child component that calls UseAuth().
 export function ProvideAuth({ children }) {
     const auth = useProvideAuth();
     return (
@@ -33,7 +31,7 @@ export function ProvideAuth({ children }) {
 
 // Hook for child components to get the auth object ...
 // ... and re-render when it changes.
-export const useAuth = () => {
+export const UseAuth = () => {
     return useContext(authContext);
 };
 

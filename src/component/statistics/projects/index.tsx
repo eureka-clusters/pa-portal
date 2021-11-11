@@ -3,11 +3,9 @@ import {Button, Form} from "react-bootstrap";
 import ProjectTable from "./project-table";
 import ProjectFacets from './project-facets';
 import TableFilter from '../../../function/api/table-filter';
-import {useAuth} from "../../../context/UserContext";
+import {UseAuth} from "../../../context/UserContext";
 import {getFilter, getServerUri} from '../../../function/api';
 import downloadBase64File from "../../../function/DownloadBase64";
-// useToggle only for testing a togglebutton
-import {useToggle} from '../../../function/utils';
 import {DownloadButton} from './download-excel';
 import {RouteComponentProps} from "react-router-dom";
 
@@ -21,9 +19,7 @@ interface Props extends RouteComponentProps<MatchParams> {
 
 export default function ProjectStatistics(props: Props) {
 
-    let auth = useAuth();
-
-    const [isTextChanged, setIsTextChanged] = useToggle();
+    let auth = UseAuth();
 
     const defaultFilter = {
         country: [],
@@ -37,7 +33,7 @@ export default function ProjectStatistics(props: Props) {
         year: [],
     };
 
-    const { updateHash, updateFilter, filter, setFilter} = TableFilter({props, defaultFilter});
+    const {updateHash, updateFilter, filter, setFilter} = TableFilter({props, defaultFilter});
 
     const downloadExcel = async () => {
         var serverUri = getServerUri();

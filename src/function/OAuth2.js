@@ -1,4 +1,4 @@
-import Config from "../constants/Config";
+import Config from "../constants/config";
 import axios from 'axios';
 
 export const OAuth2 = {

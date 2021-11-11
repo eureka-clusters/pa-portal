@@ -1,5 +1,5 @@
 import React from 'react';
-import {useAuth} from "../../../../context/UserContext";
+import {UseAuth} from "../../../../context/UserContext";
 import axios from 'axios';
 import {apiStates, getServerUri} from "../../index";
 import {Partner} from "../../../../interface/project/partner";
@@ -18,7 +18,7 @@ interface PartnerState {
 
 export const GetResults = (filter: string) => {
 
-    let auth = useAuth();
+    let auth = UseAuth();
     const serverUri = getServerUri();
     let accessToken = auth.getToken();
 

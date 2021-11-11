@@ -1,6 +1,6 @@
 import React from 'react';
-import {useAuth} from "../../context/UserContext";
-import Config from "../../constants/Config";
+import {UseAuth} from "../../context/UserContext";
+import Config from "../../constants/config";
 import axios from 'axios';
 
 export {getFilter} from './filter-functions';
@@ -20,7 +20,7 @@ export const getServerUri = () => {
 
 export const Api = url => {
 
-    let auth = useAuth();
+    let auth = UseAuth();
 
     const [hookState, setHookState] = React.useState({
         state: apiStates.LOADING,

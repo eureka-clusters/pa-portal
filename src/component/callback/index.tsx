@@ -1,5 +1,5 @@
 import React, {useEffect } from 'react';
-import { useAuth } from "../../context/UserContext";
+import { UseAuth } from "../../context/UserContext";
 import { useHistory } from "react-router-dom";
 import {RouteComponentProps} from "react-router-dom";
 
@@ -8,7 +8,7 @@ const LoadingComponent = () => <div> Waiting for login... </div>
 
 export default function Callback(props:RouteComponentProps) {
   
-    const auth = useAuth();
+    const auth = UseAuth();
     let history = useHistory();
 
     /*

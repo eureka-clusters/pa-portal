@@ -2,8 +2,8 @@
 import React, { useState, useEffect } from "react";
 
 import Button from 'react-bootstrap/Button'
-import { useAuth } from "../../context/UserContext";
-import Config from "../../constants/Config";
+import { UseAuth } from "../../context/UserContext";
+import Config from "../../constants/config";
 
 import { Me } from "./Me";
 
@@ -11,7 +11,7 @@ import axios from 'axios';
 
 
 const ProtectedPage = () => {
-    let auth = useAuth();
+    let auth = UseAuth();
     const serverUri = Config.SERVER_URI;
     const url = serverUri + '/api/me';
     

@@ -1,17 +1,17 @@
 version: "3.8"
 
 services:
-  web: #https://gist.github.com/przbadu/4a62a5fc5f117cda1ed5dc5409bd4ac1
+  web:
     build:
       context: .
       target: build
     image: pa-portal-cli
-    container_name: pa-portal-cli
+    container_name: pa-portal-web
     volumes:
       - .:/app
 
   app:
-    container_name: pa-portal-dev
+    container_name: pa-portal-app
     image: pa-portal-dev
     build:
       context: .

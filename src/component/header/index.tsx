@@ -1,14 +1,14 @@
 import React from 'react';
 import {NavLink} from "react-router-dom";
 import {Container, Nav, Navbar, NavDropdown} from 'react-bootstrap';
-import {useAuth} from "../../context/UserContext";
+import {UseAuth} from "../../context/UserContext";
 import Button from 'react-bootstrap/Button'
 
 import './header.scss';
 
 export default function Header() {
     // Get auth state and re-render anytime it changes
-    let auth = useAuth();
+    let auth = UseAuth();
 
     return (
         <header className="header">

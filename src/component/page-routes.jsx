@@ -1,7 +1,7 @@
 import {Redirect, Route, Switch, useHistory, useLocation} from "react-router-dom";
 
 // import Switch from "react-bootstrap/Switch";
-import {useAuth} from "../context/UserContext";
+import {UseAuth} from "../context/UserContext";
 
 import Login from "./login";
 import Callback from "./callback";
@@ -39,7 +39,7 @@ function GenericNotFound() {
 
 // test page
 function AccountPage() {
-    let auth = useAuth();
+    let auth = UseAuth();
     return <h3>Account page currently in PageRoutes.js user = "{auth.user}"</h3>;
 }
 
@@ -51,7 +51,7 @@ function HomePage() {
 function LoginPage() {
     let history = useHistory();
     let location = useLocation();
-    let auth = useAuth();
+    let auth = UseAuth();
 
     let {from} = location.state || {from: {pathname: "/"}};
     let login = () => {
@@ -71,7 +71,7 @@ function LoginPage() {
 // A wrapper for <Route> that redirects to the login
 // screen if you're not yet authenticated.
 function PrivateRoute({children, ...props}) {
-    let auth = useAuth();
+    let auth = UseAuth();
 
     // @Johan
     // with the following code routes like below are working
