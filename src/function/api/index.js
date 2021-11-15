@@ -18,7 +18,7 @@ export const GetServerUri = () => {
     return serverUri;
 };
 
-export const Api = (url: string) => {
+export const Api = (url) => {
 
     let auth = UseAuth();
 

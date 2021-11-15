@@ -104,14 +104,14 @@ link the current entry
 <BreadcrumbTree current="project_partner" data={data} linkCurrent={true} />
 */
 
-interface Props {
-    current: string,
-    data: Array<any>,
-    linkCurrent: boolean
-}
+// interface Props {
+//     current: string,
+//     data: Object,
+//     linkCurrent: boolean
+// }
 
 // function BreadcrumbTree({ children, ...props }) {
-const BreadcrumbTree: FC<Props> = ({current, data, linkCurrent}) => {
+const BreadcrumbTree = ({current, data, linkCurrent}) => {
 
     const [breadcrumbs, setBreadcrumbs] = useState([]);
 
