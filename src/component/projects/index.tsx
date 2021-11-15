@@ -1,12 +1,13 @@
 import React from 'react';
 import {Table} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
-import BreadcrumbTree from '../partial/BreadcrumbTree'
+import BreadcrumbTree from 'component/partial/breadcrumb-tree'
+import DataTable from 'component/database-table/index';
+import {Project} from "interface/project";
+import {CostsFormat, EffortFormat} from 'function/utils';
+import {ApiError, apiStates, GetProjects} from "function/api/get-projects";
+
 import './projects.scss';
-import DataTable from '../DataTableBase';
-import {Project} from "../../interface/project";
-import {CostsFormat, EffortFormat} from '../../function/utils';
-import {ApiError, apiStates, GetProjects} from "../../function/api/get-projects";
 
 export default function Projects() {
 

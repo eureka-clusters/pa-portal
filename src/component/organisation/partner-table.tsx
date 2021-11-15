@@ -1,13 +1,13 @@
 import React, {FC} from 'react';
 import {Table} from "react-bootstrap";
-import {ApiError, apiStates} from '../../function/api';
+import {ApiError, apiStates} from 'function/api';
 import NumberFormat from "react-number-format";
 import {Link} from "react-router-dom";
-import DataTable from '../DataTableBase';
-import {CostsFormat, EffortFormat} from '../../function/utils';
-import {GetPartners} from "../../function/api/get-partners";
-import {Partner} from "../../interface/project/partner";
-import {Organisation} from "../../interface/organisation";
+import DataTable from 'component/database-table/index';
+import {CostsFormat, EffortFormat} from 'function/utils';
+import {GetPartners} from "function/api/get-partners";
+import {Partner} from "interface/project/partner";
+import {Organisation} from "interface/organisation";
 
 interface Props {
     organisation: Organisation

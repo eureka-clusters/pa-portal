@@ -1,9 +1,9 @@
 import React from 'react';
-import {ApiError, apiStates} from '../../function/api';
+import {ApiError, apiStates} from 'function/api';
 import {Link, RouteComponentProps} from "react-router-dom";
-import BreadcrumbTree from '../partial/BreadcrumbTree'
-import {GetOrganisation} from "../../function/api/get-organisation";
-import PartnerTable from "./partner-table";
+import BreadcrumbTree from 'component/partial/breadcrumb-tree'
+import {GetOrganisation} from "function/api/get-organisation";
+import PartnerTable from "component/organisation/partner-table";
 
 //Create the interface to identify the slug
 interface MatchParams {

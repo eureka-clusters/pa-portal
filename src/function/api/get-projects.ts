@@ -1,11 +1,11 @@
 import React from 'react';
-import {UseAuth} from "../../context/UserContext";
+import {UseAuth} from "context/user-context";
 import axios from 'axios';
-import {apiStates, getServerUri} from "./index";
-import {Project} from "../../interface/project";
+import {apiStates, GetServerUri} from "function/api/index";
+import {Project} from "interface/project";
 
-export {apiStates} from './index';
-export {ApiError} from './index';
+export {apiStates} from 'function/api/index';
+export {ApiError} from 'function/api/index';
 
 interface ProjectResponse {
     _embedded: {
@@ -21,7 +21,8 @@ interface ProjectState {
 
 export const GetProjects = () => {
 
-
+    let auth = UseAuth();
+    const serverUri = GetServerUri();
 
     const [hookState, setHookState] = React.useState<ProjectState>({
         state: apiStates.LOADING,
@@ -31,8 +32,6 @@ export const GetProjects = () => {
 
     const createInstance = async () => {
 
-        let auth = UseAuth();
-        const serverUri = getServerUri();
         let accessToken = auth.getToken();
 
         return axios.create({

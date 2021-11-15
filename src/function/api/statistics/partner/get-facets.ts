@@ -1,10 +1,10 @@
 import React from 'react';
-import {UseAuth} from "../../../../context/UserContext";
+import {UseAuth} from "context/user-context";
 import axios from 'axios';
-import {apiStates, getServerUri} from "../../index";
-import {Facets} from "../../../../interface/statistics/partner/facets";
+import {apiStates, GetServerUri} from "function/api/index";
+import {Facets} from "interface/statistics/partner/facets";
 
-export {apiStates, ApiError, getFilter} from './../../index';
+export {apiStates, ApiError, getFilter} from 'function/api/index';
 
 interface FacetState {
     state: string;
@@ -15,7 +15,7 @@ interface FacetState {
 export const GetFacets = (filter: string) => {
 
     let auth = UseAuth();
-    const serverUri = getServerUri();
+    const serverUri = GetServerUri();
     let accessToken = auth.getToken();
 
     const [hookState, setHookState] = React.useState<FacetState>({

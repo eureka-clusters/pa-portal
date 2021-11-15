@@ -1,7 +1,7 @@
 import React from 'react';
 import {NavLink} from "react-router-dom";
 import {Container, Nav, Navbar, NavDropdown} from 'react-bootstrap';
-import {UseAuth} from "../../context/UserContext";
+import {UseAuth} from "context/user-context";
 import Button from 'react-bootstrap/Button'
 
 import './header.scss';

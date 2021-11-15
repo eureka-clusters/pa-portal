@@ -1,10 +1,10 @@
 import React, {FC, useEffect} from 'react';
-import {ApiError, apiStates, getFilter} from '../../../function/api';
+import {ApiError, apiStates, getFilter} from 'function/api';
 import {Link} from "react-router-dom";
-import DataTable from '../../DataTableBase';
-import {CostsFormat, EffortFormat} from '../../../function/utils';
-import {GetResults} from "../../../function/api/statistics/project/get-results";
-import {Project} from "../../../interface/project";
+import DataTable from 'component/database-table/index';
+import {CostsFormat, EffortFormat} from 'function/utils';
+import {GetResults} from "function/api/statistics/project/get-results";
+import {Project} from "interface/project";
 
 interface Props {
     filter: any

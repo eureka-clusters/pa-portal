@@ -1,20 +1,16 @@
-
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 
 import Button from 'react-bootstrap/Button'
-import { UseAuth } from "../../context/UserContext";
-import Config from "../../constants/config";
-
-import { Me } from "./Me";
+import {UseAuth} from "context/user-context";
+import Config from "constants/config";
 
 import axios from 'axios';
-
 
 const ProtectedPage = () => {
     let auth = UseAuth();
     const serverUri = Config.SERVER_URI;
     const url = serverUri + '/api/me';
-    
+
     const [isLoading, setLoading] = useState(true);
     const [data, setData] = useState([]);
     const [refetch, setRefetch] = useState(false);
@@ -26,16 +22,15 @@ const ProtectedPage = () => {
         const serverUri = Config.SERVER_URI;
         let accessToken = await auth.getToken();
         console.log('accessToken used in getApi', accessToken);
-       
-        const instance = axios.create({
+
+        return axios.create({
             baseURL: serverUri + '/api',
             timeout: 1000,
-            headers: { 
+            headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${accessToken}`
             }
         });
-        return instance;
     };
 
 
@@ -56,10 +51,10 @@ const ProtectedPage = () => {
                     'Authorization': 'Bearer ' + accessToken
                 }
             })
-            .then((response) => response.json())
-            .then((json) => setData(json))
-            .catch((error) => console.error(error))
-            .finally(() => setLoading(false));
+                .then((response) => response.json())
+                .then((json) => setData(json))
+                .catch((error) => console.error(error))
+                .finally(() => setLoading(false));
         })();
 
 
@@ -104,7 +99,7 @@ const ProtectedPage = () => {
         //         abortController.abort(); // cancel pending fetch request on component unmount
         //     };
         // }();
-        
+
         // or just like this?
         // auth.getToken().then(accessToken => {
         //     console.log('fetch use Token:', accessToken);
@@ -121,9 +116,9 @@ const ProtectedPage = () => {
         //     .catch((error) => console.error(error))
         //     .finally(() => setLoading(false));
         // });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [refetch]);
-    
+
     // possible problem if the same useEffect is called multiple times (perhaps in Statistics?)
     // invalidate and click the refetch3 button
     useEffect(() => {
@@ -180,7 +175,7 @@ const ProtectedPage = () => {
 
     useEffect(() => {
         (async () => {
-            
+
             // test by setting only the global defaults https://github.com/axios/axios#global-axios-defaults
             // const serverUri = Config.SERVER_URI;
             // let token = await auth.getToken();
@@ -197,9 +192,9 @@ const ProtectedPage = () => {
                 // settings could be overwritten
                 timeout: 5000
             }) // axios automatically returns json in response.data
-            .then((response) => setData(response.data))
-            .catch((error) => console.error(error))
-            .finally(() => setLoading(false));
+                .then((response) => setData(response.data))
+                .catch((error) => console.error(error))
+                .finally(() => setLoading(false));
 
             // check to see if  a second getApi() call would generate 2nd accessToken when the Token is currently expired 
             // => it doesn't generate 2 codes 
@@ -209,52 +204,53 @@ const ProtectedPage = () => {
                 // settings could be overwritten
                 timeout: 5000
             }) // axios automatically returns json in response.data
-            .then((response) => setData(response.data))
-            .catch((error) => console.error(error))
-            .finally(() => setLoading(false));
+                .then((response) => setData(response.data))
+                .catch((error) => console.error(error))
+                .finally(() => setLoading(false));
         })();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [refetch2]);
 
 
-
-
-
     return (
         <div>
             render me Component:
-            <Me />
+
             <h3>Protected page with user "{auth.user}"</h3>
             <p>
-                AccessToken "{auth.accessToken}" <br />
-                RefreshToken "{auth.refreshToken}" <br />
+                AccessToken "{auth.accessToken}" <br/>
+                RefreshToken "{auth.refreshToken}" <br/>
 
                 {/* <Button onClick={() => auth.getAccessToken()}>getAccessToken()</Button>  <br /> */}
                 {/* <Button onClick={() => auth.getRefreshToken()}>getRefreshToken()</Button>  <br /> */}
 
-                <Button onClick={() => auth.getToken()}>getToken()</Button> auth.getToken() <br />
-                
-                <Button onClick={() => auth.UseRefreshToken()}>UseRefreshToken()</Button> refresh token manually <br />
+                <Button onClick={() => auth.getToken()}>getToken()</Button> auth.getToken() <br/>
 
-                <Button onClick={() => auth.invalidateToken()}>invalidateToken()</Button> invalidate token <br />
+                <Button onClick={() => auth.UseRefreshToken()}>UseRefreshToken()</Button> refresh token manually <br/>
+
+                <Button onClick={() => auth.invalidateToken()}>invalidateToken()</Button> invalidate token <br/>
 
 
-                <br />
-                <Button onClick={() => setRefetch(!refetch)}>refetch</Button> normal fetch example<br />
-                <Button onClick={() => setRefetch2(!refetch2)}>refetch2</Button> Load the data via axios (currently executes 2 request for testing reasons)<br />
+                <br/>
+                <Button onClick={() => setRefetch(!refetch)}>refetch</Button> normal fetch example<br/>
+                <Button onClick={() => setRefetch2(!refetch2)}>refetch2</Button> Load the data via axios (currently
+                executes 2 request for testing reasons)<br/>
 
-                <br />
-                <span>Possible issues invalidate before clicking. Both examples generate multiple AccessTokens </span> <br />
-                <Button onClick={() => setRefetch3(!refetch3)}>refetch3</Button>  Possible issue of the auth.getToken() is used in the same useeffect call<br />
+                <br/>
+                <span>Possible issues invalidate before clicking. Both examples generate multiple AccessTokens </span>
+                <br/>
+                <Button onClick={() => setRefetch3(!refetch3)}>refetch3</Button> Possible issue of the auth.getToken()
+                is used in the same useeffect call<br/>
 
-                <Button onClick={() => setRefetch4(!refetch4)}>refetch4</Button>  Possible issue of the auth.getToken() is used in the multipe useeffect calls<br />
+                <Button onClick={() => setRefetch4(!refetch4)}>refetch4</Button> Possible issue of the auth.getToken()
+                is used in the multipe useeffect calls<br/>
 
-                <br />
-                <Button onClick={refreshPage}>Reload page</Button><br />
+                <br/>
+                <Button onClick={refreshPage}>Reload page</Button><br/>
             </p>
             <h3>data from api call:</h3>
             <p>
-                {data.firstName} {data.lastName} ({data.email})<br />
+                {data.firstName} {data.lastName} ({data.email})<br/>
             </p>
         </div>
     );

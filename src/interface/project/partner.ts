@@ -1,6 +1,6 @@
-import {Project} from "../project";
-import {Contact} from "../contact";
-import {Organisation} from "../organisation";
+import {Project} from "interface/project";
+import {Contact} from "interface/contact";
+import {Organisation} from "interface/organisation";
 
 export interface Partner {
     id: number,

@@ -1,11 +1,10 @@
 import React from 'react';
 import {Table} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
-import BreadcrumbTree from '../partial/BreadcrumbTree';
-import DataTable from '../DataTableBase';
-import {ApiError, apiStates, GetOrganisations} from "../../function/api/get-organisations";
-import {Organisation} from "../../interface/organisation";
-
+import BreadcrumbTree from 'component/partial/breadcrumb-tree';
+import DataTable from 'component/database-table/index';
+import {ApiError, apiStates, GetOrganisations} from "function/api/get-organisations";
+import {Organisation} from "interface/organisation";
 
 export default function Organisations() {
 

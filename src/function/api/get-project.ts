@@ -1,11 +1,11 @@
 import React from 'react';
-import {UseAuth} from "../../context/UserContext";
+import {UseAuth} from "context/user-context";
 import axios from 'axios';
-import {apiStates, getServerUri} from "./index";
-import {Project} from "../../interface/project";
+import {apiStates, GetServerUri} from "function/api/index";
+import {Project} from "interface/project";
 
-export {apiStates} from './index';
-export {ApiError} from './index';
+export {apiStates} from 'function/api/index';
+export {ApiError} from 'function/api/index';
 
 interface ProjectState {
     state: string;
@@ -16,7 +16,7 @@ interface ProjectState {
 export const GetProject = (slug: string) => {
 
     let auth = UseAuth();
-    const serverUri = getServerUri();
+    const serverUri = GetServerUri();
     let accessToken = auth.getToken();
 
     const [hookState, setHookState] = React.useState<ProjectState>({

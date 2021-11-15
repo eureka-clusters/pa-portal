@@ -1,5 +1,5 @@
-import {Organisation} from "../organisation";
-import {Contact} from "../contact";
+import {Organisation} from "interface/organisation";
+import {Contact} from "interface/contact";
 
 export interface Coordinator {
     id: number,

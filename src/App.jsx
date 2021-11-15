@@ -1,23 +1,13 @@
-import React, {ErrorInfo} from "react";
-
-import Header from './component/header';
-import Footer from './component/footer';
-import Content from './component/content';
-
-import {ProvideAuth} from "./context/UserContext.js";
-
 import './App.scss';
 
-interface State {
-    error: Error | null,
-    errorInfo: ErrorInfo | null
-}
+import Content from './component/content';
+import { ProvideAuth } from "./context/user-context";
+import React from "react";
 
 class ErrorBoundary extends React.Component {
+    state = { error: null, errorInfo: null };
 
-    state: Readonly<State> = {error: null, errorInfo: null};
-
-    componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    componentDidCatch(error, errorInfo) {
         this.setState({
             error: error,
             errorInfo: errorInfo
@@ -28,10 +18,10 @@ class ErrorBoundary extends React.Component {
         if (this.state.errorInfo) {
             return (
                 <div>
-                    <h2>Something went wrong.</h2>
-                    <details style={{whiteSpace: "pre-wrap"}}>
+                    <h2>An error was thrown</h2>
+                    <details style={{ whiteSpace: "pre-wrap" }}>
                         {this.state.error && this.state.error.toString()}
-                        <br/>
+                        <br />
                         {this.state.errorInfo.componentStack}
                     </details>
                 </div>
@@ -47,9 +37,7 @@ function App() {
         <div className="App">
             <ErrorBoundary>
                 <ProvideAuth>
-                    <Header/>
-                    <Content/>
-                    <Footer/>
+                    <Content />
                 </ProvideAuth>
             </ErrorBoundary>
         </div>

@@ -1,11 +1,11 @@
 import React from 'react';
-import {UseAuth} from "../../context/UserContext";
+import {UseAuth} from "context/user-context";
 import axios from 'axios';
-import {apiStates, getServerUri} from "./index";
-import {Organisation} from "../../interface/organisation";
+import {apiStates, GetServerUri, ApiError} from 'function/api/index';
+import {Organisation} from "interface/organisation";
 
-export {apiStates} from './index';
-export {ApiError} from './index';
+export {apiStates} from 'function/api/index';
+export {ApiError} from 'function/api/index';
 
 interface OrganisationResponse {
     _embedded: {
@@ -22,7 +22,7 @@ interface OrganisationState {
 export const GetOrganisations = () => {
 
     let auth = UseAuth();
-    const serverUri = getServerUri();
+    const serverUri = GetServerUri();
     let accessToken = auth.getToken();
 
     const [hookState, setHookState] = React.useState<OrganisationState>({

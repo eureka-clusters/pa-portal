@@ -1,8 +1,8 @@
 import React from 'react';
-import {UseAuth} from "../../../../context/UserContext";
+import {UseAuth} from "context/user-context";
 import axios from 'axios';
-import {apiStates, getServerUri} from "../../index";
-import {Project} from "../../../../interface/project";
+import {apiStates, GetServerUri} from "function/api/index";
+import {Project} from "interface/project";
 
 interface ProjectResponse {
     _embedded: {
@@ -19,7 +19,7 @@ interface ProjectState {
 export const GetResults = (filter: string) => {
 
     let auth = UseAuth();
-    const serverUri = getServerUri();
+    const serverUri = GetServerUri();
     let accessToken = auth.getToken();
 
     const [hookState, setHookState] = React.useState<ProjectState>({

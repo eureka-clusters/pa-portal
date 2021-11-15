@@ -1,8 +1,8 @@
 import React from 'react';
 
 import {Form} from "react-bootstrap";
-import {ApiError, apiStates, getFilter} from '../../../function/api';
-import {GetFacets} from "../../../function/api/statistics/partner/get-facets";
+import {ApiError, apiStates, getFilter} from 'function/api';
+import {GetFacets} from "function/api/statistics/partner/get-facets";
 
 const PartnerFacets = (filter: any, setFilter: any, updateFilter: any, updateResults: any, updateHash: any) => {
 

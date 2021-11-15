@@ -1,7 +1,7 @@
 import {Redirect, Route, Switch, useHistory, useLocation} from "react-router-dom";
 
 // import Switch from "react-bootstrap/Switch";
-import {UseAuth} from "../context/UserContext";
+import {UseAuth} from "context/user-context";
 
 import Login from "./login";
 import Callback from "./callback";
@@ -18,24 +18,26 @@ import PartnerStatistics from "./statistics/partners"
 
 import Partner from "./partner";
 
-import ProtectedPage from "./partial/ProtectedPage";
-import PublicPage from "./partial/PublicPage";
+import ProtectedPage from "./partial/protected-page";
+import PublicPage from "./partial/public-page";
 
 import {createBrowserHistory} from 'history';
 
 // const GenericNotFound = () => {
 function GenericNotFound() {
     const browserHistory = createBrowserHistory();
+
     const previousLocation = () => {
         browserHistory.goBack();
-    };
+    }
+
     return (
         <section>
             <h1>Page not found</h1>
             <button onClick={previousLocation}>Go back</button>
         </section>
-    );
-};
+    )
+}
 
 // test page
 function AccountPage() {

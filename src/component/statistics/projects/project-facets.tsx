@@ -2,7 +2,7 @@ import React from 'react';
 
 import {Form} from "react-bootstrap";
 import BootstrapSwitchButton from "bootstrap-switch-button-react";
-import {ApiError, apiStates, GetFacets, getFilter} from "../../../function/api/statistics/project/get-facets";
+import {ApiError, apiStates, GetFacets, getFilter} from "function/api/statistics/project/get-facets";
 
 /**
  * @TODO get rid fo the any here

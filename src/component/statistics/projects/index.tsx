@@ -1,12 +1,11 @@
 import React from 'react';
 import {Button, Form} from "react-bootstrap";
-import ProjectTable from "./project-table";
-import ProjectFacets from './project-facets';
-import TableFilter from '../../../function/api/table-filter';
-import {UseAuth} from "../../../context/UserContext";
-import {getFilter, getServerUri} from '../../../function/api';
-import downloadBase64File from "../../../function/DownloadBase64";
-import {DownloadButton} from './download-excel';
+import ProjectTable from "component/statistics/projects/project-table";
+import ProjectFacets from 'component/statistics/projects/project-facets';
+import TableFilter from 'function/api/table-filter';
+import {UseAuth} from "context/user-context";
+import {getFilter, GetServerUri} from 'function/api';
+import downloadBase64File from "function/DownloadBase64";
 import {RouteComponentProps} from "react-router-dom";
 
 //Create the interface to identify the slug
@@ -36,7 +35,7 @@ export default function ProjectStatistics(props: Props) {
     const {updateHash, updateFilter, filter, setFilter} = TableFilter({props, defaultFilter});
 
     const downloadExcel = async () => {
-        var serverUri = getServerUri();
+        var serverUri = GetServerUri();
         var hash = getFilter(filter);
         let accessToken = await auth.getToken();
         fetch(serverUri + '/api/statistics/download/project/' + hash,
@@ -76,10 +75,6 @@ export default function ProjectStatistics(props: Props) {
                         <ProjectTable filter={filter}/>
 
                         {/*<Button onClick={setIsTextChanged}>{isTextChanged ? 'Toggled' : 'Click to Toggle'}</Button> // simple toggle button*/}
-                        <br/><br/>
-
-                        <DownloadButton filter={filter}/> (test with the download button with status opens download
-                        2x <br/>the download also starts if togglebutton is clicked and download not reseted)
                         <br/><br/>
 
                         <Button onClick={downloadExcel}>Export to Excel</Button> // normal export via using fetch (could

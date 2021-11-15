@@ -1,10 +1,19 @@
-import Config from "../constants/config";
+import Config from "constants/config";
 import axios from 'axios';
+
+export interface BearerToken {
+    access_token: string
+    refresh_token: string,
+    expires_in: number,
+    status: number,
+    detail: string,
+    title: string
+}
 
 export const OAuth2 = {
     createInstance() {
         const serverUri = Config.SERVER_URI;
-        const instance = axios.create({
+        return axios.create({
             baseURL: serverUri,
             timeout: 1000,
             headers: {
@@ -12,13 +21,13 @@ export const OAuth2 = {
                 'Content-Type': 'application/json',
             }
         });
-        return instance;
     },
 
-    async AuthorizeRequest(authorizationCode, cb) {
+    async AuthorizeRequest(authorizationCode: string) {
         console.debug('authorizationCode in custom oauth', authorizationCode);
         let axios = this.createInstance();
-        const res = await axios.post('/oauth', {
+
+        return await axios.post<BearerToken>('/oauth', {
             'client_id': Config.CLIENT_ID,
             'client_secret': Config.CLIENT_SECRET,
             'redirect_uri': Config.REDIRECT_URI,
@@ -33,14 +42,12 @@ export const OAuth2 = {
                 console.error(error);
                 throw new Error(error);
             });
-        console.debug('AuthorizeRequest res:', res);
-        return res;
     },
 
-    async RefreshRequest(refreshToken, cb) {
+    async RefreshRequest(refreshToken: string) {
         console.debug('Use the refresh token', refreshToken);
         let axios = this.createInstance();
-        const res = await axios.post('/oauth', {
+        return await axios.post<BearerToken>('/oauth', {
             'client_id': Config.CLIENT_ID,
             'client_secret': Config.CLIENT_SECRET,
             'redirect_uri': Config.REDIRECT_URI,
@@ -55,7 +62,5 @@ export const OAuth2 = {
                 console.error(error);
                 throw new Error(error);
             });
-        console.debug('RefreshRequest res:', res);
-        return res;
     }
 }

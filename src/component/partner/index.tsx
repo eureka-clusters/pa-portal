@@ -1,9 +1,9 @@
 import React from 'react';
-import {ApiError, apiStates} from '../../function/api';
+import {ApiError, apiStates} from 'function/api';
 import {Link, RouteComponentProps} from "react-router-dom";
-import BreadcrumbTree from '../partial/BreadcrumbTree'
+import BreadcrumbTree from 'component/partial/breadcrumb-tree'
 import NumberFormat from "react-number-format";
-import {GetPartner} from "../../function/api/get-partner";
+import {GetPartner} from "function/api/get-partner";
 
 //Create the interface to identify the slug
 interface MatchParams {

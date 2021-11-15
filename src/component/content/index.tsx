@@ -1,6 +1,6 @@
 import {Container} from 'react-bootstrap';
 
-import PageRoutes from '../page-routes';
+import PageRoutes from 'component/page-routes';
 
 export default function Content() {
     return (

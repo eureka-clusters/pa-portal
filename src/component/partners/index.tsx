@@ -1,7 +1,7 @@
 import React from 'react';
 import {Table} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
-import {ApiError, apiStates, GetPartners} from "../../function/api/get-partners";
+import {ApiError, apiStates, GetPartners} from "function/api/get-partners";
 
 export default function Partners() {
 

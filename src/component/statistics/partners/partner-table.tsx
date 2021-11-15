@@ -1,13 +1,12 @@
 import React, {FC} from 'react';
 import {Table} from "react-bootstrap";
-import {ApiError, apiStates, getFilter} from '../../../function/api';
+import {ApiError, apiStates, getFilter} from 'function/api';
 import NumberFormat from "react-number-format";
 import {Link} from "react-router-dom";
-import DataTable from '../../DataTableBase';
-import {CostsFormat, EffortFormat} from '../../../function/utils';
-import {Partner} from "../../../interface/project/partner";
-import {GetResults} from "../../../function/api/statistics/partner/get-results";
-
+import DataTable from 'component/database-table/index';
+import {CostsFormat, EffortFormat} from 'function/utils';
+import {Partner} from "interface/project/partner";
+import {GetResults} from "function/api/statistics/partner/get-results";
 
 interface Props {
     filter: any

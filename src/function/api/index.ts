@@ -1,10 +1,10 @@
-import React from 'react';
-import {UseAuth} from "../../context/UserContext";
-import Config from "../../constants/config";
-import axios from 'axios';
+import React from "react";
+import {UseAuth} from "context/user-context";
+import axios from "axios";
+import Config from "constants/config";
 
-export {getFilter} from './filter-functions';
-export {ApiError} from './api-error';
+export {getFilter} from 'function/api/filter-functions';
+export {ApiError} from 'function/api/api-error';
 
 export const apiStates = {
     LOADING: 'LOADING',
@@ -12,13 +12,13 @@ export const apiStates = {
     ERROR: 'ERROR'
 }
 
-export const getServerUri = () => {
+export const GetServerUri = () => {
     const serverUri = Config.SERVER_URI;
     console.log(['serverUri', serverUri]);
     return serverUri;
 };
 
-export const Api = url => {
+export const Api = (url: string) => {
 
     let auth = UseAuth();
 
@@ -29,7 +29,7 @@ export const Api = url => {
     });
 
     const createInstance = async () => {
-        const serverUri = getServerUri();
+        const serverUri = GetServerUri();
         let accessToken = await auth.getToken();
 
         return axios.create({
@@ -43,22 +43,17 @@ export const Api = url => {
         });
     };
 
-    const load = (directurl) => {
+    const load = () => {
 
         const setPartData = partialData => {
             setHookState(hookState => ({...hookState, ...partialData}))
         }
 
-        if (directurl !== undefined) {
-            url = directurl;
-        }
-
-
         setPartData({
             state: apiStates.LOADING
         })
         createInstance().then(axios => {
-            // axios automatically returns json in response.data and catches errors 
+            // axios automatically returns json in response.data and catches errors
             axios.get(url, {
                 // settings could be overwritten
                 // timeout: 1000

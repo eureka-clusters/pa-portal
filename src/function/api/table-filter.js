@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import useState from 'react-usestateref';
-import {getFilter} from '../api';
+import {getFilter} from 'function/api/index';
 
 //For now quite impossible to convert to TS as all params and objects are everywhere
 

@@ -1,13 +1,12 @@
 import React from 'react';
-import { Form, Button } from "react-bootstrap";
-import PartnerTable from "./partner-table";
-import PartnerFacets from './partner-facets';
-import TableFilter from '../../../function/api/table-filter';
-import { UseAuth } from "../../../context/UserContext";
-import { getFilter, getServerUri } from '../../../function/api';
-import downloadBase64File from "../../../function/DownloadBase64";
+import {Form, Button} from "react-bootstrap";
+import PartnerTable from "component/statistics/partners/partner-table";
+import PartnerFacets from 'component/statistics/partners/partner-facets';
+import TableFilter from 'function/api/table-filter';
+import {UseAuth} from "context/user-context";
+import {getFilter, GetServerUri} from 'function/api';
+import downloadBase64File from "function/DownloadBase64";
 import {RouteComponentProps} from "react-router-dom";
-// import ResultChart from "./ResultChart";
 
 //Create the interface to identify the slug
 interface MatchParams {
@@ -18,7 +17,7 @@ interface Props extends RouteComponentProps<MatchParams> {
 }
 
 export default function PartnerStatistics(props: Props) {
-    
+
     let auth = UseAuth();
 
     const defaultFilter = {
@@ -29,10 +28,10 @@ export default function PartnerStatistics(props: Props) {
         year: [],
     };
 
-    const { updateHash, updateFilter, filter, setFilter } = TableFilter({ props, defaultFilter });
+    const {updateHash, updateFilter, filter, setFilter} = TableFilter({props, defaultFilter});
 
     const downloadExcel = async () => {
-        const serverUri = getServerUri();
+        const serverUri = GetServerUri();
         const hash = getFilter(filter);
         let accessToken = await auth.getToken();
         fetch(serverUri + '/api/statistics/download/partner/' + hash,
@@ -52,7 +51,8 @@ export default function PartnerStatistics(props: Props) {
     }
 
 
-    const updateResults = () => { }
+    const updateResults = () => {
+    }
 
     return (
         <React.Fragment>
@@ -64,11 +64,12 @@ export default function PartnerStatistics(props: Props) {
                 </div>
                 <div className={'row'}>
                     <div className={'col-2'}>
-                        <PartnerFacets filter={filter} setFilter={setFilter} updateFilter={updateFilter} updateHash={updateHash} updateResults={updateResults} />
+                        <PartnerFacets filter={filter} setFilter={setFilter} updateFilter={updateFilter}
+                                       updateHash={updateHash} updateResults={updateResults}/>
                     </div>
                     <div className={'col-10'}>
 
-                        <PartnerTable filter={filter} />
+                        <PartnerTable filter={filter}/>
 
                         <Button onClick={downloadExcel}>Download</Button>
                     </div>
