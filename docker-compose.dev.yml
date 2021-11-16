@@ -5,14 +5,12 @@ services:
     build:
       context: .
       target: build
-    image: pa-portal-cli
     container_name: pa-portal-web
     volumes:
       - .:/app
 
   app:
     container_name: pa-portal-app
-    image: pa-portal-dev
     build:
       context: .
       target: development
