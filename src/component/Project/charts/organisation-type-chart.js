@@ -39,6 +39,7 @@ const OrganisationTypeChart = ({ results }) => {
                 options={{
                     title: 'Partners by organisation type',
                 }}
+                // graphID="PartnersByOrganisationTypeChart"
                 rootProps={{ 'data-testid': '1' }}
             />
         </React.Fragment>

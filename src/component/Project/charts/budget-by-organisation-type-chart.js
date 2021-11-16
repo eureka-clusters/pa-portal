@@ -36,7 +36,6 @@ const BudgetByOrganisationTypeChart = ({ results }) => {
         res[value.organisation.type.type].budget += value.latestVersionCosts;
         res[value.organisation.type.type].effort += value.latestVersionEffort;
         return res;
-
     }, {});
     console.log(stats);
 
@@ -72,7 +71,7 @@ const BudgetByOrganisationTypeChart = ({ results }) => {
     return (
         <React.Fragment>
             {/* <h2>Budget by organisation type</h2> */}
-
+            <div className="col">
             <Chart
                 width={'500px'}
                 height={'300px'}
@@ -82,12 +81,14 @@ const BudgetByOrganisationTypeChart = ({ results }) => {
                 options={{
                     title: 'Budget by Organisation Types',
                 }}
+                // graphID="BudgetByOrganisationTypesChart"
                 rootProps={{ 'data-testid': '1' }}
             />
 
 
             {/* <h2>Effort by organisation type</h2> */}
-
+            </div>
+            <div className="col">
             <Chart
                 width={'500px'}
                 height={'300px'}
@@ -97,9 +98,10 @@ const BudgetByOrganisationTypeChart = ({ results }) => {
                 options={{
                     title: 'Effort by Organisation Types',
                 }}
+                // graphID="EffortByOrganisationTypesChart"
                 rootProps={{ 'data-testid': '1' }}
             />
-
+            </div>
         </React.Fragment>
     );
 }

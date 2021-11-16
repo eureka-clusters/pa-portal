@@ -1,14 +1,20 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { apiStates, Api, ApiError } from '../../function/Api';
 import { Link } from "react-router-dom";
-import DataTable from '../DataTableBase';
-import { CostsFormat, EffortFormat } from '../../function/utils';
+import DataTable from 'component/DataTableBase';
+import { CostsFormat, EffortFormat } from 'function/utils';
 import OrganisationTypeChart from './charts/organisation-type-chart';
 import OrganisationCountryChart from './charts/country-chart';
 import BudgetByOrganisationTypeChart from './charts/budget-by-organisation-type-chart';
-
+import BudgetByCountryChart from './charts/budget-amd-effort-by-country-chart';
+import Tabs from 'react-bootstrap/Tabs';
+import Tab from 'react-bootstrap/Tab';
+import TestPages from './test';
 
 const PartnerTable = ({ project }) => {
+
+    const [activeTab, setActiveTab] = useState('table'); // default tab
+
 
     const columns = [
         {
@@ -68,6 +74,7 @@ const PartnerTable = ({ project }) => {
         setResultUrl('list/partner?project=' + project.slug);
     }, [project]);
 
+
     switch (state) {
         case apiStates.ERROR:
             return <ApiError error={error} />
@@ -76,18 +83,80 @@ const PartnerTable = ({ project }) => {
                 <React.Fragment>
                     {/* <pre className='debug'>{JSON.stringify(data, undefined, 2)}</pre> */}
                     <h2>Partners</h2>
-                    <DataTable
+
+                    {/* <DataTable
                         // title="Partners"
                         keyField="id"
                         columns={columns}
                         data={data._embedded.partner}
                         pagination={false}
-                    />
+                    /> */}
+                    <TestPages />
 
-                    <OrganisationTypeChart results={data._embedded.partner} />
-                    <OrganisationCountryChart results={data._embedded.partner} />
-                    <BudgetByOrganisationTypeChart results={data._embedded.partner} />
-                    
+                    <Tabs 
+                        
+                        id="partner-tabs"
+                        className="mb-3"
+                        // defaultActiveKey="table"
+                        activeKey={activeTab}
+                        // use a state Controlled tab and window.dispatchEvent so that the charts are correctly resized (which is not the case when the tab is hidden)
+                        onSelect={(k) => {
+                            setActiveTab(k);
+                            // trigger windows resize so that the chart is re-drawn 
+                            if (k === 'charts') {
+                                console.log('trigger resize');
+                                window.dispatchEvent(new Event('resize'));
+                            }
+                        }}
+                    >
+                        <Tab eventKey="table" title="Table">
+                            <DataTable
+                                // title="Partners"
+                                keyField="id"
+                                columns={columns}
+                                data={data._embedded.partner}
+                                pagination={false}
+                            />
+                        </Tab>
+                        <Tab eventKey="charts" title="Charts">
+                            <div className="container">
+                                <div className="row">
+                                    <div className="col">
+                                        <OrganisationTypeChart results={data._embedded.partner} />
+                                    </div>
+                                    <div className="col">
+                                        <OrganisationCountryChart results={data._embedded.partner} />
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <BudgetByOrganisationTypeChart results={data._embedded.partner} />
+                                </div>
+                                <div className="row">
+                                    <BudgetByCountryChart results={data._embedded.partner} />
+                                </div>
+                            </div>
+                        </Tab>
+                        
+                    </Tabs>
+
+                    {/* <div className="container">
+                        <div className="row">
+                            <div className="col">
+                                <OrganisationTypeChart results={data._embedded.partner} />
+                            </div>
+                            <div className="col">
+                                <OrganisationCountryChart results={data._embedded.partner} />
+                            </div>
+                        </div>
+                        <div className="row">
+                            <BudgetByOrganisationTypeChart results={data._embedded.partner} />
+                        </div>
+                        <div className="row">
+                            <BudgetByCountryChart results={data._embedded.partner} />
+                        </div>
+                    </div> */}
+
+
                 </React.Fragment>
             );
         default:
