@@ -6,7 +6,7 @@ import { CostsFormat, EffortFormat } from 'function/utils';
 import OrganisationTypeChart from './charts/organisation-type-chart';
 import OrganisationCountryChart from './charts/country-chart';
 import BudgetByOrganisationTypeChart from './charts/budget-by-organisation-type-chart';
-import BudgetByCountryChart from './charts/budget-amd-effort-by-country-chart';
+import BudgetByCountryChart from './charts/budget-and-effort-by-country-chart';
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
 import TestPages from './test';
