@@ -144,10 +144,10 @@ const BreadcrumbTree = ({current, data, linkCurrent}) => {
 
     // function to substitute texts parameters
     const substituteTexts = (str, data) => {
-        const reg = /\{([a-z|A-Z|0-9|_|.]+)\}/g;
+        const reg = /{([a-zA-Z0-9_|.]+)}/g;
 
         // version which works with child objects like {organisation.name}
-        const output = reactStringReplace(str, reg, (match, i) => (
+        const output = reactStringReplace(str, reg, (match) => (
             fetchFromObject(data, match)
         ));
         return output.join('');

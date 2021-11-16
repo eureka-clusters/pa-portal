@@ -1,7 +1,7 @@
 import React from 'react';
 import {UseAuth} from "context/user-context";
 import axios from 'axios';
-import {apiStates, GetServerUri, ApiError} from 'function/api/index';
+import {apiStates, GetServerUri} from 'function/api/index';
 import {Organisation} from "interface/organisation";
 
 export {apiStates} from 'function/api/index';

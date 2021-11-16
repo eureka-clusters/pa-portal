@@ -33,7 +33,7 @@ const auth = UseProvideAuth();
 // Provider component that wraps your app and makes auth object ...
 // ... available to any child component that calls useAuth().
 export const ProvideAuth: FC<Props> = ({children}) => (
-    <AuthContext.Provider value={auth}>
+    <AuthContext.Provider value={ UseProvideAuth() }>
         {children}
     </AuthContext.Provider>
 )
@@ -61,32 +61,38 @@ function UseProvideAuth() {
     //         refreshToken: storage.getItem(KEY_REFRESH_TOKEN),
     //         accessToken: storage.getItem(KEY_ACCESS_TOKEN),
     //         authExpire: storage.getItem(KEY_EXPIRES_IN),
-    //         redirect: storage.getItem(KEY_REDIRECT),  // has to be an independed useState
+    //         redirect: storage.getItem(KEY_REDIRECT),  // has to be an independent useState
     //         loading: false,
     //         errorMessage: null
     //     }
     // );
 
     //Init the state (with an empty object?)
-    const [state, setState] = useState<UserContent>({} as UserContent);
+    //const [state, setState] = useState<UserContent>({} as UserContent);
 
     //Use the same mechanism as for the set HookState to have simpler type hinting
-    const setUserContent = (userContent: UserContent) => {
-        setState(state => ({...state, ...userContent}))
-    }
-
+    //const setUserContent = (userContent: UserContent) => {
+    //    setState(state => ({...state, ...userContent}))
+    //}
 
     // state for current running refresh via refreshToken
     // eslint-disable-next-line no-unused-vars
-    const [isRefreshing, setIsRefreshing, isRefreshing_ref] = useState(false);
+    //const [isRefreshing, setIsRefreshing, isRefreshing_ref] = useState(false);
 
     // for direct access
-    const accessToken = state.accessToken;
-    const refreshToken = state.refreshToken;
-    const authExpire = state.authExpire;
-    const user = state.user;
-    const userInfo = state.userInfo;
-    const redirect = state.redirect;
+    // const accessToken = state.accessToken;
+    // const refreshToken = state.refreshToken;
+    // const authExpire = state.authExpire;
+    // const user = state.user;
+    // const userInfo = state.userInfo;
+    // const redirect = state.redirect;
+
+    // const accessToken = '';
+    // const refreshToken = state.refreshToken;
+    // const authExpire = state.authExpire;
+    // const user = state.user;
+    // const userInfo = state.userInfo;
+    // const redirect = state.redirect;
 
     function __delay__(timer: number) {
         return new Promise<void>(resolve => {
@@ -142,35 +148,36 @@ function UseProvideAuth() {
 
     const getToken = async () => {
         // console.log(['isRefreshing_ref', isRefreshing_ref.current]);
-        if (isRefreshing_ref.current) {
-            // console.log('is currently refreshing token wait!');
-            await waitForRefreshFinish();
-        }
+       // if (isRefreshing_ref.current) {
+       //     // console.log('is currently refreshing token wait!');
+       //     await waitForRefreshFinish();
+       // }
 
         if (isExpired(getExpirationDate())) {
             // console.debug('getToken isExpired:');
-            setIsRefreshing(true);
+            //setIsRefreshing(true);
             // console.log(['isRefreshing_ref after setting true', isRefreshing_ref.current]);
             await UseRefreshToken();
 
             // test delay by 3 seconds if the second request to getTokenTest2 really waits.
             // await __delay__(3000);
         }
-        setIsRefreshing(false);
+        //setIsRefreshing(false);
         // console.log(['isRefreshing_ref after setting false', isRefreshing_ref.current]);
         return getAccessToken();
     };
 
     const waitForRefreshFinish = async () => {
-        if (isRefreshing_ref.current) {
-            // console.log('waitForRefreshFinish: isRefreshing_ref.current = true wait for another 100 ms ', isRefreshing_ref.current);
-            // delay for 100ms before rechecking
-            await __delay__(100);
-            await waitForRefreshFinish();
-        } else {
-            // console.log('waitForRefreshFinish: isRefreshing_ref.current = false ', isRefreshing_ref.current);
-            return true;
-        }
+        return false;
+        // if (isRefreshing_ref.current) {
+        //     // console.log('waitForRefreshFinish: isRefreshing_ref.current = true wait for another 100 ms ', isRefreshing_ref.current);
+        //     // delay for 100ms before rechecking
+        //     await __delay__(100);
+        //     await waitForRefreshFinish();
+        // } else {
+        //     // console.log('waitForRefreshFinish: isRefreshing_ref.current = false ', isRefreshing_ref.current);
+        //     return true;
+        // }
     }
 
     const RedirectAfterLogin = () => {
@@ -198,12 +205,12 @@ function UseProvideAuth() {
             storage.setItem(KEY_USER_STATE, String(true));
             storage.setItem(KEY_EXPIRES_IN, String(newAuthExpire.unix()));
 
-            setUserContent({
-                accessToken: bearerToken.access_token,
-                refreshToken: bearerToken.refresh_token,
-                authExpire: newAuthExpire.unix(),
-                user: "true",
-            });
+            // setUserContent({
+            //     accessToken: bearerToken.access_token,
+            //     refreshToken: bearerToken.refresh_token,
+            //     authExpire: newAuthExpire.unix(),
+            //     user: "true",
+            // });
         } else {
             // error handling (errors should be caught)
             //title: "invalid_grant", status: 400, detail: "Invalid refresh token"
@@ -256,12 +263,12 @@ function UseProvideAuth() {
     // }
 
     const logout = (cb ?: any) => {
-        setUserContent({
-            accessToken: undefined,
-            refreshToken: undefined,
-            user: undefined,
-            userInfo: undefined,
-        });
+        // setUserContent({
+        //     accessToken: undefined,
+        //     refreshToken: undefined,
+        //     user: undefined,
+        //     userInfo: undefined,
+        // });
 
         storage.removeItem(KEY_REFRESH_TOKEN);
         storage.removeItem(KEY_ACCESS_TOKEN);
@@ -275,16 +282,16 @@ function UseProvideAuth() {
     // Return the user object and auth methods
 
     return {
-        state,
-        user,
-        userInfo,
-        redirect,
+ //       state,
+ //       user,
+ //       userInfo,
+ //       redirect,
         RedirectAfterLogin,
         SaveRedirect,
         LoginWithAuthorizationCode,
-        authExpire,
-        accessToken,
-        refreshToken,
+ //       authExpire,
+ //       accessToken,
+ //       refreshToken,
         invalidateToken,
         getToken,
         getAccessToken,
