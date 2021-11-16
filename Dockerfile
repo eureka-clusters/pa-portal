@@ -53,6 +53,10 @@ RUN yarn build
 
 # Bundle static assets with nginx
 FROM nginx:1.21.0-alpine as production
+
+LABEL maintainer="johan.van.der.heide@itea4.org"
+LABEL org.opencontainers.image.source = "https://github.com/eureka-clusters/portal-backend";
+
 ENV NODE_ENV production
 
 # Copy built assets from builder
