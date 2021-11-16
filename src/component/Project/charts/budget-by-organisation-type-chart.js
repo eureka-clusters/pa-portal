@@ -12,21 +12,6 @@ const BudgetByOrganisationTypeChart = ({ results }) => {
         ['Organisation Type', 'Effort']
     ];
 
-
-    // const Types = results
-    //     .map(dataItem => dataItem.organisation.type.type) // get all organisation types
-    //     .filter((Type, index, array) => array.indexOf(Type) === index); // filter out duplicates
-
-    // console.log(results.flatMap(a => a.organisation.type.type));
-    // const res = results.flatMap(a => a.organisation.type.type).reduce((acc, { type, score }) => {
-    //     console.log(['acc', acc]);
-
-    //     console.log(['type', type]);
-    //     console.log(['score', score]);
-    //     return acc;
-    // }, {})
-    // console.log(res)
-
     var stats = [];
     results.reduce(function (res, value) {
         if (!res[value.organisation.type.type]) {
@@ -37,22 +22,8 @@ const BudgetByOrganisationTypeChart = ({ results }) => {
         res[value.organisation.type.type].effort += value.latestVersionEffort;
         return res;
     }, {});
-    console.log(stats);
+    // console.log(stats);
 
-  
-    // const counts = Types
-    //     .map(Type => ({
-    //         type: Type,
-    //         count: results.filter(item => item.organisation.type.type === Type).length
-    //     }));
-
-
-    // counts.forEach(element => {
-    //     $data.push([
-    //         element.type,
-    //         element.count
-    //     ]);
-    // });
 
     stats.forEach(element => {
         $data.push([
