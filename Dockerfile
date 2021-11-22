@@ -10,7 +10,6 @@ COPY yarn.lock .
 
 RUN yarn install
 
-
 FROM node:16-alpine AS development
 ENV NODE_ENV development
 
@@ -35,10 +34,10 @@ CMD [ "yarn", "start" ]
 FROM node:14-alpine AS builder
 ENV NODE_ENV production
 
-ENV REACT_APP_SERVER_URI $REACT_APP_SERVER_URI
-ENV REACT_APP_CLIENT_ID $REACT_APP_CLIENT_ID
-ENV REACT_APP_CLIENT_SECRET $REACT_APP_CLIENT_SECRET
-ENV REACT_APP_REDIRECT_URI $REACT_APP_REDIRECT_URI
+ENV REACT_APP_SERVER_URI 'https://api.eurekaclusters.eu'
+ENV REACT_APP_CLIENT_ID 'ZoDgQeNuqWAdtQyGPZoAPFYGGBzWqkqYHomOynefk'
+ENV REACT_APP_CLIENT_SECRET 'this_is_the_secret'
+ENV REACT_APP_REDIRECT_URI 'https://eurekaclusters.eu/callback'
 
 # Add a work directory
 WORKDIR /app
