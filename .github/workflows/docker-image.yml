@@ -1,23 +1,51 @@
-name: Docker Image CI
+name: Portal Backend Docker Image
 
 on:
   push:
     branches:
       - main
       - develop
-      - migration-to-typescript
+      - frontend-to-typescript
   pull_request:
     branches:
       - main
       - develop
 
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Build the Docker image
-        run: docker build . --file Dockerfile --target production --tag my-image-name:$(date +%s)
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.CR_PAT }}
+
+      - name: Build and push development
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          platforms: linux/amd64
+          target: development
+          push: true
+          tags: ghcr.io/eureka-clusters/backend/development:latest
+
+      - name: Build and push builder
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          platforms: linux/amd64
+          target: builder
+          push: true
+          tags: ghcr.io/eureka-clusters/backend/builder:builder
