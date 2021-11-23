@@ -1,5 +1,5 @@
-import {Country} from "./country";
-import {Type} from "./organisation/type";
+import {Country} from "interface/country";
+import {Type} from "interface/organisation/type";
 
 export interface Organisation {
     id: number,

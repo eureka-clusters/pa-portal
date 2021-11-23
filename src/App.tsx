@@ -1,15 +1,19 @@
+import React, {ErrorInfo} from "react";
+import Content from 'component/content';
+import {ProvideAuth} from "context/user-context";
+
 import './App.scss';
 
-import Content from './component/content';
-import {ProvideAuth} from "./context/user-context";
-import React from "react";
-import Header from "./component/header";
-import Footer from "./component/footer";
+interface State {
+    error: Error | null,
+    errorInfo: ErrorInfo | null
+}
 
-class ErrorBoundary extends React.Component {
-    state = {error: null, errorInfo: null};
+class ErrorBoundary extends React.Component<any, any> {
 
-    componentDidCatch(error, errorInfo) {
+    state: Readonly<State> = {error: null, errorInfo: null};
+
+    componentDidCatch(error: Error, errorInfo: ErrorInfo) {
         this.setState({
             error: error,
             errorInfo: errorInfo
@@ -33,14 +37,13 @@ class ErrorBoundary extends React.Component {
     }
 }
 
+
 function App() {
     return (
         <div className="App">
             <ErrorBoundary>
                 <ProvideAuth>
-                    <Header/>
                     <Content/>
-                    <Footer/>
                 </ProvideAuth>
             </ErrorBoundary>
         </div>
