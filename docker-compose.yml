@@ -23,8 +23,8 @@ services:
       - traefik.http.routers.pa-portal-app.rule=Host(`pa-portal.docker.localhost`)
       - traefik.http.routers.pa-portal-app.entrypoints=node
     networks:
-      - web
+      - pa-portal
 
 networks:
-  web:
+  pa-portal:
     external: true
