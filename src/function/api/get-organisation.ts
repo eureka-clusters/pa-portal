@@ -17,7 +17,7 @@ export const GetOrganisation = (slug: string) => {
 
     let auth = UseAuth();
     const serverUri = GetServerUri();
-    let accessToken = auth.getToken();
+    let jwtToken = auth.getToken();
 
     const [hookState, setHookState] = React.useState<OrganisationState>({
         state: apiStates.LOADING,
@@ -32,7 +32,7 @@ export const GetOrganisation = (slug: string) => {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${accessToken}`
+                'Authorization': `${jwtToken}`
             }
         });
     };

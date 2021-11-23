@@ -1,5 +1,4 @@
-import React, {useEffect} from 'react';
-import useState from 'react-usestateref';
+import {useEffect, useState} from 'react';
 import {getFilter} from 'function/api/index';
 
 //For now quite impossible to convert to TS as all params and objects are everywhere
@@ -58,10 +57,10 @@ function TableFilter({props, defaultFilter}) {
         return {...defaultFilter, ...getFilterFromHash()};
     }
 
-    const [filter, setFilter, filter_ref] = useState(() => getDefaultFilter());
+    const [filter, setFilter] = useState(() => getDefaultFilter());
 
     const updateHash = () => {
-        const hash = getFilter(filter_ref.current);
+        const hash = getFilter(filter.current);
         props.history.push({
             'hash': hash
         });

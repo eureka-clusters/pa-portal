@@ -1,37 +1,37 @@
 import React from 'react';
 import {UseAuth} from "context/user-context";
+import Config from "constants/config";
 import axios from 'axios';
-import {apiStates, GetServerUri} from 'function/api/index';
-import {Organisation} from "interface/organisation";
 
-export {apiStates} from 'function/api/index';
-export {ApiError} from 'function/api/index';
+export {getFilter} from './filter-functions';
+export {ApiError} from './api-error';
 
-interface OrganisationResponse {
-    _embedded: {
-        organisations: Array<Organisation>
-    }
+export const apiStates = {
+    LOADING: 'LOADING',
+    SUCCESS: 'SUCCESS',
+    ERROR: 'ERROR'
 }
 
-interface OrganisationState {
-    state: string;
-    error?: string
-    organisations: Array<Organisation>
-}
+export const GetServerUri = () => {
+    const serverUri = Config.SERVER_URI;
+    console.log(['serverUri', serverUri]);
+    return serverUri;
+};
 
-export const GetOrganisations = () => {
+export const Api = url => {
 
     let auth = UseAuth();
-    const serverUri = GetServerUri();
-    let jwtToken = auth.getToken();
 
-    const [hookState, setHookState] = React.useState<OrganisationState>({
+    const [hookState, setHookState] = React.useState({
         state: apiStates.LOADING,
         error: '',
-        organisations: []
+        data: []
     });
 
     const createInstance = async () => {
+        const serverUri = GetServerUri();
+        let jwtToken = auth.getJwtToken();
+
         return axios.create({
             baseURL: serverUri + '/api',
             timeout: 5000,
@@ -43,30 +43,48 @@ export const GetOrganisations = () => {
         });
     };
 
-    const load = () => {
+    const load = (directurl) => {
 
-        const setPartData = (partialData: { state: string; organisations?: Array<Organisation>; error?: string; }) => {
+        const setPartData = partialData => {
             setHookState(hookState => ({...hookState, ...partialData}))
         }
 
+        if (directurl !== undefined) {
+            url = directurl;
+        }
+
+
+        setPartData({
+            state: apiStates.LOADING
+        })
         createInstance().then(axios => {
             // axios automatically returns json in response.data and catches errors 
-            axios.get<OrganisationResponse>('list/organisation', {
+            axios.get(url, {
                 // settings could be overwritten
                 // timeout: 1000
             })
                 .then(response => {
-                    //Use a local const to have the proper TS typehinting
-                    const {data} = response;
-
                     setPartData({
                         state: apiStates.SUCCESS,
-                        organisations: data._embedded.organisations
+                        data: response.data
                     })
                 })
 
                 .catch(function (error) {
+                    // setPartData({
+                    //     state: apiStates.ERROR,
+                    //     error: (error.response &&
+                    //         error.response.data &&
+                    //         error.response.data.message) ||
+                    //         error.message ||
+                    //         error.toString()
+                    // });
+
                     if (error.response) {
+                        // Request made and server responded
+                        console.log(error.response.data);
+                        // console.log(error.response.status);
+                        // console.log(error.response.headers);
                         setPartData({
                             state: apiStates.ERROR,
                             error: error.response.data.title + ' ' + error.response.data.status + '\n' + error.response.data.detail
@@ -95,7 +113,7 @@ export const GetOrganisations = () => {
     React.useEffect(() => {
         load();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [url]);
 
     return {...hookState, load: load};
 }

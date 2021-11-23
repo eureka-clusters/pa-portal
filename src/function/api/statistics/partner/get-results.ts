@@ -20,7 +20,7 @@ export const GetResults = (filter: string) => {
 
     let auth = UseAuth();
     const serverUri = GetServerUri();
-    let accessToken = auth.getToken();
+    let jwtToken = auth.getToken();
 
     const [hookState, setHookState] = React.useState<PartnerState>({
         state: apiStates.LOADING,
@@ -35,7 +35,7 @@ export const GetResults = (filter: string) => {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${accessToken}`
+                'Authorization': `${jwtToken}`
             }
         });
     };

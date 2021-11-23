@@ -16,7 +16,7 @@ export const GetFacets = (filter: string) => {
 
     let auth = UseAuth();
     const serverUri = GetServerUri();
-    let accessToken = auth.getToken();
+    let jwtToken = auth.getToken();
 
     const [hookState, setHookState] = React.useState<FacetState>({
         state: apiStates.LOADING,
@@ -31,7 +31,7 @@ export const GetFacets = (filter: string) => {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${accessToken}`
+                'Authorization': `${jwtToken}`
             }
         });
     };

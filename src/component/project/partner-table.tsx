@@ -1,6 +1,6 @@
 import React, {FC} from 'react';
 import {Table} from "react-bootstrap";
-import {ApiError, apiStates} from 'function/api';
+import {ApiError, apiStates} from 'function/api/index';
 import NumberFormat from "react-number-format";
 import {Link} from "react-router-dom";
 import DataTable from 'component/database-table/index';

@@ -29,7 +29,7 @@ export function GetPartners(project?: Project | undefined, organisation?: Organi
 
     let auth = UseAuth();
     const serverUri = GetServerUri();
-    let accessToken = auth.getToken();
+    let jwtToken = auth.getToken();
 
     const [hookState, setHookState] = React.useState<PartnerState>({
         state: apiStates.LOADING,
@@ -44,7 +44,7 @@ export function GetPartners(project?: Project | undefined, organisation?: Organi
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${accessToken}`
+                'Authorization': `${jwtToken}`
             }
         });
     };

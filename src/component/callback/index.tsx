@@ -16,37 +16,10 @@ export default function Callback(props: RouteComponentProps) {
         //We switch to the URL search params API: https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams
         let params = new URLSearchParams(props.location.search);
 
-        auth.LoginWithAuthorizationCode(params.get('code'), () => {
-
-            console.log('auth in cb', auth);
-            console.log('auth.state', auth.state);
-
-            // console.log('callback after LoginWithAuthorizationCode', auth.redirect);
-            if (auth.redirect !== undefined && auth.redirect !== null) {
-                history.replace(auth.redirect);
-            } else {
-                history.replace('/');
-            }
-
-        }).then(() => {
-            console.log('auth in then', auth);
-            console.log('auth.state', auth.state);
-            console.log('auth.state.errorMessage', auth.state.errorMessage);
-
-            if (auth.state.errorMessage) {
-                console.log('auth.state.errorMessage', auth.state.errorMessage);
-                return (<h3 className="error"> {auth.state.errorMessage} </h3>);
-            }
-            return (<div> this is a test</div>);
-        });
+        auth.setJwtToken(params.get('token'));
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.location.search, history]);
-
-
-    if (auth.state.errorMessage) {
-        throw new Error(auth.state.errorMessage);
-    }
 
     return <LoadingComponent/>
 }

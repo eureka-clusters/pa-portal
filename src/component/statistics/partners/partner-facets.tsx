@@ -8,20 +8,6 @@ const PartnerFacets = (filter: any, setFilter: any, updateFilter: any, updateRes
 
     const {state, error, facets} = GetFacets(getFilter(filter));
 
-    const updateOrganisationTypeMethod = (event: any) => {
-        // filter['organisation_type_method'] = event ? 'and' : 'or';
-        let updatedValues = {
-            organisation_type_method: (event ? 'and' : 'or')
-        };
-        setFilter((prevState: any) => ({
-            ...prevState, ...updatedValues
-        }))
-
-        updateResults();
-        updateHash();
-    }
-
-
     switch (state) {
         case apiStates.ERROR:
             return <ApiError error={error}/>;

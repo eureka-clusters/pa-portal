@@ -32,7 +32,7 @@ export const GetProjects = () => {
 
     const createInstance = async () => {
 
-        let accessToken = auth.getToken();
+        let jwtToken = auth.getToken();
 
         return axios.create({
             baseURL: serverUri + '/api',
@@ -40,7 +40,7 @@ export const GetProjects = () => {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${accessToken}`
+                'Authorization': `${jwtToken}`
             }
         });
     };

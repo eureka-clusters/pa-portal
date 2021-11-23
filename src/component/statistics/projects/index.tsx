@@ -4,7 +4,7 @@ import ProjectTable from "component/statistics/projects/project-table";
 import ProjectFacets from 'component/statistics/projects/project-facets';
 import TableFilter from 'function/api/table-filter';
 import {UseAuth} from "context/user-context";
-import {getFilter, GetServerUri} from 'function/api';
+import {getFilter, GetServerUri} from 'function/api/index';
 import downloadBase64File from "function/DownloadBase64";
 import {RouteComponentProps} from "react-router-dom";
 
@@ -74,11 +74,9 @@ export default function ProjectStatistics(props: Props) {
 
                         <ProjectTable filter={filter}/>
 
-                        {/*<Button onClick={setIsTextChanged}>{isTextChanged ? 'Toggled' : 'Click to Toggle'}</Button> // simple toggle button*/}
                         <br/><br/>
 
-                        <Button onClick={downloadExcel}>Export to Excel</Button> // normal export via using fetch (could
-                        this mean no error handling?)
+                        <Button onClick={downloadExcel}>Export to Excel</Button>
 
                     </div>
                 </div>
