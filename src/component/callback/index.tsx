@@ -18,6 +18,13 @@ export default function Callback(props: RouteComponentProps) {
 
         auth.setJwtToken(params.get('token'));
 
+        //An extra roundtip is needed to get the user information
+        auth.setUser('Johan van der Heide (to be updated)');
+
+        if (auth.hasUser()) {
+            history.replace('/');
+        }
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.location.search, history]);
 

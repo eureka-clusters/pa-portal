@@ -16,10 +16,10 @@ When something is changed in the root of the application (for example different 
 
 ```shell
 docker compose up app --force-recreate --build
+docker compose build app --no-cache
 ```
 
 As the root of the app is not mounted in the container (only /src)
-
 
 Update all packages in Yarn
 

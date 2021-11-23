@@ -10,8 +10,6 @@ export default function Login() {
     let history = useHistory();
     let auth = UseAuth();
 
-    auth.SaveRedirect();
-
     if (auth.user) {
         history.replace(auth.redirect);
     }

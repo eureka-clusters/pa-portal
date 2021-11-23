@@ -35,9 +35,6 @@ FROM node:14-alpine AS builder
 ENV NODE_ENV production
 
 ENV REACT_APP_SERVER_URI 'https://api.eurekaclusters.eu'
-ENV REACT_APP_CLIENT_ID 'ZoDgQeNuqWAdtQyGPZoAPFYGGBzWqkqYHomOynefk'
-ENV REACT_APP_CLIENT_SECRET 'this_is_the_secret'
-ENV REACT_APP_REDIRECT_URI 'https://eurekaclusters.eu/callback'
 
 # Add a work directory
 WORKDIR /app

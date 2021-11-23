@@ -42,7 +42,7 @@ export default function Header() {
                                 <NavDropdown.Item as={NavLink} to='/protected'>Protected Page</NavDropdown.Item>
                             </NavDropdown>
 
-                            {auth.user ? (
+                            {auth.hasUser() ? (
                                 <React.Fragment>
                                     {/* // do we need an account page? */}
                                     <Nav.Link as={NavLink} to='/account'>Account ({auth.user})</Nav.Link>

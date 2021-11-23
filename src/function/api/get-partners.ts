@@ -29,7 +29,7 @@ export function GetPartners(project?: Project | undefined, organisation?: Organi
 
     let auth = UseAuth();
     const serverUri = GetServerUri();
-    let jwtToken = auth.getToken();
+    let jwtToken = auth.getJwtToken();
 
     const [hookState, setHookState] = React.useState<PartnerState>({
         state: apiStates.LOADING,

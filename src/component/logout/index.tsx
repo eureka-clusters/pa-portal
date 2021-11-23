@@ -6,8 +6,9 @@ export default function Logout() {
 
     const auth = UseAuth();
 
+    auth.logout();
     useEffect(() => {
-        auth.logout();
+
     });
 
     return <Redirect to="/"/>

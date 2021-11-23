@@ -23,7 +23,7 @@ export const GetOrganisations = () => {
 
     let auth = UseAuth();
     const serverUri = GetServerUri();
-    let jwtToken = auth.getToken();
+    let jwtToken = auth.getJwtToken();
 
     const [hookState, setHookState] = React.useState<OrganisationState>({
         state: apiStates.LOADING,

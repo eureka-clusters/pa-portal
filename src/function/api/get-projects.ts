@@ -32,7 +32,7 @@ export const GetProjects = () => {
 
     const createInstance = async () => {
 
-        let jwtToken = auth.getToken();
+        let jwtToken = auth.getJwtToken();
 
         return axios.create({
             baseURL: serverUri + '/api',

@@ -55,9 +55,7 @@ function LoginPage() {
 
     let {from} = location.state || {from: {pathname: "/"}};
     let login = () => {
-        auth.signin(() => {
-            history.replace(from);
-        });
+        history.replace('/login');
     };
 
     return (
@@ -85,7 +83,7 @@ function PrivateRoute({children, ...props}) {
 
     const location = useLocation();
 
-    return auth.user ? (
+    return auth.hasUser() ? (
         <Route {...props} >
             {children}
         </Route>

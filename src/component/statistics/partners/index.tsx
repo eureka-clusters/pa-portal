@@ -33,7 +33,7 @@ export default function PartnerStatistics(props: Props) {
     const downloadExcel = async () => {
         const serverUri = GetServerUri();
         const hash = getFilter(filter);
-        let accessToken = await auth.getToken();
+        let accessToken = auth.getJwtToken();
         fetch(serverUri + '/api/statistics/download/partner/' + hash,
             {
                 method: 'GET',
