@@ -1,12 +1,11 @@
 import React from 'react';
 import Config from "constants/config";
 import {UseAuth} from "context/user-context";
-import {useHistory, useLocation} from "react-router-dom";
+import {useHistory} from "react-router-dom";
 
 export default function Login() {
 
     const serverUri = Config.SERVER_URI;
-    const CLIENT_ID = Config.CLIENT_ID;
 
     let history = useHistory();
     let auth = UseAuth();
@@ -27,13 +26,13 @@ export default function Login() {
             </div>
             <div className="d-flex flex-row bd-highlight mb-3">
                 <div className="p-2 bd-highlight"><a className="btn btn-primary btn-lg"
-                                                     href={serverUri + '/oauth2/login/via/itea.html?client_id=' + CLIENT_ID}>Login
+                                                     href={serverUri + '/oauth2/login/via/itea.html'}>Login
                     via ITEA Office</a></div>
                 <div className="p-2 bd-highlight"><a className="btn btn-primary btn-lg"
-                                                     href={serverUri + '/oauth2/login/via/celtic.html?client_id=' + CLIENT_ID}>Login
+                                                     href={serverUri + '/oauth2/login/via/celtic.html'}>Login
                     via Celtic</a></div>
                 <div className="p-2 bd-highlight"><a className="btn btn-primary btn-lg"
-                                                     href={serverUri + '/oauth2/login/via/penta.html?client_id=' + CLIENT_ID}>Login
+                                                     href={serverUri + '/oauth2/login/via/penta.html'}>Login
                     via Penta-Euripides</a></div>
             </div>
         </React.Fragment>

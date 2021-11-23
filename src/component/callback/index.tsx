@@ -1,8 +1,6 @@
 import React, {useEffect} from 'react';
 import {UseAuth} from "context/user-context";
-import {useHistory} from "react-router-dom";
-import {RouteComponentProps} from "react-router-dom";
-
+import {RouteComponentProps, useHistory} from "react-router-dom";
 
 const LoadingComponent = () => <div> Waiting for login... </div>
 
