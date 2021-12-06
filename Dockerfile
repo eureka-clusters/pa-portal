@@ -31,7 +31,7 @@ EXPOSE 3000
 # Start the app
 CMD [ "yarn", "start" ]
 
-FROM node:14-alpine AS builder
+FROM node:16-alpine AS builder
 ENV NODE_ENV production
 
 ENV REACT_APP_SERVER_URI 'https://api.eurekaclusters.eu'
@@ -51,7 +51,7 @@ COPY . .
 RUN yarn build
 
 # Bundle static assets with nginx
-FROM nginx:1.21.0-alpine as production
+FROM nginx:alpine as production
 
 LABEL maintainer="johan.van.der.heide@itea4.org"
 LABEL org.opencontainers.image.source = "https://github.com/eureka-clusters/portal-backend";

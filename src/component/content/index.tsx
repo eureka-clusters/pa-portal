@@ -6,12 +6,15 @@ import Footer from "component/footer";
 
 export default function Content() {
     return (
-        <main className="flex-shrink-0">
-            <Header/>
-            <Container>
-                <PageRoutes/>
-            </Container>
+        <>
+            <main className="flex-shrink-0">
+                <Header/>
+                <Container>
+                    <PageRoutes/>
+                </Container>
+
+            </main>
             <Footer/>
-        </main>
+        </>
     );
 }

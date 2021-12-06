@@ -11,15 +11,16 @@ interface Props {
     children: JSX.Element
 }
 
-const auth = UseProvideAuth();
-
 // Provider component that wraps your app and makes auth object ...
 // ... available to any child component that calls useAuth().
-export const ProvideAuth: FC<Props> = ({children}) => (
-    <AuthContext.Provider value={auth}>
-        {children}
-    </AuthContext.Provider>
-);
+export const ProvideAuth: FC<Props> = ({children}) => {
+    const auth = useProvideAuth();
+    return (
+        <AuthContext.Provider value={auth}>
+            {children}
+        </AuthContext.Provider>
+    );
+};
 
 // Hook for child components to get the auth object ...
 // ... and re-render when it changes.
@@ -28,7 +29,7 @@ export const UseAuth = () => {
 };
 
 
-function UseProvideAuth() {
+function useProvideAuth() {
 
     let storage = localStorage;
 

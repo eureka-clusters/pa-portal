@@ -21,7 +21,8 @@ services:
       - traefik.http.services.pa-portal-app.loadbalancer.server.port=3000
       - traefik.http.routers.pa-portal-app.service=pa-portal-app
       - traefik.http.routers.pa-portal-app.rule=Host(`pa-portal.docker.localhost`)
-      - traefik.http.routers.pa-portal-app.entrypoints=node
+      - traefik.http.routers.pa-portal-app.entrypoints=https
+      - traefik.http.routers.pa-portal-app.tls=true
     networks:
       - pa-portal
 

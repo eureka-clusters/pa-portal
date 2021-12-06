@@ -40,13 +40,11 @@ class ErrorBoundary extends React.Component<any, any> {
 
 function App() {
     return (
-        <div className="App">
-            <ErrorBoundary>
-                <ProvideAuth>
-                    <Content/>
-                </ProvideAuth>
-            </ErrorBoundary>
-        </div>
+        <ErrorBoundary>
+            <ProvideAuth>
+                <Content/>
+            </ProvideAuth>
+        </ErrorBoundary>
     );
 }
 

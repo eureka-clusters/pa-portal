@@ -22,8 +22,6 @@ const BudgetByCountryChart = ({ results }) => {
         res[value.organisation.country.country].effort += value.latestVersionEffort;
         return res;
     }, {});
-    // console.log(stats);
-
 
     stats.forEach(element => {
         $data.push([

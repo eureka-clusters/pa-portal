@@ -15,8 +15,8 @@ docker compose run web yarn install
 When something is changed in the root of the application (for example different env params, run)
 
 ```shell
-docker compose up app --force-recreate --build
-docker compose build app --no-cache
+docker compose build app
+docker compose up app --force-recreate
 ```
 
 As the root of the app is not mounted in the container (only /src)

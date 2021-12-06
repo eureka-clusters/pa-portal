@@ -5,16 +5,16 @@ import {UseAuth} from "context/user-context";
 import Button from 'react-bootstrap/Button'
 
 import './header.scss';
+import Config from "../../constants/config";
 
 export default function Header() {
     // Get auth state and re-render anytime it changes
     let auth = UseAuth();
 
     return (
-        <header className="header">
-            <Navbar variant="light" bg="light" expand="lg" fixed="top">
-                <Container>
-                    <Navbar.Brand href="#home">PA Report Portal</Navbar.Brand>
+        <>
+            <Navbar variant="light" bg="light" className={'py-2 border-bottom'}>
+                <Container className={'d-flex flex-wrap'}>
                     <Navbar.Toggle aria-controls="navbar-dark-example"/>
                     <Navbar.Collapse id="navbar-dark-example">
                         <Nav>
@@ -60,6 +60,18 @@ export default function Header() {
                     </Navbar.Collapse>
                 </Container>
             </Navbar>
-        </header>
+            <header className="py-3 mb-4 border-bottom">
+                <div className="container d-flex flex-wrap justify-content-center">
+                    <a href="/"
+                       className="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto text-dark text-decoration-none">
+                        <img className={'pe-2'} src={'https://image.itea3.org/vHVUI8HfFtzgYrZnl--zCxbf_HY=/190x150:443x484/fit-in/30x30/smart/https://tool.eureka-clusters-ai.eu/img/i/14-1614258308.png'}/>
+                        <span className="fs-4">PA Report Portal</span>
+                    </a>
+                    <form className="col-12 col-lg-auto mb-3 mb-lg-0">
+                        <input type="search" className="form-control" placeholder="Search..." aria-label="Search"/>
+                    </form>
+                </div>
+            </header>
+        </>
     );
 }
