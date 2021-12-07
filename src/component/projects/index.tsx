@@ -1,5 +1,4 @@
 import React from 'react';
-import {Table} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
 import BreadcrumbTree from 'component/partial/breadcrumb-tree'
 import DataTable from 'component/database-table/index';
@@ -82,30 +81,6 @@ export default function Projects() {
                         columns={columns}
                         data={projects}
                     />
-                    <h1>Projects</h1>
-                    <Table size="sm" striped>
-                        <thead>
-                        <tr>
-                            <th>Number</th>
-                            <th>Name</th>
-                            <th>Title</th>
-                            <td>Primary cluster</td>
-                            <td>Secondary cluster</td>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {projects.map((project) => (
-                            <tr>
-                                <td>{project.number} </td>
-                                <td><Link to={`/project/${project.slug}`}>{project.name}</Link></td>
-                                <td>{project.title}</td>
-                                <td>{project.primaryCluster && project.primaryCluster.name}</td>
-                                <td>{project.secondaryCluster && project.secondaryCluster.name}</td>
-                            </tr>
-                        ))}
-
-                        </tbody>
-                    </Table>
                 </React.Fragment>
             );
         default:

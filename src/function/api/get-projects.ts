@@ -30,20 +30,7 @@ export const GetProjects = () => {
         projects: []
     });
 
-    const createInstance = async () => {
-
-        let jwtToken = auth.getJwtToken();
-
-        return axios.create({
-            baseURL: serverUri + '/api',
-            timeout: 5000,
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': `${jwtToken}`
-            }
-        });
-    };
+    let jwtToken = auth.getJwtToken();
 
     const load = () => {
 
@@ -51,47 +38,50 @@ export const GetProjects = () => {
             setHookState(hookState => ({...hookState, ...partialData}))
         }
 
-        createInstance().then(axios => {
-            // axios automatically returns json in response.data and catches errors 
-            axios.get<ProjectResponse>('list/project', {
-                // settings could be overwritten
-                // timeout: 1000
-            })
-                .then(response => {
-                    //Use a local const to have the proper TS typehinting
-                    const {data} = response;
-
-                    setPartData({
-                        state: apiStates.SUCCESS,
-                        projects: data._embedded.projects
-                    })
-                })
-
-                .catch(function (error) {
-                    if (error.response) {
-                        setPartData({
-                            state: apiStates.ERROR,
-                            error: error.response.data.title + ' ' + error.response.data.status + '\n' + error.response.data.detail
-                        });
-                    } else if (error.request) {
-                        // The request timed out
-                        console.log(error.request);
-                        setPartData({
-                            state: apiStates.ERROR,
-                            error: 'The request timed out'
-                        });
-                    } else {
-                        // Something happened in setting up the request that triggered an Error
-                        console.log('Error', error.message);
-                        setPartData({
-                            state: apiStates.ERROR,
-                            error: 'Something happened in setting up the request that triggered an Error'
-                        });
-                    }
-                })
-
+        axios.create({
+            baseURL: serverUri + '/api',
+            timeout: 5000,
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `${jwtToken}`
+            }
+        }).get<ProjectResponse>('list/project', {
+            // settings could be overwritten
+            // timeout: 1000
         })
+            .then(response => {
+                //Use a local const to have the proper TS typehinting
+                const {data} = response;
 
+                setPartData({
+                    state: apiStates.SUCCESS,
+                    projects: data._embedded.projects
+                })
+            })
+
+            .catch(function (error) {
+                if (error.response) {
+                    setPartData({
+                        state: apiStates.ERROR,
+                        error: error.response.data.title + ' ' + error.response.data.status + '\n' + error.response.data.detail
+                    });
+                } else if (error.request) {
+                    // The request timed out
+                    console.log(error.request);
+                    setPartData({
+                        state: apiStates.ERROR,
+                        error: 'The request timed out'
+                    });
+                } else {
+                    // Something happened in setting up the request that triggered an Error
+                    console.log('Error', error.message);
+                    setPartData({
+                        state: apiStates.ERROR,
+                        error: 'Something happened in setting up the request that triggered an Error'
+                    });
+                }
+            })
     };
 
     React.useEffect(() => {

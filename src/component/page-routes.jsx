@@ -51,7 +51,6 @@ function HomePage() {
 function LoginPage() {
     let history = useHistory();
     let location = useLocation();
-    let auth = UseAuth();
 
     let {from} = location.state || {from: {pathname: "/"}};
     let login = () => {

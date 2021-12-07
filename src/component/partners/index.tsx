@@ -25,7 +25,7 @@ export default function Partners() {
                         </tr>
                         </thead>
                         <tbody>
-                        {partners.map((partner, i) => (
+                        {partners.map((partner, i: React.Key) => (
                             <tr key={i}>
                                 <td><Link to={`/partner/${partner.slug}`}>{partner.organisation.name}</Link></td>
                                 <td>{partner.organisation.type}</td>

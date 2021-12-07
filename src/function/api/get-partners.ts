@@ -37,20 +37,7 @@ export function GetPartners(project?: Project | undefined, organisation?: Organi
         partners: []
     });
 
-    const createInstance = async () => {
-        return axios.create({
-            baseURL: serverUri + '/api',
-            timeout: 5000,
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': `${jwtToken}`
-            }
-        });
-    };
-
     const load = () => {
-
         const setPartData = (partialData: { state: string; partners?: Array<Partner>; error?: string; }) => {
             setHookState(hookState => ({...hookState, ...partialData}))
         }
@@ -63,47 +50,50 @@ export function GetPartners(project?: Project | undefined, organisation?: Organi
             url = 'list/partner?organisation=' + organisation.slug;
         }
 
-        createInstance().then(axios => {
-            // axios automatically returns json in response.data and catches errors 
-            axios.get<PartnerResponse>(url, {
-                // settings could be overwritten
-                // timeout: 1000
-            })
-                .then(response => {
-                    //Use a local const to have the proper TS typehinting
-                    const {data} = response;
-
-                    setPartData({
-                        state: apiStates.SUCCESS,
-                        partners: data._embedded.partners
-                    })
-                })
-
-                .catch(function (error) {
-                    if (error.response) {
-                        setPartData({
-                            state: apiStates.ERROR,
-                            error: error.response.data.title + ' ' + error.response.data.status + '\n' + error.response.data.detail
-                        });
-                    } else if (error.request) {
-                        // The request timed out
-                        console.log(error.request);
-                        setPartData({
-                            state: apiStates.ERROR,
-                            error: 'The request timed out'
-                        });
-                    } else {
-                        // Something happened in setting up the request that triggered an Error
-                        console.log('Error', error.message);
-                        setPartData({
-                            state: apiStates.ERROR,
-                            error: 'Something happened in setting up the request that triggered an Error'
-                        });
-                    }
-                })
-
+        axios.create({
+            baseURL: serverUri + '/api',
+            timeout: 5000,
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `${jwtToken}`
+            }
+        }).get<PartnerResponse>(url, {
+            // settings could be overwritten
+            // timeout: 1000
         })
+            .then(response => {
+                //Use a local const to have the proper TS typehinting
+                const {data} = response;
 
+                setPartData({
+                    state: apiStates.SUCCESS,
+                    partners: data._embedded.partners
+                })
+            })
+
+            .catch(function (error) {
+                if (error.response) {
+                    setPartData({
+                        state: apiStates.ERROR,
+                        error: error.response.data.title + ' ' + error.response.data.status + '\n' + error.response.data.detail
+                    });
+                } else if (error.request) {
+                    // The request timed out
+                    console.log(error.request);
+                    setPartData({
+                        state: apiStates.ERROR,
+                        error: 'The request timed out'
+                    });
+                } else {
+                    // Something happened in setting up the request that triggered an Error
+                    console.log('Error', error.message);
+                    setPartData({
+                        state: apiStates.ERROR,
+                        error: 'Something happened in setting up the request that triggered an Error'
+                    });
+                }
+            })
     };
 
     React.useEffect(() => {

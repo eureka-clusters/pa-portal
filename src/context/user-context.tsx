@@ -46,10 +46,6 @@ function useProvideAuth() {
         return null !== storage.getItem('user');
     }
 
-    const getUser = () => {
-        return storage.getItem('user');
-    }
-
     const setJwtToken = (token: string) => {
         storage.setItem('token', token)
     }
