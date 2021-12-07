@@ -1,5 +1,5 @@
 import React from 'react';
-import {UseAuth} from "context/user-context";
+import {useAuth} from "context/user-context";
 import axios from 'axios';
 import {apiStates, GetServerUri} from "function/api/index";
 import {Project} from "interface/project";
@@ -21,7 +21,7 @@ interface ProjectState {
 
 export const GetProjects = () => {
 
-    let auth = UseAuth();
+    let auth = useAuth();
     const serverUri = GetServerUri();
 
     const [hookState, setHookState] = React.useState<ProjectState>({

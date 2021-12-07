@@ -3,7 +3,7 @@ import {Button, Form} from "react-bootstrap";
 import ProjectTable from "component/statistics/projects/project-table";
 import ProjectFacets from 'component/statistics/projects/project-facets';
 import TableFilter from 'function/api/table-filter';
-import {UseAuth} from "context/user-context";
+import { useAuth} from "context/user-context";
 import {getFilter, GetServerUri} from 'function/api/index';
 import downloadBase64File from "function/DownloadBase64";
 import {RouteComponentProps} from "react-router-dom";
@@ -18,7 +18,7 @@ interface Props extends RouteComponentProps<MatchParams> {
 
 export default function ProjectStatistics(props: Props) {
 
-    let auth = UseAuth();
+    let auth = useAuth();
 
     const defaultFilter = {
         country: [],
