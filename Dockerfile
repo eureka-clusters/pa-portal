@@ -35,7 +35,7 @@ FROM node:16-alpine AS builder
 ENV NODE_ENV production
 
 ENV REACT_APP_SERVER_URI 'https://api.eurekaclusters.eu'
-ENV REACT_APP_SERVER_URI 'frontend'
+ENV REACT_APP_SERVER_CLIENT_ID 'frontend'
 
 # Add a work directory
 WORKDIR /app

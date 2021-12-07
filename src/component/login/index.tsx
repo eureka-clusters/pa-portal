@@ -28,10 +28,10 @@ export default function Login() {
                                                      href={serverUri + '/oauth2/login/via/itea.html?client=' + clientId}>Login
                     via ITEA Office</a></div>
                 <div className="p-2 bd-highlight"><a className="btn btn-primary btn-lg"
-                                                     href={serverUri + '/oauth2/login/via/celtic.html?client' + clientId}>Login
+                                                     href={serverUri + '/oauth2/login/via/celtic.html?client=' + clientId}>Login
                     via Celtic</a></div>
                 <div className="p-2 bd-highlight"><a className="btn btn-primary btn-lg"
-                                                     href={serverUri + '/oauth2/login/via/penta.html' + clientId}>Login
+                                                     href={serverUri + '/oauth2/login/via/penta.html?client=' + clientId}>Login
                     via Penta-Euripides</a></div>
             </div>
         </React.Fragment>
