@@ -1,6 +1,6 @@
 import React from 'react';
-import PartnerTable from "component/project/partner-table";
-// import PartnerTable from "component/project/partner-table2";
+// import PartnerTable from "component/project/partner-table";
+import PartnerTable from "component/project/partner-table2";
 import BreadcrumbTree from 'component/partial/breadcrumb-tree'
 import NumberFormat from "react-number-format";
 import moment from 'moment';
@@ -53,12 +53,20 @@ export default function Project(props: Props) {
 
                         {project.coordinator && <>
                             <dt className="col-sm-3">Coordinator:</dt>
-                            <dd className="col-sm-9">{String(project.coordinator.organisation)}<br/>{String(project.coordinator.technicalContact.fullName)} ({String(project.coordinator.technicalContact.email)})
+                            <dd className="col-sm-9">
+                            
+                                @johan still not camel case in this result "full_name" instead of "fullName"
+                                <pre className='debug'>{JSON.stringify(project.coordinator.technicalContact, undefined, 2)}</pre>
+
+                            {String(project.coordinator.organisation)}<br/>{String(project.coordinator.technicalContact.fullName)} ({String(project.coordinator.technicalContact.email)})
                             </dd>
                         </>}
 
                         <dt className="col-sm-3">Project leader:</dt>
-                        <dd className="col-sm-9">{String(project.projectLeader.fullName)} ({String(project.projectLeader.email)})</dd>
+                        <dd className="col-sm-9">
+                            @johan still not camel case in this result "full_name" instead of "fullName"
+                            <pre className='debug'>{JSON.stringify(project.projectLeader, undefined, 2)}</pre>
+                        {String(project.projectLeader.fullName)} ({String(project.projectLeader.email)})</dd>
 
                         <dt className="col-sm-3">TechnicalArea:</dt>
                         <dd className="col-sm-9">{project.technicalArea}</dd>
