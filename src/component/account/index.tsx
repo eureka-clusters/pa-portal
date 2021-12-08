@@ -1,6 +1,6 @@
 import React from 'react';
 import { Me } from "component/partial/Me";
-import { Me2 } from "component/partial/Me2";
+// import { Me2 } from "component/partial/Me2";
 import { useAuth } from "context/user-context";
 
 export default function Account() {
@@ -15,7 +15,7 @@ export default function Account() {
         </span>
         <h2>ME Component</h2>
         <Me />
-        <h2>ME2 Component</h2>
-        <Me2 />
+        {/* <h2>ME2 Component</h2>
+        <Me2 /> */}
      </>;
 }
