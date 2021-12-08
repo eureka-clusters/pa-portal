@@ -34,8 +34,9 @@ export default function Header() {
                             <NavDropdown
                                 id="nav-dropdown-test"
                                 title="Test links"
+                                className={'ms-auto'}
+                                align="end"  // align menu to the right 
                             >
-                                <NavDropdown.Item as={NavLink} to='/login2'>Login2</NavDropdown.Item>
                                 <NavDropdown.Item as={NavLink} to='/public'>Public Page</NavDropdown.Item>
                                 <NavDropdown.Divider/>
                                 <NavDropdown.Item as={NavLink} to='/protected'>Protected Page</NavDropdown.Item>
