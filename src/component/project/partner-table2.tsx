@@ -11,7 +11,7 @@ import { GetPartners } from "function/api/get-partners";
 
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
-import TestPages from './test';
+// import TestPages from './test';
 
 // import OrganisationTypeChart from './charts/organisation-type-chart';
 // import OrganisationCountryChart from './charts/country-chart';
