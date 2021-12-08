@@ -1,7 +1,5 @@
 import React, {FC} from 'react';
-import {Table} from "react-bootstrap";
 import {ApiError, apiStates} from 'function/api';
-import NumberFormat from "react-number-format";
 import {Link} from "react-router-dom";
 import DataTable from 'component/database-table/index';
 import {CostsFormat, EffortFormat} from 'function/utils';
