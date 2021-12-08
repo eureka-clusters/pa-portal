@@ -1,7 +1,5 @@
 import React, {FC} from 'react';
-import {Table} from "react-bootstrap";
 import {ApiError, apiStates} from 'function/api/index';
-import NumberFormat from "react-number-format";
 import {Link} from "react-router-dom";
 import DataTable from 'component/database-table/index';
 import {CostsFormat, EffortFormat} from 'function/utils';
@@ -69,12 +67,7 @@ const PartnerTable: FC<Props> = ({project}) => {
         },
     ];
 
-    // const [resultUrl, setResultUrl] = React.useState('list/partner?project=' + project.slug);
     const {state, error, partners} = GetPartners(project);
-
-    // useEffect(() => {
-    //     setResultUrl('list/partner?project=' + project.slug);
-    // }, [project]);
 
     switch (state) {
         case apiStates.ERROR:
@@ -83,58 +76,14 @@ const PartnerTable: FC<Props> = ({project}) => {
             return (
                 <React.Fragment>
                     {/* <pre className='debug'>{JSON.stringify(data, undefined, 2)}</pre> */}
+                    <h2>Partners</h2>
                     <DataTable
-                        title="Partners"
+                        // title="Partners"
                         keyField="id"
                         columns={columns}
                         data={partners}
                         pagination={false}
                     />
-
-                    <h2>Partners</h2>
-                    <Table size={'sm'} striped hover>
-                        <thead>
-                        <tr>
-                            <th></th>
-                            <th>Partner</th>
-                            <th>Country</th>
-                            <th>Type</th>
-                            <th className={'text-right'}>Partner Costs</th>
-                            <th className={'text-right'}>Partner Effort</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {partners.map((result, i) => {
-                            return (
-                                <React.Fragment key={i}>
-                                    <tr className={!result.isActive ? 'table-danger' : ''}>
-                                        <td><small className={'text-muted'}>{result.id}</small></td>
-                                        <td><Link to={`/partner/${result.slug}`}>{result.organisation.name}</Link></td>
-
-                                        {/* <td><Link to={`/partner/${result.id}`}>{result.partner}</Link></td> */}
-                                        <td>{result.organisation.country.country}</td>
-                                        <td>{result.organisation.type.type}</td>
-                                        <td className={'text-monospace text-right'}><NumberFormat
-                                            value={result.latestVersionCosts}
-                                            thousandSeparator={' '}
-                                            displayType={'text'}
-                                            prefix={'€ '}/></td>
-                                        <td className={'text-monospace text-right'}>
-                                            <NumberFormat
-                                                value={result.latestVersionEffort}
-                                                thousandSeparator={' '}
-                                                displayType={'text'}
-                                                decimalScale={2}
-                                                fixedDecimalScale={true}
-                                            />
-                                        </td>
-
-                                    </tr>
-                                </React.Fragment>)
-                        })
-                        }
-                        </tbody>
-                    </Table>
                 </React.Fragment>
             );
         default:

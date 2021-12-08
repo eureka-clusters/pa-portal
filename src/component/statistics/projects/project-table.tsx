@@ -91,7 +91,7 @@ const ProjectTable: FC<Props> = ({filter}) => {
                     {/* <pre className='debug'>{JSON.stringify(data._embedded.results, undefined, 2)}</pre> */}
                     <h2>Projects</h2>
                     <DataTable
-                        title="Projects"
+                        // title="Projects"
                         keyField="number"
                         columns={columns}
                         data={projects}

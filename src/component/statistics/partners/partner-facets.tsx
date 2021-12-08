@@ -16,10 +16,12 @@ const PartnerFacets = (filter: any, setFilter: any, updateFilter: any, updateRes
             return (
                 <>
                     {/* <pre className='debug'>{JSON.stringify(filter, undefined, 2)}</pre> */}
+                    <pre className='debug'>{JSON.stringify(facets, undefined, 2)}</pre>
+                    {/* @johan did you changed something on the backend that the facets aren't in a named array any more? */}
                     <fieldset>
                         <legend><small>Countries</small></legend>
 
-                        {facets.countries.map((country, i) => (
+                        {facets.countries && facets.countries.map((country, i) => (
                             <div key={i}>
                                 <Form.Check type={'checkbox'} id={`check-country-${i}`}>
                                     <Form.Check.Input
@@ -39,7 +41,7 @@ const PartnerFacets = (filter: any, setFilter: any, updateFilter: any, updateRes
                     <fieldset>
                         <legend><small>Organisation type</small></legend>
 
-                        {facets.organisationTypes.map((organisationType, i) => (
+                        {facets.organisationTypes && facets.organisationTypes.map((organisationType, i) => (
                             <div key={i}>
                                 <Form.Check type={'checkbox'} id={`check-type-${i}`}>
                                     <Form.Check.Input
@@ -59,7 +61,7 @@ const PartnerFacets = (filter: any, setFilter: any, updateFilter: any, updateRes
                     <fieldset>
                         <legend><small>Project Status</small></legend>
 
-                        {facets.projectStatus.map((projectStatus, i) => (
+                        {facets.projectStatus && facets.projectStatus.map((projectStatus, i) => (
                             <div key={i}>
                                 <Form.Check type={'checkbox'} id={`check-project-status-${i}`}>
                                     <Form.Check.Input
@@ -79,7 +81,7 @@ const PartnerFacets = (filter: any, setFilter: any, updateFilter: any, updateRes
                     <fieldset>
                         <legend><small>Primary Cluster</small></legend>
 
-                        {facets.primaryClusters.map((primaryCluster, i) => (
+                        {facets.primaryClusters && facets.primaryClusters.map((primaryCluster, i) => (
                             <div key={i}>
                                 <Form.Check type={'checkbox'} id={`check-primary-cluster-${i}`}>
                                     <Form.Check.Input
@@ -98,7 +100,7 @@ const PartnerFacets = (filter: any, setFilter: any, updateFilter: any, updateRes
 
                     <fieldset>
                         <legend><small>Years</small></legend>
-                        {facets.years.map((year, i) => (
+                        {facets.years && facets.years.map((year, i) => (
                             <div key={i}>
                                 <Form.Check type={'checkbox'} id={`check-year-${i}`}>
                                     <Form.Check.Input

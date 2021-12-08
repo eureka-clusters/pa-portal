@@ -48,8 +48,10 @@ const ProjectFacets = (filter: any, setFilter: any, updateFilter: any, updateRes
 
             return (
                 <>
-                    {/* <pre className='debug'>{JSON.stringify(filter, undefined, 2)}</pre> */}
-                    <fieldset>
+                    {/* <pre className='debug'>{JSON.stringify(filter, undefined, 2)}</pre>
+                    <pre className='debug'>{JSON.stringify(facets, undefined, 2)}</pre> */}
+
+                     <fieldset>
                         <legend><small>Countries</small></legend>
                         <BootstrapSwitchButton checked={filter['country_method'] === 'and'}
                                                size="sm"
@@ -60,7 +62,7 @@ const ProjectFacets = (filter: any, setFilter: any, updateFilter: any, updateRes
                                                onChange={updateCountryMethod}
                         />
 
-                        {facets.countries.map((country, i) => (
+                        {facets.countries && facets.countries.map((country, i) => (
                             <div key={i}>
                                 <Form.Check type={'checkbox'} id={`check-country-${i}`}>
                                     <Form.Check.Input
@@ -76,7 +78,7 @@ const ProjectFacets = (filter: any, setFilter: any, updateFilter: any, updateRes
                             </div>
                         ))}
                     </fieldset>
-
+                    
                     <fieldset>
                         <legend><small>Organisation type</small></legend>
 
@@ -87,7 +89,7 @@ const ProjectFacets = (filter: any, setFilter: any, updateFilter: any, updateRes
                                                onstyle={'primary'}
                                                offstyle={'secondary'} onChange={updateOrganisationTypeMethod}/>
 
-                        {facets.organisationTypes.map((organisationType, i) => (
+                        {facets.organisationTypes && facets.organisationTypes.map((organisationType, i) => (
                             <div key={i}>
                                 <Form.Check type={'checkbox'} id={`check-type-${i}`}>
                                     <Form.Check.Input
@@ -107,7 +109,7 @@ const ProjectFacets = (filter: any, setFilter: any, updateFilter: any, updateRes
                     <fieldset>
                         <legend><small>Project Status</small></legend>
 
-                        {facets.projectStatus.map((projectStatus, i) => (
+                        {facets.projectStatus && facets.projectStatus.map((projectStatus, i) => (
                             <div key={i}>
                                 <Form.Check type={'checkbox'} id={`check-project-status-${i}`}>
                                     <Form.Check.Input
@@ -127,7 +129,7 @@ const ProjectFacets = (filter: any, setFilter: any, updateFilter: any, updateRes
                     <fieldset>
                         <legend><small>Primary Cluster</small></legend>
 
-                        {facets.primaryClusters.map((primaryCluster, i) => (
+                        {facets.primaryClusters && facets.primaryClusters.map((primaryCluster, i) => (
                             <div key={i}>
                                 <Form.Check type={'checkbox'} id={`check-primary-cluster-${i}`}>
                                     <Form.Check.Input

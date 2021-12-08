@@ -2,7 +2,7 @@ import React from 'react';
 import {NavLink} from "react-router-dom";
 import {Container, Nav, Navbar, NavDropdown} from 'react-bootstrap';
 import { useAuth} from "context/user-context";
-import Button from 'react-bootstrap/Button'
+// import Button from 'react-bootstrap/Button'
 
 import './header.scss';
 
@@ -14,13 +14,13 @@ export default function Header() {
         <>
             <Navbar variant="light" bg="light" className={'py-2 border-bottom'}>
                 <Container className={'d-flex flex-wrap'}>
-                    <Navbar.Toggle aria-controls="navbar-dark-example"/>
-                    <Navbar.Collapse id="navbar-dark-example">
-                        <Nav>
+                    <Navbar.Toggle aria-controls="navbar-main"/>
+                    <Navbar.Collapse id="navbar-main">
+                        <Nav className='d-flex w-100'>
                             <Nav.Link as={NavLink} to='/' exact>Home</Nav.Link>
 
                             <NavDropdown
-                                id="nav-dropdown-dark-example"
+                                id="nav-dropdown-statistics"
                                 title="Statistics"
                             >
                                 <NavDropdown.Item as={NavLink} to='/statistics/projects'>Projects</NavDropdown.Item>
@@ -30,9 +30,9 @@ export default function Header() {
                             <Nav.Link as={NavLink} to='/projects' exact>Projects</Nav.Link>
                             <Nav.Link as={NavLink} to='/organisations' exact>Organisations</Nav.Link>
 
-                            {/* test links */}
+                            {/* test links will be removed */}
                             <NavDropdown
-                                id="nav-dropdown-dark-example"
+                                id="nav-dropdown-test"
                                 title="Test links"
                             >
                                 <NavDropdown.Item as={NavLink} to='/login2'>Login2</NavDropdown.Item>
@@ -43,18 +43,24 @@ export default function Header() {
 
                             {auth.hasUser() ? (
                                 <React.Fragment>
-                                    {/* // do we need an account page? */}
-                                    <Nav.Link as={NavLink} to='/account'>Account ({auth.user})</Nav.Link>
-
-                                    {/* // logout directly via button */}
-                                    <Button onClick={() => auth.logout()}>Logout directly via button</Button>
-
-                                    {/* // or logout via page? */}
-                                    <Nav.Link as={NavLink} to='/logout'>Logout via page</Nav.Link>
+                                    <NavDropdown
+                                        id="nav-dropdown-account"
+                                        // title={`Account (${auth.userInfo.email})`}  // we could also use auth.getUser() 
+                                        title={`Account (${auth.user})`}
+                                        className = {'ms-auto'}
+                                        align="end"  // align menu to the right 
+                                        
+                                    >
+                                        <NavDropdown.Item as={NavLink} to='/account'>Account</NavDropdown.Item>
+                                        <NavDropdown.Divider />
+                                        <NavDropdown.Item as={NavLink} to='/logout'>Logout</NavDropdown.Item>
+                                        {/* <Button onClick={() => auth.logout()}>Logout via button</Button> */}
+                                    </NavDropdown>
                                 </React.Fragment>
                             ) : (
-                                <Nav.Link as={NavLink} to='/login'>Login</Nav.Link>
+                                <Nav.Link as={NavLink} to='/login' className={'ms-auto'}>Login</Nav.Link>
                             )}
+                          
                         </Nav>
                     </Navbar.Collapse>
                 </Container>

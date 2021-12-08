@@ -1,5 +1,4 @@
 import React from 'react';
-import {Table} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
 import BreadcrumbTree from 'component/partial/breadcrumb-tree';
 import DataTable from 'component/database-table/index';
@@ -50,33 +49,13 @@ export default function Organisations() {
                     {/* <pre className='debug'>{JSON.stringify(data, undefined, 2)}</pre> */}
                     <BreadcrumbTree current="organisations" data={organisations} linkCurrent={false}/>
 
+                    <h1>Organisations</h1>
                     <DataTable
-                        title="Organisations"
+                        // title="Organisations"
                         keyField="id"
                         columns={columns}
                         data={organisations}
                     />
-
-                    <h1>Organisations</h1>
-                    <Table size="sm" striped>
-                        <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Type</th>
-                            <th>Country</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {organisations.map((organisation, key) => (
-                            <tr key={key}>
-                                <td><Link to={`/organisation/${organisation.slug}`}>{organisation.name}</Link></td>
-                                <td>{organisation.type.type}</td>
-                                <td>{organisation.country.country}</td>
-                            </tr>
-                        ))}
-
-                        </tbody>
-                    </Table>
                 </React.Fragment>
             );
         default:

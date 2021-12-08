@@ -1,5 +1,4 @@
 import {Redirect, Route, Switch, useHistory, useLocation} from "react-router-dom";
-
 // import Switch from "react-bootstrap/Switch";
 import {useAuth} from "../context/user-context";
 
@@ -48,22 +47,6 @@ function HomePage() {
     return <h3>Home</h3>;
 }
 
-function LoginPage() {
-    let history = useHistory();
-    let location = useLocation();
-
-    let {from} = location.state || {from: {pathname: "/"}};
-    let login = () => {
-        history.replace('/login');
-    };
-
-    return (
-        <div>
-            <p>You must log in to view the page at {from.pathname}</p>
-            <button onClick={login}>Log in</button>
-        </div>
-    );
-}
 
 // A wrapper for <Route> that redirects to the login
 // screen if you're not yet authenticated.
@@ -97,7 +80,6 @@ function PrivateRoute({children, ...props}) {
 }
 
 export const PageRoutes = () => {
-
     return (
         <Switch>
             <Route path='/' exact
@@ -105,9 +87,6 @@ export const PageRoutes = () => {
             />
             <Route path='/public'
                    render={props => <PublicPage {...props} />}
-            />
-            <Route path='/login2'
-                   render={props => <LoginPage {...props} />}
             />
             <PrivateRoute path='/protected'
                           render={props => <ProtectedPage {...props} />}

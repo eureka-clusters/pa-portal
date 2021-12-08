@@ -33,14 +33,14 @@ export default function PartnerStatistics(props: Props) {
     const downloadExcel = async () => {
         const serverUri = GetServerUri();
         const hash = getFilter(filter);
-        let accessToken = auth.getJwtToken();
+        let jwtToken = auth.getJwtToken();
         fetch(serverUri + '/api/statistics/download/partner/' + hash,
             {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + accessToken
+                    'Authorization': `${jwtToken}`
                 }
             }
         ).then((res) => res.json()).then((res) => {

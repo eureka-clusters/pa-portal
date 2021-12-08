@@ -112,92 +112,15 @@ const PartnerTable: FC<Props> = ({filter}) => {
                 <React.Fragment>
                     {/* <pre className='debug'>{JSON.stringify(filter, undefined, 2)}</pre> */}
                     {/* <pre className='debug'>{JSON.stringify(data, undefined, 2)}</pre> */}
+                    <h2>Partners</h2>
                     <DataTable
-                        title="Partners"
+                        // title="Partners"
                         keyField="id"
                         columns={columns}
                         data={partners}
                         paginationPerPage={50}  // overwrite the default paginationPerPage setting
                         paginationPartnersPerPageOptions={[10, 15, 20, 25, 30, 50, 100, 200]}
                     />
-
-                    <h2>Partners</h2>
-                    <Table className="caption-top" size={'sm'} striped hover>
-                        <caption>
-                            List of Partners: <span className="float-end">Displaying {partners.length} partners.</span>
-                        </caption>
-                        <thead>
-                        <tr>
-                            <th></th>
-                            <th>Project</th>
-                            <th>Partner</th>
-                            <th>Country</th>
-                            <th>Type</th>
-                            {!hasYearFilter && <>
-                                <th className={'text-right'}>Partner Costs</th>
-                                <th className={'text-right'}>Partner Effort</th>
-                            </>}
-                            {hasYearFilter && <>
-                                <th>Year</th>
-                                <th className={'text-right'}>Partner Costs in year</th>
-                                <th className={'text-right'}>Partner Effort in year</th>
-                            </>}
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {partners.map((partner, i) => {
-                            return (
-                                <React.Fragment key={i}>
-                                    <tr className={!partner.isActive ? 'table-danger' : ''}>
-                                        <td><small className={'text-muted'}>{partner.id}</small></td>
-                                        {/* <td><Link to={`/project/${partner.projectName}`}>{partner.projectName}</Link></td> */}
-                                        <td><Link to={`/project/${partner.project.slug}`}>{partner.project.name}</Link>
-                                        </td>
-
-
-                                        <td><Link to={`/partner/${partner.slug}`}>{partner.organisation.name}</Link>
-                                        </td>
-
-                                        {/* <td><Link to={`/partner/${partner.id}`}>{partner.partner}</Link></td> */}
-                                        <td>{partner.organisation.country.country}</td>
-                                        <td>{partner.organisation.type.type}</td>
-                                        {!hasYearFilter && <>
-                                            <td className={'text-monospace text-right'}><NumberFormat
-                                                value={partner.latestVersionCosts}
-                                                thousandSeparator={' '}
-                                                displayType={'text'}
-                                                prefix={'€ '}/></td>
-                                            <td className={'text-monospace text-right'}><NumberFormat
-                                                value={partner.latestVersionEffort}
-                                                thousandSeparator={' '}
-                                                decimalScale={2}
-                                                fixedDecimalScale={true}
-                                                displayType={'text'}
-                                            /></td>
-                                        </>
-                                        }
-                                        {hasYearFilter && <>
-                                            <td>{partner.year}</td>
-                                            <td className={'text-monospace text-right'}><NumberFormat
-                                                value={partner.latestVersionCostsInYear}
-                                                thousandSeparator={' '}
-                                                displayType={'text'}
-                                                prefix={'€ '}/></td>
-                                            <td className={'text-monospace text-right'}><NumberFormat
-                                                value={partner.latestVersionEffortInYear}
-                                                thousandSeparator={' '}
-                                                decimalScale={2}
-                                                fixedDecimalScale={true}
-                                                displayType={'text'}
-                                            /></td>
-                                        </>
-                                        }
-                                    </tr>
-                                </React.Fragment>)
-                        })
-                        }
-                        </tbody>
-                    </Table>
                 </React.Fragment>
             );
         default:

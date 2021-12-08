@@ -37,14 +37,14 @@ export default function ProjectStatistics(props: Props) {
     const downloadExcel = async () => {
         var serverUri = GetServerUri();
         var hash = getFilter(filter);
-        let accessToken = auth.getJwtToken();
+        let jwtToken = auth.getJwtToken();
         fetch(serverUri + '/api/statistics/download/project/' + hash,
             {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + accessToken
+                    'Authorization': `${jwtToken}`
                 }
             }
         ).then((res) => res.json()).then((res) => {
