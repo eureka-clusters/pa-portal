@@ -10,10 +10,10 @@ import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
 
 // import TestPages from './test';
-import OrganisationTypeChart from 'component/project/charts/organisation-type-chart';
-import OrganisationCountryChart from 'component/project/charts/country-chart';
-import BudgetByOrganisationTypeChart from 'component/project/charts/budget-by-organisation-type-chart';
-import BudgetByCountryChart from 'component/project/charts/budget-and-effort-by-country-chart';
+import OrganisationTypeChart from 'component/project/charts/organisation-type-chart2';
+import OrganisationCountryChart from 'component/project/charts/country-chart2';
+import BudgetByOrganisationTypeChart from 'component/project/charts/budget-by-organisation-type-chart2';
+import BudgetByCountryChart from 'component/project/charts/budget-and-effort-by-country-chart2';
 
 // try lazy loading
 // const OrganisationTypeChart = React.lazy(() => import('component/project/charts/organisation-type-chart'));
