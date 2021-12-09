@@ -1,11 +1,10 @@
-import { createContext, FC, useContext, useReducer} from 'react';
-import {
-    useHistory
-} from "react-router-dom";
+import { createContext, FC, useContext, useReducer } from 'react';
+import { useHistory } from "react-router-dom";
 import { GetServerUri } from 'function/api';
+import { iUserinfo } from 'interface/auth/userinfo';
+
 
 const AuthContext = createContext<any>({}); //Any, might be replaced by more strict objects
-
 
 export const KEY_USER = 'user';
 export const KEY_USER_INFO = 'userInfo';
@@ -21,23 +20,13 @@ type CallbackHandler = () => void
 interface iLocation {
     pathname: string
 }
-
-interface iUserinfo {
-    id: number,
-    first_name: string,
-    last_name: string,
-    email: string,
-    is_funder: boolean
-    funder_country: string,
-    funder_clusters: Array<string>
-}
 interface iProps {
     children: JSX.Element
 }
 
 // Provider component that wraps your app and makes auth object ...
 // ... available to any child component that calls useAuth().
-export const ProvideAuth: FC<iProps> = ({children}) => {
+export const ProvideAuth: FC<iProps> = ({ children }) => {
     const auth = useProvideAuth();
     return (
         <AuthContext.Provider value={auth}>
@@ -57,21 +46,65 @@ function useProvideAuth() {
 
     let storage = localStorage;
     let history = useHistory();
-    
+
+    const setUser = (username: string) => {
+        storage.setItem(KEY_USER, username)
+    }
+
+    const getUser = () => {
+        return storage.getItem(KEY_USER)
+    }
+
+    const setJwtToken = (token: string) => {
+        storage.setItem(KEY_TOKEN, token)
+    }
+
+    const getJwtToken = () => {
+        return storage.getItem(KEY_TOKEN)
+    }
+
+    const setUserInfo = (userinfo: iUserinfo) => {
+        // console.log(['setUserInfo ', userinfo]);
+        // userinfo must be saved a json string into storage as no objects could be saved
+        storage.setItem(KEY_USER_INFO, JSON.stringify(userinfo));
+    }
+
+    const getUserInfo = () => {
+        let userinfo = storage.getItem(KEY_USER_INFO);
+        if (userinfo) {
+            return JSON.parse(userinfo);
+        }
+        return null;
+    }
+
+    const setRedirect = (location: iLocation) => {
+        // console.log(['saveRedirect with from ', location]);
+        storage.setItem(KEY_REDIRECT, location.pathname);
+    }
+
+    const getRedirect = () => {
+        return storage.getItem(KEY_REDIRECT);
+    }
+
     const [state, setState] = useReducer(
         (state: any, newState: any) => ({ ...state, ...newState }),
         {
-            user: storage.getItem(KEY_USER),
+            // user: storage.getItem(KEY_USER),
+
             // userInfo: storage.getItem(KEY_USER_INFO) ? JSON.parse(storage.getItem(KEY_USER_INFO)) : null,
             // userInfo: storage.getItem(KEY_USER_INFO) ? JSON.parse(storage.getItem(KEY_USER_INFO)) : '',
-            userInfo: storage.getItem(KEY_USER_INFO),
-            token: storage.getItem(KEY_TOKEN),
-            redirect: storage.getItem(KEY_REDIRECT),  // has to be an independed useState
+            // userInfo: storage.getItem(KEY_USER_INFO) ? JSON.parse(storage.getItem(KEY_USER_INFO)) : {},
+            // token: storage.getItem(KEY_TOKEN),
+            // redirect: storage.getItem(KEY_REDIRECT),
+
+            user: getUser(),
+            userInfo: getUserInfo(),
+            token: getJwtToken(),
+            redirect: getRedirect(),
             loading: false,
             errorMessage: null
         }
     );
-
 
     // return values for the states
     const user = state.user;
@@ -79,6 +112,7 @@ function useProvideAuth() {
     const redirect = state.redirect;
     const token = state.token;
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     function __delay__(timer: number | undefined) {
         return new Promise<void>(resolve => {
             timer = timer || 2000;
@@ -99,13 +133,7 @@ function useProvideAuth() {
         storage.removeItem(KEY_USER_INFO)
     }
 
-    const setUser = (username: string) => {
-        storage.setItem(KEY_USER, username)
-    }
-
-    const getUser = () => {
-        return storage.getItem(KEY_USER)
-    }
+  
 
     const hasUser = () => {
         // must use the states instead.
@@ -113,24 +141,7 @@ function useProvideAuth() {
         // return null !== storage.getItem('user');
     }
 
-    const setJwtToken = (token: string) => {
-        storage.setItem(KEY_TOKEN, token)
-    }
-
-    const getJwtToken = () => {
-        return storage.getItem(KEY_TOKEN)
-    }
-
-    const setUserInfo = (userinfo: iUserinfo) => {
-        // console.log(['setUserInfo ', userinfo]);
-        // userinfo must be saved a json string into storage as no objects could be saved
-        storage.setItem(KEY_USER_INFO, JSON.stringify(userinfo));
-    }
-
-    const getUserInfo = () => {
-        return storage.getItem(KEY_USER_INFO)
-    }
-
+   
     // const requestUserInfo = async (jwtToken: string): iUserinfo =>  {
     // todo iUserinfo returns no promise which async needs.
     const requestUserInfo = async (jwtToken: string) => {
@@ -147,8 +158,8 @@ function useProvideAuth() {
                 }
             }
         ).then((res) => res.json()).then((res) => {
-            console.log(['requestUserInfo res 1',res]);
-            return res 
+            console.log(['requestUserInfo res 1', res]);
+            return res
             // missing is error handling which i had the last time => still todo
         });
 
@@ -163,7 +174,7 @@ function useProvideAuth() {
 
         // todo: missing error handling for requestUserInfo
         // use token to get the userInfo (if this succeeds the token is valid)
-        let userinfo =  await requestUserInfo(token);
+        let userinfo = await requestUserInfo(token);
         let user = userinfo.email;
         console.log(['userinfo in loginWithToken', userinfo]);
 
@@ -182,10 +193,10 @@ function useProvideAuth() {
     }
 
     const saveRedirect = (location: iLocation) => {
-        console.log(['saveRedirect with from ', location]);
-        storage.setItem(KEY_REDIRECT, location.pathname);
+        if (location) {
+            setRedirect(location);
+        }
     }
-
 
     const redirectAfterLogin = () => {
         console.log(['redirectAfterLogin to ', redirect]);
@@ -197,12 +208,12 @@ function useProvideAuth() {
         user,
         userInfo,
         redirect,
-        token, 
+        token,
 
         // pretty sure we don't want that some code set the user and token externally?
         // setUser, 
         // setJwtToken,
-        
+
         // storage functions
         hasUser,
         getJwtToken,
