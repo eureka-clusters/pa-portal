@@ -1,13 +1,13 @@
 import React from 'react';
 import Chart from "react-google-charts";
-import NumberFormat from "react-number-format"
+// import NumberFormat from "react-number-format"
 
 const OrganisationTypeChart = ({ results }) => {
 
 
-    function percentageFormat(num) {
-        return parseFloat(num.toFixed(2));
-    }
+    // function percentageFormat(num) {
+    //     return parseFloat(num.toFixed(2));
+    // }
 
     var $data = [
         [
@@ -35,6 +35,7 @@ const OrganisationTypeChart = ({ results }) => {
             element.count
 
             // test calculate the percentage manually (only works with  pieSliceText: 'value',)
+            // instead of adding element.count  use one of these lines
             // 100 / element.total * element.count  // needs formating for 2 digits
             // percentageFormat(100 / element.total * element.count)
             
@@ -46,8 +47,6 @@ const OrganisationTypeChart = ({ results }) => {
             //     displayType = { 'text'}
             //     prefix = { '%'}
             // />
-
-
         ]);
     });
 
@@ -59,7 +58,6 @@ const OrganisationTypeChart = ({ results }) => {
     const pieOptions = {
         title: "Partners by organisation type",
         // pieHole: 0.6,
-
         // different colors
         // slices: [
         //     {
@@ -76,7 +74,7 @@ const OrganisationTypeChart = ({ results }) => {
         //     }
         // ],
 
-        // bottom legend has a rendering issue (legend text isn't displayed):(  
+        // bottom legend has a rendering issue (legend text isn't displayed) :(  
         // first i thought it's the color (because on color change it is rendered correctly. but not on reload.)
         // legend: {
         //     position: "bottom",

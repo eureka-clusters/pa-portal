@@ -1,5 +1,6 @@
 import React from 'react';
-import PartnerTable from "component/project/partner-table";
+// import PartnerTable from "component/project/partner-table";
+import PartnerTable from "component/project/partner-table2";
 import BreadcrumbTree from 'component/partial/breadcrumb-tree'
 import NumberFormat from "react-number-format";
 import moment from 'moment';
