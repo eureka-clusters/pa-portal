@@ -1,4 +1,4 @@
-import React, {FC, useEffect} from 'react';
+import React, {FC} from 'react';
 import {ApiError, apiStates, getFilter} from 'function/api';
 import {Link} from "react-router-dom";
 import DataTable from 'component/database-table/index';
@@ -68,13 +68,24 @@ const ProjectTable: FC<Props> = ({filter}) => {
         },
     ];
 
+   
+
 
     const {state, error, projects} = GetResults(getFilter(filter))
 
-    useEffect(() => {
-        // const {state, error, projects} = GetResults(getFilter(filter))
-    }, [filter]);
 
+    // useEffect(() => {
+    //      const {state, error, projects} = GetResults(getFilter(filter))
+    // }, [filter]);
+
+
+    // return (
+    //     <>
+    //         filter in table
+    //         <pre className='debug'>{JSON.stringify(filter, undefined, 2)}</pre>
+    //         <pre className='debug'>{JSON.stringify(projects, undefined, 2)}</pre>
+    //     </>
+    // );
 
     switch (state) {
         case apiStates.ERROR:
@@ -87,8 +98,6 @@ const ProjectTable: FC<Props> = ({filter}) => {
         case apiStates.SUCCESS:
             return (
                 <React.Fragment>
-                    {/* <pre className='debug'>{JSON.stringify(filter, undefined, 2)}</pre> */}
-                    {/* <pre className='debug'>{JSON.stringify(data._embedded.results, undefined, 2)}</pre> */}
                     <h2>Projects</h2>
                     <DataTable
                         // title="Projects"

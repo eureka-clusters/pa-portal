@@ -44,17 +44,18 @@ export const GetFacets = (filter: string) => {
 
         createInstance().then(axios => {
             // axios automatically returns json in response.data and catches errors 
-            axios.get<Facets>('/statistics/facets/partner?filter=' + filter, {
+            // axios.get<Facets>('/statistics/facets/partner?filter=' + filter, {
+            axios.get<any>('/statistics/facets/partner?filter=' + filter, {
                 // settings could be overwritten
                 // timeout: 1000
             })
                 .then(response => {
                     //Use a local const to have the proper TS typehinting
                     const {data} = response;
-
                     setPartData({
                         state: apiStates.SUCCESS,
-                        facets: data
+                        // facets: data
+                        facets: data._embedded.facets[0]
                     })
                 }).catch(function (error) {
                 if (error.response) {

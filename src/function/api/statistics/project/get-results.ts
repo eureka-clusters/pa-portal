@@ -48,7 +48,8 @@ export const GetResults = (filter: string) => {
 
         createInstance().then(axios => {
             // axios automatically returns json in response.data and catches errors 
-            axios.get<ProjectResponse>('/statistics/results/project?filter=' + filter, {
+            axios.get<any>('/statistics/results/project?filter=' + filter, {
+            // axios.get<ProjectResponse>('/statistics/results/project?filter=' + filter, {
                 // settings could be overwritten
                 // timeout: 1000
             })
@@ -56,9 +57,16 @@ export const GetResults = (filter: string) => {
                     //Use a local const to have the proper TS typehinting
                     const {data} = response;
 
+                    console.log(['response', response]);
+                    // console.log(['data._embedded.projects', data._embedded.projects]);
+                    // console.log(['data._embedded.projects[0]', data._embedded.projects[0]]);
+                    // console.log(['data._embedded.results', data._embedded.results]);
+                    
+
                     setPartData({
                         state: apiStates.SUCCESS,
-                        projects: data._embedded.projects
+                        // projects: data._embedded.projects
+                        projects: data._embedded.results  // used with any
                     })
                 })
 

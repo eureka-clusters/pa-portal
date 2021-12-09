@@ -48,7 +48,8 @@ export const GetResults = (filter: string) => {
 
         createInstance().then(axios => {
             // axios automatically returns json in response.data and catches errors 
-            axios.get<PartnerResponse>('/statistics/results/partner?filter=' + filter, {
+            // axios.get<PartnerResponse>('/statistics/results/partner?filter=' + filter, {
+            axios.get<any>('/statistics/results/partner?filter=' + filter, {
                 // settings could be overwritten
                 // timeout: 1000
             })
@@ -58,7 +59,8 @@ export const GetResults = (filter: string) => {
 
                     setPartData({
                         state: apiStates.SUCCESS,
-                        partners: data._embedded.partners
+                        // partners: data._embedded.partners
+                        partners: data._embedded.results
                     })
                 })
 

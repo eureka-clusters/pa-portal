@@ -6,6 +6,14 @@ import {Facets} from "interface/statistics/project/facets";
 
 export {apiStates, ApiError, getFilter} from 'function/api/index';
 
+
+interface FacetResponse {
+    _embedded: {
+        facets: Array<Facets>
+    }
+}
+
+
 interface FacetState {
     state: string;
     error?: string
@@ -44,17 +52,22 @@ export const GetFacets = (filter: string) => {
 
         createInstance().then(axios => {
             // axios automatically returns json in response.data and catches errors 
-            axios.get<Facets>('/statistics/facets/project?filter=' + filter, {
+            // axios.get<FacetResponse>('/statistics/facets/project?filter=' + filter, {
+            // axios.get<Facets>('/statistics/facets/project?filter=' + filter, {
+            axios.get<any>('/statistics/facets/project?filter=' + filter, {
                 // settings could be overwritten
                 // timeout: 1000
             })
                 .then(response => {
                     //Use a local const to have the proper TS typehinting
                     const {data} = response;
-
+                    // console.log(['response', response]);
+                    // console.log(['data._embedded.facets', data._embedded.facets]);
+                    // console.log(['data._embedded.facets[0]', data._embedded.facets[0]]);
                     setPartData({
                         state: apiStates.SUCCESS,
-                        facets: data
+                        // facets: data
+                        facets: data._embedded.facets[0]
                     })
                 }).catch(function (error) {
                 if (error.response) {

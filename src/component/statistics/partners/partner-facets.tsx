@@ -1,12 +1,28 @@
-import React from 'react';
-
+import React, { FC } from 'react';
 import {Form} from "react-bootstrap";
+import BootstrapSwitchButton from "bootstrap-switch-button-react";
 import {ApiError, apiStates, getFilter} from "function/api";
 import {GetFacets} from "function/api/statistics/partner/get-facets";
 
-const PartnerFacets = (filter: any, setFilter: any, updateFilter: any, updateResults: any, updateHash: any) => {
+interface Props {
+    filter: any,
+    setFilter: any,
+    updateFilter: any,
+    updateResults: any,
+    updateHash: any
+}
+
+// const PartnerFacets = (filter: any, setFilter: any, updateFilter: any, updateResults: any, updateHash: any) => {
+const PartnerFacets: FC<Props> = ({ filter, setFilter, updateFilter, updateResults, updateHash }) => {
 
     const {state, error, facets} = GetFacets(getFilter(filter));
+
+    // return (
+    //     <>
+    //         <pre className='debug'>{JSON.stringify(filter, undefined, 2)}</pre>
+    //         <pre className='debug'>{JSON.stringify(facets, undefined, 2)}</pre>
+    //     </>
+    // );
 
     switch (state) {
         case apiStates.ERROR:
@@ -15,12 +31,8 @@ const PartnerFacets = (filter: any, setFilter: any, updateFilter: any, updateRes
 
             return (
                 <>
-                    {/* <pre className='debug'>{JSON.stringify(filter, undefined, 2)}</pre> */}
-                    <pre className='debug'>{JSON.stringify(facets, undefined, 2)}</pre>
-                    {/* @johan did you changed something on the backend that the facets aren't in a named array any more? */}
                     <fieldset>
                         <legend><small>Countries</small></legend>
-
                         {facets.countries && facets.countries.map((country, i) => (
                             <div key={i}>
                                 <Form.Check type={'checkbox'} id={`check-country-${i}`}>
@@ -100,6 +112,7 @@ const PartnerFacets = (filter: any, setFilter: any, updateFilter: any, updateRes
 
                     <fieldset>
                         <legend><small>Years</small></legend>
+
                         {facets.years && facets.years.map((year, i) => (
                             <div key={i}>
                                 <Form.Check type={'checkbox'} id={`check-year-${i}`}>
@@ -112,12 +125,12 @@ const PartnerFacets = (filter: any, setFilter: any, updateFilter: any, updateRes
                                         }
                                     />
                                     <Form.Check.Label>{year}</Form.Check.Label>
-                                    {/* @johan do we add an amount for year?
-                                     <Form.Check.Label>{year['year']} ({year['amount']})</Form.Check.Label> */}
                                 </Form.Check>
                             </div>
                         ))}
                     </fieldset>
+
+                   
                 </>
             );
 

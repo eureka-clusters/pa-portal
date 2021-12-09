@@ -1,5 +1,4 @@
-import React from 'react';
-
+import React, {FC} from 'react';
 import {Form} from "react-bootstrap";
 import BootstrapSwitchButton from "bootstrap-switch-button-react";
 import {ApiError, apiStates, GetFacets, getFilter} from "function/api/statistics/project/get-facets";
@@ -8,7 +7,17 @@ import {ApiError, apiStates, GetFacets, getFilter} from "function/api/statistics
  * @TODO get rid fo the any here
  */
 
-const ProjectFacets = (filter: any, setFilter: any, updateFilter: any, updateResults: any, updateHash: any) => {
+interface Props {
+    filter: any,
+    setFilter: any,
+    updateFilter: any,
+    updateResults: any,
+    updateHash: any
+}
+
+
+// const ProjectFacets = (filter: any, setFilter: any, updateFilter: any, updateResults: any, updateHash: any) => {
+const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResults, updateHash}) => {
 
     const {state, error, facets} = GetFacets(getFilter(filter));
 
@@ -36,6 +45,14 @@ const ProjectFacets = (filter: any, setFilter: any, updateFilter: any, updateRes
         updateHash();
     }
 
+    // return (
+    //     <>
+    //         filter in facets
+    //         <pre className='debug'>{JSON.stringify(filter, undefined, 2)}</pre>
+    //         <pre className='debug'>{JSON.stringify(facets, undefined, 2)}</pre>
+    //     </>
+    // );
+
     switch (state) {
         case apiStates.ERROR:
             return (
@@ -48,10 +65,7 @@ const ProjectFacets = (filter: any, setFilter: any, updateFilter: any, updateRes
 
             return (
                 <>
-                    {/* <pre className='debug'>{JSON.stringify(filter, undefined, 2)}</pre>
-                    <pre className='debug'>{JSON.stringify(facets, undefined, 2)}</pre> */}
-
-                     <fieldset>
+                    <fieldset>
                         <legend><small>Countries</small></legend>
                         <BootstrapSwitchButton checked={filter['country_method'] === 'and'}
                                                size="sm"
