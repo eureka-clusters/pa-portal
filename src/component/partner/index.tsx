@@ -62,8 +62,6 @@ export default function Partner(props: Props) {
 
                         <dt className="col-sm-3">Technical contact:</dt>
                         <dd className="col-sm-9">
-                            @johan still not camel case in this result "full_name" instead of "fullName"
-                            <pre className='debug'>{JSON.stringify(partner.technicalContact, undefined, 2)}</pre>
                             {String(partner.technicalContact.fullName)} (<a
                             href={`mailto:${partner.technicalContact.email}`}>{partner.technicalContact.email}</a>)
                         </dd>
@@ -92,9 +90,6 @@ export default function Partner(props: Props) {
 
                         <dt className="col-sm-3">Project leader</dt>
                         <dd className="col-sm-9">
-                            @johan still not camel case in this result "full_name" instead of "fullName"
-                            <pre className='debug'>{JSON.stringify(partner.project.projectLeader, undefined, 2)}</pre>
-                            
                             {String(partner.project.projectLeader.fullName)} (<a
                             href={`mailto:${partner.project.projectLeader.email}`}>{partner.project.projectLeader.email}</a>)
                         </dd>
