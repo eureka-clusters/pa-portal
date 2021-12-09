@@ -1,11 +1,11 @@
-import {Redirect, Route, Switch, useHistory, useLocation} from "react-router-dom";
+import {Redirect, Route, Switch, useLocation} from "react-router-dom";
 // import Switch from "react-bootstrap/Switch";
 import {useAuth} from "../context/user-context";
 
 import Login from "./login";
 import Callback from "./callback";
 import Logout from "./logout";
-
+import Account from "./account";
 import Projects from "./projects";
 import Project from "./project";
 
@@ -35,12 +35,6 @@ function GenericNotFound() {
         </section>
     );
 };
-
-// test page
-function AccountPage() {
-    let auth = useAuth();
-    return <h3>Account page currently in PageRoutes.js user = "{auth.user}"</h3>;
-}
 
 
 function HomePage() {
@@ -101,7 +95,7 @@ export const PageRoutes = () => {
                    render={props => <Callback {...props} />}
             />
             <PrivateRoute path='/account'
-                          render={props => <AccountPage {...props} />}
+                    render={props => <Account {...props} />}
             />
             <PrivateRoute path='/statistics/projects'
                           render={props => <ProjectStatistics {...props} />}
