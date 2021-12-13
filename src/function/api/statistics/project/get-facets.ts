@@ -64,10 +64,16 @@ export const GetFacets = (filter: string) => {
                     // console.log(['response', response]);
                     // console.log(['data._embedded.facets', data._embedded.facets]);
                     // console.log(['data._embedded.facets[0]', data._embedded.facets[0]]);
+
+                    // if user is not a funder it will return [];
+                    var facets = [];
+                    if (data._embedded.facets[0] !== undefined) {
+                        facets = data._embedded.facets[0];
+                    } 
                     setPartData({
                         state: apiStates.SUCCESS,
                         // facets: data
-                        facets: data._embedded.facets[0]
+                        facets: facets
                     })
                 }).catch(function (error) {
                 if (error.response) {

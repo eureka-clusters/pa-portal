@@ -6,7 +6,7 @@ import {Project} from "interface/project";
 
 interface ProjectResponse {
     _embedded: {
-        projects: Array<Project>
+        results: Array<Project>
     }
 }
 
@@ -48,8 +48,8 @@ export const GetResults = (filter: string) => {
 
         createInstance().then(axios => {
             // axios automatically returns json in response.data and catches errors 
-            axios.get<any>('/statistics/results/project?filter=' + filter, {
-            // axios.get<ProjectResponse>('/statistics/results/project?filter=' + filter, {
+            // axios.get<any>('/statistics/1results/project?filter=' + filter, {
+            axios.get<ProjectResponse>('/statistics/results/project?filter=' + filter, {
                 // settings could be overwritten
                 // timeout: 1000
             })
