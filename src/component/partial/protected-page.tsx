@@ -1,5 +1,9 @@
 const ProtectedPage = () => {
-    return ('<h2>This page is protected</h2>')
+    return (
+        <>
+            <h3>This page is protected</h3>
+        </>
+    );
 };
 
 export default ProtectedPage;
