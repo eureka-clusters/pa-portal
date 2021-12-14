@@ -1,6 +1,7 @@
 import React, { useEffect, useState} from 'react';
 import { Breadcrumb } from "react-bootstrap";
 import reactStringReplace from 'react-string-replace';
+import { Link } from "react-router-dom";
 
 // Tree structure of all pages still needs harmonising of all dynamic variable names like projectIdentifier or projectName
 var tree = {
@@ -196,20 +197,21 @@ function BreadcrumbTree({ current, data, linkCurrent = false }) {
                         delete breadcrumbitem.href;
                     }
 
-                    if (breadcrumbitem.href !== undefined) {
-                        // console.log('href before', breadcrumbitem.href);
-                        breadcrumbitem.href = substituteTexts(breadcrumbitem.href, data)
-                        // console.log('href after ', breadcrumbitem.href);
-                    } 
+                    // hard href link would => page reload
+                    // if (breadcrumbitem.href !== undefined) {
+                    //     breadcrumbitem.href = substituteTexts(breadcrumbitem.href, data)
+                    // } 
 
-                    if (breadcrumbitem.displayname !== undefined) {
-                        // console.log('displayname before', breadcrumbitem.displayname);
-                        breadcrumbitem.displayname = substituteTexts(breadcrumbitem.displayname, data);
-                        // console.log('displayname after', breadcrumbitem.displayname);
+                    // use react-router-dom => no page reload
+                    if (breadcrumbitem.href !== undefined) {
+                        breadcrumbitem.linkAs = Link ;
+                        breadcrumbitem.linkProps = { to: substituteTexts(breadcrumbitem.href, data) };
+                        delete breadcrumbitem.href;
                     }
 
-                    // not sure if i shouldn't use this instead so leave this here as backup
-                    //linkProps = {{ to: item.href }} linkAs = { Link }
+                    if (breadcrumbitem.displayname !== undefined) {
+                        breadcrumbitem.displayname = substituteTexts(breadcrumbitem.displayname, data);
+                    }
 
                     return (<Breadcrumb.Item {...breadcrumbitem} key={breadcrumbitem.name} >{breadcrumbitem.displayname}</Breadcrumb.Item>);
                 })
