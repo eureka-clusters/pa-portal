@@ -6,7 +6,7 @@ import {Project} from "interface/project";
 
 interface ProjectResponse {
     _embedded: {
-        results: Array<Project>
+        projects: Array<Project>
     }
 }
 
@@ -28,8 +28,13 @@ export const GetResults = (filter: string) => {
         projects: []
     });
 
-    const createInstance = async () => {
-        return axios.create({
+    const load = () => {
+
+        const setPartData = (partialData: { state: string; projects?: Array<Project>; error?: string; }) => {
+            setHookState(hookState => ({...hookState, ...partialData}))
+        }
+
+        axios.create({
             baseURL: serverUri + '/api',
             timeout: 5000,
             headers: {
@@ -37,64 +42,40 @@ export const GetResults = (filter: string) => {
                 'Content-Type': 'application/json',
                 'Authorization': `${jwtToken}`
             }
-        });
-    };
+        }).get<ProjectResponse>('/statistics/results/project?filter=' + filter)
+            .then(response => {
+                //Use a local const to have the proper TS typehinting
+                const {data} = response;
 
-    const load = () => {
-
-        const setPartData = (partialData: { state: string; projects?: Array<Project>; error?: string; }) => {
-            setHookState(hookState => ({...hookState, ...partialData}))
-        }
-
-        createInstance().then(axios => {
-            // axios automatically returns json in response.data and catches errors 
-            // axios.get<any>('/statistics/1results/project?filter=' + filter, {
-            axios.get<ProjectResponse>('/statistics/results/project?filter=' + filter, {
-                // settings could be overwritten
-                // timeout: 1000
+                setPartData({
+                    state: apiStates.SUCCESS,
+                    // projects: data._embedded.projects
+                    projects: data._embedded.projects  // used with any
+                })
             })
-                .then(response => {
-                    //Use a local const to have the proper TS typehinting
-                    const {data} = response;
 
-                    console.log(['response', response]);
-                    // console.log(['data._embedded.projects', data._embedded.projects]);
-                    // console.log(['data._embedded.projects[0]', data._embedded.projects[0]]);
-                    // console.log(['data._embedded.results', data._embedded.results]);
-                    
-
+            .catch(function (error) {
+                if (error.response) {
                     setPartData({
-                        state: apiStates.SUCCESS,
-                        // projects: data._embedded.projects
-                        projects: data._embedded.results  // used with any
-                    })
-                })
-
-                .catch(function (error) {
-                    if (error.response) {
-                        setPartData({
-                            state: apiStates.ERROR,
-                            error: error.response.data.title + ' ' + error.response.data.status + '\n' + error.response.data.detail
-                        });
-                    } else if (error.request) {
-                        // The request timed out
-                        console.log(error.request);
-                        setPartData({
-                            state: apiStates.ERROR,
-                            error: 'The request timed out'
-                        });
-                    } else {
-                        // Something happened in setting up the request that triggered an Error
-                        console.log('Error', error.message);
-                        setPartData({
-                            state: apiStates.ERROR,
-                            error: 'Something happened in setting up the request that triggered an Error'
-                        });
-                    }
-                })
-
-        })
-
+                        state: apiStates.ERROR,
+                        error: error.response.data.title + ' ' + error.response.data.status + '\n' + error.response.data.detail
+                    });
+                } else if (error.request) {
+                    // The request timed out
+                    console.log(error.request, 'error');
+                    setPartData({
+                        state: apiStates.ERROR,
+                        error: 'The request timed out'
+                    });
+                } else {
+                    // Something happened in setting up the request that triggered an Error
+                    console.log('Error', error.message);
+                    setPartData({
+                        state: apiStates.ERROR,
+                        error: 'Something happened in setting up the request that triggered an Error'
+                    });
+                }
+            })
     };
 
     React.useEffect(() => {

@@ -68,24 +68,7 @@ const ProjectTable: FC<Props> = ({filter}) => {
         },
     ];
 
-   
-
-
     const {state, error, projects} = GetResults(getFilter(filter))
-
-
-    // useEffect(() => {
-    //      const {state, error, projects} = GetResults(getFilter(filter))
-    // }, [filter]);
-
-
-    // return (
-    //     <>
-    //         filter in table
-    //         <pre className='debug'>{JSON.stringify(filter, undefined, 2)}</pre>
-    //         <pre className='debug'>{JSON.stringify(projects, undefined, 2)}</pre>
-    //     </>
-    // );
 
     switch (state) {
         case apiStates.ERROR:

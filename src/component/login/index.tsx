@@ -21,14 +21,11 @@ export default function Login() {
     let auth = useAuth();
     let { from } = location.state || { from: { pathname: "/" } };
 
-    console.log(['from', from]);
-
     // save redirect for not logged in users
     auth.saveRedirect(from);
 
     // if user already logged in redirect him
     if (auth.hasUser()) {
-        console.log('redirect on login page');
         auth.redirectAfterLogin();
         // history.replace(auth.redirect);
         // return <Redirect to={auth.redirect} />

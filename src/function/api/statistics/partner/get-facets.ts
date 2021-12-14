@@ -24,8 +24,13 @@ export const GetFacets = (filter: string) => {
         facets: {} as Facets
     });
 
-    const createInstance = async () => {
-        return axios.create({
+    const load = () => {
+
+        const setPartData = (partialData: { state: string; facets?: Facets; error?: string; }) => {
+            setHookState(hookState => ({...hookState, ...partialData}))
+        }
+
+        axios.create({
             baseURL: serverUri + '/api',
             timeout: 5000,
             headers: {
@@ -33,55 +38,36 @@ export const GetFacets = (filter: string) => {
                 'Content-Type': 'application/json',
                 'Authorization': `${jwtToken}`
             }
-        });
-    };
-
-    const load = () => {
-
-        const setPartData = (partialData: { state: string; facets?: Facets; error?: string; }) => {
-            setHookState(hookState => ({...hookState, ...partialData}))
-        }
-
-        createInstance().then(axios => {
-            // axios automatically returns json in response.data and catches errors 
-            // axios.get<Facets>('/statistics/facets/partner?filter=' + filter, {
-            axios.get<any>('/statistics/facets/partner?filter=' + filter, {
-                // settings could be overwritten
-                // timeout: 1000
-            })
-                .then(response => {
-                    //Use a local const to have the proper TS typehinting
-                    const {data} = response;
-                    setPartData({
-                        state: apiStates.SUCCESS,
-                        // facets: data
-                        facets: data._embedded.facets[0]
-                    })
-                }).catch(function (error) {
-                if (error.response) {
-                    setPartData({
-                        state: apiStates.ERROR,
-                        error: error.response.data.title + ' ' + error.response.data.status + '\n' + error.response.data.detail
-                    });
-                } else if (error.request) {
-                    // The request timed out
-                    console.log(error.request);
-                    setPartData({
-                        state: apiStates.ERROR,
-                        error: 'The request timed out'
-                    });
-                } else {
-                    // Something happened in setting up the request that triggered an Error
-                    console.log('Error', error.message);
-                    setPartData({
-                        state: apiStates.ERROR,
-                        error: 'Something happened in setting up the request that triggered an Error'
-                    });
-                }
-            })
-
+        }).get<Facets>('/statistics/facets/partner/' + filter)
+            .then(response => {
+                //Use a local const to have the proper TS typehinting
+                const {data} = response;
+                setPartData({
+                    state: apiStates.SUCCESS,
+                    facets: data
+                })
+            }).catch(function (error) {
+            if (error.response) {
+                setPartData({
+                    state: apiStates.ERROR,
+                    error: error.response.data.title + ' ' + error.response.data.status + '\n' + error.response.data.detail
+                });
+            } else if (error.request) {
+                // The request timed out
+                console.log(error.request);
+                setPartData({
+                    state: apiStates.ERROR,
+                    error: 'The request timed out'
+                });
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.log('Error', error.message);
+                setPartData({
+                    state: apiStates.ERROR,
+                    error: 'Something happened in setting up the request that triggered an Error'
+                });
+            }
         })
-
     };
 
     React.useEffect(() => {

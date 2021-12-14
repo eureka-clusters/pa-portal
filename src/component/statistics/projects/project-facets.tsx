@@ -45,14 +45,6 @@ const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
         updateHash();
     }
 
-    // return (
-    //     <>
-    //         filter in facets
-    //         <pre className='debug'>{JSON.stringify(filter, undefined, 2)}</pre>
-    //         <pre className='debug'>{JSON.stringify(facets, undefined, 2)}</pre>
-    //     </>
-    // );
-
     switch (state) {
         case apiStates.ERROR:
             return (
@@ -82,6 +74,7 @@ const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
                                     <Form.Check.Input
                                         name="country"
                                         value={country['name']}
+                                        className={'me-2'}
                                         onChange={updateFilter}
                                         checked={
                                             filter['country'].indexOf(country['name']) > -1
@@ -92,7 +85,7 @@ const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
                             </div>
                         ))}
                     </fieldset>
-                    
+
                     <fieldset>
                         <legend><small>Organisation type</small></legend>
 
@@ -110,6 +103,7 @@ const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
                                         name="organisation_type"
                                         value={organisationType['name']}
                                         onChange={updateFilter}
+                                        className={'me-2'}
                                         checked={
                                             filter['organisation_type'].indexOf(organisationType['name']) > -1
                                         }
@@ -130,6 +124,7 @@ const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
                                         name="project_status"
                                         value={projectStatus['name']}
                                         onChange={updateFilter}
+                                        className={'me-2'}
                                         checked={
                                             filter['project_status'].indexOf(projectStatus['name']) > -1
                                         }
@@ -150,6 +145,7 @@ const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
                                         name="primary_cluster"
                                         value={primaryCluster['name']}
                                         onChange={updateFilter}
+                                        className={'me-2'}
                                         checked={
                                             filter['primary_cluster'].indexOf(primaryCluster['name']) > -1
                                         }

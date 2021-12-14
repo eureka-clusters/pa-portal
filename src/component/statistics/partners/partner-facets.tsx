@@ -17,13 +17,6 @@ const PartnerFacets: FC<Props> = ({ filter, setFilter, updateFilter, updateResul
 
     const {state, error, facets} = GetFacets(getFilter(filter));
 
-    // return (
-    //     <>
-    //         <pre className='debug'>{JSON.stringify(filter, undefined, 2)}</pre>
-    //         <pre className='debug'>{JSON.stringify(facets, undefined, 2)}</pre>
-    //     </>
-    // );
-
     switch (state) {
         case apiStates.ERROR:
             return <ApiError error={error}/>;
@@ -39,6 +32,7 @@ const PartnerFacets: FC<Props> = ({ filter, setFilter, updateFilter, updateResul
                                     <Form.Check.Input
                                         name="country"
                                         value={country['name']}
+                                        className={'me-2'}
                                         onChange={updateFilter}
                                         checked={
                                             filter['country'].indexOf(country['name']) > -1
@@ -59,6 +53,7 @@ const PartnerFacets: FC<Props> = ({ filter, setFilter, updateFilter, updateResul
                                     <Form.Check.Input
                                         name="organisation_type"
                                         value={organisationType['name']}
+                                        className={'me-2'}
                                         onChange={updateFilter}
                                         checked={
                                             filter['organisation_type'].indexOf(organisationType['name']) > -1
@@ -80,6 +75,7 @@ const PartnerFacets: FC<Props> = ({ filter, setFilter, updateFilter, updateResul
                                         name="project_status"
                                         value={projectStatus['name']}
                                         onChange={updateFilter}
+                                        className={'me-2'}
                                         checked={
                                             filter['project_status'].indexOf(projectStatus['name']) > -1
                                         }
@@ -100,6 +96,7 @@ const PartnerFacets: FC<Props> = ({ filter, setFilter, updateFilter, updateResul
                                         name="primary_cluster"
                                         value={primaryCluster['name']}
                                         onChange={updateFilter}
+                                        className={'me-2'}
                                         checked={
                                             filter['primary_cluster'].indexOf(primaryCluster['name']) > -1
                                         }
@@ -120,6 +117,7 @@ const PartnerFacets: FC<Props> = ({ filter, setFilter, updateFilter, updateResul
                                         name="year"
                                         value={year}
                                         onChange={updateFilter}
+                                        className={'me-2'}
                                         checked={
                                             filter['year'].indexOf(year.toString()) > -1
                                         }

@@ -78,8 +78,8 @@ const PartnerTable: FC<Props> = ({filter}) => {
         {
             id: 'partner_costs_in_year',
             name: 'Partner Costs in Year',
-            selector: (partner: Partner) => partner.latestVersionCostsInYear,
-            format: (partner: Partner) => <CostsFormat value={partner.latestVersionCostsInYear}/>,
+            selector: (partner: Partner) => partner.latestVersionTotalCostsInYear,
+            format: (partner: Partner) => <CostsFormat value={partner.latestVersionTotalCostsInYear}/>,
             sortable: true,
             reorder: true,
             omit: !hasYearFilter
@@ -87,8 +87,8 @@ const PartnerTable: FC<Props> = ({filter}) => {
         {
             id: 'partner_effort_in_year',
             name: 'Partner Effort in Year',
-            selector: (partner: Partner) => partner.latestVersionEffortInYear,
-            format: (partner: Partner) => <EffortFormat value={partner.latestVersionEffortInYear}/>,
+            selector: (partner: Partner) => partner.latestVersionTotalEffortInYear,
+            format: (partner: Partner) => <EffortFormat value={partner.latestVersionTotalEffortInYear}/>,
             sortable: true,
             omit: !hasYearFilter
         },
@@ -97,19 +97,12 @@ const PartnerTable: FC<Props> = ({filter}) => {
 
     const {state, error, partners} = GetResults(getFilter(filter));
 
-
-    // useEffect(() => {
-    //     setPartnerUrl('/statistics/partners/partner?filter=' + getFilter(filter));
-    // }, [filter]);
-
     switch (state) {
         case apiStates.ERROR:
             return <ApiError error={error}/>
         case apiStates.SUCCESS:
             return (
                 <React.Fragment>
-                    {/* <pre className='debug'>{JSON.stringify(filter, undefined, 2)}</pre> */}
-                    {/* <pre className='debug'>{JSON.stringify(data, undefined, 2)}</pre> */}
                     <h2>Partners</h2>
                     <DataTable
                         // title="Partners"
