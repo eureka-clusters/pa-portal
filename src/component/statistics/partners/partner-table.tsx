@@ -110,7 +110,7 @@ const PartnerTable: FC<Props> = ({filter}) => {
                         columns={columns}
                         data={partners}
                         paginationPerPage={50}  // overwrite the default paginationPerPage setting
-                        paginationPartnersPerPageOptions={[10, 15, 20, 25, 30, 50, 100, 200]}
+                        paginationRowsPerPageOptions={[10, 15, 20, 25, 30, 50, 100, 200]}
                     />
                 </React.Fragment>
             );
