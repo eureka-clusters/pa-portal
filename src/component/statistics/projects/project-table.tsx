@@ -7,10 +7,41 @@ import {GetResults} from "function/api/statistics/project/get-results";
 import {Project} from "interface/project";
 
 interface Props {
-    filter: any
+    filter: any,
+    setFilter: any
+    updateFilter: any,
+    updateResults: any,
+    updateHash: any
 }
 
-const ProjectTable: FC<Props> = ({filter}) => {
+const ProjectTable: FC<Props> = ({ filter }) => {
+
+
+    const [perPage, setPerPage] = React.useState(30); // default pageSize
+    const [loading, setLoading] = React.useState(false);
+
+    const { state, error, projects, load, pageCount, pageSize, page, totalItems } = GetResults({ filter: getFilter(filter), page: 1, pageSize: perPage });
+
+    const handlePageChange = async (page: number = 1) => {
+        setLoading(true);
+        await load({
+            filter: getFilter(filter),
+            page: page,
+            pageSize: perPage
+        });
+        setLoading(false);
+    };
+
+    const handlePerRowsChange = async (perPage: any, page: any) => {
+        setLoading(true);
+        await load({
+            filter: getFilter(filter),
+            page: page,
+            pageSize: perPage
+        });
+        setPerPage(perPage);
+        setLoading(false);
+    };
 
     const columns = [
         {
@@ -68,7 +99,7 @@ const ProjectTable: FC<Props> = ({filter}) => {
         },
     ];
 
-    const {state, error, projects} = GetResults(getFilter(filter))
+    
 
     switch (state) {
         case apiStates.ERROR:
@@ -82,11 +113,20 @@ const ProjectTable: FC<Props> = ({filter}) => {
             return (
                 <React.Fragment>
                     <h2>Projects</h2>
+                    {/* <pre className='debug'>{JSON.stringify(filter, undefined, 2)}</pre> */}
                     <DataTable
                         // title="Projects"
                         keyField="number"
                         columns={columns}
                         data={projects}
+
+                        progressPending={loading}
+                        pagination
+                        paginationServer
+                        paginationPerPage={pageSize}
+                        paginationTotalRows={totalItems}
+                        onChangeRowsPerPage={handlePerRowsChange}
+                        onChangePage={handlePageChange}
                     />
                 </React.Fragment>
             );

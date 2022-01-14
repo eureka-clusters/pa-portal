@@ -8,15 +8,35 @@ interface PartnerResponse {
     _embedded: {
         partners: Array<Partner>
     }
+    page_count: number
+    page_size: number
+    total_items: number
+    page: number
 }
 
 interface PartnerState {
-    state: string;
-    error?: string
-    partners: Array<Partner>
+    state: string,
+    error?: string,
+    partners: Array<Partner>,
+    pageCount?: number,
+    pageSize?: number,
+    totalItems?: number,
+    page?: number
 }
 
-export const GetResults = (filter: string) => {
+interface Props {
+    filter: string,
+    page: number,
+    pageSize: number
+}
+
+// default properties for page and pageSize
+const defaultProps = {
+    page: 1,
+    pageSize: 10
+}
+
+export const GetResults = (params: Props = { filter: '', page: defaultProps.page, pageSize: defaultProps.pageSize }) => {
 
     let auth = useAuth();
     const serverUri = GetServerUri();
@@ -28,9 +48,17 @@ export const GetResults = (filter: string) => {
         partners: []
     });
 
-    const load = () => {
+    const load = (params: Props) => {
 
-        const setPartData = (partialData: { state: string; partners?: Array<Partner>; error?: string; }) => {
+        const setPartData = (partialData: {
+            state: string,
+            partners?: Array<Partner>,
+            error?: string,
+            pageCount?: number,
+            pageSize?: number,
+            totalItems?: number,
+            page?: number
+        }) => {
             setHookState(hookState => ({...hookState, ...partialData}))
         }
 
@@ -42,7 +70,8 @@ export const GetResults = (filter: string) => {
                 'Content-Type': 'application/json',
                 'Authorization': `${jwtToken}`
             }
-        }).get<PartnerResponse>('/statistics/results/partner?filter=' + filter, {
+        }).get<PartnerResponse>('/statistics/results/partner', {
+            params: params
             // settings could be overwritten
             // timeout: 1000
         })
@@ -52,7 +81,11 @@ export const GetResults = (filter: string) => {
 
                 setPartData({
                     state: apiStates.SUCCESS,
-                    partners: data._embedded.partners
+                    partners: data._embedded.partners,
+                    pageCount: data.page_count,
+                    pageSize: data.page_size,
+                    totalItems: data.total_items,
+                    page: data.page
                 })
             })
 
@@ -81,9 +114,9 @@ export const GetResults = (filter: string) => {
     };
 
     React.useEffect(() => {
-        load();
+        load(params);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [filter]);
+    }, [params.filter]);
 
     return {...hookState, load: load};
 }

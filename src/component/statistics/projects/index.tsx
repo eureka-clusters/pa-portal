@@ -72,7 +72,7 @@ export default function ProjectStatistics(props: Props) {
                     </div>
                     <div className={'col-10'}>
 
-                        <ProjectTable filter={filter}/>
+                        <ProjectTable filter={filter} />
 
                         <br/><br/>
 

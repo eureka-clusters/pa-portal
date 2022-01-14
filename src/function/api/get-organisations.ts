@@ -11,15 +11,36 @@ interface OrganisationResponse {
     _embedded: {
         organisations: Array<Organisation>
     }
+    page_count: number
+    page_size: number
+    total_items: number
+    page: number
 }
 
 interface OrganisationState {
     state: string;
     error?: string
     organisations: Array<Organisation>
+
+    pageCount?: number,
+    pageSize?: number,
+    totalItems?: number,
+    page?: number
 }
 
-export const GetOrganisations = () => {
+
+interface Props {
+    page: number;
+    pageSize: number;
+}
+
+// default properties for page and pageSize
+const defaultProps = {
+    page: 1,
+    pageSize: 10
+}
+
+export const GetOrganisations = (params: Props = { page: defaultProps.page, pageSize: defaultProps.pageSize }) => {
 
     let auth = useAuth();
     const serverUri = GetServerUri();
@@ -43,15 +64,24 @@ export const GetOrganisations = () => {
         });
     };
 
-    const load = () => {
+    const load = (params: Props) => {
 
-        const setPartData = (partialData: { state: string; organisations?: Array<Organisation>; error?: string; }) => {
+        const setPartData = (partialData: {
+            state: string,
+            organisations?: Array<Organisation>,
+            error?: string,
+            pageCount?: number,
+            pageSize?: number,
+            totalItems?: number,
+            page?: number
+        }) => {
             setHookState(hookState => ({...hookState, ...partialData}))
         }
 
         createInstance().then(axios => {
             // axios automatically returns json in response.data and catches errors 
             axios.get<OrganisationResponse>('list/organisation', {
+                params: params
                 // settings could be overwritten
                 // timeout: 1000
             })
@@ -61,7 +91,13 @@ export const GetOrganisations = () => {
 
                     setPartData({
                         state: apiStates.SUCCESS,
-                        organisations: data._embedded.organisations
+                        organisations: data._embedded.organisations,
+                        
+                        // set the values which come from the paginated values
+                        pageCount: data.page_count,
+                        pageSize: data.page_size,
+                        totalItems: data.total_items,
+                        page: data.page
                     })
                 })
 
@@ -93,7 +129,7 @@ export const GetOrganisations = () => {
     };
 
     React.useEffect(() => {
-        load();
+        load(params);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 

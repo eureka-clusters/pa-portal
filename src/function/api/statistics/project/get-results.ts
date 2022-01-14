@@ -8,15 +8,36 @@ interface ProjectResponse {
     _embedded: {
         projects: Array<Project>
     }
+    page_count: number
+    page_size: number
+    total_items: number
+    page: number
 }
 
 interface ProjectState {
-    state: string;
-    error?: string
-    projects: Array<Project>
+    state: string,
+    error?: string,
+    projects: Array<Project>,
+    pageCount?: number,
+    pageSize?: number,
+    totalItems?: number,
+    page?: number
 }
 
-export const GetResults = (filter: string) => {
+
+interface Props {
+    filter: string,
+    page: number,
+    pageSize: number
+}
+
+// default properties for page and pageSize
+const defaultProps = {
+    page: 1,
+    pageSize: 10
+}
+
+export const GetResults = (params: Props = { filter:'',  page: defaultProps.page, pageSize: defaultProps.pageSize }) => {
 
     let auth = useAuth();
     const serverUri = GetServerUri();
@@ -28,9 +49,17 @@ export const GetResults = (filter: string) => {
         projects: []
     });
 
-    const load = () => {
+    const load = (params: Props) => {
 
-        const setPartData = (partialData: { state: string; projects?: Array<Project>; error?: string; }) => {
+        const setPartData = (partialData: {
+            state: string,
+            projects?: Array<Project>,
+            error?: string,
+            pageCount?: number,
+            pageSize?: number,
+            totalItems?: number,
+            page?: number
+        }) => {
             setHookState(hookState => ({...hookState, ...partialData}))
         }
 
@@ -42,15 +71,25 @@ export const GetResults = (filter: string) => {
                 'Content-Type': 'application/json',
                 'Authorization': `${jwtToken}`
             }
-        }).get<ProjectResponse>('/statistics/results/project?filter=' + filter)
+        })
+        // .get<ProjectResponse>('/statistics/results/project?page=' + page + '&pageSize=' + pageSize +'&filter=' + filter)
+            .get<ProjectResponse>('statistics/results/project', {
+                params: params
+                // settings could be overwritten
+                // timeout: 1000
+            })
+        // }).get<ProjectResponse>('/statistics/results/project?filter=' + filter)
             .then(response => {
                 //Use a local const to have the proper TS typehinting
                 const {data} = response;
 
                 setPartData({
                     state: apiStates.SUCCESS,
-                    // projects: data._embedded.projects
-                    projects: data._embedded.projects  // used with any
+                    projects: data._embedded.projects,
+                    pageCount: data.page_count,
+                    pageSize: data.page_size,
+                    totalItems: data.total_items,
+                    page: data.page
                 })
             })
 
@@ -79,9 +118,9 @@ export const GetResults = (filter: string) => {
     };
 
     React.useEffect(() => {
-        load();
+        load(params);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [filter]);
+    }, [params.filter]);
 
     return {...hookState, load: load};
 }

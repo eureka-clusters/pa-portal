@@ -12,6 +12,33 @@ interface Props {
 
 const PartnerTable: FC<Props> = ({filter}) => {
 
+    const [perPage, setPerPage] = React.useState(30); // default pageSize
+    const [loading, setLoading] = React.useState(false);
+
+
+    const { state, error, partners, load, pageCount, pageSize, page, totalItems } = GetResults({ filter: getFilter(filter), page: 1, pageSize: perPage });
+
+    const handlePageChange = async (page: number = 1) => {
+        setLoading(true);
+        await load({
+            filter: getFilter(filter),
+            page: page,
+            pageSize: perPage
+        });
+        setLoading(false);
+    };
+
+    const handlePerRowsChange = async (perPage: any, page: any) => {
+        setLoading(true);
+        await load({
+            filter: getFilter(filter),
+            page: page,
+            pageSize: perPage
+        });
+        setPerPage(perPage);
+        setLoading(false);
+    };
+
     const hasYearFilter = filter.year.length > 0;
 
     const columns = [
@@ -95,8 +122,6 @@ const PartnerTable: FC<Props> = ({filter}) => {
     ];
 
 
-    const {state, error, partners} = GetResults(getFilter(filter));
-
     switch (state) {
         case apiStates.ERROR:
             return <ApiError error={error}/>
@@ -109,8 +134,15 @@ const PartnerTable: FC<Props> = ({filter}) => {
                         keyField="id"
                         columns={columns}
                         data={partners}
-                        paginationPerPage={50}  // overwrite the default paginationPerPage setting
                         paginationRowsPerPageOptions={[10, 15, 20, 25, 30, 50, 100, 200]}
+
+                        progressPending={loading}
+                        pagination
+                        paginationServer
+                        paginationPerPage={pageSize}
+                        paginationTotalRows={totalItems}
+                        onChangeRowsPerPage={handlePerRowsChange}
+                        onChangePage={handlePageChange}
                     />
                 </React.Fragment>
             );

@@ -11,15 +11,36 @@ interface ProjectResponse {
     _embedded: {
         projects: Array<Project>
     }
+    page_count:number
+    page_size:number
+    total_items:number
+    page: number
 }
+
 
 interface ProjectState {
-    state: string;
-    error?: string
-    projects: Array<Project>
+    state: string,
+    error?: string,
+    projects: Array<Project>,
+    pageCount?:number,
+    pageSize?: number,
+    totalItems?: number,
+    page?: number
+
 }
 
-export const GetProjects = () => {
+interface Props {
+    page: number;
+    pageSize: number;
+}
+
+// default properties for page and pageSize
+const defaultProps = {
+    page: 1,
+    pageSize: 10
+}
+
+export const GetProjects = (params: Props = { page : defaultProps.page, pageSize : defaultProps.pageSize}) => {
 
     let auth = useAuth();
     const serverUri = GetServerUri();
@@ -27,16 +48,27 @@ export const GetProjects = () => {
     const [hookState, setHookState] = React.useState<ProjectState>({
         state: apiStates.LOADING,
         error: '',
-        projects: []
+        projects: [],
     });
+    
 
     let jwtToken = auth.getJwtToken();
 
-    const load = () => {
+    const load = (params: Props) => {
 
-        const setPartData = (partialData: { state: string; projects?: Array<Project>; error?: string; }) => {
+        const setPartData = (partialData: { 
+            state: string,
+            projects?: Array<Project>,
+            error?: string,
+            pageCount?: number,
+            pageSize?: number,
+            totalItems?: number,
+            page?: number
+        }) => {
             setHookState(hookState => ({...hookState, ...partialData}))
         }
+
+        // console.log(['params', params]);
 
         axios.create({
             baseURL: serverUri + '/api',
@@ -47,6 +79,7 @@ export const GetProjects = () => {
                 'Authorization': `${jwtToken}`
             }
         }).get<ProjectResponse>('list/project', {
+            params: params
             // settings could be overwritten
             // timeout: 1000
         })
@@ -56,7 +89,13 @@ export const GetProjects = () => {
 
                 setPartData({
                     state: apiStates.SUCCESS,
-                    projects: data._embedded.projects
+                    projects: data._embedded.projects,
+
+                    // set the values which come from the paginated values
+                    pageCount: data.page_count,
+                    pageSize: data.page_size,
+                    totalItems: data.total_items,
+                    page: data.page
                 })
             })
 
@@ -85,9 +124,11 @@ export const GetProjects = () => {
     };
 
     React.useEffect(() => {
-        load();
+        // load(page, pageSize);
+        load(params);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return {...hookState, load: load};
 }
+

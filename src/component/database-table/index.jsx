@@ -166,7 +166,7 @@ function DataTableBase(props) {
             // selectableRowsComponent={Checkbox}
             selectableRowsComponentProps={selectProps}
             // sortIcon={sortIcon}
-
+            
             noDataComponent="No results"
 
             pagination
