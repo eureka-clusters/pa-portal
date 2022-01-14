@@ -8,10 +8,6 @@ import {Project} from "interface/project";
 
 interface Props {
     filter: any,
-    setFilter: any
-    updateFilter: any,
-    updateResults: any,
-    updateHash: any
 }
 
 const ProjectTable: FC<Props> = ({ filter }) => {
