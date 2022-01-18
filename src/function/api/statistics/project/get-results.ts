@@ -69,7 +69,7 @@ export const GetResults = (params: Props = { filter:'',  page: defaultProps.page
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'Authorization': `${jwtToken}`
+                'Authorization': `Bearer ${jwtToken}`
             }
         })
         // .get<ProjectResponse>('/statistics/results/project?page=' + page + '&pageSize=' + pageSize +'&filter=' + filter)

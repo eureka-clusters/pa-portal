@@ -56,7 +56,7 @@ export function GetPartners(project?: Project | undefined, organisation?: Organi
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'Authorization': `${jwtToken}`
+                'Authorization': `Bearer ${jwtToken}`
             }
         }).get<PartnerResponse>(url, {
             // settings could be overwritten

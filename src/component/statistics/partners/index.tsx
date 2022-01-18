@@ -40,7 +40,7 @@ export default function PartnerStatistics(props: Props) {
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
-                    'Authorization': `${jwtToken}`
+                    'Authorization': `Bearer ${jwtToken}`
                 }
             }
         ).then((res) => res.json()).then((res) => {

@@ -68,7 +68,7 @@ export const GetResults = (params: Props = { filter: '', page: defaultProps.page
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'Authorization': `${jwtToken}`
+                'Authorization': `Bearer ${jwtToken}`
             }
         }).get<PartnerResponse>('/statistics/results/partner', {
             params: params

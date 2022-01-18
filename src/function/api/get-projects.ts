@@ -76,7 +76,7 @@ export const GetProjects = (params: Props = { page : defaultProps.page, pageSize
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'Authorization': `${jwtToken}`
+                'Authorization': `Bearer ${jwtToken}`
             }
         }).get<ProjectResponse>('list/project', {
             params: params

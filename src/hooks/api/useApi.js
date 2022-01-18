@@ -25,7 +25,7 @@ export function useApi(url, globalOptions = {}) {
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            // 'Authorization': `${jwtToken}`   // jwtToken could also be added directly then uncomment line above 
+            // 'Authorization': `Bearer ${jwtToken}`   // jwtToken could also be added directly then uncomment line above
         }
     }
 

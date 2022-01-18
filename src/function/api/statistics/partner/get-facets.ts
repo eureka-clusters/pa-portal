@@ -36,7 +36,7 @@ export const GetFacets = (filter: string) => {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'Authorization': `${jwtToken}`
+                'Authorization': `Bearer ${jwtToken}`
             }
         }).get<Facets>('/statistics/facets/partner/' + filter)
             .then(response => {

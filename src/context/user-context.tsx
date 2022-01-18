@@ -153,7 +153,7 @@ function useProvideAuth() {
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
-                    'Authorization': `${jwtToken}`
+                    'Authorization': `Bearer ${jwtToken}`
                     // 'Authorization': 'Bearer ' + accessToken
                 }
             }

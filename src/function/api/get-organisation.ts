@@ -32,7 +32,7 @@ export const GetOrganisation = (slug: string) => {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'Authorization': `${jwtToken}`
+                'Authorization': `Bearer ${jwtToken}`
             }
         });
     };

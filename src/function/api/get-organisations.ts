@@ -59,7 +59,7 @@ export const GetOrganisations = (params: Props = { page: defaultProps.page, page
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'Authorization': `${jwtToken}`
+                'Authorization': `Bearer ${jwtToken}`
             }
         });
     };
