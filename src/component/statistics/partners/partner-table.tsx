@@ -14,28 +14,57 @@ const PartnerTable: FC<Props> = ({filter}) => {
 
     const [perPage, setPerPage] = React.useState(30); // default pageSize
     const [loading, setLoading] = React.useState(false);
+    const [sort, setSort] = React.useState('partner.organisation.name'); // default sort
+    const [order, setOrder] = React.useState('asc'); // default order
 
+    const { state, error, partners, load, pageCount, pageSize, page, totalItems } = GetResults({ filter: getFilter(filter), page: 1, pageSize: perPage, sort:sort, order:order });
 
-    const { state, error, partners, load, pageCount, pageSize, page, totalItems } = GetResults({ filter: getFilter(filter), page: 1, pageSize: perPage });
+    const handlePageChange = async (newpage: number = 1) => {
+        console.log(['handlePageChange']);
 
-    const handlePageChange = async (page: number = 1) => {
         setLoading(true);
         await load({
             filter: getFilter(filter),
-            page: page,
-            pageSize: perPage
+            page: newpage,
+            pageSize: perPage,
+            sort: sort,
+            order: order
         });
         setLoading(false);
     };
 
     const handlePerRowsChange = async (perPage: any, page: any) => {
+        console.log(['handlePerRowsChange']);
         setLoading(true);
         await load({
             filter: getFilter(filter),
             page: page,
-            pageSize: perPage
+            pageSize: perPage,
+            sort: sort,
+            order: order
         });
         setPerPage(perPage);
+        setLoading(false);
+    };
+
+    const handleSort = async (column: any, sortDirection: any) => {
+        console.log(['handleSort']);
+        setLoading(true);
+        let sortField = column.sortField;
+        console.log(['sortField', sortField]);
+        console.log(['sortDirection', sortDirection]);
+
+        setSort(sortField);
+        setOrder(sortDirection);
+
+        await load({
+            filter: getFilter(filter),
+            page : 1,
+            pageSize: perPage,
+            sort: sortField,
+            order: sortDirection
+        });
+        
         setLoading(false);
     };
 
@@ -47,6 +76,8 @@ const PartnerTable: FC<Props> = ({filter}) => {
             name: 'Id',
             selector: (partner: Partner) => partner.id,
             sortable: true,
+            sortField: 'partner.id',
+            // sortField: 'project_partner.id',
         },
         {
             id: 'project',
@@ -55,6 +86,9 @@ const PartnerTable: FC<Props> = ({filter}) => {
             format: (partner: Partner) => <Link to={`/project/${partner.project.slug}`}
                                                 title={partner.project.name}>{partner.project.name}</Link>,
             sortable: true,
+            // sortField: 'project.name',
+            sortField: 'partner.project.name',
+            
         },
         {
             id: 'partner',
@@ -63,18 +97,21 @@ const PartnerTable: FC<Props> = ({filter}) => {
             format: (partner: Partner) => <Link to={`/partner/${partner.slug}`}
                                                 title={partner.organisation.name}>{partner.organisation.name}</Link>,
             sortable: true,
+            sortField: 'partner.organisation.name',
         },
         {
             id: 'country',
             name: 'Country',
             selector: (partner: Partner) => partner.organisation && partner.organisation.country ? partner.organisation.country.country : '',
             sortable: true,
+            sortField: 'partner.organisation.country.country',
         },
         {
             id: 'type',
             name: 'Type',
             selector: (partner: Partner) => partner.organisation && partner.organisation.type ? partner.organisation.type.type : '',
             sortable: true,
+            sortField: 'partner.organisation.type.type',
         },
 
         {
@@ -84,7 +121,8 @@ const PartnerTable: FC<Props> = ({filter}) => {
             format: (partner: Partner) => <CostsFormat value={partner.latestVersionCosts}/>,
             sortable: true,
             reorder: true,
-            omit: hasYearFilter
+            omit: hasYearFilter,
+            sortField: 'partner.latestVersionCosts',
         },
         {
             id: 'partner_effort',
@@ -92,7 +130,8 @@ const PartnerTable: FC<Props> = ({filter}) => {
             selector: (partner: Partner) => partner.latestVersionEffort,
             format: (partner: Partner) => <EffortFormat value={partner.latestVersionEffort}/>,
             sortable: true,
-            omit: hasYearFilter
+            omit: hasYearFilter,
+            sortField: 'partner.latestVersionEffort',
         },
         {
             id: 'year',
@@ -100,7 +139,8 @@ const PartnerTable: FC<Props> = ({filter}) => {
             selector: (partner: Partner) => partner.year,
             sortable: true,
             reorder: true,
-            omit: !hasYearFilter
+            omit: !hasYearFilter,
+            sortField: 'partner.year',
         },
         {
             id: 'partner_costs_in_year',
@@ -109,7 +149,8 @@ const PartnerTable: FC<Props> = ({filter}) => {
             format: (partner: Partner) => <CostsFormat value={partner.latestVersionTotalCostsInYear}/>,
             sortable: true,
             reorder: true,
-            omit: !hasYearFilter
+            omit: !hasYearFilter,
+            sortField: 'partner.latestVersionTotalCostsInYear',
         },
         {
             id: 'partner_effort_in_year',
@@ -117,7 +158,8 @@ const PartnerTable: FC<Props> = ({filter}) => {
             selector: (partner: Partner) => partner.latestVersionTotalEffortInYear,
             format: (partner: Partner) => <EffortFormat value={partner.latestVersionTotalEffortInYear}/>,
             sortable: true,
-            omit: !hasYearFilter
+            omit: !hasYearFilter,
+            sortField: 'partner.latestVersionTotalEffortInYear',
         },
     ];
 
@@ -143,6 +185,8 @@ const PartnerTable: FC<Props> = ({filter}) => {
                         paginationTotalRows={totalItems}
                         onChangeRowsPerPage={handlePerRowsChange}
                         onChangePage={handlePageChange}
+                        sortServer
+                        onSort={handleSort}
                     />
                 </React.Fragment>
             );
