@@ -50,7 +50,7 @@ const PartnerTable: FC<Props> = ({filter}) => {
         setLoading(false);
     };
   
-    const handleSort3 = async (column: any, sortDirection: any) => {
+    const handleSort = async (column: any, sortDirection: any) => {
         let sortField = column.sortField;
         setSort(sortField);
         setOrder(sortDirection);
@@ -181,7 +181,7 @@ const PartnerTable: FC<Props> = ({filter}) => {
                         onChangeRowsPerPage={handlePerRowsChange}
                         onChangePage={handlePageChange}
                         sortServer
-                        onSort={handleSort3}
+                        onSort={handleSort}
                     />
                 </React.Fragment>
             );
