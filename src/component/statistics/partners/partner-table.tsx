@@ -5,6 +5,7 @@ import DataTable from 'component/database-table/index';
 import {CostsFormat, EffortFormat} from 'function/utils';
 import {Partner} from "interface/project/partner";
 import {GetResults} from "function/api/statistics/partner/get-results";
+import useState from 'react-usestateref';
 
 interface Props {
     filter: any
@@ -12,29 +13,31 @@ interface Props {
 
 const PartnerTable: FC<Props> = ({filter}) => {
 
-    const [perPage, setPerPage] = React.useState(30); // default pageSize
-    const [loading, setLoading] = React.useState(false);
-    const [sort, setSort] = React.useState('partner.organisation.name'); // default sort
-    const [order, setOrder] = React.useState('asc'); // default order
+    const [perPage, setPerPage] = useState(30); // default pageSize
+    const [loading, setLoading] = useState(false);
+    
+    const [sort, setSort, sort_ref] = useState('partner.organisation.name'); // default sort
+    const [order, setOrder, order_ref] = useState('asc'); // default order
+
+    // store the current page (needed for handleSort)
+    const [currentPage, setCurrentPage] = useState(1); // default current page
 
     const { state, error, partners, load, pageCount, pageSize, page, totalItems } = GetResults({ filter: getFilter(filter), page: 1, pageSize: perPage, sort:sort, order:order });
 
     const handlePageChange = async (newpage: number = 1) => {
-        console.log(['handlePageChange']);
-
+        setCurrentPage(newpage);
         setLoading(true);
         await load({
             filter: getFilter(filter),
             page: newpage,
             pageSize: perPage,
-            sort: sort,
-            order: order
+            sort: sort_ref.current,
+            order: order_ref.current
         });
         setLoading(false);
     };
 
     const handlePerRowsChange = async (perPage: any, page: any) => {
-        console.log(['handlePerRowsChange']);
         setLoading(true);
         await load({
             filter: getFilter(filter),
@@ -46,26 +49,20 @@ const PartnerTable: FC<Props> = ({filter}) => {
         setPerPage(perPage);
         setLoading(false);
     };
-
-    const handleSort = async (column: any, sortDirection: any) => {
-        console.log(['handleSort']);
-        setLoading(true);
+  
+    const handleSort3 = async (column: any, sortDirection: any) => {
         let sortField = column.sortField;
-        console.log(['sortField', sortField]);
-        console.log(['sortDirection', sortDirection]);
-
         setSort(sortField);
         setOrder(sortDirection);
-
-        await load({
-            filter: getFilter(filter),
-            page : 1,
-            pageSize: perPage,
-            sort: sortField,
-            order: sortDirection
-        });
-        
-        setLoading(false);
+        if (currentPage === 1) {
+            await load({
+                filter: getFilter(filter),
+                page: 1,
+                pageSize: perPage,
+                sort: sortField,
+                order: sortDirection
+            });
+        }
     };
 
     const hasYearFilter = filter.year.length > 0;
@@ -77,7 +74,6 @@ const PartnerTable: FC<Props> = ({filter}) => {
             selector: (partner: Partner) => partner.id,
             sortable: true,
             sortField: 'partner.id',
-            // sortField: 'project_partner.id',
         },
         {
             id: 'project',
@@ -86,9 +82,7 @@ const PartnerTable: FC<Props> = ({filter}) => {
             format: (partner: Partner) => <Link to={`/project/${partner.project.slug}`}
                                                 title={partner.project.name}>{partner.project.name}</Link>,
             sortable: true,
-            // sortField: 'project.name',
             sortField: 'partner.project.name',
-            
         },
         {
             id: 'partner',
@@ -100,7 +94,7 @@ const PartnerTable: FC<Props> = ({filter}) => {
             sortField: 'partner.organisation.name',
         },
         {
-            id: 'country',
+            id: 'partner_country',
             name: 'Country',
             selector: (partner: Partner) => partner.organisation && partner.organisation.country ? partner.organisation.country.country : '',
             sortable: true,
@@ -180,13 +174,14 @@ const PartnerTable: FC<Props> = ({filter}) => {
 
                         progressPending={loading}
                         pagination
+                        // paginationDefaultPage = {currentPage}
                         paginationServer
                         paginationPerPage={pageSize}
                         paginationTotalRows={totalItems}
                         onChangeRowsPerPage={handlePerRowsChange}
                         onChangePage={handlePageChange}
                         sortServer
-                        onSort={handleSort}
+                        onSort={handleSort3}
                     />
                 </React.Fragment>
             );
