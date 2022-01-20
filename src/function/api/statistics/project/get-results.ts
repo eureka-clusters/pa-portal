@@ -28,7 +28,9 @@ interface ProjectState {
 interface Props {
     filter: string,
     page: number,
-    pageSize: number
+    pageSize: number,
+    sort?: string,
+    order?: string,
 }
 
 // default properties for page and pageSize
