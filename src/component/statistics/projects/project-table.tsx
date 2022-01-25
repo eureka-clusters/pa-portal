@@ -150,7 +150,6 @@ const ProjectTable: FC<Props> = ({ filter }) => {
             selector: (project: Project) => project.latestVersionTotalCosts,
             format: (project: Project) => <CostsFormat value={project.latestVersionTotalCosts}/>,
             sortable: true,
-            reorder: true,
             sortField: 'project.latestVersionTotalCosts',
         },
         {
