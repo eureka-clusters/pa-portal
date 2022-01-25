@@ -2,16 +2,22 @@ import React, {FC} from 'react';
 import {ApiError, apiStates, getFilter} from 'function/api';
 import {Link} from "react-router-dom";
 import DataTable from 'component/database-table/index';
-import {CostsFormat, EffortFormat} from 'function/utils';
+import { CostsFormat, EffortFormat} from 'function/utils';
 import {Partner} from "interface/project/partner";
 import {GetResults} from "function/api/statistics/partner/get-results";
 import useState from 'react-usestateref';
+import { useAuth } from "context/user-context";
+import downloadBase64File from "function/DownloadBase64";
+import { GetServerUri, objToQueryString } from 'function/api';
+import { Button } from "react-bootstrap";
 
 interface Props {
     filter: any
 }
 
 const PartnerTable: FC<Props> = ({filter}) => {
+
+    let auth = useAuth();
 
     const [perPage, setPerPage] = useState(30); // default pageSize
     const [loading, setLoading] = useState(false);
@@ -64,6 +70,33 @@ const PartnerTable: FC<Props> = ({filter}) => {
             });
         }
     };
+
+    const downloadExcel = async () => {
+        const serverUri = GetServerUri();
+        let jwtToken = auth.getJwtToken();
+
+        const queryString = objToQueryString({
+            filter: getFilter(filter),
+            sort: sort,
+            order: order,
+        });
+        
+        fetch(serverUri + '/api/statistics/results/partner/download/csv?' + queryString,
+            {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${jwtToken}`
+                }
+            }
+        ).then((res) => res.json()).then((res) => {
+            let extension = res.extension;
+            let mimetype = res.mimetype;
+            downloadBase64File(mimetype, res.download, 'Download' + extension);
+        });
+    }
+
 
     const hasYearFilter = filter.year.length > 0;
 
@@ -165,6 +198,7 @@ const PartnerTable: FC<Props> = ({filter}) => {
             return (
                 <React.Fragment>
                     <h2>Partners</h2>
+                    <pre className='debug'>{JSON.stringify(partners.length, undefined, 2)}</pre>
                     <DataTable
                         // title="Partners"
                         keyField="id"
@@ -183,6 +217,10 @@ const PartnerTable: FC<Props> = ({filter}) => {
                         sortServer
                         onSort={handleSort}
                     />
+
+                    <div className="datatable-download">
+                        <Button onClick={downloadExcel}>Export to Excel</Button>
+                    </div>
                 </React.Fragment>
             );
         default:

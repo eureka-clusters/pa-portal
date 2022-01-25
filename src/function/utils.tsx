@@ -27,3 +27,13 @@ export const EffortFormat: FC<Props> = (props) => {
         />
     )
 }
+
+export function __delay__(timer: number | undefined) {
+    return new Promise<void>(resolve => {
+        timer = timer || 2000;
+        setTimeout(function () {
+            resolve();
+        }, timer);
+    });
+};
+

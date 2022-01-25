@@ -1,11 +1,8 @@
 import React from 'react';
-import {Button, Form} from "react-bootstrap";
+import {Form} from "react-bootstrap";
 import ProjectTable from "component/statistics/projects/project-table";
 import ProjectFacets from 'component/statistics/projects/project-facets';
 import TableFilter from 'function/api/table-filter';
-import { useAuth} from "context/user-context";
-import {getFilter, GetServerUri} from 'function/api/index';
-import downloadBase64File from "function/DownloadBase64";
 import {RouteComponentProps} from "react-router-dom";
 
 //Create the interface to identify the slug
@@ -17,8 +14,6 @@ interface Props extends RouteComponentProps<MatchParams> {
 }
 
 export default function ProjectStatistics(props: Props) {
-
-    let auth = useAuth();
 
     const defaultFilter = {
         country: [],
@@ -34,26 +29,7 @@ export default function ProjectStatistics(props: Props) {
 
     const {updateHash, updateFilter, filter, setFilter} = TableFilter({props, defaultFilter});
 
-    const downloadExcel = async () => {
-        var serverUri = GetServerUri();
-        var hash = getFilter(filter);
-        let jwtToken = auth.getJwtToken();
-        fetch(serverUri + '/api/statistics/download/project/' + hash,
-            {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${jwtToken}`
-                }
-            }
-        ).then((res) => res.json()).then((res) => {
-            let extension = res.extension;
-            let mimetype = res.mimetype;
-            downloadBase64File(mimetype, res.download, 'Download' + extension);
-        });
-    }
-
+ 
     const updateResults = () => {
     }
 
@@ -71,13 +47,7 @@ export default function ProjectStatistics(props: Props) {
                                        updateHash={updateHash} updateResults={updateResults}/>
                     </div>
                     <div className={'col-10'}>
-
                         <ProjectTable filter={filter} />
-
-                        <br/><br/>
-
-                        <Button onClick={downloadExcel}>Export to Excel</Button>
-
                     </div>
                 </div>
             </Form>

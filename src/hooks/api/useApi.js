@@ -36,7 +36,7 @@ export function useApi(url, globalOptions = {}) {
             // todo: add switch between both auth methods JWT / Bearer Access Token
             const jwtToken = auth.getJwtToken();
             if (jwtToken!==undefined) {
-                defaultOptions.headers.Authorization = `${jwtToken}`;
+                defaultOptions.headers.Authorization = `Bearer ${jwtToken}`;
             }
         }
         
