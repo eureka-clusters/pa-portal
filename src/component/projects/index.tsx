@@ -5,31 +5,31 @@ import DataTable from 'component/database-table/index';
 import {Project} from "interface/project";
 import {CostsFormat, EffortFormat} from 'function/utils';
 import {ApiError, apiStates, GetProjects} from "function/api/get-projects";
+import useState from 'react-usestateref';
 
 import './projects.scss';
-
-function __delay__(timer: number | undefined) {
-    return new Promise<void>(resolve => {
-        timer = timer || 2000;
-        setTimeout(function () {
-            resolve();
-        }, timer);
-    });
-};
 
 export default function Projects() {
 
     const [perPage, setPerPage] = React.useState(30); // default pageSize
     const [loading, setLoading] = React.useState(false);
 
+    const [sort, setSort, sort_ref] = useState('partner.organisation.name'); // default sort
+    const [order, setOrder, order_ref] = useState('asc'); // default order
+
+    // store the current page (needed for handleSort)
+    const [currentPage, setCurrentPage] = useState(1); // default current page
+
     const { state, error, projects, load, pageCount, pageSize, page, totalItems } = GetProjects({page: 1, pageSize: perPage});
     
-    const handlePageChange = async (page: number=1) => {
+    const handlePageChange = async (newpage: number=1) => {
+        setCurrentPage(newpage);
         setLoading(true);
-        // await __delay__(2000);
         await load({
-            page: page,
-            pageSize: perPage
+            page: newpage,
+            pageSize: perPage,
+            sort: sort_ref.current,
+            order: order_ref.current
         });
         setLoading(false);
     };
@@ -38,10 +38,26 @@ export default function Projects() {
         setLoading(true);
         await load({
             page: page,
-            pageSize: perPage
+            pageSize: perPage,
+            sort: sort,
+            order: order
         });
         setPerPage(perPage);
         setLoading(false);
+    };
+
+    const handleSort = async (column: any, sortDirection: any) => {
+        let sortField = column.sortField;
+        setSort(sortField);
+        setOrder(sortDirection);
+        if (currentPage === 1) {
+            await load({
+                page: 1,
+                pageSize: perPage,
+                sort: sortField,
+                order: sortDirection
+            });
+        }
     };
 
     const columns = [
@@ -50,6 +66,7 @@ export default function Projects() {
             name: 'Number',
             selector: (row: Project) => row.number,
             sortable: true,
+            sortField: 'project.number',
         },
         {
             id: 'name',
@@ -57,30 +74,35 @@ export default function Projects() {
             selector: (row: Project) => row.name,
             format: (row: Project) => <Link to={`/project/${row.slug}`} title={row.name}>{row.name}</Link>,
             sortable: true,
+            sortField: 'project.name',
         },
         {
             id: 'primaryCluster',
             name: 'Primary Cluster',
             selector: (row: Project) => row.primaryCluster ? row.primaryCluster.name : '',
             sortable: true,
+            sortField: 'project.primaryCluster.name',
         },
         {
             id: 'secondaryCluster',
             name: 'Secondary Cluster',
             selector: (row: Project) => row.secondaryCluster ? row.secondaryCluster.name : '',
             sortable: true,
+            sortField: 'project.secondaryCluster.name',
         },
         {
             id: 'status',
             name: 'Status',
             selector: (row: Project) => row.status ? row.status.status : '',
             sortable: true,
+            sortField: 'project.status.status',
         },
         {
             id: 'latestVersion',
             name: 'Latest version',
             selector: (row: Project) => row.latestVersion && row.latestVersion.type ? row.latestVersion.type.type : '',
             sortable: true,
+            sortField: 'project.latestVersion.type.type',
         },
         {
             id: 'latestVersionTotalCosts',
@@ -88,7 +110,7 @@ export default function Projects() {
             selector: (row: Project) => row.latestVersionTotalCosts,
             format: (row: Project) => <CostsFormat value={row.latestVersionTotalCosts}/>,
             sortable: true,
-            reorder: true
+            sortField: 'project.latestVersionTotalCosts',
         },
         {
             id: 'latestVersionTotalEffort',
@@ -96,6 +118,7 @@ export default function Projects() {
             selector: (row: Project) => row.latestVersionTotalEffort,
             format: (row: Project) => <EffortFormat value={row.latestVersionTotalEffort}/>,
             sortable: true,
+            sortField: 'project.latestVersionTotalEffort',
         },
     ];
 
@@ -113,7 +136,6 @@ export default function Projects() {
                         keyField="number"
                         columns={columns}
                         data={projects}
-
                         progressPending={loading}
                         pagination
                         paginationServer
@@ -121,6 +143,8 @@ export default function Projects() {
                         paginationTotalRows={totalItems}
                         onChangeRowsPerPage={handlePerRowsChange}
                         onChangePage={handlePageChange}
+                        sortServer
+                        onSort={handleSort}
                     />
                 </React.Fragment>
             );

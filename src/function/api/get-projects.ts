@@ -30,8 +30,11 @@ interface ProjectState {
 }
 
 interface Props {
-    page: number;
-    pageSize: number;
+    filter?: string,
+    page: number,
+    pageSize: number,
+    sort?: string,
+    order?: string,
 }
 
 // default properties for page and pageSize
@@ -40,7 +43,7 @@ const defaultProps = {
     pageSize: 10
 }
 
-export const GetProjects = (params: Props = { page : defaultProps.page, pageSize : defaultProps.pageSize}) => {
+export const GetProjects = (params: Props = { filter: '', page: defaultProps.page, pageSize: defaultProps.pageSize }) => {
 
     let auth = useAuth();
     const serverUri = GetServerUri();
