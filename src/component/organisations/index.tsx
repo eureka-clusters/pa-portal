@@ -4,20 +4,29 @@ import BreadcrumbTree from 'component/partial/breadcrumb-tree';
 import DataTable from 'component/database-table/index';
 import {ApiError, apiStates, GetOrganisations} from "function/api/get-organisations";
 import {Organisation} from "interface/organisation";
+import useState from 'react-usestateref';
 
 export default function Organisations() {
 
     const [perPage, setPerPage] = React.useState(30); // default pageSize
     const [loading, setLoading] = React.useState(false);
 
+    const [sort, setSort, sort_ref] = useState('organisation.name'); // default sort
+    const [order, setOrder, order_ref] = useState('asc'); // default order
+
+    // store the current page (needed for handleSort)
+    const [currentPage, setCurrentPage] = useState(1); // default current page
+
     const { state, error, organisations, load, pageCount, pageSize, page, totalItems } = GetOrganisations({ page: 1, pageSize: perPage })
 
-    const handlePageChange = async (page: number = 1) => {
+    const handlePageChange = async (newpage: number = 1) => {
+        setCurrentPage(newpage);
         setLoading(true);
-        // await __delay__(2000);
         await load({
-            page: page,
-            pageSize: perPage
+            page: newpage,
+            pageSize: perPage,
+            sort: sort_ref.current,
+            order: order_ref.current
         });
         setLoading(false);
     };
@@ -32,6 +41,21 @@ export default function Organisations() {
         setLoading(false);
     };
 
+    const handleSort = async (column: any, sortDirection: any) => {
+        let sortField = column.sortField;
+        setSort(sortField);
+        setOrder(sortDirection);
+        if (currentPage === 1) {
+            await load({
+                page: 1,
+                pageSize: perPage,
+                sort: sortField,
+                order: sortDirection
+            });
+        }
+    };
+
+
     const columns = [
         {
             id: 'id',
@@ -39,6 +63,7 @@ export default function Organisations() {
             selector: (organisation: Organisation) => organisation.id,
             sortable: true,
             omit: true,
+            sortField: 'partner.id',
         },
         {
             id: 'name',
@@ -47,18 +72,21 @@ export default function Organisations() {
             format: (organisation: Organisation) => <Link to={`/organisation/${organisation.slug}`}
                                                           title={organisation.name}>{organisation.name}</Link>,
             sortable: true,
+            sortField: 'organisation.name'
         },
         {
             id: 'country',
             name: 'Country',
             selector: (organisation: Organisation) => organisation.country ? organisation.country.country : '',
             sortable: true,
+            sortField: 'organisation.country.country',
         },
         {
             id: 'type',
             name: 'Type',
             selector: (organisation: Organisation) => organisation.type ? organisation.type.type : '',
             sortable: true,
+            sortField: 'organisation.type.type',
         },
     ];
 
@@ -86,6 +114,8 @@ export default function Organisations() {
                         paginationTotalRows={totalItems}
                         onChangeRowsPerPage={handlePerRowsChange}
                         onChangePage={handlePageChange}
+                        sortServer
+                        onSort={handleSort}
                     />
                 </React.Fragment>
             );
