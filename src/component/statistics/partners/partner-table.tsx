@@ -80,7 +80,7 @@ const PartnerTable: FC<Props> = ({filter}) => {
             sort: sort,
             order: order,
         });
-        
+
         fetch(serverUri + '/api/statistics/results/partner/download/csv?' + queryString,
             {
                 method: 'GET',
@@ -198,10 +198,11 @@ const PartnerTable: FC<Props> = ({filter}) => {
             return (
                 <React.Fragment>
                     <h2>Partners</h2>
-                    <pre className='debug'>{JSON.stringify(partners.length, undefined, 2)}</pre>
+                    {/* <pre className='debug'>{JSON.stringify(partners.length, undefined, 2)}</pre> */}
                     <DataTable
                         // title="Partners"
-                        keyField="id"
+                        keyField="keyfield"
+
                         columns={columns}
                         data={partners}
                         paginationRowsPerPageOptions={[10, 15, 20, 25, 30, 50, 100, 200]}
