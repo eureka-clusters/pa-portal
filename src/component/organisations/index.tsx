@@ -35,7 +35,9 @@ export default function Organisations() {
         setLoading(true);
         await load({
             page: page,
-            pageSize: perPage
+            pageSize: perPage,
+            sort: sort,
+            order: order
         });
         setPerPage(perPage);
         setLoading(false);
