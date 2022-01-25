@@ -199,9 +199,10 @@ const PartnerTable: FC<Props> = ({filter}) => {
                 <React.Fragment>
                     <h2>Partners</h2>
                     {/* <pre className='debug'>{JSON.stringify(partners.length, undefined, 2)}</pre> */}
+                    {/* <pre className='debug'>{JSON.stringify(partners, undefined, 2)}</pre> */}
                     <DataTable
                         // title="Partners"
-                        keyField="keyfield"
+                        keyField={hasYearFilter ? ("keyfield"): ("id")}
 
                         columns={columns}
                         data={partners}
