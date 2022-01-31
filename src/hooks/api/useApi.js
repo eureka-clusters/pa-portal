@@ -1,11 +1,10 @@
-import { useCallback} from 'react'
+import {useCallback} from 'react'
 import Config from 'constants/config'
-import { useAuth } from "context/user-context";
+import {useAuth} from "context/user-context";
 import _ from 'lodash';
 
 export const getServerUri = () => {
-    const serverUri = Config.SERVER_URI;
-    return serverUri;
+    return Config.SERVER_URI;
 };
 
 export const apiStates = {
