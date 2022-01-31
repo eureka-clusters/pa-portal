@@ -7,8 +7,6 @@ import {CostsFormat, EffortFormat} from 'function/utils';
 import {ApiError, apiStates, GetProjects} from "function/api/get-projects";
 import useState from 'react-usestateref';
 
-import './projects.scss';
-
 export default function Projects() {
 
     const [perPage, setPerPage] = React.useState(30); // default pageSize
@@ -20,9 +18,12 @@ export default function Projects() {
     // store the current page (needed for handleSort)
     const [currentPage, setCurrentPage] = useState(1); // default current page
 
-    const { state, error, projects, load, pageCount, pageSize, page, totalItems } = GetProjects({page: 1, pageSize: perPage});
-    
-    const handlePageChange = async (newpage: number=1) => {
+    const {state, error, projects, load, pageCount, pageSize, page, totalItems} = GetProjects({
+        page: 1,
+        pageSize: perPage
+    });
+
+    const handlePageChange = async (newpage: number = 1) => {
         setCurrentPage(newpage);
         setLoading(true);
         await load({

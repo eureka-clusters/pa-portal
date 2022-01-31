@@ -1,7 +1,7 @@
 import React from 'react';
 import Config from "constants/config";
-import { useAuth } from "context/user-context";
-import { useLocation } from "react-router-dom";
+import {useAuth} from "context/user-context";
+import {useLocation} from "react-router-dom";
 
 // import { useHistory, useLocation } from "react-router-dom";
 // import { Redirect } from 'react-router';
@@ -19,7 +19,7 @@ export default function Login() {
     // let history = useHistory();
     let location = useLocation<iLocation>();
     let auth = useAuth();
-    let { from } = location.state || { from: { pathname: "/" } };
+    let {from} = location.state || {from: {pathname: "/"}};
 
     // save redirect for not logged in users
     auth.saveRedirect(from);
@@ -30,7 +30,6 @@ export default function Login() {
         // history.replace(auth.redirect);
         // return <Redirect to={auth.redirect} />
     }
-
 
 
     return (
