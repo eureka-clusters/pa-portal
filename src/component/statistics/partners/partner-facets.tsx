@@ -107,7 +107,7 @@ const PartnerFacets: FC<Props> = ({ filter, setFilter, updateFilter, updateResul
                         ))}
                     </fieldset>
 
-                    <fieldset>
+                    {/* <fieldset>
                         <legend><small>Years</small></legend>
 
                         {facets.years && facets.years.map((year, i) => (
@@ -126,7 +126,7 @@ const PartnerFacets: FC<Props> = ({ filter, setFilter, updateFilter, updateResul
                                 </Form.Check>
                             </div>
                         ))}
-                    </fieldset>
+                    </fieldset> */}
 
                    
                 </>
