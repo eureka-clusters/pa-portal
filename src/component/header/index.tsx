@@ -31,7 +31,7 @@ export default function Header() {
                             <Nav.Link as={NavLink} to='/organisations' exact>Organisations</Nav.Link>
 
                             {/* test links will be removed */}
-                            <NavDropdown
+                            {/* <NavDropdown
                                 id="nav-dropdown-test"
                                 title="Test links"
                                 className={'ms-auto'}
@@ -40,7 +40,7 @@ export default function Header() {
                                 <NavDropdown.Item as={NavLink} to='/public'>Public Page</NavDropdown.Item>
                                 <NavDropdown.Divider/>
                                 <NavDropdown.Item as={NavLink} to='/protected'>Protected Page</NavDropdown.Item>
-                            </NavDropdown>
+                            </NavDropdown> */}
 
                             {auth.hasUser() ? (
                                 <React.Fragment>
