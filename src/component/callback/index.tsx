@@ -14,17 +14,22 @@ export default function Callback(props: RouteComponentProps) {
     useEffect(() => {
         let params = new URLSearchParams(props.location.search);
         const loginWithToken = async (params: any) => {
-            await auth.loginWithToken(params.get('token'), () => {
+            if( await auth.loginWithToken(params.get('token'), () => {
                 // console.log('cb after loginWithToken');
                 // cb not yet needed but good for test if the async code works correctly
-            })
-            auth.redirectAfterLogin();
+            })) {
+                auth.redirectAfterLogin();
+            } 
         }
-        loginWithToken(params)
+        loginWithToken(params);
         // console.log('after loginWithToken doesn\t wait for the exec');
-        
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.location.search, history]); 
 
+    if (auth.error) {
+        return (
+            <>Error {auth.error} </>
+        );
+    }
     return <LoadingComponent/>
 }

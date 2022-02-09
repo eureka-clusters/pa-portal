@@ -1,11 +1,13 @@
 // ./Me2.js
 import React from 'react';
-import {useMe2} from 'hooks/api/user/useMe.ts'
+import { useMeCompact} from 'hooks/api/user/useMeCompact'
+
+
 import Button from 'react-bootstrap/Button'
 
 export const Me2 = () => {
 
-    const meQuery = useMe2();
+    const meQuery = useMeCompact();
     
     return (
         <div>
@@ -19,7 +21,7 @@ export const Me2 = () => {
                     </>
                 ) : (
                     <>
-                        <pre className='debug'>{JSON.stringify(meQuery.data, undefined, 2)}</pre>
+                        {/* <pre className='debug'>{JSON.stringify(meQuery.data, undefined, 2)}</pre> */}
                         <ul>
                             <li>{meQuery.data.first_name}</li>
                             <li>{meQuery.data.last_name}</li>

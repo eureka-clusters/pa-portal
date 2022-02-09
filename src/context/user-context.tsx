@@ -2,6 +2,10 @@ import { createContext, FC, useContext, useReducer } from 'react';
 import { useHistory } from "react-router-dom";
 import { GetServerUri } from 'function/api';
 import { iUserinfo } from 'interface/auth/userinfo';
+import jwtDecode, { JwtPayload } from "jwt-decode";
+
+
+import { useApi} from 'hooks/api/useApi';
 
 
 const AuthContext = createContext<any>({}); //Any, might be replaced by more strict objects
@@ -17,6 +21,15 @@ type CallbackHandler = () => void
 //     jwtToken: string,
 //     user?: string,
 // }
+
+// interface ierror {
+//     code: string
+//     data: string
+//     message: string
+//     type: string
+// }
+
+
 interface iLocation {
     pathname: string
 }
@@ -44,7 +57,9 @@ export const useAuth = () => {
 
 function useProvideAuth() {
 
-    let storage = localStorage;
+    // let storage = localStorage;
+    let storage = sessionStorage;
+    
     let history = useHistory();
 
     const setUser = (username: string) => {
@@ -59,7 +74,7 @@ function useProvideAuth() {
         storage.setItem(KEY_TOKEN, token)
     }
 
-    const getJwtToken = () => {
+    const getJwtTokenStorage = () => {
         return storage.getItem(KEY_TOKEN)
     }
 
@@ -99,7 +114,7 @@ function useProvideAuth() {
 
             user: getUser(),
             userInfo: getUserInfo(),
-            token: getJwtToken(),
+            token: getJwtTokenStorage(),
             redirect: getRedirect(),
             loading: false,
             errorMessage: null
@@ -111,16 +126,7 @@ function useProvideAuth() {
     const userInfo = state.userInfo;
     const redirect = state.redirect;
     const token = state.token;
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    function __delay__(timer: number | undefined) {
-        return new Promise<void>(resolve => {
-            timer = timer || 2000;
-            setTimeout(function () {
-                resolve();
-            }, timer);
-        });
-    };
+    const error = state.errorMessage;
 
     const logout = () => {
         setState({
@@ -133,7 +139,44 @@ function useProvideAuth() {
         storage.removeItem(KEY_USER_INFO)
     }
 
-  
+
+    const checkToken = (token: string | null) => {
+        if (token) {
+            const decoded = jwtDecode<JwtPayload>(token);
+            // console.log(decoded);
+            const now = Date.now().valueOf() / 1000
+
+            if (typeof decoded.exp !== 'undefined' && decoded.exp < now) {
+                throw new Error(`token expired: ${JSON.stringify(decoded)}`)
+            }
+            if (typeof decoded.nbf !== 'undefined' && decoded.nbf > now) {
+                throw new Error(`token expired: ${JSON.stringify(decoded)}`)
+            }
+            return true;
+        }
+        return false;
+    }
+
+    const getJwtToken = () => {
+        const token = getJwtTokenStorage();
+        // console.log(['token in getJwtToken', token]);
+        if (token === null )
+            return undefined; 
+
+        try {
+            checkToken(token);
+            return token;
+        } catch (error) {
+            console.debug('catch error in getJwtToken logout user', error);
+            logout();       // ReferenceError: can't access lexical declaration 'logout' before initialization
+            // history.push('/logout');
+            // history.push('/public');
+            // throw (error);
+            // return token;
+            return undefined;
+        }
+    }
+
 
     const hasUser = () => {
         // must use the states instead.
@@ -141,55 +184,58 @@ function useProvideAuth() {
         // return null !== storage.getItem('user');
     }
 
-   
-    // const requestUserInfo = async (jwtToken: string): iUserinfo =>  {
-    // todo iUserinfo returns no promise which async needs.
+    // const userInfoQuery =  useApi('222/me', {}); // for error testing
+    const userInfoQuery = useApi('/me', {}, {});
     const requestUserInfo = async (jwtToken: string) => {
-        var serverUri = GetServerUri();
-        console.log(['serverUri', serverUri]);
-        let response = await fetch(serverUri + '/api/me',
-            {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${jwtToken}`
-                    // 'Authorization': 'Bearer ' + accessToken
-                }
-            }
-        ).then((res) => res.json()).then((res) => {
-            console.log(['requestUserInfo res 1', res]);
-            return res
-            // missing is error handling which i had the last time => still todo
-        });
-
-        // test delay check if the function and cb are waiting correctly
-        // await __delay__(2000);
-
-        console.log(['requestUserInfo res', response]);
-        return response;
+        try {
+            const data = await userInfoQuery({}, { headers: { Authorization: `Bearer ${jwtToken}` } })
+            return data;
+        } catch (error) {
+            console.log(['requestUserInfo error', error]);
+            throw (error);
+        }
     }
+
+    
+    
 
     const loginWithToken = async (token: string, cb: CallbackHandler) => {
 
         // todo: missing error handling for requestUserInfo
         // use token to get the userInfo (if this succeeds the token is valid)
-        let userinfo = await requestUserInfo(token);
-        let user = userinfo.email;
-        console.log(['userinfo in loginWithToken', userinfo]);
+        try {
+            let userinfo = await requestUserInfo(token);
+            console.log(['userinfo', userinfo]);
+            let user = userinfo.email;
+            console.log(['userinfo in loginWithToken', userinfo]);
 
-        // save items in storage       
-        setUser(user);
-        setJwtToken(token);
-        setUserInfo(userinfo);
+            // save items in storage       
+            setUser(user);
+            setJwtToken(token);
+            setUserInfo(userinfo);
 
-        // set the states (can't be done in the storage functions as each change would create a re-render)        
-        setState({
-            token: token,
-            user: user,
-            userInfo: userinfo,
-        });
-        typeof cb == "function" && cb();
+            // set the states (can't be done in the storage functions as each change would create a re-render)        
+            setState({
+                token: token,
+                user: user,
+                userInfo: userinfo,
+            });
+            typeof cb == "function" && cb();
+            return true;
+        } catch (error: any) {
+            // } catch (error: Error) {
+            console.log(error);
+            setState({
+                errorMessage: 'Userinfo could not been loaded ' + error.message
+            });
+
+            // setState({
+            //     errorMessage: 'Userinfo could not been loaded ' + ex.message
+            //     // errorMessage: 'Userinfo could not been loaded '+ error.message
+            // });
+            // throw (error);
+            // throw ('error on login ' + error.detail);
+        }
     }
 
     const saveRedirect = (location: iLocation) => {
@@ -205,14 +251,11 @@ function useProvideAuth() {
 
     return {
         // states
+        error,
         user,
         userInfo,
         redirect,
         token,
-
-        // pretty sure we don't want that some code set the user and token externally?
-        // setUser, 
-        // setJwtToken,
 
         // storage functions
         hasUser,

@@ -2,7 +2,10 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 import BreadcrumbTree from 'component/partial/breadcrumb-tree';
 import DataTable from 'component/database-table/index';
-import {ApiError, apiStates, GetOrganisations} from "function/api/get-organisations";
+
+// import {ApiError, apiStates, GetOrganisations} from "function/api/get-organisations"; // old api
+import { useOrganisations, apiStates, ApiError } from 'hooks/api/organisation/useOrganisations'; // new api
+
 import {Organisation} from "interface/organisation";
 import useState from 'react-usestateref';
 
@@ -17,8 +20,10 @@ export default function Organisations() {
     // store the current page (needed for handleSort)
     const [currentPage, setCurrentPage] = useState(1); // default current page
 
-    const { state, error, organisations, load, pageCount, pageSize, page, totalItems } = GetOrganisations({ page: 1, pageSize: perPage })
+    // const { state, error, organisations, load, pageCount, pageSize, page, totalItems } = GetOrganisations({ page: 1, pageSize: perPage }) // old api 
+    const { state, error, organisations, load, pageCount, pageSize, page, totalItems } = useOrganisations({ filter: '', page: 1, pageSize: perPage }); // new api
 
+    
     const handlePageChange = async (newpage: number = 1) => {
         setCurrentPage(newpage);
         setLoading(true);
@@ -108,6 +113,10 @@ export default function Organisations() {
                         keyField="id"
                         columns={columns}
                         data={organisations}
+
+
+                        defaultSortFieldId= {sort_ref.current}
+                        defaultSortAsc={order_ref.current === 'asc'? false: true}
 
                         progressPending={loading}
                         pagination

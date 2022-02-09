@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useAuth} from "context/user-context";
 import axios from 'axios';
 import {apiStates, GetServerUri} from 'function/api/index';
@@ -45,15 +45,26 @@ const defaultProps = {
 
 export const GetOrganisations = (params: Props = { filter: '', page: defaultProps.page, pageSize: defaultProps.pageSize }) => {
 
+    const mountedRef = useRef(true);
+
     let auth = useAuth();
     const serverUri = GetServerUri();
-    let jwtToken = auth.getJwtToken();
-
+    
+    let jwtToken = auth.getJwtToken();    
+    
+    
     const [hookState, setHookState] = React.useState<OrganisationState>({
         state: apiStates.LOADING,
         error: '',
         organisations: []
     });
+
+    // not possilble
+    // if (jwtToken === undefined) {
+    //     console.log('token is null');
+    //     return null;
+    // }  
+
 
     const createInstance = async () => {
         return axios.create({
@@ -67,6 +78,7 @@ export const GetOrganisations = (params: Props = { filter: '', page: defaultProp
         });
     };
 
+
     const load = (params: Props) => {
 
         const setPartData = (partialData: {
@@ -78,6 +90,8 @@ export const GetOrganisations = (params: Props = { filter: '', page: defaultProp
             totalItems?: number,
             page?: number
         }) => {
+            if (!mountedRef.current) return null;
+
             setHookState(hookState => ({...hookState, ...partialData}))
         }
 
@@ -133,8 +147,14 @@ export const GetOrganisations = (params: Props = { filter: '', page: defaultProp
 
     React.useEffect(() => {
         load(params);
+
+        // important unload of unmounted component
+        return () => {
+            console.log('unload in get-organisations');
+            mountedRef.current = false
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [mountedRef]);
 
     return {...hookState, load: load};
 }
