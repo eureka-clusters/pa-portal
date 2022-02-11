@@ -1,7 +1,11 @@
 import React, {FC} from 'react';
 import {Form} from "react-bootstrap";
 import BootstrapSwitchButton from "bootstrap-switch-button-react";
-import {ApiError, apiStates, GetFacets, getFilter} from "function/api/statistics/project/get-facets";
+
+// import {ApiError, apiStates, GetFacets, getFilter} from "function/api/statistics/project/get-facets";  // old api
+
+import { getFilter } from 'function/api';
+import { useFacets, apiStates, ApiError } from 'hooks/api/statistics/projects/useFacets'; // new api
 
 /**
  * @TODO get rid fo the any here
@@ -19,7 +23,8 @@ interface Props {
 // const ProjectFacets = (filter: any, setFilter: any, updateFilter: any, updateResults: any, updateHash: any) => {
 const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResults, updateHash}) => {
 
-    const {state, error, facets} = GetFacets(getFilter(filter));
+    // const { state, error, facets } = GetFacets(getFilter(filter)); // old api
+    const { state, error, facets } = useFacets({ filter: getFilter(filter)}); // new api
 
     const updateCountryMethod = (event: any) => {
         var updatedValues = {

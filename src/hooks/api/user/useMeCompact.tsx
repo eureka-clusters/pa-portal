@@ -35,6 +35,7 @@ export function useMeCompact() {
 
     React.useEffect(() => {
         // function must be outside otherwise i couldn't return it e.g. for a reload button
+        mountedRef.current = true;
         load();
         return () => {
             mountedRef.current = false

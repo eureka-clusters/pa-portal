@@ -77,7 +77,7 @@ export function useMe(queryParameter: Props , requestOptions = {}) {
 
 
     React.useEffect(() => {
-
+        mountedRef.current = true;
         load(queryParameter, requestOptions);
         
         // important unload of unmounted component

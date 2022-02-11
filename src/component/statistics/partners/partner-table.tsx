@@ -1,10 +1,16 @@
 import React, {FC} from 'react';
-import {ApiError, apiStates, getFilter} from 'function/api';
+
 import {Link} from "react-router-dom";
 import DataTable from 'component/database-table/index';
 import { CostsFormat, EffortFormat} from 'function/utils';
 import {Partner} from "interface/project/partner";
-import {GetResults} from "function/api/statistics/partner/get-results";
+
+// import { ApiError, apiStates, getFilter } from 'function/api';
+// import { GetResults } from "function/api/statistics/partner/get-results"; // old api
+
+import { getFilter } from 'function/api';
+import { usePartners, apiStates, ApiError } from 'hooks/api/statistics/partners/usePartners'; // new api
+
 import useState from 'react-usestateref';
 import { useAuth } from "context/user-context";
 import downloadBase64File from "function/DownloadBase64";
@@ -28,7 +34,8 @@ const PartnerTable: FC<Props> = ({filter}) => {
     // store the current page (needed for handleSort)
     const [currentPage, setCurrentPage] = useState(1); // default current page
 
-    const { state, error, partners, load, pageCount, pageSize, page, totalItems } = GetResults({ filter: getFilter(filter), page: 1, pageSize: perPage, sort:sort, order:order });
+    // const { state, error, partners, load, pageCount, pageSize, page, totalItems } = GetResults({ filter: getFilter(filter), page: 1, pageSize: perPage, sort:sort, order:order });
+    const { state, error, partners, load, pageCount, pageSize, page, totalItems } = usePartners({ filter: getFilter(filter), page: 1, pageSize: perPage }); // new api
 
     const handlePageChange = async (newpage: number = 1) => {
         setCurrentPage(newpage);

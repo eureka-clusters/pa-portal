@@ -24,7 +24,6 @@ interface State {
     pageSize?: number,
     totalItems?: number,
     page?: number
-    // data: any
 }
 
 interface Props {
@@ -56,7 +55,7 @@ export function useOrganisations(queryParameter: Props = {  filter: '', page: de
 
     const fetchData = useApi('/list/organisation', queryParameter, requestOptions);
 
-    const mountedRef = useRef(true)
+    const mountedRef = useRef(true);
 
     const [hookState, setHookState] = React.useState<State>({
         state: apiStates.LOADING,
@@ -149,7 +148,7 @@ export function useOrganisations(queryParameter: Props = {  filter: '', page: de
     }, [mountedRef, fetchData]);
 
     React.useEffect(() => {
-
+        mountedRef.current = true;
         load(queryParameter, requestOptions);
 
         // important unload of unmounted component

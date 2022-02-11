@@ -1,9 +1,17 @@
 import React, {FC} from 'react';
-import {ApiError, apiStates, getFilter} from 'function/api';
+
+
 import {Link} from "react-router-dom";
 import DataTable from 'component/database-table/index';
 import { CostsFormat, EffortFormat } from 'function/utils';
-import {GetResults} from "function/api/statistics/project/get-results";
+
+// import {ApiError, apiStates, getFilter} from 'function/api';
+// import {GetResults} from "function/api/statistics/project/get-results";  // old api
+
+import { getFilter } from 'function/api';
+import { useProjects, apiStates, ApiError } from 'hooks/api/statistics/projects/useProjects'; // new api
+
+
 import {Project} from "interface/project";
 import useState from 'react-usestateref';
 import { useAuth } from "context/user-context";
@@ -28,7 +36,8 @@ const ProjectTable: FC<Props> = ({ filter }) => {
     // store the current page (needed for handleSort)
     const [currentPage, setCurrentPage] = useState(1); // default current page
 
-    const { state, error, projects, load, pageCount, pageSize, page, totalItems } = GetResults({ filter: getFilter(filter), page: 1, pageSize: perPage });
+    // const { state, error, projects, load, pageCount, pageSize, page, totalItems } = GetResults({ filter: getFilter(filter), page: 1, pageSize: perPage }); // old api
+    const { state, error, projects, load, pageCount, pageSize, page, totalItems } = useProjects({ filter: getFilter(filter), page: 1, pageSize: perPage }); // new api
 
     const handlePageChange = async (newpage: number = 1) => {
         setCurrentPage(newpage);
@@ -177,11 +186,16 @@ const ProjectTable: FC<Props> = ({ filter }) => {
                 <React.Fragment>
                     <h2>Projects</h2>
                     {/* <pre className='debug'>{JSON.stringify(filter, undefined, 2)}</pre> */}
+                    {/* <pre className='debug'>{JSON.stringify(projects, undefined, 2)}</pre> */}
+                    
                     <DataTable
                         // title="Projects"
                         keyField="number"
                         columns={columns}
                         data={projects}
+
+                        defaultSortFieldId={sort_ref.current}
+                        defaultSortAsc={order_ref.current === 'asc' ? false : true}
 
                         progressPending={loading}
                         pagination

@@ -1,8 +1,12 @@
 import React, { FC } from 'react';
 import {Form} from "react-bootstrap";
 import BootstrapSwitchButton from "bootstrap-switch-button-react";
-import {ApiError, apiStates, getFilter} from "function/api";
-import {GetFacets} from "function/api/statistics/partner/get-facets";
+
+// import {ApiError, apiStates, getFilter} from "function/api";
+// import { GetFacets } from "function/api/statistics/partner/get-facets"; // old api
+
+import { getFilter } from 'function/api';
+import { useFacets, apiStates, ApiError } from 'hooks/api/statistics/partners/useFacets'; // new api
 
 interface Props {
     filter: any,
@@ -15,7 +19,8 @@ interface Props {
 // const PartnerFacets = (filter: any, setFilter: any, updateFilter: any, updateResults: any, updateHash: any) => {
 const PartnerFacets: FC<Props> = ({ filter, setFilter, updateFilter, updateResults, updateHash }) => {
 
-    const {state, error, facets} = GetFacets(getFilter(filter));
+    // const {state, error, facets} = GetFacets(getFilter(filter)); // old api
+    const { state, error, facets } = useFacets({ filter: getFilter(filter) }); // new api
 
     switch (state) {
         case apiStates.ERROR:

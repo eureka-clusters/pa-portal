@@ -2,6 +2,8 @@ import { useRef, useCallback} from 'react'
 import Config from 'constants/config'
 import {useAuth} from "context/user-context";
 import _ from 'lodash';
+import reactStringReplace from 'react-string-replace';
+import { collapseTextChangeRangesAcrossMultipleVersions } from 'typescript';
 
 export const getServerUri = () => {
     return Config.SERVER_URI;
@@ -16,10 +18,11 @@ export const apiStates = {
 
 const defaultSettings = {
     tokenMethod: 'jwt',
-    tokenRequired: true
+    tokenRequired: true,
+    parseUrl: false,
 }
 
-export function useApi(url, queryParameterDefault = {}, requestOptionsDefault = {}, settings = { tokenMethod: defaultSettings.tokenMethod, tokenRequired: defaultSettings.tokenRequired}) {
+export function useApi(url, queryParameterDefault = {}, requestOptionsDefault = {}, settings = { tokenMethod: defaultSettings.tokenMethod, tokenRequired: defaultSettings.tokenRequired, parseUrl: defaultSettings.parseUrl}) {
 
     const mountedRef = useRef(true);
     const auth = useAuth();
@@ -38,6 +41,31 @@ export function useApi(url, queryParameterDefault = {}, requestOptionsDefault = 
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             }
+        }
+
+        const substituteUrl = (str, data) => {
+            const reg = /\{([a-z|A-Z|0-9|_|.]+)\}/g;
+
+            // version which works with child objects like {organisation.name}
+            var output = reactStringReplace(str, reg, (match, i) => (
+                fetchFromObject(data, match)
+            ));
+          
+            return output.join('');
+        }
+
+        function fetchFromObject(obj, prop) {
+            if (typeof obj === 'undefined') {
+                return false;
+            }
+            var _index = prop.indexOf('.')
+            if (_index > -1) {
+                return fetchFromObject(obj[prop.substring(0, _index)], prop.substr(_index + 1));
+            }
+            
+            const return_value = obj[prop];
+            delete obj[prop];
+            return return_value;
         }
 
         function updateOptions(mergeOptions) {
@@ -101,14 +129,21 @@ export function useApi(url, queryParameterDefault = {}, requestOptionsDefault = 
             const requestUrl = serverUri + '/api' + url;
 
             // add query parameters to the url
-            var QueryUrl = new URL(requestUrl);
+            let QueryUrl = new URL(requestUrl);
+
+            if (settings.parseUrl === true && requestUrl.includes('{') && queryParameterRef !== undefined) {
+                // url should be parsed to add the parameters directly
+                // each parameter found will be replaced and removed from queryParameterRef so they aren't attached 2 times.
+                const parsedUrl = substituteUrl(requestUrl, queryParameterRef.current);
+                QueryUrl = new URL(parsedUrl);
+            } 
+
             if (queryParameterRef !== undefined) {
                 console.log('add query params to the url', queryParameterRef.current);
                 QueryUrl.search = new URLSearchParams(queryParameterRef.current).toString();
-                
             }
             console.log(['QueryUrl.search', QueryUrl.search]);
-
+            
 
             //Making the request
             const response = await fetch(QueryUrl, {
