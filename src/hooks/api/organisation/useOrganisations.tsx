@@ -4,15 +4,15 @@ import { Organisation } from "interface/organisation";
 
 export { ApiError, apiStates } from 'hooks/api/useApi';
 
-interface Response {
-    _embedded: {
-        organisations: Array<Organisation>
-    }
-    page_count: number
-    page_size: number
-    total_items: number
-    page: number
-}
+// interface Response {
+//     _embedded: {
+//         organisations: Array<Organisation>
+//     }
+//     page_count: number
+//     page_size: number
+//     total_items: number
+//     page: number
+// }
 
 interface State {
     state: string,

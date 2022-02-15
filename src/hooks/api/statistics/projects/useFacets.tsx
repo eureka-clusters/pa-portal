@@ -67,7 +67,6 @@ export function useFacets(queryParameter: Props = { filter: '' }, requestOptions
 
         // important unload of unmounted component
         return () => {
-            console.log('unload in useFacets');
             mountedRef.current = false
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps

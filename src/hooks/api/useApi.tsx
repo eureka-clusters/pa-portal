@@ -23,7 +23,7 @@ const defaultSettings = {
     parseUrl: false,
 }
 
-export function useApi(url: any, queryParameterDefault = {}, requestOptionsDefault = {}, settings = { tokenMethod: defaultSettings.tokenMethod, tokenRequired: defaultSettings.tokenRequired, parseUrl: defaultSettings.parseUrl}) {
+export function useApi(url: string, queryParameterDefault = {}, requestOptionsDefault = {}, settings = { tokenMethod: defaultSettings.tokenMethod, tokenRequired: defaultSettings.tokenRequired, parseUrl: defaultSettings.parseUrl}) {
 
     const mountedRef = useRef(true);
     const auth = useAuth();
