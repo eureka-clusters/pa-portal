@@ -8,7 +8,7 @@ export { ApiError, apiStates } from 'hooks/api/useApi';
 
 interface State {
     state: string,
-    error: iApiError | undefined,
+    error?: iApiError,
     facets: Facets,
     // facets: Facets
 }
@@ -28,7 +28,6 @@ export function useFacets(queryParameter: Props = { filter: '' }, requestOptions
 
     const [hookState, setHookState] = React.useState<State>({
         state: apiStates.LOADING,
-        error: undefined,
         // facets: undefined
         facets: {} as Facets
     });

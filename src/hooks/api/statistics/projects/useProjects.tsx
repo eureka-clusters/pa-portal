@@ -1,6 +1,5 @@
 import React, { useRef, useCallback } from 'react'
-
-import { useApi, apiStates, iApiError} from 'hooks/api/useApi';
+import { useApi, apiStates, iApiError } from 'hooks/api/useApi';
 import { Project } from "interface/project";
 
 export { ApiError, apiStates } from 'hooks/api/useApi';
@@ -16,7 +15,7 @@ export { ApiError, apiStates } from 'hooks/api/useApi';
 // }
 interface State {
     state: string,
-    error: iApiError | undefined,
+    error?: iApiError,
     projects: Array<Project> | undefined,
     pageCount?: number,
     pageSize?: number,
@@ -38,17 +37,14 @@ const defaultProps = {
 }
 
 
-
 export function useProjects(queryParameter: Props = { filter: '', page: defaultProps.page, pageSize: defaultProps.pageSize }, requestOptions = {}) {
 
-    // const filter = queryParameter.filter;
     const fetchData = useApi('/statistics/results/project', queryParameter, requestOptions);
     
     const mountedRef = useRef(true);
 
     const [hookState, setHookState] = React.useState<State>({
         state: apiStates.LOADING,
-        error: undefined,
         projects: undefined
     });
 

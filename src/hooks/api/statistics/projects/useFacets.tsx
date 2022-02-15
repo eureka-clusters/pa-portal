@@ -1,12 +1,11 @@
 import React, { useRef, useCallback } from 'react'
 import { useApi, apiStates, iApiError } from 'hooks/api/useApi';
-
 import { Facets } from "interface/statistics/project/facets";
 
 export { ApiError, apiStates } from 'hooks/api/useApi';
 interface State {
     state: string,
-    error: iApiError | undefined,
+    error?: iApiError,
     facets: Facets,
     // facets: Facets
 }
@@ -26,7 +25,6 @@ export function useFacets(queryParameter: Props = { filter: '' }, requestOptions
 
     const [hookState, setHookState] = React.useState<State>({
         state: apiStates.LOADING,
-        error: undefined,
         facets: {} as Facets
     });
 

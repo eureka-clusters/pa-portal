@@ -4,8 +4,6 @@ import { Organisation } from "interface/organisation";
 
 export { ApiError, apiStates } from 'hooks/api/useApi';
 
-
-
 interface Response {
     _embedded: {
         organisations: Array<Organisation>
@@ -18,7 +16,7 @@ interface Response {
 
 interface State {
     state: string,
-    error?: iApiError | undefined,
+    error?: iApiError,
     organisations: Array<Organisation> | undefined,
     pageCount?: number,
     pageSize?: number,
@@ -59,7 +57,6 @@ export function useOrganisations(queryParameter: Props = {  filter: '', page: de
 
     const [hookState, setHookState] = React.useState<State>({
         state: apiStates.LOADING,
-        error: undefined,
         organisations: undefined
     });
 
