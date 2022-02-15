@@ -1,5 +1,5 @@
 import React, { useRef, useCallback } from 'react'
-import { useApi, apiStates } from 'hooks/api/useApi';
+import { useApi, apiStates, iApiError } from 'hooks/api/useApi';
 
 import { Facets } from "interface/statistics/project/facets";
 
@@ -8,7 +8,7 @@ export { ApiError, apiStates } from 'hooks/api/useApi';
 
 interface State {
     state: string,
-    error?: string,
+    error: iApiError | undefined,
     facets: Facets,
     // facets: Facets
 }
@@ -28,7 +28,7 @@ export function useFacets(queryParameter: Props = { filter: '' }, requestOptions
 
     const [hookState, setHookState] = React.useState<State>({
         state: apiStates.LOADING,
-        error: '',
+        error: undefined,
         // facets: undefined
         facets: {} as Facets
     });
@@ -38,7 +38,7 @@ export function useFacets(queryParameter: Props = { filter: '' }, requestOptions
         const setPartData = (partialData: {
             state: string,
             facets?: Facets,
-            error?: string
+            error?: iApiError
         }) => {
             // Before setState ensure that the component is mounted, otherwise return null and don't allow to unmounted component.
             if (!mountedRef.current) return null;

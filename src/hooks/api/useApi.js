@@ -3,18 +3,31 @@ import Config from 'constants/config'
 import {useAuth} from "context/user-context";
 import _ from 'lodash';
 import reactStringReplace from 'react-string-replace';
-import { collapseTextChangeRangesAcrossMultipleVersions } from 'typescript';
+
+export { iApiError } from 'hooks/api/interfaces';
 
 export const getServerUri = () => {
     return Config.SERVER_URI;
 };
-export { ApiError } from 'function/api/api-error';
+
+export const ApiError = ({error}) => {
+    return <>
+        <p className="api-error">
+            <strong>Api Error</strong><br />
+            {error.data}<br />
+            Message: {error.message}<br />
+            Code: {error.code}<br />
+        </p>
+    </>
+}
+
 
 export const apiStates = {
     LOADING: 'LOADING',
     SUCCESS: 'SUCCESS',
     ERROR: 'ERROR'
 }
+
 
 const defaultSettings = {
     tokenMethod: 'jwt',

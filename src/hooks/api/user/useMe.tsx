@@ -1,5 +1,5 @@
 import React, { useRef, useCallback}  from 'react'
-import { useApi, apiStates} from 'hooks/api/useApi';
+import { useApi, apiStates, iApiError} from 'hooks/api/useApi';
 
 export { apiStates } from 'hooks/api/useApi';
 
@@ -24,7 +24,7 @@ interface Props {
 
 interface State {
     state: string,
-    error?: string,
+    error?: iApiError | undefined,
     data: Me | undefined,
     // data: any
 }
@@ -37,7 +37,7 @@ export function useMe(queryParameter: Props , requestOptions = {}) {
 
     const [hookState, setHookState] = React.useState <State> ({
         state: apiStates.LOADING,
-        error: '',
+        error: undefined,
         data: undefined
         // data: {} as Me
     });
@@ -47,7 +47,7 @@ export function useMe(queryParameter: Props , requestOptions = {}) {
         const setPartData = (partialData: {
             state: string;
             data?: Me;
-            error?: string;
+            error?: iApiError;
         }) => {
             // Before setState ensure that the component is mounted, otherwise return null and don't allow to unmounted component.
             if (!mountedRef.current) return null;

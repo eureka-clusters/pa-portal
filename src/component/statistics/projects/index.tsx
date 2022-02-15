@@ -22,8 +22,8 @@ export default function ProjectStatistics(props: Props) {
         organisation_type_method: 'or',
         project_status: [],
         project_status_method: 'or',
-        primary_cluster: [],
-        primary_cluster_method: 'or',
+        clusters: [],
+        clusters_method: 'or',
         year: [],
     };
 

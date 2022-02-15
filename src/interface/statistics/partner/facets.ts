@@ -11,7 +11,7 @@ export interface Facets {
         name: string,
         amount: number
     }>,
-    primaryClusters: Array<{
+    clusters: Array<{
         name: string,
         amount: number
     }>,

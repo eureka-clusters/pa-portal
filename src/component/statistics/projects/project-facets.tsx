@@ -79,7 +79,7 @@ const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
                                     <Form.Check.Input
                                         name="country"
                                         value={country['name']}
-                                        className={'me-2'}
+                                        className={'filter'}
                                         onChange={updateFilter}
                                         checked={
                                             filter['country'].indexOf(country['name']) > -1
@@ -108,7 +108,7 @@ const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
                                         name="organisation_type"
                                         value={organisationType['name']}
                                         onChange={updateFilter}
-                                        className={'me-2'}
+                                        className={'filter'}
                                         checked={
                                             filter['organisation_type'].indexOf(organisationType['name']) > -1
                                         }
@@ -129,7 +129,7 @@ const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
                                         name="project_status"
                                         value={projectStatus['name']}
                                         onChange={updateFilter}
-                                        className={'me-2'}
+                                        className={'filter'}
                                         checked={
                                             filter['project_status'].indexOf(projectStatus['name']) > -1
                                         }
@@ -141,21 +141,21 @@ const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
                     </fieldset>
 
                     <fieldset>
-                        <legend><small>Primary Cluster</small></legend>
+                        <legend><small>Clusters</small></legend>
 
-                        {facets.primaryClusters && facets.primaryClusters.map((primaryCluster, i) => (
+                        {facets.clusters && facets.clusters.map((cluster, i) => (
                             <div key={i}>
-                                <Form.Check type={'checkbox'} id={`check-primary-cluster-${i}`}>
+                                <Form.Check type={'checkbox'} id={`check-cluster-${i}`}>
                                     <Form.Check.Input
-                                        name="primary_cluster"
-                                        value={primaryCluster['name']}
+                                        name="clusters"
+                                        value={cluster['name']}
                                         onChange={updateFilter}
-                                        className={'me-2'}
+                                        className={'filter'}
                                         checked={
-                                            filter['primary_cluster'].indexOf(primaryCluster['name']) > -1
+                                            filter['clusters'].indexOf(cluster['name']) > -1
                                         }
                                     />
-                                    <Form.Check.Label>{primaryCluster['name']} ({primaryCluster['amount']})</Form.Check.Label>
+                                    <Form.Check.Label>{cluster['name']} ({cluster['amount']})</Form.Check.Label>
                                 </Form.Check>
                             </div>
                         ))}

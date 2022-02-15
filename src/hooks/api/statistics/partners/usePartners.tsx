@@ -1,5 +1,5 @@
 import React, { useRef, useCallback } from 'react'
-import { useApi, apiStates } from 'hooks/api/useApi';
+import { useApi, apiStates, iApiError } from 'hooks/api/useApi';
 import { Partner } from "interface/project/partner";
 
 export { ApiError, apiStates } from 'hooks/api/useApi';
@@ -16,7 +16,7 @@ export { ApiError, apiStates } from 'hooks/api/useApi';
 
 interface State {
     state: string,
-    error?: string,
+    error: iApiError | undefined,
     partners: Array<Partner> | undefined,
     pageCount?: number,
     pageSize?: number,
@@ -46,7 +46,7 @@ export function usePartners(queryParameter: Props = { filter: '', page: defaultP
 
     const [hookState, setHookState] = React.useState<State>({
         state: apiStates.LOADING,
-        error: '',
+        error: undefined,
         partners: undefined
     });
 
@@ -54,7 +54,7 @@ export function usePartners(queryParameter: Props = { filter: '', page: defaultP
         const setPartData = (partialData: {
             state: string,
             partners?: Array<Partner>,
-            error?: string,
+            error?: iApiError,
             pageCount?: number,
             pageSize?: number,
             totalItems?: number,
