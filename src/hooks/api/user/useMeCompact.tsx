@@ -2,7 +2,16 @@ import React, {useRef} from 'react'
 
 import { useApi} from 'hooks/api/useApi';
 
-export function useMeCompact() {
+
+interface Props {
+    // filter?: string,
+    // page: number,
+    // pageSize: number,
+    // sort?: string,
+    // order?: string,
+}
+
+export function useMeCompact(queryParameter: Props, requestOptions = {}) {
 
     // fetchData is a callback function
     // const fetchData = useApi('/me', { method: 'Post', body: JSON.stringify({ title: 'React POST Request Example' })}); // post + overwrite headers example
@@ -20,7 +29,7 @@ export function useMeCompact() {
         setState({ isLoading: true })
         try {
             // await __delay__(3000);
-            const data = await fetchData()
+            const data = await fetchData(queryParameter, requestOptions)
             
             if (!mountedRef.current) return null
             setState({ isSuccess: true, data })
