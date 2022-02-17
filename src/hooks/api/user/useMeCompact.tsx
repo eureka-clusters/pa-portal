@@ -1,14 +1,7 @@
 import React, {useRef} from 'react'
-
-import { useApi} from 'hooks/api/useApi';
-
+import {useApi} from 'hooks/api/useApi';
 
 interface Props {
-    // filter?: string,
-    // page: number,
-    // pageSize: number,
-    // sort?: string,
-    // order?: string,
 }
 
 export function useMeCompact(queryParameter: Props, requestOptions = {}) {
@@ -26,17 +19,17 @@ export function useMeCompact(queryParameter: Props, requestOptions = {}) {
 
     const load = async () => {
         if (!mountedRef.current) return null
-        setState({ isLoading: true })
+        setState({isLoading: true})
         try {
             // await __delay__(3000);
             const data = await fetchData(queryParameter, requestOptions)
-            
+
             if (!mountedRef.current) return null
-            setState({ isSuccess: true, data })
+            setState({isSuccess: true, data})
         } catch (error) {
             // console.log('error catched');
             if (!mountedRef.current) return null
-            setState({ isError: true, error })
+            setState({isError: true, error})
         }
     }
 
