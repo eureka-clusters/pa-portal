@@ -19,4 +19,5 @@ export interface Facets {
         name: string,
         amount: number
     }>
+    years: Array<number>
 }
