@@ -1,12 +1,10 @@
-import React, { FC } from 'react';
+import React, {FC} from 'react';
 import {Form} from "react-bootstrap";
-import BootstrapSwitchButton from "bootstrap-switch-button-react";
 
 // import {ApiError, apiStates, getFilter} from "function/api";
 // import { GetFacets } from "function/api/statistics/partner/get-facets"; // old api
-
-import { getFilter } from 'function/api';
-import { useFacets, apiStates, ApiError } from 'hooks/api/statistics/partners/useFacets'; // new api
+import {getFilter} from 'function/api';
+import {ApiError, apiStates, useFacets} from 'hooks/api/statistics/partners/useFacets'; // new api
 
 interface Props {
     filter: any,
@@ -17,10 +15,10 @@ interface Props {
 }
 
 // const PartnerFacets = (filter: any, setFilter: any, updateFilter: any, updateResults: any, updateHash: any) => {
-const PartnerFacets: FC<Props> = ({ filter, setFilter, updateFilter, updateResults, updateHash }) => {
+const PartnerFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResults, updateHash}) => {
 
     // const {state, error, facets} = GetFacets(getFilter(filter)); // old api
-    const { state, error, facets } = useFacets({ filter: getFilter(filter) }); // new api
+    const {state, error, facets} = useFacets({filter: getFilter(filter)}); // new api
 
     switch (state) {
         case apiStates.ERROR:
@@ -92,6 +90,27 @@ const PartnerFacets: FC<Props> = ({ filter, setFilter, updateFilter, updateResul
                     </fieldset>
 
                     <fieldset>
+                        <legend><small>Programme Call</small></legend>
+
+                        {facets.programmeCalls && facets.programmeCalls.map((programmeCall, i) => (
+                            <div key={i}>
+                                <Form.Check type={'checkbox'} id={`check-project-programmecall-${i}`}>
+                                    <Form.Check.Input
+                                        name="programme_call"
+                                        value={programmeCall['name']}
+                                        onChange={updateFilter}
+                                        className={'me-2'}
+                                        checked={
+                                            filter['programme_call'].indexOf(programmeCall['name']) > -1
+                                        }
+                                    />
+                                    <Form.Check.Label>{programmeCall['name']} ({programmeCall['amount']})</Form.Check.Label>
+                                </Form.Check>
+                            </div>
+                        ))}
+                    </fieldset>
+
+                    <fieldset>
                         <legend><small>Primary Cluster</small></legend>
 
                         {facets.primaryClusters && facets.primaryClusters.map((primaryCluster, i) => (
@@ -112,7 +131,7 @@ const PartnerFacets: FC<Props> = ({ filter, setFilter, updateFilter, updateResul
                         ))}
                     </fieldset>
 
-                    {/* <fieldset>
+                    <fieldset>
                         <legend><small>Years</small></legend>
 
                         {facets.years && facets.years.map((year, i) => (
@@ -131,9 +150,9 @@ const PartnerFacets: FC<Props> = ({ filter, setFilter, updateFilter, updateResul
                                 </Form.Check>
                             </div>
                         ))}
-                    </fieldset> */}
+                    </fieldset>
 
-                   
+
                 </>
             );
 

@@ -41,32 +41,32 @@ export default function Partner(props: Props) {
 
                     <dl className="row">
 
-                        <dt className="col-sm-3">Organisation:</dt>
+                        <dt className="col-sm-3 text-end">Organisation:</dt>
                         <dd className="col-sm-9"><Link
                             to={`/organisation/${partner.organisation.slug}`}>{partner.organisation.name}</Link></dd>
 
-                        <dt className="col-sm-3">Type:</dt>
+                        <dt className="col-sm-3 text-end">Type:</dt>
                         <dd className="col-sm-9">{partner.organisation.type.type}</dd>
 
-                        <dt className="col-sm-3">Country:</dt>
+                        <dt className="col-sm-3 text-end">Country:</dt>
                         <dd className="col-sm-9">{partner.organisation.country.country}</dd>
 
-                        <dt className="col-sm-3">Coordinator:</dt>
+                        <dt className="col-sm-3 text-end">Coordinator:</dt>
                         <dd className="col-sm-9">{partner.isCoordinator ? 'Yes' : 'No'}</dd>
 
-                        <dt className="col-sm-3">Active:</dt>
+                        <dt className="col-sm-3 text-end">Active:</dt>
                         <dd className="col-sm-9">{partner.isActive ? 'Yes' : 'No'}</dd>
 
-                        <dt className="col-sm-3">Self Funded:</dt>
+                        <dt className="col-sm-3 text-end">Self Funded:</dt>
                         <dd className="col-sm-9">{partner.isSelfFunded ? 'Yes' : 'No'}</dd>
 
-                        <dt className="col-sm-3">Technical contact:</dt>
+                        <dt className="col-sm-3 text-end">Technical contact:</dt>
                         <dd className="col-sm-9">
                             {String(partner.technicalContact.fullName)} (<a
                             href={`mailto:${partner.technicalContact.email}`}>{partner.technicalContact.email}</a>)
                         </dd>
 
-                        <dt className="col-sm-3">Total costs (latest version)</dt>
+                        <dt className="col-sm-3 text-end">Total costs (latest version)</dt>
                         <dd className="col-sm-9"><NumberFormat
                             value={partner.latestVersionCosts}
                             thousandSeparator={' '}
@@ -74,7 +74,7 @@ export default function Partner(props: Props) {
                             prefix={'€ '}/></dd>
 
 
-                        <dt className="col-sm-3">Total effort (latest version)</dt>
+                        <dt className="col-sm-3 text-end">Total effort (latest version)</dt>
                         <dd className="col-sm-9"><NumberFormat
                             value={partner.latestVersionEffort}
                             thousandSeparator={' '}
@@ -84,11 +84,11 @@ export default function Partner(props: Props) {
                         /></dd>
 
 
-                        <dt className="col-sm-3">Project:</dt>
+                        <dt className="col-sm-3 text-end">Project:</dt>
                         <dd className="col-sm-9"><Link
                             to={`/project/${partner.project.slug}`}>{partner.project.name}</Link></dd>
 
-                        <dt className="col-sm-3">Project leader</dt>
+                        <dt className="col-sm-3 text-end">Project leader</dt>
                         <dd className="col-sm-9">
                             {String(partner.project.projectLeader.fullName)} (<a
                             href={`mailto:${partner.project.projectLeader.email}`}>{partner.project.projectLeader.email}</a>)

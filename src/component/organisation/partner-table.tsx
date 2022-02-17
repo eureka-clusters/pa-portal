@@ -15,12 +15,6 @@ const PartnerTable: FC<Props> = ({organisation}) => {
 
     const columns = [
         {
-            id: 'id',
-            name: 'Id',
-            selector: (row: Partner) => row.id,
-            sortable: true,
-        },
-        {
             id: 'project',
             name: 'Project',
             selector: (partner: Partner) => partner.project.name,
@@ -67,13 +61,7 @@ const PartnerTable: FC<Props> = ({organisation}) => {
         },
     ];
 
-
-    // const [resultUrl, setResultUrl] = useState('list/partner?organisation=' + organisation.slug);
     const {state, error, partners} = GetPartners(undefined, organisation);
-
-    // useEffect(() => {
-    //     setResultUrl('list/partner?organisation=' + organisation.slug);
-    // }, [organisation]);
 
     switch (state) {
         case apiStates.ERROR:
@@ -81,10 +69,8 @@ const PartnerTable: FC<Props> = ({organisation}) => {
         case apiStates.SUCCESS:
             return (
                 <React.Fragment>
-                    {/* <pre className='debug'>{JSON.stringify(data, undefined, 2)}</pre> */}
                     <h2>Partners</h2>
                     <DataTable
-                        // title="Partners"
                         keyField="id"
                         columns={columns}
                         data={partners}

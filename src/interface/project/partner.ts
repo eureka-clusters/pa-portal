@@ -14,6 +14,6 @@ export interface Partner {
     latestVersionCosts: number,
     latestVersionEffort: number,
     year?: number
-    latestVersionTotalCostsInYear?: number,
-    latestVersionTotalEffortInYear?: number,
+    latestVersionCostsInYear?: number,
+    latestVersionEffortInYear?: number,
 }

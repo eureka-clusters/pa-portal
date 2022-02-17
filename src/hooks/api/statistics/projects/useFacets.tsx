@@ -1,9 +1,9 @@
-import React, { useRef, useCallback } from 'react'
-import { useApi, apiStates } from 'hooks/api/useApi';
+import React, {useCallback, useRef} from 'react'
+import {apiStates, useApi} from 'hooks/api/useApi';
 
-import { Facets } from "interface/statistics/project/facets";
+import {Facets} from "interface/statistics/project/facets";
 
-export { ApiError, apiStates } from 'hooks/api/useApi';
+export {ApiError, apiStates} from 'hooks/api/useApi';
 
 
 interface State {
@@ -17,13 +17,17 @@ interface Props {
     filter?: string,
 }
 
-export function useFacets(queryParameter: Props = { filter: '' }, requestOptions = {}) {
+export function useFacets(queryParameter: Props = {filter: ''}, requestOptions = {}) {
 
     // const filter = queryParameter.filter;
     // const fetchData = useApi(`/statistics/facets/project/${filter}`, queryParameter, requestOptions);
 
-    const fetchData = useApi("/statistics/facets/project/{filter}", queryParameter, requestOptions, { tokenMethod: 'jwt', tokenRequired:true, parseUrl:true }); // how can i change it that i don't have to add all parameters?
-    
+    const fetchData = useApi("/statistics/facets/project/{filter}", queryParameter, requestOptions, {
+        tokenMethod: 'jwt',
+        tokenRequired: true,
+        parseUrl: true
+    }); // how can i change it that i don't have to add all parameters?
+
     const mountedRef = useRef(true);
 
     const [hookState, setHookState] = React.useState<State>({
@@ -45,7 +49,7 @@ export function useFacets(queryParameter: Props = { filter: '' }, requestOptions
         }) => {
             // Before setState ensure that the component is mounted, otherwise return null and don't allow to unmounted component.
             if (!mountedRef.current) return null;
-            setHookState(hookState => ({ ...hookState, ...partialData }))
+            setHookState(hookState => ({...hookState, ...partialData}))
         }
 
         // has to be removed otherwise it will re-render the complete page maybe add different states for re-query e.g. because of sorting / pagination ?
@@ -79,7 +83,7 @@ export function useFacets(queryParameter: Props = { filter: '' }, requestOptions
             mountedRef.current = false
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [queryParameter.filter, load, mountedRef]);  
+    }, [queryParameter.filter, load, mountedRef]);
 
-    return { ...hookState, load: load };
+    return {...hookState, load: load};
 }

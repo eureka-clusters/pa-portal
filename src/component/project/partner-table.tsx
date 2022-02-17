@@ -15,12 +15,6 @@ const PartnerTable: FC<Props> = ({project}) => {
 
     const columns = [
         {
-            id: 'id',
-            name: 'Id',
-            selector: (partner: Partner) => partner.id,
-            sortable: true,
-        },
-        {
             id: 'project',
             name: 'Project',
             selector: (partner: Partner) => partner.project.name,
@@ -75,10 +69,8 @@ const PartnerTable: FC<Props> = ({project}) => {
         case apiStates.SUCCESS:
             return (
                 <React.Fragment>
-                    {/* <pre className='debug'>{JSON.stringify(data, undefined, 2)}</pre> */}
                     <h2>Partners</h2>
                     <DataTable
-                        // title="Partners"
                         keyField="id"
                         columns={columns}
                         data={partners}

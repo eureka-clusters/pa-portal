@@ -22,6 +22,7 @@ export default function ProjectStatistics(props: Props) {
         organisation_type_method: 'or',
         project_status: [],
         project_status_method: 'or',
+        programme_call: [],
         primary_cluster: [],
         primary_cluster_method: 'or',
         year: [],
@@ -29,7 +30,7 @@ export default function ProjectStatistics(props: Props) {
 
     const {updateHash, updateFilter, filter, setFilter} = TableFilter({props, defaultFilter});
 
- 
+
     const updateResults = () => {
     }
 
@@ -47,7 +48,7 @@ export default function ProjectStatistics(props: Props) {
                                        updateHash={updateHash} updateResults={updateResults}/>
                     </div>
                     <div className={'col-10'}>
-                        <ProjectTable filter={filter} />
+                        <ProjectTable filter={filter}/>
                     </div>
                 </div>
             </Form>

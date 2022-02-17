@@ -24,7 +24,7 @@ As the root of the app is not mounted in the container (only /src)
 Update all packages in Yarn
 
 ```shell
-docker compose -f docker-compose.dev.yml run web yarn upgrade-interactive [--latest]
+docker compose -f docker-compose.yml run web yarn upgrade-interactive [--latest]
 ```
 
 To publish a new version just push the code to Github. The ./github/workflows/docker-image.yml will launch the action which creates a new container.

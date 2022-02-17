@@ -48,8 +48,8 @@ export default function Login() {
                                                      href={serverUri + '/oauth2/login/via/celtic.html?client=' + clientId}>Login
                     via Celtic</a></div>
                 <div className="p-2 bd-highlight"><a className="btn btn-primary btn-lg"
-                                                     href={serverUri + '/oauth2/login/via/penta.html?client=' + clientId}>Login
-                    via Penta-Euripides</a></div>
+                                                     href={serverUri + '/oauth2/login/via/xecs.html?client=' + clientId}>Login
+                    via Xecs</a></div>
             </div>
         </React.Fragment>
     );

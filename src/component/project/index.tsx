@@ -39,41 +39,41 @@ export default function Project(props: Props) {
                     <h1>Project Page</h1>
 
                     <dl className="row">
-                        <dt className="col-sm-3">Project:</dt>
+                        <dt className="col-sm-3 text-end">Project:</dt>
                         <dd className="col-sm-9">{project.name}</dd>
 
-                        <dt className="col-sm-3">Status:</dt>
+                        <dt className="col-sm-3 text-end">Status:</dt>
                         <dd className="col-sm-9">{project.status && project.status.status}</dd>
 
-                        <dt className="col-sm-3">Primary Cluster:</dt>
+                        <dt className="col-sm-3 text-end">Primary Cluster:</dt>
                         <dd className="col-sm-9">{project.primaryCluster && project.primaryCluster.name}</dd>
 
-                        <dt className="col-sm-3">Programme:</dt>
+                        <dt className="col-sm-3 text-end">Programme:</dt>
                         <dd className="col-sm-9">{project.programme}</dd>
 
                         {project.coordinator && <>
-                            <dt className="col-sm-3">Coordinator:</dt>
+                            <dt className="col-sm-3 text-end">Coordinator:</dt>
                             <dd className="col-sm-9">{String(project.coordinator.organisation)}<br/>{String(project.coordinator.technicalContact.fullName)} ({String(project.coordinator.technicalContact.email)})
                             </dd>
                         </>}
 
-                        <dt className="col-sm-3">Project leader:</dt>
+                        <dt className="col-sm-3 text-end">Project leader:</dt>
                         <dd className="col-sm-9">{String(project.projectLeader.fullName)} ({String(project.projectLeader.email)})</dd>
 
-                        <dt className="col-sm-3">TechnicalArea:</dt>
+                        <dt className="col-sm-3 text-end">TechnicalArea:</dt>
                         <dd className="col-sm-9">{project.technicalArea}</dd>
 
-                        <dt className="col-sm-3">Label date:</dt>
+                        <dt className="col-sm-3 text-end">Label date:</dt>
                         <dd className="col-sm-9">{moment(project.labelDate).format('LLL')}</dd>
 
-                        <dt className="col-sm-3">Total costs:</dt>
+                        <dt className="col-sm-3 text-end">Total costs:</dt>
                         <dd className="col-sm-9"><NumberFormat
                             value={project.latestVersionTotalCosts}
                             thousandSeparator={' '}
                             displayType={'text'}
                             prefix={'€ '}/></dd>
 
-                        <dt className="col-sm-3">Total effort:</dt>
+                        <dt className="col-sm-3 text-end">Total effort:</dt>
                         <dd className="col-sm-9"><NumberFormat
                             value={project.latestVersionTotalEffort}
                             thousandSeparator={' '}
@@ -82,7 +82,7 @@ export default function Project(props: Props) {
                             fixedDecimalScale={true}
                         /></dd>
 
-                        <dt className="col-sm-3">Description:</dt>
+                        <dt className="col-sm-3 text-end">Description:</dt>
                         <dd className="col-sm-9">
                             <details>
                                 <summary>open/close</summary>

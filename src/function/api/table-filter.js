@@ -1,4 +1,4 @@
-import { useEffect} from 'react';
+import {useEffect} from 'react';
 // import {useEffect, useState} from 'react';
 import useState from 'react-usestateref'; // we need the useState with the .current href
 import {getFilter} from 'function/api/index';
@@ -61,7 +61,7 @@ function TableFilter({props, defaultFilter}) {
 
     // const [filter, setFilter] = useState(() => getDefaultFilter());
     const [filter, setFilter, filter_ref] = useState(() => getDefaultFilter());
-    
+
     const updateHash = () => {
         // const hash = getFilter(filter.current);
         const hash = getFilter(filter_ref.current);

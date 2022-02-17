@@ -3,9 +3,8 @@ import {Form} from "react-bootstrap";
 import BootstrapSwitchButton from "bootstrap-switch-button-react";
 
 // import {ApiError, apiStates, GetFacets, getFilter} from "function/api/statistics/project/get-facets";  // old api
-
-import { getFilter } from 'function/api';
-import { useFacets, apiStates, ApiError } from 'hooks/api/statistics/projects/useFacets'; // new api
+import {getFilter} from 'function/api';
+import {ApiError, apiStates, useFacets} from 'hooks/api/statistics/projects/useFacets'; // new api
 
 /**
  * @TODO get rid fo the any here
@@ -24,7 +23,7 @@ interface Props {
 const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResults, updateHash}) => {
 
     // const { state, error, facets } = GetFacets(getFilter(filter)); // old api
-    const { state, error, facets } = useFacets({ filter: getFilter(filter)}); // new api
+    const {state, error, facets} = useFacets({filter: getFilter(filter)}); // new api
 
     const updateCountryMethod = (event: any) => {
         var updatedValues = {
@@ -135,6 +134,27 @@ const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
                                         }
                                     />
                                     <Form.Check.Label>{projectStatus['name']} ({projectStatus['amount']})</Form.Check.Label>
+                                </Form.Check>
+                            </div>
+                        ))}
+                    </fieldset>
+
+                    <fieldset>
+                        <legend><small>Programme Call</small></legend>
+
+                        {facets.programmeCalls && facets.programmeCalls.map((programmeCall, i) => (
+                            <div key={i}>
+                                <Form.Check type={'checkbox'} id={`check-project-programmecall-${i}`}>
+                                    <Form.Check.Input
+                                        name="programme_call"
+                                        value={programmeCall['name']}
+                                        onChange={updateFilter}
+                                        className={'me-2'}
+                                        checked={
+                                            filter['programme_call'].indexOf(programmeCall['name']) > -1
+                                        }
+                                    />
+                                    <Form.Check.Label>{programmeCall['name']} ({programmeCall['amount']})</Form.Check.Label>
                                 </Form.Check>
                             </div>
                         ))}

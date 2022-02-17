@@ -109,13 +109,6 @@ const PartnerTable: FC<Props> = ({filter}) => {
 
     const columns = [
         {
-            id: 'id',
-            name: 'Id',
-            selector: (partner: Partner) => partner.id,
-            sortable: true,
-            sortField: 'partner.id',
-        },
-        {
             id: 'project',
             name: 'Project',
             selector: (partner: Partner) => partner.project.name,
@@ -179,21 +172,21 @@ const PartnerTable: FC<Props> = ({filter}) => {
         {
             id: 'partner_costs_in_year',
             name: 'Partner Costs in Year',
-            selector: (partner: Partner) => partner.latestVersionTotalCostsInYear,
-            format: (partner: Partner) => <CostsFormat value={partner.latestVersionTotalCostsInYear}/>,
+            selector: (partner: Partner) => partner.latestVersionCostsInYear,
+            format: (partner: Partner) => <CostsFormat value={partner.latestVersionCostsInYear}/>,
             sortable: true,
             reorder: true,
             omit: !hasYearFilter,
-            sortField: 'partner.latestVersionTotalCostsInYear',
+            sortField: 'partner.latestVersionCostsInYear',
         },
         {
             id: 'partner_effort_in_year',
             name: 'Partner Effort in Year',
-            selector: (partner: Partner) => partner.latestVersionTotalEffortInYear,
-            format: (partner: Partner) => <EffortFormat value={partner.latestVersionTotalEffortInYear}/>,
+            selector: (partner: Partner) => partner.latestVersionEffortInYear,
+            format: (partner: Partner) => <EffortFormat value={partner.latestVersionEffortInYear}/>,
             sortable: true,
             omit: !hasYearFilter,
-            sortField: 'partner.latestVersionTotalEffortInYear',
+            sortField: 'partner.latestVersionEffortInYear',
         },
     ];
 

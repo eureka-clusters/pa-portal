@@ -25,22 +25,19 @@ export default function Organisation(props: Props) {
         case apiStates.SUCCESS:
             return (
                 <React.Fragment>
-                    {/* <p>Debug:</p><PrintObject value={organisation} /> */}
                     <BreadcrumbTree current="organisation" data={organisation} linkCurrent={false}/>
 
                     <h1>{organisation.name}</h1>
 
                     <dl className="row">
 
-                        <dt className="col-sm-3">Organisation:</dt>
-                        <dd className="col-sm-9"><Link
-                            to={`/organisation/${organisation.id}/${organisation.name}`}>{organisation.name}</Link>
-                        </dd>
+                        <dt className="col-sm-3 text-end">Organisation:</dt>
+                        <dd className="col-sm-9">{organisation.name}</dd>
 
-                        <dt className="col-sm-3">Type:</dt>
+                        <dt className="col-sm-3 text-end">Type:</dt>
                         <dd className="col-sm-9">{organisation.type.type}</dd>
 
-                        <dt className="col-sm-3">Country:</dt>
+                        <dt className="col-sm-3 text-end">Country:</dt>
                         <dd className="col-sm-9">{organisation.country.country}</dd>
 
                     </dl>
