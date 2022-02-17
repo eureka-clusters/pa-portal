@@ -1,24 +1,22 @@
 import React, { useRef, useCallback } from 'react'
-import { useApi, apiStates } from 'hooks/api/useApi';
+import { useApi, apiStates, iApiError  } from 'hooks/api/useApi';
 import { Organisation } from "interface/organisation";
 
 export { ApiError, apiStates } from 'hooks/api/useApi';
 
-
-
-interface Response {
-    _embedded: {
-        organisations: Array<Organisation>
-    }
-    page_count: number
-    page_size: number
-    total_items: number
-    page: number
-}
+// interface Response {
+//     _embedded: {
+//         organisations: Array<Organisation>
+//     }
+//     page_count: number
+//     page_size: number
+//     total_items: number
+//     page: number
+// }
 
 interface State {
     state: string,
-    error?: string,
+    error?: iApiError,
     organisations: Array<Organisation> | undefined,
     pageCount?: number,
     pageSize?: number,
@@ -59,7 +57,6 @@ export function useOrganisations(queryParameter: Props = {  filter: '', page: de
 
     const [hookState, setHookState] = React.useState<State>({
         state: apiStates.LOADING,
-        error: '',
         organisations: undefined
     });
 
@@ -112,7 +109,7 @@ export function useOrganisations(queryParameter: Props = {  filter: '', page: de
         const setPartData = (partialData: {
             state: string,
             organisations?: Array<Organisation>,
-            error?: string,
+            error?: iApiError,
             pageCount?: number,
             pageSize?: number,
             totalItems?: number,

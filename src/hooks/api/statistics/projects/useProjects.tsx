@@ -1,5 +1,5 @@
 import React, { useRef, useCallback } from 'react'
-import { useApi, apiStates } from 'hooks/api/useApi';
+import { useApi, apiStates, iApiError } from 'hooks/api/useApi';
 import { Project } from "interface/project";
 
 export { ApiError, apiStates } from 'hooks/api/useApi';
@@ -13,10 +13,9 @@ export { ApiError, apiStates } from 'hooks/api/useApi';
 //     total_items: number
 //     page: number
 // }
-
 interface State {
     state: string,
-    error?: string,
+    error?: iApiError,
     projects: Array<Project> | undefined,
     pageCount?: number,
     pageSize?: number,
@@ -38,17 +37,14 @@ const defaultProps = {
 }
 
 
-
 export function useProjects(queryParameter: Props = { filter: '', page: defaultProps.page, pageSize: defaultProps.pageSize }, requestOptions = {}) {
 
-    // const filter = queryParameter.filter;
     const fetchData = useApi('/statistics/results/project', queryParameter, requestOptions);
     
     const mountedRef = useRef(true);
 
     const [hookState, setHookState] = React.useState<State>({
         state: apiStates.LOADING,
-        error: '',
         projects: undefined
     });
 
@@ -56,7 +52,7 @@ export function useProjects(queryParameter: Props = { filter: '', page: defaultP
         const setPartData = (partialData: {
             state: string,
             projects?: Array<Project>,
-            error?: string,
+            error?: iApiError,
             pageCount?: number,
             pageSize?: number,
             totalItems?: number,
@@ -139,14 +135,12 @@ export function useProjects(queryParameter: Props = { filter: '', page: defaultP
         if (queryParameter.filter) {
             const hash = atob(queryParameter.filter);
             const newFilter = JSON.parse(hash);
-            console.log(['filter test', newFilter]);
         }
 
         load(queryParameter, requestOptions);
 
         // important unload of unmounted component
         return () => {
-            console.log('unload in useProject');
             mountedRef.current = false
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps

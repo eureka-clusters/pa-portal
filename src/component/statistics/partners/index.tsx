@@ -19,7 +19,7 @@ export default function PartnerStatistics(props: Props) {
         country: [],
         organisation_type: [],
         project_status: [],
-        primary_cluster: [],
+        clusters: [],
         programme_call: [],
         year: [],
     };

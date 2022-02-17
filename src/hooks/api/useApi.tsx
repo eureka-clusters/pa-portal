@@ -1,14 +1,15 @@
-import { useRef, useCallback} from 'react'
+import { useRef, useCallback, FC} from 'react'
 import Config from 'constants/config'
 import {useAuth} from "context/user-context";
 import _ from 'lodash';
 import reactStringReplace from 'react-string-replace';
-import { collapseTextChangeRangesAcrossMultipleVersions } from 'typescript';
+import {iApiError} from 'hooks/api/interfaces';
+export type { iApiError }
+export { ApiError } from 'hooks/api/api-error';
 
 export const getServerUri = () => {
     return Config.SERVER_URI;
 };
-export { ApiError } from 'function/api/api-error';
 
 export const apiStates = {
     LOADING: 'LOADING',
@@ -22,7 +23,7 @@ const defaultSettings = {
     parseUrl: false,
 }
 
-export function useApi(url, queryParameterDefault = {}, requestOptionsDefault = {}, settings = { tokenMethod: defaultSettings.tokenMethod, tokenRequired: defaultSettings.tokenRequired, parseUrl: defaultSettings.parseUrl}) {
+export function useApi(url: string, queryParameterDefault = {}, requestOptionsDefault = {}, settings = { tokenMethod: defaultSettings.tokenMethod, tokenRequired: defaultSettings.tokenRequired, parseUrl: defaultSettings.parseUrl}) {
 
     const mountedRef = useRef(true);
     const auth = useAuth();
@@ -30,9 +31,6 @@ export function useApi(url, queryParameterDefault = {}, requestOptionsDefault = 
     const queryParameterRef = useRef(queryParameterDefault);
     const requestOptionsRef = useRef(requestOptionsDefault);
     
-
-    // const jwtToken = auth.getJwtToken();
-
     const call = useCallback(async (queryParameter, requestOptions) => {
 
         const defaultOptions = {
@@ -40,10 +38,13 @@ export function useApi(url, queryParameterDefault = {}, requestOptionsDefault = 
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
+                'Authorization':'',
             }
         }
 
-        const substituteUrl = (str, data) => {
+        // const substituteUrl = (str, data) => {
+        const substituteUrl = (str: string, data: {}) => {
+
             const reg = /\{([a-z|A-Z|0-9|_|.]+)\}/g;
 
             // version which works with child objects like {organisation.name}
@@ -54,7 +55,9 @@ export function useApi(url, queryParameterDefault = {}, requestOptionsDefault = 
             return output.join('');
         }
 
-        function fetchFromObject(obj, prop) {
+        // function fetchFromObject(obj, prop) {
+        // function fetchFromObject(obj: { [x: string]: any; }, prop: string) {
+        function fetchFromObject(obj: any, prop: string):any {
             if (typeof obj === 'undefined') {
                 return false;
             }
@@ -68,7 +71,7 @@ export function useApi(url, queryParameterDefault = {}, requestOptionsDefault = 
             return return_value;
         }
 
-        function updateOptions(mergeOptions) {
+        function updateOptions(mergeOptions:any) {
             switch (settings.tokenMethod) {
                 case 'jwt':
                 default:
@@ -126,29 +129,25 @@ export function useApi(url, queryParameterDefault = {}, requestOptionsDefault = 
             const serverUri = getServerUri();
 
             // add api to the base server url
-            const requestUrl = serverUri + '/api' + url;
-
-            // add query parameters to the url
-            let QueryUrl = new URL(requestUrl);
+            let requestUrl = serverUri + '/api' + url;
 
             if (settings.parseUrl === true && requestUrl.includes('{') && queryParameterRef !== undefined) {
                 // url should be parsed to add the parameters directly
                 // each parameter found will be replaced and removed from queryParameterRef so they aren't attached 2 times.
-                const parsedUrl = substituteUrl(requestUrl, queryParameterRef.current);
-                QueryUrl = new URL(parsedUrl);
-            } 
+                requestUrl = substituteUrl(requestUrl, queryParameterRef.current);
+            }
 
             if (queryParameterRef !== undefined) {
-                console.log('add query params to the url', queryParameterRef.current);
-                QueryUrl.search = new URLSearchParams(queryParameterRef.current).toString();
+                requestUrl += '?' + new URLSearchParams(queryParameterRef.current).toString();
             }
-            console.log(['QueryUrl.search', QueryUrl.search]);
-            
+
+            // console.log(['requestUrl', requestUrl]);
+
+            //create Request object
+            const request = new Request(requestUrl, options);
 
             //Making the request
-            const response = await fetch(QueryUrl, {
-                ...options,
-            });
+            const response = await fetch(request);
 
             // console.log(['response', response]);
             const result = await response.json(); // parsing the response
@@ -158,8 +157,6 @@ export function useApi(url, queryParameterDefault = {}, requestOptionsDefault = 
             }
 
             // error handling
-            // console.error('error on request result =', result);
-
             const responseError = {
                 type: 'Error',
                 message: result.message || result.detail || 'Something went wrong',

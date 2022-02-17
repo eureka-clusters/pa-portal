@@ -19,16 +19,14 @@ export function useMeCompact() {
         if (!mountedRef.current) return null
         setState({ isLoading: true })
         try {
-            if (!mountedRef.current) return null
-
             // await __delay__(3000);
             const data = await fetchData()
-            // console.log(['data', data]);
+            
+            if (!mountedRef.current) return null
             setState({ isSuccess: true, data })
         } catch (error) {
-            if (!mountedRef.current) return null
-
             // console.log('error catched');
+            if (!mountedRef.current) return null
             setState({ isError: true, error })
         }
     }
