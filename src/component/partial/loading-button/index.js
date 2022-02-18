@@ -1,11 +1,12 @@
 import React from "react";
 import { Button } from "react-bootstrap";
 
-export default function LoadingButton({ isLoading, children, ...props }) {
+export default function LoadingButton({ isLoading, loadingText ='Loading...',  children, ...props }) {
     /* showLoader is used to stay in the "isLoading state" a bit longer to avoid loading flashes
      if the loading state is too short. */
     const [showLoader, setShowLoader] = React.useState(false);
 
+    
     React.useEffect(() => {
         if (isLoading) {
             setShowLoader(true);
@@ -58,7 +59,7 @@ export default function LoadingButton({ isLoading, children, ...props }) {
             {showLoader ? (
                 <>
                     <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                    &nbsp; Loading...
+                    &nbsp; {loadingText}
                 </>
             ) : (
                 <>

@@ -235,6 +235,7 @@ const ProjectTable: FC<Props> = ({ filter }) => {
                     <div className="datatable-download">
                         <LoadingButton
                             isLoading={isExportLoading}
+                            loadingText='Exporting...'
                             onClick={() => setIsExportButtonLoading(true)}
                         >
                             Export to Excel
