@@ -8,5 +8,11 @@ export function JSON_stringify(s: string, emit_unicode: boolean) {
 }
 
 export const getFilter = (filter: string) => {
-    return btoa(JSON_stringify(filter, false));
+    return Buffer.from(JSON_stringify(filter, false)).toString('base64');
+    // return btoa(JSON_stringify(filter, false));
+}
+
+export const fromFilter = (filter:string) => {
+    return Buffer.from(filter, 'base64').toString('ascii');
+    // return atob(filter);
 }

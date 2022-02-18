@@ -1,6 +1,7 @@
 import React, { useRef, useCallback } from 'react'
 import { useApi, apiStates, iApiError } from 'hooks/api/useApi';
 import { Project } from "interface/project";
+import { fromFilter } from 'function/api/filter-functions';
 
 export { ApiError, apiStates } from 'hooks/api/useApi';
 
@@ -133,7 +134,7 @@ export function useProjects(queryParameter: Props = { filter: '', page: defaultP
         mountedRef.current = true;
 
         if (queryParameter.filter) {
-            const hash = atob(queryParameter.filter);
+            const hash = fromFilter(queryParameter.filter);
             const newFilter = JSON.parse(hash);
         }
 

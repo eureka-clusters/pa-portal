@@ -1,7 +1,7 @@
 import {useEffect} from 'react';
 // import {useEffect, useState} from 'react';
 import useState from 'react-usestateref'; // we need the useState with the .current href
-import {getFilter} from 'function/api/index';
+import {getFilter, fromFilter} from 'function/api/filter-functions';
 
 
 //For now quite impossible to convert to TS as all params and objects are everywhere
@@ -10,7 +10,7 @@ function TableFilter({props, defaultFilter}) {
 
     const getFilterFromHash = (setFilterMethod, useAsFilter = false) => {
         if (props.location.hash) {
-            const hash = atob(props.location.hash.substring(1));
+            const hash = fromFilter(props.location.hash.substring(1));
             const newFilter = JSON.parse(hash);
             // console.log(['filter from hash', newFilter]);
             if (useAsFilter && typeof setFilterMethod == "function") {
