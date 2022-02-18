@@ -6,8 +6,7 @@ import DataTable from 'component/database-table/index';
 import { CostsFormat, EffortFormat } from 'function/utils';
 
 import { getFilter } from 'function/api';
-import { useProjects, apiStates, ApiError } from 'hooks/api/statistics/projects/useProjects'; // new api
-
+import { useProjects, apiStates, ApiError } from 'hooks/api/statistics/projects/useProjects';
 
 import {Project} from "interface/project";
 import useState from 'react-usestateref';
@@ -35,10 +34,8 @@ const ProjectTable: FC<Props> = ({ filter }) => {
     // store the current page (needed for handleSort)
     const [currentPage, setCurrentPage] = useState(1); // default current page
 
-    // const { state, error, projects, load, pageCount, pageSize, page, totalItems } = GetResults({ filter: getFilter(filter), page: 1, pageSize: perPage }); // old api
-    const { state, error, projects, load, pageCount, pageSize, page, totalItems } = useProjects({ filter: getFilter(filter), page: 1, pageSize: perPage }); // new api
-
-
+    const { state, error, projects, load, pageCount, pageSize, page, totalItems } = useProjects({filter: getFilter(filter), page: 1, pageSize: perPage, sort: sort, order: order});
+    
     const [isExportLoading, setIsExportButtonLoading] = useState(false);
     
 
