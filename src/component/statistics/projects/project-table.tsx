@@ -87,7 +87,7 @@ const ProjectTable: FC<Props> = ({ filter }) => {
         if (isExportLoading) {
             // start the download
             (async () => {
-                await __delay__(3000); // test delay to test if the download could be started twice
+                // await __delay__(3000); // test delay to test if the download could be started twice
                 await downloadExcel().then(() => {
                     setIsExportButtonLoading(false);
                 });

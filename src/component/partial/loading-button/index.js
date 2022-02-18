@@ -66,6 +66,7 @@ export default function LoadingButton({ isLoading, loadingText ='Loading...',  c
                     {children}
                 </>
             )}
+
         </Button>
     );
 }
