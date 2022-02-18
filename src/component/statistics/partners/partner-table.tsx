@@ -17,6 +17,11 @@ import downloadBase64File from "function/DownloadBase64";
 import { GetServerUri, objToQueryString } from 'function/api';
 import { Button } from "react-bootstrap";
 
+import { __delay__ } from 'function/utils';
+
+
+import LoadingButton from "component/partial/loading-button";
+
 interface Props {
     filter: any
 }
@@ -37,6 +42,10 @@ const PartnerTable: FC<Props> = ({filter}) => {
     // const { state, error, partners, load, pageCount, pageSize, page, totalItems } = GetResults({ filter: getFilter(filter), page: 1, pageSize: perPage, sort:sort, order:order });
     const { state, error, partners, load, pageCount, pageSize, page, totalItems } = usePartners({ filter: getFilter(filter), page: 1, pageSize: perPage }); // new api
 
+    const [isExportLoading, setIsExportButtonLoading] = React.useState(
+        false
+    );
+    
     const handlePageChange = async (newpage: number = 1) => {
         setCurrentPage(newpage);
         setLoading(true);
@@ -78,6 +87,20 @@ const PartnerTable: FC<Props> = ({filter}) => {
         }
     };
 
+    React.useEffect(() => {
+        if (isExportLoading) {
+            // start the download
+            (async () => {
+                // await __delay__(3000); // test delay to test if the download could be started twice
+                await downloadExcel().then(() => {
+                    setIsExportButtonLoading(false);
+                });
+            })();
+        }
+    }, [isExportLoading]);
+
+
+
     const downloadExcel = async () => {
         const serverUri = GetServerUri();
         let jwtToken = auth.getJwtToken();
@@ -97,10 +120,18 @@ const PartnerTable: FC<Props> = ({filter}) => {
                     'Authorization': `Bearer ${jwtToken}`
                 }
             }
-        ).then((res) => res.json()).then((res) => {
+        )
+        .then(res => {
+            if (!res.ok) { throw res }
+            return res.json()
+        })
+        .then((res) => {
             let extension = res.extension;
             let mimetype = res.mimetype;
             downloadBase64File(mimetype, res.download, 'Download' + extension);
+        })
+        .catch((err) => {
+            console.error(err);
         });
     }
 
@@ -221,8 +252,14 @@ const PartnerTable: FC<Props> = ({filter}) => {
                     />
 
                     <div className="datatable-download">
-                        <Button onClick={downloadExcel}>Export to Excel</Button>
+                        <LoadingButton
+                            isLoading={isExportLoading}
+                            onClick={() => setIsExportButtonLoading(true)}
+                        >
+                            Export to Excel
+                        </LoadingButton>
                     </div>
+
                 </React.Fragment>
             );
         default:

@@ -5,9 +5,6 @@ import {Link} from "react-router-dom";
 import DataTable from 'component/database-table/index';
 import { CostsFormat, EffortFormat } from 'function/utils';
 
-// import {ApiError, apiStates, getFilter} from 'function/api';
-// import {GetResults} from "function/api/statistics/project/get-results";  // old api
-
 import { getFilter } from 'function/api';
 import { useProjects, apiStates, ApiError } from 'hooks/api/statistics/projects/useProjects'; // new api
 
@@ -17,7 +14,9 @@ import useState from 'react-usestateref';
 import { useAuth } from "context/user-context";
 import downloadBase64File from "function/DownloadBase64";
 import { GetServerUri, objToQueryString } from 'function/api';
-import { Button } from "react-bootstrap";
+
+import { __delay__ } from 'function/utils';
+import LoadingButton from "component/partial/loading-button";
 
 interface Props {
     filter: any,
@@ -38,6 +37,10 @@ const ProjectTable: FC<Props> = ({ filter }) => {
 
     // const { state, error, projects, load, pageCount, pageSize, page, totalItems } = GetResults({ filter: getFilter(filter), page: 1, pageSize: perPage }); // old api
     const { state, error, projects, load, pageCount, pageSize, page, totalItems } = useProjects({ filter: getFilter(filter), page: 1, pageSize: perPage }); // new api
+
+
+    const [isExportLoading, setIsExportButtonLoading] = useState(false);
+    
 
     const handlePageChange = async (newpage: number = 1) => {
         setCurrentPage(newpage);
@@ -80,9 +83,21 @@ const ProjectTable: FC<Props> = ({ filter }) => {
         }
     };
 
+    React.useEffect(() => {
+        if (isExportLoading) {
+            // start the download
+            (async () => {
+                await __delay__(3000); // test delay to test if the download could be started twice
+                await downloadExcel().then(() => {
+                    setIsExportButtonLoading(false);
+                });
+            })();
+        }
+    }, [isExportLoading]);
+
+
     const downloadExcel = async () => {
         var serverUri = GetServerUri();
-        
         let jwtToken = auth.getJwtToken();
 
         const queryString = objToQueryString({
@@ -100,10 +115,18 @@ const ProjectTable: FC<Props> = ({ filter }) => {
                     'Authorization': `Bearer ${jwtToken}`
                 }
             }
-        ).then((res) => res.json()).then((res) => {
+        )
+        .then(res => {
+            if (!res.ok) { throw res }
+            return res.json() 
+        })
+        .then((res) => {
             let extension = res.extension;
             let mimetype = res.mimetype;
             downloadBase64File(mimetype, res.download, 'Download' + extension);
+        })
+        .catch((err) => {
+            console.error(err);
         });
     }
 
@@ -209,10 +232,15 @@ const ProjectTable: FC<Props> = ({ filter }) => {
                         onSort={handleSort}
                     />
 
-
                     <div className="datatable-download">
-                        <Button onClick={downloadExcel}>Export to Excel</Button>
+                        <LoadingButton
+                            isLoading={isExportLoading}
+                            onClick={() => setIsExportButtonLoading(true)}
+                        >
+                            Export to Excel
+                        </LoadingButton>
                     </div>
+
                 </React.Fragment>
             );
         default:
