@@ -85,7 +85,6 @@ const PartnerTable: FC<Props> = ({filter}) => {
         if (isExportLoading) {
             // start the download
             (async () => {
-                // await __delay__(3000); // test delay to test if the download could be started twice
                 await downloadExcel().then(() => {
                     setIsExportButtonLoading(false);
                 });
@@ -105,7 +104,7 @@ const PartnerTable: FC<Props> = ({filter}) => {
             order: order,
         });
 
-        fetch(serverUri + '/api/statistics/results/partner/download/csv?' + queryString,
+        await fetch(serverUri + '/api/statistics/results/partner/download/csv?' + queryString,
             {
                 method: 'GET',
                 headers: {
@@ -225,6 +224,9 @@ const PartnerTable: FC<Props> = ({filter}) => {
                     <h2>Partners</h2>
                     {/* <pre className='debug'>{JSON.stringify(partners.length, undefined, 2)}</pre> */}
                     {/* <pre className='debug'>{JSON.stringify(partners, undefined, 2)}</pre> */}
+                    {/* <pre className='debug'>{JSON.stringify(getFilter(filter), undefined, 2)}</pre> */}
+                    {/* <pre className='debug'>{JSON.stringify(filter, undefined, 2)}</pre> */}
+                    
                     <DataTable
                         // title="Partners"
                         keyField={hasYearFilter ? ("keyfield"): ("id")}

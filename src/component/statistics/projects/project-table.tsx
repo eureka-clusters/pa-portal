@@ -103,7 +103,7 @@ const ProjectTable: FC<Props> = ({ filter }) => {
             order: order,
         });
 
-        fetch(serverUri + '/api/statistics/results/project/download/csv?' + queryString,
+        await fetch(serverUri + '/api/statistics/results/project/download/csv?' + queryString,
             {
                 method: 'GET',
                 headers: {
