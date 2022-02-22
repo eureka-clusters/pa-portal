@@ -11,6 +11,7 @@ export const CostsFormat: FC<Props> = (props) => {
             value={props.value}
             thousandSeparator={' '}
             prefix={'€ '}
+            decimalScale={2}
             displayType={'text'}
         />
     )
