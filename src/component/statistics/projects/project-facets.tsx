@@ -1,11 +1,11 @@
-import React, {FC} from 'react';
+import {FC} from 'react';
 import {Form} from "react-bootstrap";
 import BootstrapSwitchButton from "bootstrap-switch-button-react";
-
-// import {ApiError, apiStates, GetFacets, getFilter} from "function/api/statistics/project/get-facets";  // old api
-
 import { getFilter } from 'function/api';
-import { useFacets, apiStates, ApiError } from 'hooks/api/statistics/projects/useFacets'; // new api
+import { useFacets, apiStates, ApiError } from 'hooks/api/statistics/projects/useFacets';
+import { default as ReactSelect } from "react-select";
+// import { components } from "react-select"; // required if checkboxes should be added in react-select
+
 
 /**
  * @TODO get rid fo the any here
@@ -20,11 +20,9 @@ interface Props {
 }
 
 
-// const ProjectFacets = (filter: any, setFilter: any, updateFilter: any, updateResults: any, updateHash: any) => {
 const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResults, updateHash}) => {
 
-    // const { state, error, facets } = GetFacets(getFilter(filter)); // old api
-    const { state, error, facets } = useFacets({ filter: getFilter(filter)}); // new api
+    const { state, error, facets } = useFacets({ filter: getFilter(filter)});
 
     const updateCountryMethod = (event: any) => {
         var updatedValues = {
@@ -49,6 +47,23 @@ const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
         updateResults();
         updateHash();
     }
+    
+
+    // needed for checkboxes in the react-select component
+    // const Option = (props:any) => {
+    //     return (
+    //         <div>
+    //             <components.Option {...props}>
+    //                 <input
+    //                     type="checkbox"
+    //                     checked={props.isSelected}
+    //                     onChange={() => null}
+    //                 />{" "}
+    //                 <label>{props.label}</label>
+    //             </components.Option>
+    //         </div>
+    //     );
+    // };
 
     switch (state) {
         case apiStates.ERROR:
@@ -72,8 +87,43 @@ const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
                                                offstyle={'secondary'}
                                                onChange={updateCountryMethod}
                         />
+                        
+                        <div style={{ margin: '5px 0px'}}>
+                        <ReactSelect
+                            isClearable={false}
+                            isMulti
+                            className="react-select"
+                            classNamePrefix="select"
+                            options={facets.countries}
+                            // components needs the complete filter objects therefore filter these by the filter country array
+                            value={
+                                facets.countries.filter(function (itm) {
+                                    return filter['country'].indexOf(itm.name) > -1;
+                                })
+                            }
+                            getOptionLabel={(option) => `${option.name} (${option.amount})`}
+                            getOptionValue={(option) => `${option['name']}`}
+                            // add the checkboxes
+                            // components={{
+                            //     Option
+                            // }}
+                            // hideSelectedOptions={false}
+                            closeMenuOnSelect={false}
+                            onChange={(choices: any) => {
+                                let updatedValues: { [key: string]: Array<string> } = {};
+                                // get the names of the selected choices
+                                updatedValues['country'] = choices.map((choice: { name: string; amount: number }) => choice.name);
+                                setFilter((prevState: any) => ({
+                                    ...prevState, ...updatedValues
+                                }))
+                                updateHash();
+                            }}
+                        />
+                        </div>
 
-                        {facets.countries && facets.countries.map((country, i) => (
+
+                        {/* // old checkbox filter */}
+                        {/* {facets.countries && facets.countries.map((country, i) => (
                             <div key={i}>
                                 <Form.Check type={'checkbox'} id={`check-country-${i}`}>
                                     <Form.Check.Input
@@ -88,7 +138,7 @@ const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
                                     <Form.Check.Label>{country['name']} ({country['amount']})</Form.Check.Label>
                                 </Form.Check>
                             </div>
-                        ))}
+                        ))} */}
                     </fieldset>
 
                     <fieldset>
@@ -143,7 +193,41 @@ const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
                     <fieldset>
                         <legend><small>Programme Call</small></legend>
 
-                        {facets.programmeCalls && facets.programmeCalls.map((programmeCall, i) => (
+                        <div style={{ margin: '5px 0px' }}>
+                            <ReactSelect
+                                isClearable={false}
+                                isMulti
+                                className="react-select"
+                                classNamePrefix="select"
+                                options={facets.programmeCalls}
+                                // components needs the complete filter objects therefore filter these by the filter country array
+                                value={
+                                    facets.programmeCalls.filter(function (itm) {
+                                        return filter['programme_call'].indexOf(itm.name) > -1;
+                                    })
+                                }
+                                getOptionLabel={(option) => `${option.name} (${option.amount})`}
+                                getOptionValue={(option) => `${option['name']}`}
+                                // add the checkboxes 
+                                // components={{
+                                //     Option
+                                // }}
+                                // hideSelectedOptions={false}
+                                closeMenuOnSelect={false}
+                                onChange={(choices: any) => {
+                                    let updatedValues: { [key: string]: Array<string> } = {};
+                                    // get the names of the selected choices
+                                    updatedValues['programme_call'] = choices.map((choice: { name: string; amount: number }) => choice.name);
+                                    setFilter((prevState: any) => ({
+                                        ...prevState, ...updatedValues
+                                    }))
+                                    updateHash();
+                                }}
+                            />
+                        </div>
+
+                        {/* old checkbox filters */}
+                        {/* {facets.programmeCalls && facets.programmeCalls.map((programmeCall, i) => (
                             <div key={i}>
                                 <Form.Check type={'checkbox'} id={`check-project-programmecall-${i}`}>
                                     <Form.Check.Input
@@ -158,12 +242,16 @@ const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
                                     <Form.Check.Label>{programmeCall['name']} ({programmeCall['amount']})</Form.Check.Label>
                                 </Form.Check>
                             </div>
-                        ))}
+                        ))} */}
                     </fieldset>
 
                     <fieldset>
                         <legend><small>Clusters</small></legend>
 
+
+                        
+
+                        
                         {facets.clusters && facets.clusters.map((cluster, i) => (
                             <div key={i}>
                                 <Form.Check type={'checkbox'} id={`check-cluster-${i}`}>

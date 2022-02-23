@@ -1,10 +1,8 @@
-import React, {FC} from 'react';
+import {FC} from 'react';
 import {Form} from "react-bootstrap";
-
-// import {ApiError, apiStates, getFilter} from "function/api";
-// import { GetFacets } from "function/api/statistics/partner/get-facets"; // old api
 import {getFilter} from 'function/api';
-import {ApiError, apiStates, useFacets} from 'hooks/api/statistics/partners/useFacets'; // new api
+import {ApiError, apiStates, useFacets} from 'hooks/api/statistics/partners/useFacets';
+import { default as ReactSelect } from "react-select";
 
 interface Props {
     filter: any,
@@ -14,11 +12,9 @@ interface Props {
     updateHash: any
 }
 
-// const PartnerFacets = (filter: any, setFilter: any, updateFilter: any, updateResults: any, updateHash: any) => {
 const PartnerFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResults, updateHash}) => {
 
-    // const {state, error, facets} = GetFacets(getFilter(filter)); // old api
-    const {state, error, facets} = useFacets({filter: getFilter(filter)}); // new api
+    const {state, error, facets} = useFacets({filter: getFilter(filter)});
 
     switch (state) {
         case apiStates.ERROR:
@@ -29,7 +25,41 @@ const PartnerFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
                 <>
                     <fieldset>
                         <legend><small>Countries</small></legend>
-                        {facets.countries && facets.countries.map((country, i) => (
+
+                        <div style={{ margin: '5px 0px' }}>
+                            <ReactSelect
+                                isClearable={false}
+                                isMulti
+                                className="react-select"
+                                classNamePrefix="select"
+                                options={facets.countries}
+                                // components needs the complete filter objects therefore filter these by the filter country array
+                                value={
+                                    facets.countries.filter(function (itm) {
+                                        return filter['country'].indexOf(itm.name) > -1;
+                                    })
+                                }
+                                getOptionLabel={(option) => `${option.name} (${option.amount})`}
+                                getOptionValue={(option) => `${option['name']}`}
+                                // add the checkboxes
+                                // components={{
+                                //     Option
+                                // }}
+                                // hideSelectedOptions={false}
+                                closeMenuOnSelect={false}
+                                onChange={(choices: any) => {
+                                    let updatedValues: { [key: string]: Array<string> } = {};
+                                    // get the names of the selected choices
+                                    updatedValues['country'] = choices.map((choice: { name: string; amount: number }) => choice.name);
+                                    setFilter((prevState: any) => ({
+                                        ...prevState, ...updatedValues
+                                    }))
+                                    updateHash();
+                                }}
+                            />
+                        </div>
+
+                        {/* {facets.countries && facets.countries.map((country, i) => (
                             <div key={i}>
                                 <Form.Check type={'checkbox'} id={`check-country-${i}`}>
                                     <Form.Check.Input
@@ -44,7 +74,7 @@ const PartnerFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
                                     <Form.Check.Label>{country['name']} ({country['amount']})</Form.Check.Label>
                                 </Form.Check>
                             </div>
-                        ))}
+                        ))} */}
                     </fieldset>
 
                     <fieldset>
@@ -92,7 +122,39 @@ const PartnerFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
                     <fieldset>
                         <legend><small>Programme Call</small></legend>
 
-                        {facets.programmeCalls && facets.programmeCalls.map((programmeCall, i) => (
+                        <div style={{ margin: '5px 0px' }}>
+                            <ReactSelect
+                                isClearable={false}
+                                isMulti
+                                className="react-select"
+                                classNamePrefix="select"
+                                options={facets.programmeCalls}
+                                // components needs the complete filter objects therefore filter these by the filter country array
+                                value={
+                                    facets.programmeCalls.filter(function (itm) {
+                                        return filter['programme_call'].indexOf(itm.name) > -1;
+                                    })
+                                }
+                                getOptionLabel={(option) => `${option.name} (${option.amount})`}
+                                getOptionValue={(option) => `${option['name']}`}
+                                // add the checkboxes 
+                                // components={{
+                                //     Option
+                                // }}
+                                // hideSelectedOptions={false}
+                                closeMenuOnSelect={false}
+                                onChange={(choices: any) => {
+                                    let updatedValues: { [key: string]: Array<string> } = {};
+                                    // get the names of the selected choices
+                                    updatedValues['programme_call'] = choices.map((choice: { name: string; amount: number }) => choice.name);
+                                    setFilter((prevState: any) => ({
+                                        ...prevState, ...updatedValues
+                                    }))
+                                    updateHash();
+                                }}
+                            />
+                        </div>
+                        {/* {facets.programmeCalls && facets.programmeCalls.map((programmeCall, i) => (
                             <div key={i}>
                                 <Form.Check type={'checkbox'} id={`check-project-programmecall-${i}`}>
                                     <Form.Check.Input
@@ -107,7 +169,7 @@ const PartnerFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
                                     <Form.Check.Label>{programmeCall['name']} ({programmeCall['amount']})</Form.Check.Label>
                                 </Form.Check>
                             </div>
-                        ))}
+                        ))} */}
                     </fieldset>
 
                     <fieldset>
