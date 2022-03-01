@@ -2,7 +2,7 @@ import {FC} from 'react';
 import {Form} from "react-bootstrap";
 import {getFilter} from 'function/api';
 import {ApiError, apiStates, useFacets} from 'hooks/api/statistics/partners/useFacets';
-import { default as ReactSelect } from "react-select";
+import { default as ReactSelect, OptionsOrGroups } from "react-select";
 
 interface Props {
     filter: any,
@@ -12,6 +12,7 @@ interface Props {
     updateHash: any
 }
 
+
 const PartnerFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResults, updateHash}) => {
 
     const {state, error, facets} = useFacets({filter: getFilter(filter)});
@@ -20,6 +21,22 @@ const PartnerFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
         case apiStates.ERROR:
             return <ApiError error={error}/>;
         case apiStates.SUCCESS:
+
+
+            // don't know how to fix typescipt issue...
+            // var yearsFilterOptions = [];
+            // facets.years.forEach(function (element: any) {
+            //     yearsFilterOptions.push({ label: element, value: element })
+            // });
+
+            // this works
+            const yearsFilterOptions = facets.years.map((year, index) => {
+                return {
+                    label: year,
+                    value: year,
+                    key: index
+                }
+            });
 
             return (
                 <>
@@ -196,7 +213,35 @@ const PartnerFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
                     <fieldset>
                         <legend><small>Years</small></legend>
 
-                        {facets.years && facets.years.map((year, i) => (
+                        <div style={{ margin: '5px 0px' }}>
+                            <ReactSelect
+                                isClearable={false}
+                                isMulti
+                                className="react-select"
+                                classNamePrefix="select"
+                                options={yearsFilterOptions}
+                                value={yearsFilterOptions.filter(function (option) {
+                                    return filter['year'].indexOf(option.value) > -1;
+                                })}
+                                // add the checkboxes 
+                                // components={{
+                                //     Option
+                                // }}
+                                // hideSelectedOptions={false}
+                                closeMenuOnSelect={false}
+                                onChange={(choices: any) => {
+                                    let updatedValues: { [key: string]: Array<string> } = {};
+                                    // get the names of the selected choices
+                                    updatedValues['year'] = choices.map((choice: { label: string; value: string; key: number }) => choice.value);
+                                    setFilter((prevState: any) => ({
+                                        ...prevState, ...updatedValues
+                                    }))
+                                    updateHash();
+                                }}
+                            />
+                        </div>
+
+                        {/* {facets.years && facets.years.map((year, i) => (
                             <div key={i}>
                                 <Form.Check type={'checkbox'} id={`check-year-${i}`}>
                                     <Form.Check.Input
@@ -211,7 +256,7 @@ const PartnerFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
                                     <Form.Check.Label>{year}</Form.Check.Label>
                                 </Form.Check>
                             </div>
-                        ))}
+                        ))} */}
                     </fieldset>
 
 
