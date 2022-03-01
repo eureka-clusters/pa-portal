@@ -101,7 +101,8 @@ const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
                                     return filter['country'].indexOf(itm.name) > -1;
                                 })
                             }
-                            getOptionLabel={(option) => `${option.name} (${option.amount})`}
+                            // getOptionLabel={(option) => `${option.name} (${option.amount})`}
+                            getOptionLabel={(option) => `${option.name}`}
                             getOptionValue={(option) => `${option['name']}`}
                             // add the checkboxes
                             // components={{
@@ -163,7 +164,8 @@ const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
                                             filter['organisation_type'].indexOf(organisationType['name']) > -1
                                         }
                                     />
-                                    <Form.Check.Label>{organisationType['name']} ({organisationType['amount']})</Form.Check.Label>
+                                    {/* <Form.Check.Label>{organisationType['name']} ({organisationType['amount']})</Form.Check.Label> */}
+                                    <Form.Check.Label>{organisationType['name']}</Form.Check.Label>
                                 </Form.Check>
                             </div>
                         ))}
@@ -184,7 +186,8 @@ const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
                                             filter['project_status'].indexOf(projectStatus['name']) > -1
                                         }
                                     />
-                                    <Form.Check.Label>{projectStatus['name']} ({projectStatus['amount']})</Form.Check.Label>
+                                    {/* <Form.Check.Label>{projectStatus['name']} ({projectStatus['amount']})</Form.Check.Label> */}
+                                    <Form.Check.Label>{projectStatus['name']}</Form.Check.Label>
                                 </Form.Check>
                             </div>
                         ))}
@@ -206,7 +209,8 @@ const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
                                         return filter['programme_call'].indexOf(itm.name) > -1;
                                     })
                                 }
-                                getOptionLabel={(option) => `${option.name} (${option.amount})`}
+                                // getOptionLabel={(option) => `${option.name} (${option.amount})`}
+                                getOptionLabel={(option) => `${option.name}`}
                                 getOptionValue={(option) => `${option['name']}`}
                                 // add the checkboxes 
                                 // components={{
@@ -264,7 +268,8 @@ const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
                                             filter['clusters'].indexOf(cluster['name']) > -1
                                         }
                                     />
-                                    <Form.Check.Label>{cluster['name']} ({cluster['amount']})</Form.Check.Label>
+                                    {/* <Form.Check.Label>{cluster['name']} ({cluster['amount']})</Form.Check.Label> */}
+                                    <Form.Check.Label>{cluster['name']}</Form.Check.Label>
                                 </Form.Check>
                             </div>
                         ))}
