@@ -133,7 +133,7 @@ const PartnerTable: FC<Props> = ({filter}) => {
 
     const columns = [
         {
-            id: 'project',
+            id: 'partner.project.name',
             name: 'Project',
             selector: (partner: Partner) => partner.project.name,
             format: (partner: Partner) => <Link to={`/project/${partner.project.slug}`}
@@ -142,7 +142,7 @@ const PartnerTable: FC<Props> = ({filter}) => {
             sortField: 'partner.project.name',
         },
         {
-            id: 'partner',
+            id: 'partner.organisation.name',
             name: 'Partner',
             selector: (partner: Partner) => partner.organisation.name,
             format: (partner: Partner) => <Link to={`/partner/${partner.slug}`}
@@ -151,14 +151,14 @@ const PartnerTable: FC<Props> = ({filter}) => {
             sortField: 'partner.organisation.name',
         },
         {
-            id: 'partner_country',
+            id: 'partner.organisation.country.country',
             name: 'Country',
             selector: (partner: Partner) => partner.organisation && partner.organisation.country ? partner.organisation.country.country : '',
             sortable: true,
             sortField: 'partner.organisation.country.country',
         },
         {
-            id: 'type',
+            id: 'partner.organisation.type.type',
             name: 'Type',
             selector: (partner: Partner) => partner.organisation && partner.organisation.type ? partner.organisation.type.type : '',
             sortable: true,
@@ -166,7 +166,7 @@ const PartnerTable: FC<Props> = ({filter}) => {
         },
 
         {
-            id: 'partner_costs',
+            id: 'partner.latestVersionCosts',
             name: 'Partner Costs',
             selector: (partner: Partner) => partner.latestVersionCosts,
             format: (partner: Partner) => <CostsFormat value={partner.latestVersionCosts}/>,
@@ -176,7 +176,7 @@ const PartnerTable: FC<Props> = ({filter}) => {
             sortField: 'partner.latestVersionCosts',
         },
         {
-            id: 'partner_effort',
+            id: 'partner.latestVersionEffort',
             name: 'Partner Effort',
             selector: (partner: Partner) => partner.latestVersionEffort,
             format: (partner: Partner) => <EffortFormat value={partner.latestVersionEffort}/>,
@@ -185,7 +185,7 @@ const PartnerTable: FC<Props> = ({filter}) => {
             sortField: 'partner.latestVersionEffort',
         },
         {
-            id: 'year',
+            id: 'partner.year',
             name: 'Year',
             selector: (partner: Partner) => partner.year,
             sortable: true,
@@ -194,7 +194,7 @@ const PartnerTable: FC<Props> = ({filter}) => {
             sortField: 'partner.year',
         },
         {
-            id: 'partner_costs_in_year',
+            id: 'partner.latestVersionCostsInYear',
             name: 'Partner Costs in Year',
             selector: (partner: Partner) => partner.latestVersionCostsInYear,
             format: (partner: Partner) => <CostsFormat value={partner.latestVersionCostsInYear}/>,
@@ -204,7 +204,7 @@ const PartnerTable: FC<Props> = ({filter}) => {
             sortField: 'partner.latestVersionCostsInYear',
         },
         {
-            id: 'partner_effort_in_year',
+            id: 'partner.latestVersionEffortInYear',
             name: 'Partner Effort in Year',
             selector: (partner: Partner) => partner.latestVersionEffortInYear,
             format: (partner: Partner) => <EffortFormat value={partner.latestVersionEffortInYear}/>,
@@ -234,6 +234,10 @@ const PartnerTable: FC<Props> = ({filter}) => {
                         columns={columns}
                         data={partners}
                         paginationRowsPerPageOptions={[10, 15, 20, 25, 30, 50, 100, 200]}
+
+                        defaultSortFieldId={sort_ref.current}
+                        defaultSortAsc={order_ref.current === 'asc' ? true : false}
+
 
                         progressPending={loading}
                         pagination

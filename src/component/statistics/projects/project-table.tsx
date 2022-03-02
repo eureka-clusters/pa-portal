@@ -28,7 +28,7 @@ const ProjectTable: FC<Props> = ({ filter }) => {
     const [perPage, setPerPage] = useState(30); // default pageSize
     const [loading, setLoading] = useState(false);
 
-    const [sort, setSort, sort_ref] = useState('partner.organisation.name'); // default sort
+    const [sort, setSort, sort_ref] = useState('project.name'); // default sort
     const [order, setOrder, order_ref] = useState('asc'); // default order
 
     // store the current page (needed for handleSort)
@@ -130,14 +130,14 @@ const ProjectTable: FC<Props> = ({ filter }) => {
 
     const columns = [
         {
-            id: 'number',
+            id: 'project.number',
             name: 'Number',
             selector: (project: Project) => project.number,
             sortable: true,
             sortField: 'project.number',
         },
         {
-            id: 'name',
+            id: 'project.name',
             name: 'Name',
             selector: (project: Project) => project.name,
             format: (project: Project) => <Link to={`/project/${project.slug}`}
@@ -146,35 +146,35 @@ const ProjectTable: FC<Props> = ({ filter }) => {
             sortField: 'project.name',
         },
         {
-            id: 'primaryCluster',
+            id: 'project.primaryCluster',
             name: 'Primary Cluster',
             selector: (project: Project) => project.primaryCluster ? project.primaryCluster.name : '',
             sortable: true,
             sortField: 'project.primaryCluster.name',
         },
         {
-            id: 'secondaryCluster',
+            id: 'project.secondaryCluster',
             name: 'Secondary Cluster',
             selector: (project: Project) => project.secondaryCluster ? project.secondaryCluster.name : '',
             sortable: true,
             sortField: 'project.secondaryCluster.name',
         },
         {
-            id: 'status',
+            id: 'project.status.status',
             name: 'Status',
             selector: (project: Project) => project.status ? project.status.status : '',
             sortable: true,
             sortField: 'project.status.status',
         },
         {
-            id: 'latestVersion',
+            id: 'project.latestVersion.type.type',
             name: 'Latest version',
             selector: (project: Project) => project.latestVersion && project.latestVersion.type ? project.latestVersion.type.type : '',
             sortable: true,
             sortField: 'project.latestVersion.type.type',
         },
         {
-            id: 'latestVersionTotalCosts',
+            id: 'project.latestVersionTotalCosts',
             name: 'Total Costs',
             selector: (project: Project) => project.latestVersionTotalCosts,
             format: (project: Project) => <CostsFormat value={project.latestVersionTotalCosts}/>,
@@ -182,7 +182,7 @@ const ProjectTable: FC<Props> = ({ filter }) => {
             sortField: 'project.latestVersionTotalCosts',
         },
         {
-            id: 'latestVersionTotalEffort',
+            id: 'project.latestVersionTotalEffort',
             name: 'Total Effort',
             selector: (project: Project) => project.latestVersionTotalEffort,
             format: (project: Project) => <EffortFormat value={project.latestVersionTotalEffort}/>,
@@ -215,7 +215,7 @@ const ProjectTable: FC<Props> = ({ filter }) => {
                         data={projects}
 
                         defaultSortFieldId={sort_ref.current}
-                        defaultSortAsc={order_ref.current === 'asc' ? false : true}
+                        defaultSortAsc={order_ref.current === 'asc' ? true : false}
 
                         progressPending={loading}
                         pagination
