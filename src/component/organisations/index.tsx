@@ -65,12 +65,12 @@ export default function Organisations() {
 
     const columns = [
         {
-            id: 'partner.id',
+            id: 'organisation.id',
             name: 'Id',
             selector: (organisation: Organisation) => organisation.id,
             sortable: true,
             omit: true,
-            sortField: 'partner.id',
+            sortField: 'organisation.id',
         },
         {
             id: 'organisation.name',
@@ -110,7 +110,7 @@ export default function Organisations() {
                     <h1>Organisations</h1>
                     <DataTable
                         // title="Organisations"
-                        keyField="id"
+                        keyField="organisation.id"
                         columns={columns}
                         data={organisations}
 

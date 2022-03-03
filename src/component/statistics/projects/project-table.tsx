@@ -130,6 +130,13 @@ const ProjectTable: FC<Props> = ({ filter }) => {
 
     const columns = [
         {
+            id: 'project.slug',
+            name: 'slug',
+            selector: (row: Project) => row.slug,
+            sortable: false,
+            omit: true,
+        },
+        {
             id: 'project.number',
             name: 'Number',
             selector: (project: Project) => project.number,
@@ -210,7 +217,7 @@ const ProjectTable: FC<Props> = ({ filter }) => {
                     
                     <DataTable
                         // title="Projects"
-                        keyField="number"
+                        keyField="project.slug"
                         columns={columns}
                         data={projects}
 
