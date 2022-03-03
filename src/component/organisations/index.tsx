@@ -65,7 +65,7 @@ export default function Organisations() {
 
     const columns = [
         {
-            id: 'id',
+            id: 'partner.id',
             name: 'Id',
             selector: (organisation: Organisation) => organisation.id,
             sortable: true,
@@ -73,23 +73,23 @@ export default function Organisations() {
             sortField: 'partner.id',
         },
         {
-            id: 'name',
+            id: 'organisation.name',
             name: 'Organisation',
             selector: (organisation: Organisation) => organisation.name,
             format: (organisation: Organisation) => <Link to={`/organisation/${organisation.slug}`}
                                                           title={organisation.name}>{organisation.name}</Link>,
             sortable: true,
-            sortField: 'organisation.name'
+            sortField: 'organisation.name',
         },
         {
-            id: 'country',
+            id: 'organisation.country.country',
             name: 'Country',
             selector: (organisation: Organisation) => organisation.country ? organisation.country.country : '',
             sortable: true,
             sortField: 'organisation.country.country',
         },
         {
-            id: 'type',
+            id: 'organisation.type.type',
             name: 'Type',
             selector: (organisation: Organisation) => organisation.type ? organisation.type.type : '',
             sortable: true,
@@ -116,7 +116,7 @@ export default function Organisations() {
 
 
                         defaultSortFieldId= {sort_ref.current}
-                        defaultSortAsc={order_ref.current === 'asc'? false: true}
+                        defaultSortAsc={order_ref.current === 'asc'? true: false}
 
                         progressPending={loading}
                         pagination

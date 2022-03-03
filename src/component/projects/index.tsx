@@ -12,7 +12,7 @@ export default function Projects() {
     const [perPage, setPerPage] = React.useState(30); // default pageSize
     const [loading, setLoading] = React.useState(false);
 
-    const [sort, setSort, sort_ref] = useState('partner.organisation.name'); // default sort
+    const [sort, setSort, sort_ref] = useState('project.name'); // default sort
     const [order, setOrder, order_ref] = useState('asc'); // default order
 
     // store the current page (needed for handleSort)
@@ -63,14 +63,19 @@ export default function Projects() {
 
     const columns = [
         {
-            id: 'number',
+            name: '#',
+            cell: (row: any, index: any) => index,
+            grow: 0,
+        },
+        {
+            id: 'project.number',
             name: 'Number',
             selector: (row: Project) => row.number,
             sortable: true,
             sortField: 'project.number',
         },
         {
-            id: 'name',
+            id: 'project.name',
             name: 'Name',
             selector: (row: Project) => row.name,
             format: (row: Project) => <Link to={`/project/${row.slug}`} title={row.name}>{row.name}</Link>,
@@ -78,35 +83,35 @@ export default function Projects() {
             sortField: 'project.name',
         },
         {
-            id: 'primaryCluster',
+            id: 'project.primaryCluster.name',
             name: 'Primary Cluster',
             selector: (row: Project) => row.primaryCluster ? row.primaryCluster.name : '',
             sortable: true,
             sortField: 'project.primaryCluster.name',
         },
         {
-            id: 'secondaryCluster',
+            id: 'project.secondaryCluster.name',
             name: 'Secondary Cluster',
             selector: (row: Project) => row.secondaryCluster ? row.secondaryCluster.name : '',
             sortable: true,
             sortField: 'project.secondaryCluster.name',
         },
         {
-            id: 'status',
+            id: 'project.status.status',
             name: 'Status',
             selector: (row: Project) => row.status ? row.status.status : '',
             sortable: true,
             sortField: 'project.status.status',
         },
         {
-            id: 'latestVersion',
+            id: 'project.latestVersion.type.type',
             name: 'Latest version',
             selector: (row: Project) => row.latestVersion && row.latestVersion.type ? row.latestVersion.type.type : '',
             sortable: true,
             sortField: 'project.latestVersion.type.type',
         },
         {
-            id: 'latestVersionTotalCosts',
+            id: 'project.latestVersionTotalCosts',
             name: 'Total Costs',
             selector: (row: Project) => row.latestVersionTotalCosts,
             format: (row: Project) => <CostsFormat value={row.latestVersionTotalCosts}/>,
@@ -114,7 +119,7 @@ export default function Projects() {
             sortField: 'project.latestVersionTotalCosts',
         },
         {
-            id: 'latestVersionTotalEffort',
+            id: 'project.latestVersionTotalEffort',
             name: 'Total Effort',
             selector: (row: Project) => row.latestVersionTotalEffort,
             format: (row: Project) => <EffortFormat value={row.latestVersionTotalEffort}/>,
@@ -137,6 +142,8 @@ export default function Projects() {
                         keyField="number"
                         columns={columns}
                         data={projects}
+                        defaultSortFieldId={sort_ref.current}
+                        defaultSortAsc={order_ref.current === 'asc' ? true : false}
                         progressPending={loading}
                         pagination
                         paginationServer
