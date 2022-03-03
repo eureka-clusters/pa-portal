@@ -142,7 +142,7 @@ export default function Projects() {
             return (
                 <React.Fragment>
                     <BreadcrumbTree current="projects" data={{}} linkCurrent={false}/>
-                    <pre className='debug'>{JSON.stringify(projects, undefined, 2)}</pre>
+                    {/* <pre className='debug'>{JSON.stringify(projects, undefined, 2)}</pre> */}
                     <h1>Projects</h1>
                     <DataTable
                         // title="Projects"
