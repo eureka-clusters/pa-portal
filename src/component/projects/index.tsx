@@ -62,10 +62,17 @@ export default function Projects() {
     };
 
     const columns = [
+        // {
+        //     name: '#',
+        //     cell: (row: any, index: any) => index,
+        //     grow: 0,
+        // },
         {
-            name: '#',
-            cell: (row: any, index: any) => index,
-            grow: 0,
+            id: 'project.slug',
+            name: 'slug',
+            selector: (row: Project) => row.slug,
+            sortable: false,
+            omit: true,
         },
         {
             id: 'project.number',
@@ -135,11 +142,11 @@ export default function Projects() {
             return (
                 <React.Fragment>
                     <BreadcrumbTree current="projects" data={{}} linkCurrent={false}/>
-                    {/* <pre className='debug'>{JSON.stringify(data, undefined, 2)}</pre> */}
+                    <pre className='debug'>{JSON.stringify(projects, undefined, 2)}</pre>
                     <h1>Projects</h1>
                     <DataTable
                         // title="Projects"
-                        keyField="number"
+                        keyField="project.slug"
                         columns={columns}
                         data={projects}
                         defaultSortFieldId={sort_ref.current}
