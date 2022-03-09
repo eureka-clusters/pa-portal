@@ -61,7 +61,9 @@ const PartnerTable: FC<Props> = ({organisation}) => {
         },
     ];
 
-    const {state, error, partners} = GetPartners(undefined, organisation);
+    const { state, error, partners } = GetPartners({
+        organisation: organisation
+    });
 
     switch (state) {
         case apiStates.ERROR:

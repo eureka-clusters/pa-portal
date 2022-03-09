@@ -21,11 +21,28 @@ interface PartnerState {
     partners: Array<Partner>
 }
 
-// interface Props {
-//     project:?Project
-// }
+interface Props {
+    project?: Project,
+    organisation?: Organisation,
+    filter?: string,
+    page?: number,
+    pageSize?: number,
+    sort?: string,
+    order?: string,
+}
 
-export function GetPartners(project?: Project | undefined, organisation?: Organisation | undefined) {
+// default properties for page and pageSize
+const defaultProps = {
+    page: 1,
+    pageSize: -1,
+    filter: '',
+    project: undefined,
+    organisation: undefined,
+}
+
+
+export const GetPartners = (params: Props) => {
+    params = { ...defaultProps, ...params }
 
     let auth = useAuth();
     const serverUri = GetServerUri();
@@ -37,17 +54,17 @@ export function GetPartners(project?: Project | undefined, organisation?: Organi
         partners: []
     });
 
-    const load = () => {
+    const load = (params: Props) => {
         const setPartData = (partialData: { state: string; partners?: Array<Partner>; error?: string; }) => {
             setHookState(hookState => ({...hookState, ...partialData}))
         }
 
         let url = 'list/partner';
-        if (typeof project !== 'undefined') {
-            url = 'list/partner?project=' + project.slug;
+        if (typeof params.project !== 'undefined') {
+            url = 'list/partner?project=' + params.project.slug + '&pageSize= '+ params.pageSize;
         }
-        if (typeof organisation !== 'undefined') {
-            url = 'list/partner?organisation=' + organisation.slug;
+        if (typeof params.organisation !== 'undefined') {
+            url = 'list/partner?organisation=' + params.organisation.slug + '&pageSize=' + params.pageSize;
         }
 
         axios.create({
@@ -59,6 +76,7 @@ export function GetPartners(project?: Project | undefined, organisation?: Organi
                 'Authorization': `Bearer ${jwtToken}`
             }
         }).get<PartnerResponse>(url, {
+            
             // settings could be overwritten
             // timeout: 1000
         })
@@ -97,9 +115,9 @@ export function GetPartners(project?: Project | undefined, organisation?: Organi
     };
 
     React.useEffect(() => {
-        load();
+        load(params);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [project]);
+    }, [params.project, params.organisation]);
 
     return {...hookState, load: load};
 }

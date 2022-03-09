@@ -5,7 +5,7 @@ import {ApiError, apiStates, GetPartners} from "function/api/get-partners";
 
 export default function Partners() {
 
-    const {state, error, partners} = GetPartners();
+    const {state, error, partners} = GetPartners({});
 
     switch (state) {
         case apiStates.ERROR:
