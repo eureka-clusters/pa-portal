@@ -150,7 +150,6 @@ export function useOrganisations(queryParameter: Props = {  filter: '', page: de
 
         // important unload of unmounted component
         return () => {
-            console.log('unload in useOrganisations');
             mountedRef.current = false
         }
 

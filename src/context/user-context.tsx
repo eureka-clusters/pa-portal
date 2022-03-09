@@ -79,7 +79,6 @@ function useProvideAuth() {
     }
 
     const setUserInfo = (userinfo: iUserinfo) => {
-        // console.log(['setUserInfo ', userinfo]);
         // userinfo must be saved a json string into storage as no objects could be saved
         storage.setItem(KEY_USER_INFO, JSON.stringify(userinfo));
     }
@@ -93,7 +92,6 @@ function useProvideAuth() {
     }
 
     const setRedirect = (location: iLocation) => {
-        // console.log(['saveRedirect with from ', location]);
         storage.setItem(KEY_REDIRECT, location.pathname);
     }
 
@@ -143,7 +141,6 @@ function useProvideAuth() {
     const checkToken = (token: string | null) => {
         if (token) {
             const decoded = jwtDecode<JwtPayload>(token);
-            // console.log(decoded);
             const now = Date.now().valueOf() / 1000
 
             if (typeof decoded.exp !== 'undefined' && decoded.exp < now) {
@@ -159,7 +156,6 @@ function useProvideAuth() {
 
     const getJwtToken = () => {
         const token = getJwtTokenStorage();
-        // console.log(['token in getJwtToken', token]);
         if (token === null )
             return undefined; 
 
@@ -191,7 +187,7 @@ function useProvideAuth() {
             const data = await userInfoQuery({}, { headers: { Authorization: `Bearer ${jwtToken}` } })
             return data;
         } catch (error) {
-            console.log(['requestUserInfo error', error]);
+            console.error(['requestUserInfo error', error]);
             throw (error);
         }
     }
@@ -205,10 +201,8 @@ function useProvideAuth() {
         // use token to get the userInfo (if this succeeds the token is valid)
         try {
             let userinfo = await requestUserInfo(token);
-            console.log(['userinfo', userinfo]);
             let user = userinfo.email;
-            console.log(['userinfo in loginWithToken', userinfo]);
-
+            
             // save items in storage       
             setUser(user);
             setJwtToken(token);
@@ -224,17 +218,10 @@ function useProvideAuth() {
             return true;
         } catch (error: any) {
             // } catch (error: Error) {
-            console.log(error);
+            console.error(error);
             setState({
                 errorMessage: 'Userinfo could not been loaded ' + error.message
             });
-
-            // setState({
-            //     errorMessage: 'Userinfo could not been loaded ' + ex.message
-            //     // errorMessage: 'Userinfo could not been loaded '+ error.message
-            // });
-            // throw (error);
-            // throw ('error on login ' + error.detail);
         }
     }
 
@@ -245,7 +232,6 @@ function useProvideAuth() {
     }
 
     const redirectAfterLogin = () => {
-        console.log(['redirectAfterLogin to ', redirect]);
         history.replace(redirect);
     }
 

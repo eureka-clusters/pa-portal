@@ -109,9 +109,6 @@ export function useApi(url: string, queryParameterDefault = {}, requestOptionsDe
 
             let options = updateOptions(requestOptionsRef.current); // test to add the default settings here or 
             
-            console.log(['options in fetchFunction', options]);
-
-
             // skip request if token ins't set but required
             if (!mountedRef.current)  {
                 const responseError = {
