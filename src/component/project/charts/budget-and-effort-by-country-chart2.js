@@ -18,8 +18,8 @@ const BudgetByCountryChart = ({ results }) => {
             res[value.organisation.country.country] = { country: value.organisation.country.country, effort: 0, budget: 0 };
             stats.push(res[value.organisation.country.country])
         }
-        res[value.organisation.country.country].budget += value.latestVersionCosts;
-        res[value.organisation.country.country].effort += value.latestVersionEffort;
+        res[value.organisation.country.country].budget += parseFloat(value.latestVersionCosts);
+        res[value.organisation.country.country].effort += parseFloat(value.latestVersionEffort);
         return res;
     }, {});
 

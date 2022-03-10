@@ -18,12 +18,10 @@ const BudgetByOrganisationTypeChart = ({ results }) => {
             res[value.organisation.type.type] = { type: value.organisation.type.type, effort: 0, budget: 0 };
             stats.push(res[value.organisation.type.type])
         }
-        res[value.organisation.type.type].budget += value.latestVersionCosts;
-        res[value.organisation.type.type].effort += value.latestVersionEffort;
+        res[value.organisation.type.type].budget += parseFloat(value.latestVersionCosts);
+        res[value.organisation.type.type].effort += parseFloat(value.latestVersionEffort);
         return res;
     }, {});
-    // console.log(stats);
-
 
     stats.forEach(element => {
         $data.push([
