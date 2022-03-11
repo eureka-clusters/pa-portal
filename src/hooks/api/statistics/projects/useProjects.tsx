@@ -1,7 +1,7 @@
 import React, { useRef, useCallback } from 'react'
 import { useApi, apiStates, iApiError } from 'hooks/api/useApi';
 import { Project } from "interface/project";
-import { fromFilter } from 'function/api/filter-functions';
+// import { fromFilter } from 'function/api/filter-functions';
 
 export { ApiError, apiStates } from 'hooks/api/useApi';
 
@@ -89,54 +89,13 @@ export function useProjects(queryParameter: Props = { filter: '', page: defaultP
     }, [mountedRef, fetchData]);
 
 
-    // const load = (queryParameter: Props, requestOptions = {}) => {
-    //     const setPartData = (partialData: {
-    //         state: string,
-    //         projects?: Array<Project>,
-    //         error?: string,
-    //         pageCount?: number,
-    //         pageSize?: number,
-    //         totalItems?: number,
-    //         page?: number
-    //     }) => {
-    //         // Before setState ensure that the component is mounted, otherwise return null and don't allow to unmounted component.
-    //         if (!mountedRef.current) return null;
-    //         // console.log(['mountedRef.current', mountedRef.current]);
-    //         setHookState(hookState => ({ ...hookState, ...partialData }))
-    //     }
-
-    //     const fetchAsync = async () => {
-    //         try {
-    //             const data = await fetchData(queryParameter, requestOptions)
-    //             setPartData({
-    //                 state: apiStates.SUCCESS,
-    //                 projects: data._embedded.projects,
-    //                 pageCount: data.page_count,
-    //                 pageSize: data.page_size,
-    //                 totalItems: data.total_items,
-    //                 page: data.page
-    //             })
-    //         } catch (error: any) {
-                
-    //             console.log('error catched', error);
-    //             setPartData({
-    //                 state: apiStates.ERROR,
-    //                 error: error
-    //             });
-    //         }
-    //     }
-    //     fetchAsync();
-    // }
-
-
     React.useEffect(() => {
-        // console.log(['filter test', JSON.stringify(queryParameter.filter, undefined, 2)]);
         mountedRef.current = true;
 
-        if (queryParameter.filter) {
-            const hash = fromFilter(queryParameter.filter);
-            const newFilter = JSON.parse(hash);
-        }
+        // if (queryParameter.filter) {
+        //     const hash = fromFilter(queryParameter.filter);
+        //     const newFilter = JSON.parse(hash);
+        // }
 
         load(queryParameter, requestOptions);
 
@@ -145,10 +104,10 @@ export function useProjects(queryParameter: Props = { filter: '', page: defaultP
             mountedRef.current = false
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [load, mountedRef]); 
-    // }, [load, queryParameter.filter, mountedRef]);  
-    }, [load, queryParameter.filter, mountedRef]); 
-    // }, [queryParameter.filter, mountedRef]); 
+    }, [load, queryParameter.filter, mountedRef]);
+
+    // constant query ... when queryParameter or requestOptions are added.
+    // }, [load, queryParameter.filter, mountedRef, queryParameter, requestOptions]); 
     
 
     return { ...hookState, load: load };

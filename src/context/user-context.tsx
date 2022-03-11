@@ -1,6 +1,5 @@
 import { createContext, FC, useContext, useReducer } from 'react';
 import { useHistory } from "react-router-dom";
-import { GetServerUri } from 'function/api';
 import { iUserinfo } from 'interface/auth/userinfo';
 import jwtDecode, { JwtPayload } from "jwt-decode";
 
@@ -16,19 +15,6 @@ export const KEY_REDIRECT = 'redirect';
 export const KEY_TOKEN = 'token';
 
 type CallbackHandler = () => void
-
-// interface UserContent {
-//     jwtToken: string,
-//     user?: string,
-// }
-
-// interface ierror {
-//     code: string
-//     data: string
-//     message: string
-//     type: string
-// }
-
 
 interface iLocation {
     pathname: string
@@ -102,14 +88,6 @@ function useProvideAuth() {
     const [state, setState] = useReducer(
         (state: any, newState: any) => ({ ...state, ...newState }),
         {
-            // user: storage.getItem(KEY_USER),
-
-            // userInfo: storage.getItem(KEY_USER_INFO) ? JSON.parse(storage.getItem(KEY_USER_INFO)) : null,
-            // userInfo: storage.getItem(KEY_USER_INFO) ? JSON.parse(storage.getItem(KEY_USER_INFO)) : '',
-            // userInfo: storage.getItem(KEY_USER_INFO) ? JSON.parse(storage.getItem(KEY_USER_INFO)) : {},
-            // token: storage.getItem(KEY_TOKEN),
-            // redirect: storage.getItem(KEY_REDIRECT),
-
             user: getUser(),
             userInfo: getUserInfo(),
             token: getJwtTokenStorage(),
@@ -164,11 +142,8 @@ function useProvideAuth() {
             return token;
         } catch (error) {
             console.debug('catch error in getJwtToken logout user', error);
-            logout();       // ReferenceError: can't access lexical declaration 'logout' before initialization
-            // history.push('/logout');
-            // history.push('/public');
+            logout();
             // throw (error);
-            // return token;
             return undefined;
         }
     }
@@ -191,9 +166,6 @@ function useProvideAuth() {
             throw (error);
         }
     }
-
-    
-    
 
     const loginWithToken = async (token: string, cb: CallbackHandler) => {
 

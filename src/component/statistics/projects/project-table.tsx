@@ -13,8 +13,7 @@ import useState from 'react-usestateref';
 import { useAuth } from "context/user-context";
 import downloadBase64File from "function/DownloadBase64";
 import { GetServerUri, objToQueryString } from 'function/api';
-
-import { __delay__ } from 'function/utils';
+import moment from 'moment';
 import LoadingButton from "component/partial/loading-button";
 
 interface Props {
@@ -34,7 +33,16 @@ const ProjectTable: FC<Props> = ({ filter }) => {
     // store the current page (needed for handleSort)
     const [currentPage, setCurrentPage] = useState(1); // default current page
 
-    const { state, error, projects, load, pageCount, pageSize, page, totalItems } = useProjects({filter: getFilter(filter), page: 1, pageSize: perPage, sort: sort, order: order});
+    const { 
+        state,
+        error,
+        projects,
+        load,
+        // pageCount,
+        pageSize,
+        // page,
+        totalItems
+    } = useProjects({filter: getFilter(filter), page: 1, pageSize: perPage, sort: sort, order: order});
     
     const [isExportLoading, setIsExportButtonLoading] = useState(false);
     
@@ -84,12 +92,13 @@ const ProjectTable: FC<Props> = ({ filter }) => {
         if (isExportLoading) {
             // start the download
             (async () => {
-                // await __delay__(3000); // test delay to test if the download could be started twice
                 await downloadExcel().then(() => {
                     setIsExportButtonLoading(false);
                 });
             })();
         }
+    // downloadExcel couldn't been added
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isExportLoading]);
 
 
@@ -196,6 +205,16 @@ const ProjectTable: FC<Props> = ({ filter }) => {
             sortable: true,
             sortField: 'project.latestVersionTotalEffort',
         },
+        {
+            id: 'project.labelDate',
+            name: 'Label Date',
+            selector: (project: Project) => project.labelDate,
+            format: (project: Project) => moment(project.labelDate).format('LLL'),
+            sortable: false,
+            grow: true,
+            sortField: 'project.labelDate',
+            omit: true,  // currently ommited because of not enough space left.
+        },
     ];
 
     
@@ -206,6 +225,7 @@ const ProjectTable: FC<Props> = ({ filter }) => {
                 <>
                     <ApiError error={error}/>
                     <br/><br/>Filter used <code className={'pb-2 text-muted'}>{getFilter(filter)}</code>
+                    <code className={'pb-2 text-muted'}>{JSON.stringify(filter, undefined, 2)}</code>
                 </>
             );
         case apiStates.SUCCESS:

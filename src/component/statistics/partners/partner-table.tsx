@@ -4,17 +4,12 @@ import {Link} from "react-router-dom";
 import DataTable from 'component/database-table/index';
 import { CostsFormat, EffortFormat} from 'function/utils';
 import {Partner} from "interface/project/partner";
-
 import { getFilter } from 'function/api';
 import { usePartners, apiStates, ApiError } from 'hooks/api/statistics/partners/usePartners';
-
 import useState from 'react-usestateref';
 import { useAuth } from "context/user-context";
 import downloadBase64File from "function/DownloadBase64";
 import { GetServerUri, objToQueryString } from 'function/api';
-
-// import { __delay__ } from 'function/utils';
-
 import LoadingButton from "component/partial/loading-button";
 
 interface Props {
@@ -34,7 +29,16 @@ const PartnerTable: FC<Props> = ({filter}) => {
     // store the current page (needed for handleSort)
     const [currentPage, setCurrentPage] = useState(1); // default current page
 
-    const { state, error, partners, load, pageCount, pageSize, page, totalItems } = usePartners({ filter: getFilter(filter), page: 1, pageSize: perPage, sort: sort, order: order });
+    const { 
+        state, 
+        error, 
+        partners, 
+        load, 
+        // pageCount, 
+        pageSize, 
+        // page, 
+        totalItems
+    } = usePartners({ filter: getFilter(filter), page: 1, pageSize: perPage, sort: sort, order: order });
     
     const [isExportLoading, setIsExportButtonLoading] = React.useState(
         false
@@ -90,9 +94,9 @@ const PartnerTable: FC<Props> = ({filter}) => {
                 });
             })();
         }
+    // downloadExcel couldn't been added
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isExportLoading]);
-
-
 
     const downloadExcel = async () => {
         const serverUri = GetServerUri();

@@ -1,5 +1,4 @@
 import React, { FC, useState, Suspense } from 'react';
-
 import { Link } from "react-router-dom";
 import DataTable from 'component/database-table/index';
 import { CostsFormat, EffortFormat } from 'function/utils';
@@ -76,7 +75,16 @@ const PartnerTableWithCharts: FC<Props> = ({ project }) => {
         },
     ];
 
-    const { state, error, partners, load, pageCount, pageSize, page, totalItems } = usePartners({ project: project });
+    const { 
+        state, 
+        error, 
+        partners, 
+        // load, 
+        // pageCount, 
+        // pageSize, 
+        // page, 
+        totalItems
+    } = usePartners({ project: project });
 
 
     switch (state) {

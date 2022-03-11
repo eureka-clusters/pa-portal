@@ -5,7 +5,6 @@ import DataTable from 'component/database-table/index';
 
 import { usePartners, apiStates, ApiError } from 'hooks/api/partner/usePartners';
 import { Partner } from "interface/project/partner";
-import { Project } from "interface/project";
 import { CostsFormat, EffortFormat } from 'function/utils';
 
 
@@ -23,7 +22,16 @@ export default function Partners() {
     const [currentPage, setCurrentPage] = useState(1); // default current page
    
 
-    const { state, error, partners, load, pageCount, pageSize, page, totalItems } = usePartners({ filter: '', page: 1, pageSize: perPage });
+    const { 
+        state,
+        error,
+        partners,
+        load,
+        // pageCount,
+        pageSize,
+        // page,
+        totalItems
+    } = usePartners({ filter: '', page: 1, pageSize: perPage });
 
     const handlePageChange = async (newpage: number = 1) => {
         setCurrentPage(newpage);

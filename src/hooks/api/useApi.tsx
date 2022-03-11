@@ -1,4 +1,4 @@
-import { useRef, useCallback, FC} from 'react'
+import { useRef, useCallback} from 'react'
 import Config from 'constants/config'
 import {useAuth} from "context/user-context";
 import _ from 'lodash';
@@ -204,7 +204,7 @@ export function useApi(url: string, queryParameterDefault = {}, requestOptionsDe
         // console.log(['callbackResult', callbackResult]);
         return callbackResult; 
         
-    }, [auth, settings.tokenMethod, settings.tokenRequired, url]);
+    }, [auth, settings.tokenMethod, settings.tokenRequired, settings.parseUrl, url]);
     
     return call
 }

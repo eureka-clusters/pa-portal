@@ -18,7 +18,16 @@ export default function Organisations() {
     // store the current page (needed for handleSort)
     const [currentPage, setCurrentPage] = useState(1); // default current page
 
-    const { state, error, organisations, load, pageCount, pageSize, page, totalItems } = useOrganisations({ filter: '', page: 1, pageSize: perPage }); 
+    const { 
+        state,
+        error,
+        organisations,
+        load,
+        // pageCount,
+        pageSize,
+        // page,
+        totalItems
+     } = useOrganisations({ filter: '', page: 1, pageSize: perPage }); 
     
     const handlePageChange = async (newpage: number = 1) => {
         setCurrentPage(newpage);

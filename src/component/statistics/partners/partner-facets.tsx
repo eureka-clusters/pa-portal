@@ -2,7 +2,7 @@ import {FC} from 'react';
 import {Form} from "react-bootstrap";
 import {getFilter} from 'function/api';
 import {ApiError, apiStates, useFacets} from 'hooks/api/statistics/partners/useFacets';
-import { default as ReactSelect, OptionsOrGroups } from "react-select";
+import { default as ReactSelect } from "react-select";
 
 interface Props {
     filter: any,
@@ -76,23 +76,6 @@ const PartnerFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
                                 }}
                             />
                         </div>
-
-                        {/* {facets.countries && facets.countries.map((country, i) => (
-                            <div key={i}>
-                                <Form.Check type={'checkbox'} id={`check-country-${i}`}>
-                                    <Form.Check.Input
-                                        name="country"
-                                        value={country['name']}
-                                        className={'me-2'}
-                                        onChange={updateFilter}
-                                        checked={
-                                            filter['country'].indexOf(country['name']) > -1
-                                        }
-                                    />
-                                    <Form.Check.Label>{country['name']} ({country['amount']})</Form.Check.Label>
-                                </Form.Check>
-                            </div>
-                        ))} */}
                     </fieldset>
 
                     <fieldset>
@@ -175,22 +158,6 @@ const PartnerFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
                                 }}
                             />
                         </div>
-                        {/* {facets.programmeCalls && facets.programmeCalls.map((programmeCall, i) => (
-                            <div key={i}>
-                                <Form.Check type={'checkbox'} id={`check-project-programmecall-${i}`}>
-                                    <Form.Check.Input
-                                        name="programme_call"
-                                        value={programmeCall['name']}
-                                        onChange={updateFilter}
-                                        className={'me-2'}
-                                        checked={
-                                            filter['programme_call'].indexOf(programmeCall['name']) > -1
-                                        }
-                                    />
-                                    <Form.Check.Label>{programmeCall['name']} ({programmeCall['amount']})</Form.Check.Label>
-                                </Form.Check>
-                            </div>
-                        ))} */}
                     </fieldset>
 
                     <fieldset>
@@ -245,23 +212,6 @@ const PartnerFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
                                 }}
                             />
                         </div>
-
-                        {/* {facets.years && facets.years.map((year, i) => (
-                            <div key={i}>
-                                <Form.Check type={'checkbox'} id={`check-year-${i}`}>
-                                    <Form.Check.Input
-                                        name="year"
-                                        value={year}
-                                        onChange={updateFilter}
-                                        className={'me-2'}
-                                        checked={
-                                            filter['year'].indexOf(year.toString()) > -1
-                                        }
-                                    />
-                                    <Form.Check.Label>{year}</Form.Check.Label>
-                                </Form.Check>
-                            </div>
-                        ))} */}
                     </fieldset>
 
 

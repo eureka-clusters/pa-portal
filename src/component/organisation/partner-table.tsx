@@ -59,7 +59,12 @@ const PartnerTable: FC<Props> = ({organisation}) => {
         },
     ];
 
-    const { state, error, partners, load, pageCount, pageSize, page, totalItems } = usePartners({ organisation: organisation });
+    const { 
+        state,
+        error,
+        partners,
+        /*load, pageCount, pageSize, page, totalItems*/ 
+    } = usePartners({ organisation: organisation });
 
     switch (state) {
         case apiStates.ERROR:
