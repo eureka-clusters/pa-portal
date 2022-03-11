@@ -134,11 +134,31 @@ export function useApi(url: string, queryParameterDefault = {}, requestOptionsDe
                 requestUrl = substituteUrl(requestUrl, queryParameterRef.current);
             }
 
-            if (queryParameterRef !== undefined) {
-                requestUrl += '?' + new URLSearchParams(queryParameterRef.current).toString();
+            // console.log(['requestUrl after substituteUrl', requestUrl]);
+
+
+            // remove "undefined" parameters
+            // Object.keys(queryParameterRef.current).forEach(key => queryParameterRef.current[key as keyof typeof queryParameterRef.current] === undefined && delete queryParameterRef.current[key as keyof typeof queryParameterRef.current]);
+
+            // remove undefined and empty paramaters.
+            Object.keys(queryParameterRef.current).forEach(key => {
+                // delete undefined
+                queryParameterRef.current[key as keyof typeof queryParameterRef.current] === undefined && delete queryParameterRef.current[key as keyof typeof queryParameterRef.current]
+                // delete empty
+                queryParameterRef.current[key as keyof typeof queryParameterRef.current] === '' && delete queryParameterRef.current[key as keyof typeof queryParameterRef.current]
+            });
+
+            // add parameters if they are any.
+            if (queryParameterRef.current !== undefined && Object.keys(queryParameterRef.current).length > 0) {
+                // check if url already includes query params
+                if (requestUrl.includes('?')) {
+                    requestUrl += '&' + new URLSearchParams(queryParameterRef.current).toString();
+                } else {
+                    requestUrl += '?' + new URLSearchParams(queryParameterRef.current).toString();
+                }
             }
 
-            // console.log(['requestUrl', requestUrl]);
+            console.log(['requestUrl', requestUrl]);
 
             //create Request object
             const request = new Request(requestUrl, options);

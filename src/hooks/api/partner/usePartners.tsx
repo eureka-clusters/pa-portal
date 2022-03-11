@@ -1,22 +1,16 @@
 import React, { useRef, useCallback } from 'react'
-import { useApi, apiStates, iApiError  } from 'hooks/api/useApi';
+import { useApi, apiStates, iApiError } from 'hooks/api/useApi';
+import { Project } from "interface/project";
+import { Partner } from "interface/project/partner";
 import { Organisation } from "interface/organisation";
+
 export { ApiError, apiStates } from 'hooks/api/useApi';
 
-// interface Response {
-//     _embedded: {
-//         organisations: Array<Organisation>
-//     }
-//     page_count: number
-//     page_size: number
-//     total_items: number
-//     page: number
-// }
 
 interface State {
     state: string,
     error?: iApiError,
-    organisations: Array<Organisation> | undefined,
+    partners: Array<Partner>,
     pageCount?: number,
     pageSize?: number,
     totalItems?: number,
@@ -24,38 +18,62 @@ interface State {
 }
 
 interface Props {
+    project?: Project,
+    organisation?: Organisation,
     filter?: string,
-    page: number,
+    page?: number,
     pageSize?: number,
     sort?: string,
     order?: string,
 }
 
-// default properties for page and pageSize
 const defaultProps = {
-    filter: '',
     page: 1,
-    pageSize: 10,
+    pageSize: -1,
+    filter: '',
+    project: undefined,
+    organisation: undefined,
 }
 
-export function useOrganisations(queryParameter: Props , requestOptions = {}) {   
+
+export function usePartners(queryParameter: Props, requestOptions = {}) {   
     queryParameter = { ...defaultProps, ...queryParameter }
 
-    let url = '/list/organisation';
-   
+    let url = '/list/partner';
+
+    // as we only need the slug of the project for the queryParam.
+    // we could also consider to change the project to string and give the hook the project.slug instead of the complete project object.
+    if (typeof queryParameter.project !== 'undefined') {
+        url = url +'?project=' + queryParameter.project.slug;
+        delete queryParameter.project;
+    } else if (typeof queryParameter.organisation !== 'undefined') {
+        url = url + '?organisation=' + queryParameter.organisation.slug;
+        delete queryParameter.organisation;
+    }
+
+    // Object.keys(queryParameter).forEach(key =>  {
+    //     console.log(['key', key, queryParameter[key as keyof typeof queryParameter]]);
+    //     // delete undefined
+    //     queryParameter[key as keyof typeof queryParameter] === undefined && delete queryParameter[key as keyof typeof queryParameter]
+    //     // delete empty
+    //     queryParameter[key as keyof typeof queryParameter] === '' && delete queryParameter[key as keyof typeof queryParameter]
+    // });
+    // console.log(['queryParameter', queryParameter]);
+
+
     const fetchData = useApi(url, queryParameter, requestOptions);
 
     const mountedRef = useRef(true);
 
     const [hookState, setHookState] = React.useState<State>({
         state: apiStates.LOADING,
-        organisations: undefined
+        partners: []
     });
-
+    
     const load = useCallback(async (queryParameter: Props, requestOptions = {}) => {
         const setPartData = (partialData: {
             state: string,
-            organisations?: Array<Organisation>,
+            partners?: Array<Partner>,
             error?: iApiError,
             pageCount?: number,
             pageSize?: number,
@@ -72,7 +90,7 @@ export function useOrganisations(queryParameter: Props , requestOptions = {}) {
             const data = await fetchData(queryParameter, requestOptions)
             setPartData({
                 state: apiStates.SUCCESS,
-                organisations: data._embedded.organisations,
+                partners: data._embedded.partners,
                 pageCount: data.page_count,
                 pageSize: data.page_size,
                 totalItems: data.total_items,
@@ -94,12 +112,14 @@ export function useOrganisations(queryParameter: Props , requestOptions = {}) {
         return () => {
             mountedRef.current = false
         }
+
         // why can't i add properties to the "dependecies" ... (sorting etc. doen't work with it..)
         // "load" could be added if its a callback. but still can't get rid of these warnings...
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [load, mountedRef]);  // only works if load is a callback but still says properties is dependend
-    // }, [mountedRef]); // works if load is a function (load couldn't be added if its not a callback)
-    // }, [load, mountedRef, properties]);  // sort etc. doesn't work...
+    }, [load, mountedRef]);
+
 
     return { ...hookState, load: load };
 }
+

@@ -8,6 +8,8 @@ import Logout from "./logout";
 import Account from "./account";
 import Projects from "./projects";
 import Project from "./project";
+import Partners from "./partners";
+import Partner from "./partner";
 
 import Organisations from "./organisations";
 import Organisation from "./organisation"
@@ -15,7 +17,7 @@ import Organisation from "./organisation"
 import ProjectStatistics from "./statistics/projects"
 import PartnerStatistics from "./statistics/partners"
 
-import Partner from "./partner";
+
 
 import ProtectedPage from "./partial/protected-page";
 import PublicPage from "./partial/public-page";
@@ -119,6 +121,10 @@ export const PageRoutes = () => {
                           render={props => <Organisation {...props} />}
             />
 
+            <PrivateRoute path='/partners'
+                render={props => <Partners {...props} />}
+            />
+            
             <PrivateRoute path='/partner/:slug'
                           render={props => <Partner {...props} />}
             />

@@ -1,11 +1,10 @@
 import React from 'react';
-// import PartnerTable from "component/project/partner-table";
-import PartnerTable from "component/project/partner-table2";
+import PartnerTableWithCharts from "component/project/partner-table-with-charts";
 import BreadcrumbTree from 'component/partial/breadcrumb-tree'
 import NumberFormat from "react-number-format";
 import moment from 'moment';
 import {RouteComponentProps} from "react-router-dom";
-import {ApiError, apiStates, GetProject} from "function/api/get-project";
+import { useProject, apiStates, ApiError } from 'hooks/api/project/useProject'; 
 
 //Create the interface to identify the slug
 interface MatchParams {
@@ -19,7 +18,7 @@ export default function Project(props: Props) {
 
     const slug = props.match.params.slug;
 
-    const {state, error, project} = GetProject(slug);
+    const { state, error, project } = useProject({ slug: slug });
 
     switch (state) {
         case apiStates.ERROR:
@@ -90,7 +89,7 @@ export default function Project(props: Props) {
                             </details>
                         </dd>
                     </dl>
-                    <PartnerTable project={project}/>
+                    <PartnerTableWithCharts project={project}/>
                 </React.Fragment>
             );
         default:

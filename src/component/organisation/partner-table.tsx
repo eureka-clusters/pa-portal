@@ -1,12 +1,10 @@
 import React, {FC} from 'react';
-import {ApiError, apiStates} from 'function/api';
 import {Link} from "react-router-dom";
 import DataTable from 'component/database-table/index';
 import {CostsFormat, EffortFormat} from 'function/utils';
-import {GetPartners} from "function/api/get-partners";
 import {Partner} from "interface/project/partner";
 import {Organisation} from "interface/organisation";
-
+import { usePartners, apiStates, ApiError } from 'hooks/api/partner/usePartners';
 interface Props {
     organisation: Organisation
 }
@@ -61,9 +59,7 @@ const PartnerTable: FC<Props> = ({organisation}) => {
         },
     ];
 
-    const { state, error, partners } = GetPartners({
-        organisation: organisation
-    });
+    const { state, error, partners, load, pageCount, pageSize, page, totalItems } = usePartners({ organisation: organisation });
 
     switch (state) {
         case apiStates.ERROR:

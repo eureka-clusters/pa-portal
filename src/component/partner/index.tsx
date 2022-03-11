@@ -1,9 +1,9 @@
 import React from 'react';
-import {ApiError, apiStates} from 'function/api';
+
 import {Link, RouteComponentProps} from "react-router-dom";
 import BreadcrumbTree from 'component/partial/breadcrumb-tree'
 import NumberFormat from "react-number-format";
-import {GetPartner} from "function/api/get-partner";
+import { usePartner, apiStates, ApiError } from 'hooks/api/partner/usePartner';
 
 //Create the interface to identify the slug
 interface MatchParams {
@@ -15,10 +15,9 @@ interface Props extends RouteComponentProps<MatchParams> {
 
 export default function Partner(props: Props) {
 
-    //'/api/view/project/' + identifier,
     const slug = props.match.params.slug;
+    const { state, error, partner } = usePartner({ slug: slug });
 
-    const {state, error, partner} = GetPartner(slug);
 
     switch (state) {
         case apiStates.ERROR:

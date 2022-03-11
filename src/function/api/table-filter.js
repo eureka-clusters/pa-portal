@@ -1,5 +1,4 @@
 import {useEffect} from 'react';
-// import {useEffect, useState} from 'react';
 import useState from 'react-usestateref'; // we need the useState with the .current href
 import {getFilter, fromFilter} from 'function/api/filter-functions';
 

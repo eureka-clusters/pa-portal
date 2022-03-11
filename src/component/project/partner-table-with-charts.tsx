@@ -1,19 +1,18 @@
 import React, { FC, useState, Suspense } from 'react';
-import { ApiError, apiStates } from 'function/api/index';
+
 import { Link } from "react-router-dom";
 import DataTable from 'component/database-table/index';
 import { CostsFormat, EffortFormat } from 'function/utils';
 import { Project } from "interface/project";
 import { Partner } from "interface/project/partner";
-import { GetPartners } from "function/api/get-partners";
+import { usePartners, apiStates, ApiError } from 'hooks/api/partner/usePartners'; 
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
 
-// import TestPages from './test';
-import OrganisationTypeChart from 'component/project/charts/organisation-type-chart2';
-import OrganisationCountryChart from 'component/project/charts/country-chart2';
-import BudgetByOrganisationTypeChart from 'component/project/charts/budget-by-organisation-type-chart2';
-import BudgetByCountryChart from 'component/project/charts/budget-and-effort-by-country-chart2';
+import OrganisationTypeChart from 'component/project/charts/organisation-type-chart';
+import OrganisationCountryChart from 'component/project/charts/country-chart';
+import BudgetByOrganisationTypeChart from 'component/project/charts/budget-by-organisation-type-chart';
+import BudgetByCountryChart from 'component/project/charts/budget-and-effort-by-country-chart';
 
 // try lazy loading
 // const OrganisationTypeChart = React.lazy(() => import('component/project/charts/organisation-type-chart'));
@@ -25,10 +24,9 @@ interface Props {
     project: Project
 }
 
-const PartnerTable: FC<Props> = ({ project }) => {
+const PartnerTableWithCharts: FC<Props> = ({ project }) => {
 
     const [activeTab, setActiveTab] = useState('table'); // default tab
-
 
     const columns = [
         {
@@ -78,9 +76,7 @@ const PartnerTable: FC<Props> = ({ project }) => {
         },
     ];
 
-    const { state, error, partners } = GetPartners({
-        project: project
-    });
+    const { state, error, partners, load, pageCount, pageSize, page, totalItems } = usePartners({ project: project });
 
 
     switch (state) {
@@ -92,7 +88,6 @@ const PartnerTable: FC<Props> = ({ project }) => {
                     <h2>Partners</h2>
 
                     <Tabs
-                        
                         id="partner-tabs"
                         className="mb-3"
                         // defaultActiveKey="table"
@@ -117,6 +112,7 @@ const PartnerTable: FC<Props> = ({ project }) => {
                                 data={partners}
                                 pagination={false}
                             />
+                            <div className='datatable-count'>Total count:{totalItems}</div>
                         </Tab>
                         <Tab eventKey="charts" title="Charts">
                             <Suspense fallback={<div>Loading...</div>}>
@@ -147,4 +143,4 @@ const PartnerTable: FC<Props> = ({ project }) => {
     }
 }
 
-export default PartnerTable;
+export default PartnerTableWithCharts;

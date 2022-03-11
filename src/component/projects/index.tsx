@@ -4,7 +4,9 @@ import BreadcrumbTree from 'component/partial/breadcrumb-tree'
 import DataTable from 'component/database-table/index';
 import {Project} from "interface/project";
 import {CostsFormat, EffortFormat} from 'function/utils';
-import {ApiError, apiStates, GetProjects} from "function/api/get-projects";
+import { useProjects, apiStates, ApiError } from 'hooks/api/project/useProjects';
+
+
 import useState from 'react-usestateref';
 
 export default function Projects() {
@@ -18,10 +20,8 @@ export default function Projects() {
     // store the current page (needed for handleSort)
     const [currentPage, setCurrentPage] = useState(1); // default current page
 
-    const {state, error, projects, load, pageCount, pageSize, page, totalItems} = GetProjects({
-        page: 1,
-        pageSize: perPage
-    });
+    const { state, error, projects, load, pageCount, pageSize, page, totalItems } = useProjects({ filter: '', page: 1, pageSize: perPage });
+
 
     const handlePageChange = async (newpage: number = 1) => {
         setCurrentPage(newpage);
