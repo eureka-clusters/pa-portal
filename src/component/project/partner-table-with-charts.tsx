@@ -84,7 +84,7 @@ const PartnerTableWithCharts: FC<Props> = ({ project }) => {
         // pageSize, 
         // page, 
         totalItems
-    } = usePartners({ project: project });
+    } = usePartners({ project: project.slug });
 
 
     switch (state) {

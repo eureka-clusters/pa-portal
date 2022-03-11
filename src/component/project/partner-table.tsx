@@ -61,8 +61,7 @@ const PartnerTable: FC<Props> = ({project}) => {
         },
     ];
 
-
-    const { state, error, partners, load, pageCount, pageSize, page, totalItems } = usePartners({ project: project });
+    const { state, error, partners, load, pageCount, pageSize, page, totalItems } = usePartners({ project: project.slug });
 
 
     switch (state) {

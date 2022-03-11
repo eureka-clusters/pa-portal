@@ -168,8 +168,6 @@ function useProvideAuth() {
     }
 
     const loginWithToken = async (token: string, cb: CallbackHandler) => {
-
-        // todo: missing error handling for requestUserInfo
         // use token to get the userInfo (if this succeeds the token is valid)
         try {
             let userinfo = await requestUserInfo(token);

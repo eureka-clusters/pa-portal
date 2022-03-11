@@ -18,8 +18,10 @@ interface State {
 }
 
 interface Props {
-    project?: Project,
-    organisation?: Organisation,
+    // project?: Project,
+    // organisation?: Organisation,
+    project?: string,
+    organisation?: string,
     filter?: string,
     page?: number,
     pageSize?: number,
@@ -43,22 +45,15 @@ export function usePartners(queryParameter: Props, requestOptions = {}) {
 
     // as we only need the slug of the project for the queryParam.
     // we could also consider to change the project to string and give the hook the project.slug instead of the complete project object.
-    if (typeof queryParameter.project !== 'undefined') {
-        url = url +'?project=' + queryParameter.project.slug;
-        delete queryParameter.project;
-    } else if (typeof queryParameter.organisation !== 'undefined') {
-        url = url + '?organisation=' + queryParameter.organisation.slug;
-        delete queryParameter.organisation;
-    }
 
-    // Object.keys(queryParameter).forEach(key =>  {
-    //     console.log(['key', key, queryParameter[key as keyof typeof queryParameter]]);
-    //     // delete undefined
-    //     queryParameter[key as keyof typeof queryParameter] === undefined && delete queryParameter[key as keyof typeof queryParameter]
-    //     // delete empty
-    //     queryParameter[key as keyof typeof queryParameter] === '' && delete queryParameter[key as keyof typeof queryParameter]
-    // });
-    // console.log(['queryParameter', queryParameter]);
+    // this part could be removed if project + organisation would be of type string and filled with the .slug value.
+    // if (typeof queryParameter.project !== 'undefined') {
+    //     url = url +'?project=' + queryParameter.project.slug;
+    //     delete queryParameter.project;
+    // } else if (typeof queryParameter.organisation !== 'undefined') {
+    //     url = url + '?organisation=' + queryParameter.organisation.slug;
+    //     delete queryParameter.organisation;
+    // }
 
 
     const fetchData = useApi(url, queryParameter, requestOptions);
