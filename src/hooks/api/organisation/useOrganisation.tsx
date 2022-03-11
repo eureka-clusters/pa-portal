@@ -25,7 +25,6 @@ export function useOrganisation(queryParameter: Props, requestOptions = {}) {
 
     const [hookState, setHookState] = React.useState<State>({
         state: apiStates.LOADING,
-        
         organisation: {} as Organisation
     });
     

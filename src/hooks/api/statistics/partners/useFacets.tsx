@@ -10,7 +10,6 @@ interface State {
     state: string,
     error?: iApiError,
     facets: Facets,
-    // facets: Facets
 }
 
 interface Props {

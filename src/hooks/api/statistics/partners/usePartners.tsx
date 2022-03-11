@@ -18,7 +18,7 @@ export { ApiError, apiStates } from 'hooks/api/useApi';
 interface State {
     state: string,
     error?: iApiError,
-    partners: Array<Partner> | undefined,
+    partners: Array<Partner>,
     pageCount?: number,
     pageSize?: number,
     totalItems?: number,
@@ -47,7 +47,7 @@ export function usePartners(queryParameter: Props = { filter: '', page: defaultP
 
     const [hookState, setHookState] = React.useState<State>({
         state: apiStates.LOADING,
-        partners: undefined
+        partners: []
     });
 
     const load = useCallback(async (queryParameter: Props, requestOptions = {}) => {

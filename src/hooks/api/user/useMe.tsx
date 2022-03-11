@@ -25,7 +25,7 @@ interface Props {
 interface State {
     state: string,
     error?: iApiError,
-    data: Me | undefined,
+    data: Me,
     // data: any
 }
 
@@ -37,8 +37,7 @@ export function useMe(queryParameter: Props , requestOptions = {}) {
 
     const [hookState, setHookState] = React.useState <State> ({
         state: apiStates.LOADING,
-        data: undefined
-        // data: {} as Me
+        data: {} as Me
     });
 
     const load = useCallback(async (queryParameter: Props, requestOptions = {}) => {

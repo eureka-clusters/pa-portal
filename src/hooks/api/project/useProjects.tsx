@@ -8,7 +8,6 @@ export { ApiError, apiStates } from 'hooks/api/useApi';
 interface State {
     state: string,
     error?: iApiError,
-    // projects: Array<Project> | undefined,
     projects: Array<Project>,
     pageCount?: number,
     pageSize?: number,
@@ -41,7 +40,6 @@ export function useProjects(queryParameter: Props, requestOptions = {}) {
 
     const [hookState, setHookState] = React.useState<State>({
         state: apiStates.LOADING,
-        // projects: undefined
         projects: [],
     });
     

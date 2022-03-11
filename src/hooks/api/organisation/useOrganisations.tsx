@@ -16,7 +16,7 @@ export { ApiError, apiStates } from 'hooks/api/useApi';
 interface State {
     state: string,
     error?: iApiError,
-    organisations: Array<Organisation> | undefined,
+    organisations: Array<Organisation>,
     pageCount?: number,
     pageSize?: number,
     totalItems?: number,
@@ -49,7 +49,7 @@ export function useOrganisations(queryParameter: Props , requestOptions = {}) {
 
     const [hookState, setHookState] = React.useState<State>({
         state: apiStates.LOADING,
-        organisations: undefined
+        organisations: []
     });
 
     const load = useCallback(async (queryParameter: Props, requestOptions = {}) => {
