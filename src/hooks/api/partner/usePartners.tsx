@@ -1,8 +1,8 @@
 import React, { useRef, useCallback } from 'react'
 import { useApi, apiStates, iApiError } from 'hooks/api/useApi';
-import { Project } from "interface/project";
 import { Partner } from "interface/project/partner";
-import { Organisation } from "interface/organisation";
+// import { Project } from "interface/project";
+// import { Organisation } from "interface/organisation";
 
 export { ApiError, apiStates } from 'hooks/api/useApi';
 

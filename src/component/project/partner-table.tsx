@@ -2,16 +2,12 @@ import React, {FC} from 'react';
 import {Link} from "react-router-dom";
 import DataTable from 'component/database-table/index';
 import {CostsFormat, EffortFormat} from 'function/utils';
-import {Project} from "interface/project";
 import {Partner} from "interface/project/partner";
-import { usePartners, apiStates, ApiError } from 'hooks/api/partner/usePartners'; 
-
-
 interface Props {
-    project: Project
+    results: Array<Partner>
 }
 
-const PartnerTable: FC<Props> = ({project}) => {
+const PartnerTable: FC<Props> = ({results}) => {
 
     const columns = [
         {
@@ -61,27 +57,17 @@ const PartnerTable: FC<Props> = ({project}) => {
         },
     ];
 
-    const { state, error, partners, load, pageCount, pageSize, page, totalItems } = usePartners({ project: project.slug });
-
-
-    switch (state) {
-        case apiStates.ERROR:
-            return <ApiError error={error}/>
-        case apiStates.SUCCESS:
-            return (
-                <React.Fragment>
-                    <DataTable
-                        // title="Partners"
-                        keyField="id"
-                        columns={columns}
-                        data={partners}
-                        pagination={false}
-                    />
-                </React.Fragment>
-            );
-        default:
-            return <p>Loading data...</p>;
-    }
+    return (
+        <React.Fragment>
+            <DataTable
+                // title="Partners"
+                keyField="id"
+                columns={columns}
+                data={results}
+                pagination={false}
+            />
+        </React.Fragment>
+    );
 }
 
 export default PartnerTable;
