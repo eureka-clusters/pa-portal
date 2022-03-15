@@ -18,4 +18,15 @@ div.datatable-count {
   margin-bottom: 1.5em;
   text-align: right;
 }
+
+.check-true {
+    color: green;
+    font-size: 1.2em;
+}
+
+.check-false {
+    color: lightgray;
+    font-size: 1.2em;
+}
+
 @import "~bootstrap/scss/bootstrap";

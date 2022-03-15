@@ -1,8 +1,9 @@
 import React, {FC} from 'react';
 import {Link} from "react-router-dom";
 import DataTable from 'component/database-table/index';
-import {CostsFormat, EffortFormat} from 'function/utils';
+import { CostsFormat, EffortFormat, BooleanIconFormat } from 'function/utils';
 import {Partner} from "interface/project/partner";
+
 interface Props {
     results: Array<Partner>
 }
@@ -39,14 +40,13 @@ const PartnerTable: FC<Props> = ({results}) => {
             selector: (partner: Partner) => partner.organisation && partner.organisation.type ? partner.organisation.type.type : '',
             sortable: true,
         },
-
         {
             id: 'partner_costs',
             name: 'Partner Costs',
             selector: (partner: Partner) => partner.latestVersionCosts,
             format: (partner: Partner) => <CostsFormat value={partner.latestVersionCosts} />,
             sortable: true,
-            reorder: true,
+            // reorder: true,
         },
         {
             id: 'partner_effort',
@@ -55,10 +55,33 @@ const PartnerTable: FC<Props> = ({results}) => {
             format: (partner: Partner) => <EffortFormat value={partner.latestVersionEffort} />,
             sortable: true,
         },
+        {
+            id: 'partner_isActive',
+            name: 'isActive',
+            selector: (partner: Partner) => partner.isActive,
+            format: (partner: Partner) => <BooleanIconFormat value={partner.isActive}/>,
+            sortable: true,
+        },
+        {
+            id: 'partner_isSelfFunded',
+            name: 'isSelfFunded',
+            selector: (partner: Partner) => partner.isSelfFunded,
+            // format: (partner: Partner) => <BooleanIconFormat value={partner.isSelfFunded} type="square" showFalse={true} />,
+            format: (partner: Partner) => <BooleanIconFormat value={partner.isSelfFunded} />,
+            sortable: true,
+        },
+        {
+            id: 'partner_isCoordinator',
+            name: 'isCoordinator',
+            selector: (partner: Partner) => partner.isCoordinator,
+            format: (partner: Partner) => <BooleanIconFormat value={partner.isCoordinator} />,
+            sortable: true,
+        },
     ];
 
     return (
         <React.Fragment>
+            {/* <pre className='debug'>{JSON.stringify(results, undefined, 2)}</pre> */}
             <DataTable
                 // title="Partners"
                 keyField="id"
