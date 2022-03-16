@@ -17,8 +17,9 @@ export const CostsFormat: FC<Props> = (props) => {
             value={props.value}
             thousandSeparator={' '}
             prefix={'€ '}
-            decimalScale={2}
             displayType={'text'}
+            decimalScale={2}
+            fixedDecimalScale={true}
         />
     )
 }
@@ -28,6 +29,8 @@ export const EffortFormat: FC<Props> = (props) => {
         <NumberFormat
             value={props.value}
             thousandSeparator={' '}
+            prefix={'PY '}
+            // suffix={'PY '}
             displayType={'text'}
             decimalScale={2}
             fixedDecimalScale={true}

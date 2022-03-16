@@ -2,8 +2,8 @@ import React from 'react';
 
 import {Link, RouteComponentProps} from "react-router-dom";
 import BreadcrumbTree from 'component/partial/breadcrumb-tree'
-import NumberFormat from "react-number-format";
 import { usePartner, apiStates, ApiError } from 'hooks/api/partner/usePartner';
+import { CostsFormat, EffortFormat } from 'function/utils';
 
 //Create the interface to identify the slug
 interface MatchParams {
@@ -66,22 +66,14 @@ export default function Partner(props: Props) {
                         </dd>
 
                         <dt className="col-sm-3 text-end">Total costs (latest version)</dt>
-                        <dd className="col-sm-9"><NumberFormat
-                            value={partner.latestVersionCosts}
-                            thousandSeparator={' '}
-                            displayType={'text'}
-                            prefix={'€ '}/></dd>
-
+                        <dd className="col-sm-9">
+                            <CostsFormat value={partner.latestVersionCosts} />
+                        </dd>
 
                         <dt className="col-sm-3 text-end">Total effort (latest version)</dt>
-                        <dd className="col-sm-9"><NumberFormat
-                            value={partner.latestVersionEffort}
-                            thousandSeparator={' '}
-                            displayType={'text'}
-                            decimalScale={2}
-                            fixedDecimalScale={true}
-                        /></dd>
-
+                        <dd className="col-sm-9">
+                            <EffortFormat value={partner.latestVersionEffort} />
+                        </dd>
 
                         <dt className="col-sm-3 text-end">Project:</dt>
                         <dd className="col-sm-9"><Link

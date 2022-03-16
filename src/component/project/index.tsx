@@ -1,10 +1,10 @@
 import React from 'react';
 import PartnerTableWithCharts from "component/project/partner-table-with-charts";
 import BreadcrumbTree from 'component/partial/breadcrumb-tree'
-import NumberFormat from "react-number-format";
 import moment from 'moment';
 import {RouteComponentProps} from "react-router-dom";
 import { useProject, apiStates, ApiError } from 'hooks/api/project/useProject'; 
+import { CostsFormat, EffortFormat } from 'function/utils';
 
 //Create the interface to identify the slug
 interface MatchParams {
@@ -71,20 +71,14 @@ export default function Project(props: Props) {
                         <dd className="col-sm-9">{moment(project.labelDate).format('LLL')}</dd>
 
                         <dt className="col-sm-3 text-end">Total costs:</dt>
-                        <dd className="col-sm-9"><NumberFormat
-                            value={project.latestVersionTotalCosts}
-                            thousandSeparator={' '}
-                            displayType={'text'}
-                            prefix={'€ '}/></dd>
+                        <dd className="col-sm-9">
+                        <CostsFormat value={project.latestVersionTotalCosts}/>
+                        </dd>
 
                         <dt className="col-sm-3 text-end">Total effort:</dt>
-                        <dd className="col-sm-9"><NumberFormat
-                            value={project.latestVersionTotalEffort}
-                            thousandSeparator={' '}
-                            displayType={'text'}
-                            decimalScale={2}
-                            fixedDecimalScale={true}
-                        /></dd>
+                        <dd className="col-sm-9">
+                        <EffortFormat value={project.latestVersionTotalEffort} />
+                        </dd>
 
                         <dt className="col-sm-3 text-end">Description:</dt>
                         <dd className="col-sm-9">
