@@ -144,6 +144,7 @@ const PartnerTable: FC<Props> = ({filter}) => {
                                                 title={partner.project.name}>{partner.project.name}</Link>,
             sortable: true,
             sortField: 'partner.project.name',
+            grow: 1,
         },
         {
             id: 'partner.organisation.name',
@@ -153,6 +154,7 @@ const PartnerTable: FC<Props> = ({filter}) => {
                                                 title={partner.organisation.name}>{partner.organisation.name}</Link>,
             sortable: true,
             sortField: 'partner.organisation.name',
+            grow: 3,
         },
         {
             id: 'partner.organisation.country.country',

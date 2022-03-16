@@ -151,6 +151,7 @@ const ProjectTable: FC<Props> = ({ filter }) => {
             selector: (project: Project) => project.number,
             sortable: true,
             sortField: 'project.number',
+            // compact: true,
         },
         {
             id: 'project.name',
@@ -160,6 +161,8 @@ const ProjectTable: FC<Props> = ({ filter }) => {
                                                 title={project.name}>{project.name}</Link>,
             sortable: true,
             sortField: 'project.name',
+            // compact: true,
+            grow: 2,
         },
         {
             id: 'project.primaryCluster',
@@ -167,6 +170,7 @@ const ProjectTable: FC<Props> = ({ filter }) => {
             selector: (project: Project) => project.primaryCluster ? project.primaryCluster.name : '',
             sortable: true,
             sortField: 'project.primaryCluster.name',
+            // compact: true,
         },
         {
             id: 'project.secondaryCluster',
@@ -174,6 +178,7 @@ const ProjectTable: FC<Props> = ({ filter }) => {
             selector: (project: Project) => project.secondaryCluster ? project.secondaryCluster.name : '',
             sortable: true,
             sortField: 'project.secondaryCluster.name',
+            // compact: true,
         },
         {
             id: 'project.status.status',
@@ -181,6 +186,7 @@ const ProjectTable: FC<Props> = ({ filter }) => {
             selector: (project: Project) => project.status ? project.status.status : '',
             sortable: true,
             sortField: 'project.status.status',
+            // compact: true,
         },
         {
             id: 'project.latestVersion.type.type',
@@ -188,6 +194,7 @@ const ProjectTable: FC<Props> = ({ filter }) => {
             selector: (project: Project) => project.latestVersion && project.latestVersion.type ? project.latestVersion.type.type : '',
             sortable: true,
             sortField: 'project.latestVersion.type.type',
+            // compact: true,
         },
         {
             id: 'project.latestVersionTotalCosts',
@@ -196,6 +203,7 @@ const ProjectTable: FC<Props> = ({ filter }) => {
             format: (project: Project) => <CostsFormat value={project.latestVersionTotalCosts}/>,
             sortable: true,
             sortField: 'project.latestVersionTotalCosts',
+            // compact: true,
         },
         {
             id: 'project.latestVersionTotalEffort',
@@ -204,6 +212,7 @@ const ProjectTable: FC<Props> = ({ filter }) => {
             format: (project: Project) => <EffortFormat value={project.latestVersionTotalEffort}/>,
             sortable: true,
             sortField: 'project.latestVersionTotalEffort',
+            // compact: true,
         },
         {
             id: 'project.labelDate',
@@ -211,8 +220,9 @@ const ProjectTable: FC<Props> = ({ filter }) => {
             selector: (project: Project) => project.labelDate,
             format: (project: Project) => moment(project.labelDate).format('LLL'),
             sortable: false,
-            grow: true,
             sortField: 'project.labelDate',
+            // compact: true,
+            grow:2,
             omit: true,  // currently ommited because of not enough space left.
         },
     ];
@@ -243,7 +253,7 @@ const ProjectTable: FC<Props> = ({ filter }) => {
 
                         defaultSortFieldId={sort_ref.current}
                         defaultSortAsc={order_ref.current === 'asc' ? true : false}
-
+                        // paginationRowsPerPageOptions={[10, 15, 20, 25, 30, 50, 100, 200]}
                         progressPending={loading}
                         pagination
 

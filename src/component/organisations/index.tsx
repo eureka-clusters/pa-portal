@@ -85,6 +85,7 @@ export default function Organisations() {
                                                           title={organisation.name}>{organisation.name}</Link>,
             sortable: true,
             sortField: 'organisation.name',
+            grow:2, 
         },
         {
             id: 'organisation.country.country',
@@ -109,7 +110,7 @@ export default function Organisations() {
         case apiStates.SUCCESS:
             return (
                 <React.Fragment>
-                    {/* <pre className='debug'>{JSON.stringify(data, undefined, 2)}</pre> */}
+                    {/* <pre className='debug'>{JSON.stringify(organisations, undefined, 2)}</pre> */}
                     <BreadcrumbTree current="organisations" data={organisations} linkCurrent={false}/>
 
                     <h1>Organisations</h1>

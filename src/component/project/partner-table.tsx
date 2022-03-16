@@ -27,6 +27,7 @@ const PartnerTable: FC<Props> = ({results}) => {
             format: (partner: Partner) => <Link to={`/partner/${partner.slug}`}
                 title={partner.organisation.name}>{partner.organisation.name}</Link>,
             sortable: true,
+            grow: 4,
         },
         {
             id: 'country',

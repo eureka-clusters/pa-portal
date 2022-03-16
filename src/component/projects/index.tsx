@@ -98,6 +98,7 @@ export default function Projects() {
             format: (row: Project) => <Link to={`/project/${row.slug}`} title={row.name}>{row.name}</Link>,
             sortable: true,
             sortField: 'project.name',
+            grow: 2,
         },
         {
             id: 'project.primaryCluster.name',
