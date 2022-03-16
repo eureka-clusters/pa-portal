@@ -11,6 +11,44 @@ interface Props {
 
 const PartnerTable: FC<Props> = ({organisation}) => {
 
+    const customLatestVersionCostsSort = (rowA: { latestVersionCosts: string; }, rowB: { latestVersionCosts: string; }) => {
+
+        const a = parseFloat(rowA.latestVersionCosts.replace(/,/g, ''));
+        const b = parseFloat(rowB.latestVersionCosts.replace(/,/g, ''));
+
+        // console.log(['a', rowA.latestVersionCosts, a]);
+        // console.log(['b', rowB.latestVersionCosts, b]);
+
+        if (a > b) {
+            return 1;
+        }
+
+        if (b > a) {
+            return -1;
+        }
+
+        return 0;
+    };
+
+    const customLatestVersionEffortSort = (rowA: { latestVersionEffort: string; }, rowB: { latestVersionEffort: string; }) => {
+
+        const a = parseFloat(rowA.latestVersionEffort.replace(/,/g, ''));
+        const b = parseFloat(rowB.latestVersionEffort.replace(/,/g, ''));
+
+        // console.log(['a', rowA.latestVersionCosts, a]);
+        // console.log(['b', rowB.latestVersionCosts, b]);
+
+        if (a > b) {
+            return 1;
+        }
+
+        if (b > a) {
+            return -1;
+        }
+
+        return 0;
+    };
+
     const columns = [
         {
             id: 'project',
@@ -41,14 +79,14 @@ const PartnerTable: FC<Props> = ({organisation}) => {
             selector: (partner: Partner) => partner.organisation && partner.organisation.type ? partner.organisation.type.type : '',
             sortable: true,
         },
-
         {
             id: 'partner_costs',
             name: 'Partner Costs',
             selector: (partner: Partner) => partner.latestVersionCosts,
             format: (partner: Partner) => <CostsFormat value={partner.latestVersionCosts}/>,
             sortable: true,
-            reorder: true,
+            sortFunction: customLatestVersionCostsSort, // required if number_format(value, 2) is used in backend
+            // reorder: true,
         },
         {
             id: 'partner_effort',
@@ -56,6 +94,7 @@ const PartnerTable: FC<Props> = ({organisation}) => {
             selector: (partner: Partner) => partner.latestVersionEffort,
             format: (partner: Partner) => <EffortFormat value={partner.latestVersionEffort}/>,
             sortable: true,
+            sortFunction: customLatestVersionEffortSort, // required if number_format(value, 2) is used in backend
         },
     ];
 

@@ -10,6 +10,44 @@ interface Props {
 
 const PartnerTable: FC<Props> = ({results}) => {
 
+    const customLatestVersionCostsSort = (rowA: { latestVersionCosts: string; }, rowB: { latestVersionCosts: string; }) => {
+        
+        const a = parseFloat(rowA.latestVersionCosts.replace(/,/g, ''));
+        const b = parseFloat(rowB.latestVersionCosts.replace(/,/g, ''));
+
+        // console.log(['a', rowA.latestVersionCosts, a]);
+        // console.log(['b', rowB.latestVersionCosts, b]);
+
+        if (a > b) {
+            return 1;
+        }
+
+        if (b > a) {
+            return -1;
+        }
+
+        return 0;
+    };
+
+    const customLatestVersionEffortSort = (rowA: { latestVersionEffort: string; }, rowB: { latestVersionEffort: string; }) => {
+
+        const a = parseFloat(rowA.latestVersionEffort.replace(/,/g, ''));
+        const b = parseFloat(rowB.latestVersionEffort.replace(/,/g, ''));
+
+        // console.log(['a', rowA.latestVersionEffort, a]);
+        // console.log(['b', rowB.latestVersionEffort, b]);
+
+        if (a > b) {
+            return 1;
+        }
+
+        if (b > a) {
+            return -1;
+        }
+
+        return 0;
+    };
+
     const columns = [
         {
             id: 'project',
@@ -47,6 +85,7 @@ const PartnerTable: FC<Props> = ({results}) => {
             selector: (partner: Partner) => partner.latestVersionCosts,
             format: (partner: Partner) => <CostsFormat value={partner.latestVersionCosts} />,
             sortable: true,
+            sortFunction: customLatestVersionCostsSort, // required if number_format(value, 2) is used in backend
             // reorder: true,
         },
         {
@@ -55,6 +94,7 @@ const PartnerTable: FC<Props> = ({results}) => {
             selector: (partner: Partner) => partner.latestVersionEffort,
             format: (partner: Partner) => <EffortFormat value={partner.latestVersionEffort} />,
             sortable: true,
+            sortFunction: customLatestVersionEffortSort, // required if number_format(value, 2) is used in backend
         },
         {
             id: 'partner_isActive',
