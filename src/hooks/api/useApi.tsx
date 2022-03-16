@@ -158,7 +158,7 @@ export function useApi(url: string, queryParameterDefault = {}, requestOptionsDe
                 }
             }
 
-            console.log(['requestUrl', requestUrl]);
+            // console.log(['requestUrl', requestUrl]);
 
             //create Request object
             const request = new Request(requestUrl, options);
