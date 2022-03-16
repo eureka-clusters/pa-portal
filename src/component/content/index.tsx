@@ -9,7 +9,7 @@ export default function Content() {
         <>
             <main className="flex-shrink-0">
                 <Header/>
-                <Container>
+                <Container className="mb-4">
                     <PageRoutes/>
                 </Container>
 
