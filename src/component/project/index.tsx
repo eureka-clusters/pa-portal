@@ -46,6 +46,9 @@ export default function Project(props: Props) {
 
                         <dt className="col-sm-3 text-end">Primary Cluster:</dt>
                         <dd className="col-sm-9">{project.primaryCluster && project.primaryCluster.name}</dd>
+                        
+                        <dt className="col-sm-3 text-end">Secondary Cluster:</dt>
+                        <dd className="col-sm-9">{project.secondaryCluster && project.secondaryCluster.name}</dd>
 
                         <dt className="col-sm-3 text-end">Programme:</dt>
                         <dd className="col-sm-9">{project.programme}</dd>
