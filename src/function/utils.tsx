@@ -26,6 +26,11 @@ interface EffortFormatProps {
 
 
 export const CostsFormat = ({ value, showPrefix, showSuffix }: CostsFormatProps) => {
+    
+    if (typeof (value) === 'undefined' || value == null) {
+        return (<></>);
+    }
+
     return (
         <NumberFormat
             value={value}
@@ -41,12 +46,18 @@ export const CostsFormat = ({ value, showPrefix, showSuffix }: CostsFormatProps)
 CostsFormat.defaultProps = {
     showPrefix: false,
     showSuffix: true,
+    value: 0
 };
 
 
 
 
 export const EffortFormat = ({ value, showPrefix, showSuffix }: EffortFormatProps) => {
+    
+    if (typeof (value) === 'undefined' || value == null) { 
+        return (<></>);
+    }
+    
     return (
         <NumberFormat
             value={value}
@@ -62,6 +73,7 @@ export const EffortFormat = ({ value, showPrefix, showSuffix }: EffortFormatProp
 EffortFormat.defaultProps = {
     showPrefix: false,
     showSuffix: true,
+    value: 0
 };
 
 export function __delay__(timer: number | undefined) {
