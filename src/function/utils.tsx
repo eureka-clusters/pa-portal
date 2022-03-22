@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import React from 'react';
 import NumberFormat from "react-number-format"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faCheckCircle, faCheckSquare, faSquare } from '@fortawesome/fontawesome-free-solid';
@@ -6,25 +6,12 @@ import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 
 
-interface Props {
-    value?: number
-}
-
-
+/******************    CostsFormat BEGIN   ******************/
 interface CostsFormatProps {
     value?: number
     showPrefix?: boolean,
     showSuffix?: boolean,
 }
-
-
-interface EffortFormatProps {
-    value?: number
-    showPrefix?: boolean,
-    showSuffix?: boolean,
-}
-
-
 export const CostsFormat = ({ value, showPrefix, showSuffix }: CostsFormatProps) => {
     
     if (typeof (value) === 'undefined' || value == null) {
@@ -46,11 +33,17 @@ export const CostsFormat = ({ value, showPrefix, showSuffix }: CostsFormatProps)
 CostsFormat.defaultProps = {
     showPrefix: false,
     showSuffix: true,
-    value: 0
 };
+/******************    CostsFormat END   ******************/
 
 
 
+/******************    EffortFormat BEGIN   ******************/
+interface EffortFormatProps {
+    value?: number
+    showPrefix?: boolean,
+    showSuffix?: boolean,
+}
 
 export const EffortFormat = ({ value, showPrefix, showSuffix }: EffortFormatProps) => {
     
@@ -73,8 +66,9 @@ export const EffortFormat = ({ value, showPrefix, showSuffix }: EffortFormatProp
 EffortFormat.defaultProps = {
     showPrefix: false,
     showSuffix: true,
-    value: 0
 };
+
+/******************    EffortFormat END   ******************/
 
 export function __delay__(timer: number | undefined) {
     return new Promise<void>(resolve => {
