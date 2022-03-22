@@ -251,10 +251,6 @@ const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
 
                     <fieldset>
                         <legend><small>Clusters</small></legend>
-
-
-                        
-
                         
                         {facets.clusters && facets.clusters.map((cluster, i) => (
                             <div key={i}>

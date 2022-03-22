@@ -124,18 +124,19 @@ export default function Partners() {
 
         {
             id: 'partner_costs',
-            name: 'Partner Costs',
+            name: 'Partner Costs (€)',
             selector: (row: Partner) => row.latestVersionCosts,
-            format: (row: Partner) => <CostsFormat value={row.latestVersionCosts} />,
+            format: (row: Partner) => <CostsFormat value={row.latestVersionCosts} showSuffix={false} showPrefix={false}/>,
             sortable: true,
-            reorder: true,
+            right: true,
         },
         {
             id: 'partner_effort',
-            name: 'Partner Effort',
+            name: 'Partner Effort (PY)',
             selector: (row: Partner) => row.latestVersionEffort,
-            format: (row: Partner) => <EffortFormat value={row.latestVersionEffort} />,
+            format: (row: Partner) => <EffortFormat value={row.latestVersionEffort} showSuffix={false} showPrefix={false}/>,
             sortable: true,
+            right: true,
         },
     ];
 

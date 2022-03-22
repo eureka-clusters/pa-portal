@@ -81,19 +81,21 @@ const PartnerTable: FC<Props> = ({organisation}) => {
         },
         {
             id: 'partner_costs',
-            name: 'Partner Costs',
+            name: 'Partner Costs (€)',
             selector: (partner: Partner) => partner.latestVersionCosts,
-            format: (partner: Partner) => <CostsFormat value={partner.latestVersionCosts}/>,
+            format: (partner: Partner) => <CostsFormat value={partner.latestVersionCosts} showSuffix={false} showPrefix={false}/>,
             sortable: true,
+            right: true,
             sortFunction: customLatestVersionCostsSort, // required if number_format(value, 2) is used in backend
             // reorder: true,
         },
         {
             id: 'partner_effort',
-            name: 'Partner Effort',
+            name: 'Partner Effort (PY)',
             selector: (partner: Partner) => partner.latestVersionEffort,
-            format: (partner: Partner) => <EffortFormat value={partner.latestVersionEffort}/>,
+            format: (partner: Partner) => <EffortFormat value={partner.latestVersionEffort} showSuffix={false} showPrefix={false}/>,
             sortable: true,
+            right: true,
             sortFunction: customLatestVersionEffortSort, // required if number_format(value, 2) is used in backend
         },
     ];

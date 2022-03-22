@@ -11,34 +11,58 @@ interface Props {
 }
 
 
-export const CostsFormat: FC<Props> = (props) => {
-    return (
-        <NumberFormat
-            value={props.value}
-            // thousandSeparator={' '}
-            thousandSeparator={','}
-            prefix={'€ '}
-            displayType={'text'}
-            decimalScale={2}
-            fixedDecimalScale={true}
-        />
-    )
+interface CostsFormatProps {
+    value?: number
+    showPrefix?: boolean,
+    showSuffix?: boolean,
 }
 
-export const EffortFormat: FC<Props> = (props) => {
+
+interface EffortFormatProps {
+    value?: number
+    showPrefix?: boolean,
+    showSuffix?: boolean,
+}
+
+
+export const CostsFormat = ({ value, showPrefix, showSuffix }: CostsFormatProps) => {
     return (
         <NumberFormat
-            value={props.value}
-            // thousandSeparator={' '}
+            value={value}
             thousandSeparator={','}
-            prefix={'PY '}
-            // suffix={'PY '}
+            prefix={showPrefix ? '€ ':''}
+            suffix={showSuffix ? ' €' : ''}
             displayType={'text'}
             decimalScale={2}
             fixedDecimalScale={true}
         />
     )
 }
+CostsFormat.defaultProps = {
+    showPrefix: false,
+    showSuffix: true,
+};
+
+
+
+
+export const EffortFormat = ({ value, showPrefix, showSuffix }: EffortFormatProps) => {
+    return (
+        <NumberFormat
+            value={value}
+            thousandSeparator={','}
+            prefix = { showPrefix? 'PY ': '' }
+            suffix = { showSuffix? ' PY': '' }
+            displayType={'text'}
+            decimalScale={2}
+            fixedDecimalScale={true}
+        />
+    )
+}
+EffortFormat.defaultProps = {
+    showPrefix: false,
+    showSuffix: true,
+};
 
 export function __delay__(timer: number | undefined) {
     return new Promise<void>(resolve => {

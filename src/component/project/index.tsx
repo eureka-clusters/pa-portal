@@ -75,12 +75,12 @@ export default function Project(props: Props) {
 
                         <dt className="col-sm-3 text-end">Total costs:</dt>
                         <dd className="col-sm-9">
-                        <CostsFormat value={project.latestVersionTotalCosts}/>
+                            <CostsFormat value={project.latestVersionTotalCosts}/>
                         </dd>
 
                         <dt className="col-sm-3 text-end">Total effort:</dt>
                         <dd className="col-sm-9">
-                        <EffortFormat value={project.latestVersionTotalEffort} />
+                            <EffortFormat value={project.latestVersionTotalEffort}/>
                         </dd>
 
                         <dt className="col-sm-3 text-end">Description:</dt>

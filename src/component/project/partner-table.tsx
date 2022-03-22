@@ -81,19 +81,21 @@ const PartnerTable: FC<Props> = ({results}) => {
         },
         {
             id: 'partner_costs',
-            name: 'Partner Costs',
+            name: 'Partner Costs (€)',
             selector: (partner: Partner) => partner.latestVersionCosts,
-            format: (partner: Partner) => <CostsFormat value={partner.latestVersionCosts} />,
+            format: (partner: Partner) => <CostsFormat value={partner.latestVersionCosts} showSuffix={false} showPrefix={false}/>,
             sortable: true,
+            right: true,
             sortFunction: customLatestVersionCostsSort, // required if number_format(value, 2) is used in backend
             // reorder: true,
         },
         {
             id: 'partner_effort',
-            name: 'Partner Effort',
+            name: 'Partner Effort (PY)',
             selector: (partner: Partner) => partner.latestVersionEffort,
-            format: (partner: Partner) => <EffortFormat value={partner.latestVersionEffort} />,
+            format: (partner: Partner) => <EffortFormat value={partner.latestVersionEffort} showSuffix={false} showPrefix={false}/>,
             sortable: true,
+            right: true,
             sortFunction: customLatestVersionEffortSort, // required if number_format(value, 2) is used in backend
         },
         {
@@ -102,6 +104,7 @@ const PartnerTable: FC<Props> = ({results}) => {
             selector: (partner: Partner) => partner.isActive,
             format: (partner: Partner) => <BooleanIconFormat value={partner.isActive}/>,
             sortable: true,
+            center: true,
         },
         {
             id: 'partner_isSelfFunded',
@@ -110,6 +113,7 @@ const PartnerTable: FC<Props> = ({results}) => {
             // format: (partner: Partner) => <BooleanIconFormat value={partner.isSelfFunded} type="square" showFalse={true} />,
             format: (partner: Partner) => <BooleanIconFormat value={partner.isSelfFunded} />,
             sortable: true,
+            center: true,
         },
         {
             id: 'partner_isCoordinator',
@@ -117,6 +121,7 @@ const PartnerTable: FC<Props> = ({results}) => {
             selector: (partner: Partner) => partner.isCoordinator,
             format: (partner: Partner) => <BooleanIconFormat value={partner.isCoordinator} />,
             sortable: true,
+            center: true,
         },
     ];
 
