@@ -156,7 +156,7 @@ function BreadcrumbTree({ current, data, linkCurrent = false }) {
         if(breadcrumbPath.children !== undefined) {
             setBreadcrumbs(flatten(breadcrumbPath.children));
         }
-    }, [current]);
+    }, [current, data]);
     
    
 
