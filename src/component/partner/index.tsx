@@ -4,6 +4,7 @@ import {Link, RouteComponentProps} from "react-router-dom";
 import BreadcrumbTree from 'component/partial/breadcrumb-tree'
 import { usePartner, apiStates, ApiError } from 'hooks/api/partner/usePartner';
 import { CostsFormat, EffortFormat } from 'function/utils';
+import { useParams } from "react-router-dom";
 
 //Create the interface to identify the slug
 interface MatchParams {
@@ -13,9 +14,14 @@ interface MatchParams {
 interface Props extends RouteComponentProps<MatchParams> {
 }
 
-export default function Partner(props: Props) {
+type UrlParams = {
+    slug: string;
+};
 
-    const slug = props.match.params.slug;
+export default function Partner(props: Props) {
+    
+    const { slug } = useParams<UrlParams>();
+   
     const { state, error, partner } = usePartner({ slug: slug });
 
 

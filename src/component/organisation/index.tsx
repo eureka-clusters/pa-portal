@@ -3,6 +3,7 @@ import {RouteComponentProps} from "react-router-dom";
 import BreadcrumbTree from 'component/partial/breadcrumb-tree'
 import PartnerTable from "component/organisation/partner-table";
 import { useOrganisation, apiStates, ApiError } from 'hooks/api/organisation/useOrganisation'; 
+import { useParams } from "react-router-dom";
 
 //Create the interface to identify the slug
 interface MatchParams {
@@ -12,9 +13,13 @@ interface MatchParams {
 interface Props extends RouteComponentProps<MatchParams> {
 }
 
+type UrlParams = {
+    slug: string;
+};
 export default function Organisation(props: Props) {
 
-    const slug = props.match.params.slug;
+    const { slug } = useParams<UrlParams>();
+
     const { state, error, organisation } = useOrganisation({ slug: slug });
 
     switch (state) {

@@ -5,6 +5,8 @@ import moment from 'moment';
 import {RouteComponentProps} from "react-router-dom";
 import { useProject, apiStates, ApiError } from 'hooks/api/project/useProject'; 
 import { CostsFormat, EffortFormat } from 'function/utils';
+import { useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 //Create the interface to identify the slug
 interface MatchParams {
@@ -14,9 +16,13 @@ interface MatchParams {
 interface Props extends RouteComponentProps<MatchParams> {
 }
 
+type UrlParams = {
+    slug: string;
+};
+
 export default function Project(props: Props) {
 
-    const slug = props.match.params.slug;
+    const { slug } = useParams<UrlParams>();
 
     const { state, error, project } = useProject({ slug: slug });
 
@@ -25,9 +31,8 @@ export default function Project(props: Props) {
             return <ApiError error={error}/>
         case apiStates.SUCCESS:
             return (
-                <React.Fragment>
+                <>
                     {/* <pre className='debug'>{JSON.stringify(project, undefined, 2)}</pre> */}
-
                     <BreadcrumbTree current="project" data={{
                         ...project, ...{
                             project_name: project.name,
@@ -92,7 +97,7 @@ export default function Project(props: Props) {
                         </dd>
                     </dl>
                     <PartnerTableWithCharts project={project}/>
-                </React.Fragment>
+                </>
             );
         default:
             return <p>Loading project...</p>;
