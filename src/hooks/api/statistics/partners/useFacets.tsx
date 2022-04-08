@@ -46,6 +46,7 @@ export function useFacets(queryParameter: Props = { filter: '' }, requestOptions
         // has to be removed otherwise it will re-render the complete page maybe add different states for re-query e.g. because of sorting / pagination ?
         // setPartData({
         //     state: apiStates.LOADING,
+        //     facets: {} as Facets
         // })
 
         try {

@@ -39,6 +39,9 @@ const defaultProps = {
 
 
 export function usePartners(queryParameter: Props, requestOptions = {}) {   
+
+    const project = queryParameter.project;
+
     queryParameter = { ...defaultProps, ...queryParameter }
 
     let url = '/list/partner';
@@ -54,7 +57,6 @@ export function usePartners(queryParameter: Props, requestOptions = {}) {
     //     url = url + '?organisation=' + queryParameter.organisation.slug;
     //     delete queryParameter.organisation;
     // }
-
 
     const fetchData = useApi(url, queryParameter, requestOptions);
 
@@ -79,6 +81,12 @@ export function usePartners(queryParameter: Props, requestOptions = {}) {
             if (!mountedRef.current) return null;
             setHookState(hookState => ({ ...hookState, ...partialData }))
         }
+
+        // must be removed otherwise datatable pagination doesn't work
+        // setPartData({
+        //     state: apiStates.LOADING,
+        //     partners: []
+        // })
 
         try {
             // const data = await <Response>fetchData(queryParameter, requestOptions)  // doesn't work don't know how the interface could be used.
@@ -112,7 +120,9 @@ export function usePartners(queryParameter: Props, requestOptions = {}) {
         // "load" could be added if its a callback. but still can't get rid of these warnings...
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [load, mountedRef]);
+    // }, [load, queryParameter.project, mountedRef]);
+    // }, [load, mountedRef]);
+    }, [load, project, mountedRef]); // possible solution to load on project change
 
 
     return { ...hookState, load: load };

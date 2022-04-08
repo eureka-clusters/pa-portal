@@ -65,8 +65,10 @@ export function useProjects(queryParameter: Props = { filter: '', page: defaultP
         }
 
         // has to be removed otherwise it will re-render the complete page maybe add different states for re-query e.g. because of sorting / pagination ?
+        // must be removed otherwise datatable pagination doesn't work
         // setPartData({
         //     state: apiStates.LOADING,
+        //     projects: []
         // })
 
         try {

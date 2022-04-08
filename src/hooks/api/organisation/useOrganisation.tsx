@@ -16,6 +16,8 @@ interface Props {
 
 export function useOrganisation(queryParameter: Props, requestOptions = {}) {   
 
+    const slug = queryParameter.slug;
+
     let url = '/view/organisation/{slug}';
     
     const fetchData = useApi(url, queryParameter, requestOptions, { tokenMethod: 'jwt', tokenRequired: true, parseUrl: true });
@@ -38,6 +40,11 @@ export function useOrganisation(queryParameter: Props, requestOptions = {}) {
             if (!mountedRef.current) return null;
             setHookState(hookState => ({ ...hookState, ...partialData }))
         }
+
+        setPartData({
+            state: apiStates.LOADING,
+            organisation: {} as Organisation
+        })
 
         try {
             // const data = await <Response>fetchData(queryParameter, requestOptions)  // doesn't work don't know how the interface could be used.
@@ -67,7 +74,7 @@ export function useOrganisation(queryParameter: Props, requestOptions = {}) {
         // "load" could be added if its a callback. but still can't get rid of these warnings...
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [load, mountedRef]);
+    }, [load, slug, mountedRef]);
 
 
     return { ...hookState, load: load };

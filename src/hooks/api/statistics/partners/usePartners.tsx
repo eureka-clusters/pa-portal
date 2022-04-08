@@ -66,9 +66,12 @@ export function usePartners(queryParameter: Props = { filter: '', page: defaultP
         }
 
         // has to be removed otherwise it will re-render the complete page maybe add different states for re-query e.g. because of sorting / pagination ?
+        // must be removed otherwise datatable pagination doesn't work
         // setPartData({
         //     state: apiStates.LOADING,
+        //     partners: []
         // })
+
 
         try {
             // const data = await <Response>fetchData(queryParameter, requestOptions)  // doesn't work don't know how the interface could be used.

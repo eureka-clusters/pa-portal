@@ -57,6 +57,12 @@ export function useProjects(queryParameter: Props, requestOptions = {}) {
             if (!mountedRef.current) return null;
             setHookState(hookState => ({ ...hookState, ...partialData }))
         }
+        
+        // must be removed otherwise datatable pagination doesn't work
+        // setPartData({
+        //     state: apiStates.LOADING,
+        //     projects: [],
+        // })
 
         try {
             // const data = await <Response>fetchData(queryParameter, requestOptions)  // doesn't work don't know how the interface could be used.

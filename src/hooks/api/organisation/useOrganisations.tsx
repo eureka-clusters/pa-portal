@@ -67,6 +67,12 @@ export function useOrganisations(queryParameter: Props , requestOptions = {}) {
             setHookState(hookState => ({ ...hookState, ...partialData }))
         }
 
+        // must be removed otherwise datatable pagination doesn't work
+        // setPartData({
+        //     state: apiStates.LOADING,
+        //     organisations: []
+        // })
+
         try {
             // const data = await <Response>fetchData(queryParameter, requestOptions)  // doesn't work don't know how the interface could be used.
             const data = await fetchData(queryParameter, requestOptions)
