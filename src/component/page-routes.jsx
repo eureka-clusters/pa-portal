@@ -10,15 +10,14 @@ import Projects from "./projects";
 import Project from "./project";
 import Partners from "./partners";
 import Partner from "./partner";
+import Search from "./search";
+
 
 import Organisations from "./organisations";
 import Organisation from "./organisation"
 
 import ProjectStatistics from "./statistics/projects"
 import PartnerStatistics from "./statistics/partners"
-
-
-
 import ProtectedPage from "./partial/protected-page";
 import PublicPage from "./partial/public-page";
 
@@ -40,7 +39,7 @@ function GenericNotFound() {
 
 
 function HomePage() {
-    return <h3>Home</h3>;
+    return <h1>Home</h1>;
 }
 
 
@@ -79,59 +78,56 @@ export const PageRoutes = () => {
     return (
         <Switch>
             <Route path='/' exact
-                   render={props => <HomePage {...props} />}
+                render={props => <HomePage {...props} />}
             />
             <Route path='/public'
-                   render={props => <PublicPage {...props} />}
+                render={props => <PublicPage {...props} />}
             />
             <PrivateRoute path='/protected'
-                          render={props => <ProtectedPage {...props} />}
+                        render={props => <ProtectedPage {...props} />}
             />
             <Route path='/login'
-                   render={props => <Login {...props} />}
+                render={props => <Login {...props} />}
             />
             <Route path='/logout'
-                   render={props => <Logout {...props} />}
+                render={props => <Logout {...props} />}
             />
             <Route path='/callback'
-                   render={props => <Callback {...props} />}
+                render={props => <Callback {...props} />}
             />
             <PrivateRoute path='/account'
                     render={props => <Account {...props} />}
             />
+            <PrivateRoute path='/search'
+                render={props => <Search {...props} />}
+            />
+
             <PrivateRoute path='/statistics/projects'
-                          render={props => <ProjectStatistics {...props} />}
+                        render={props => <ProjectStatistics {...props} />}
             />
             <PrivateRoute path='/statistics/partners'
-                          render={props => <PartnerStatistics {...props} />}
+                        render={props => <PartnerStatistics {...props} />}
             />
-
             <PrivateRoute path='/projects'
-                          render={props => <Projects {...props} />}
+                        render={props => <Projects {...props} />}
             />
-            <PrivateRoute path='/project/:slug'
-                          render={props => <Project {...props} />}
+            <PrivateRoute exact path='/project/:slug'
+                        render={props => <Project {...props} />}
             />
-
             <PrivateRoute path='/organisations'
-                          render={props => <Organisations {...props} />}
+                        render={props => <Organisations {...props} />}
             />
-
             <PrivateRoute path='/organisation/:slug'
-                          render={props => <Organisation {...props} />}
+                        render={props => <Organisation {...props} />}
             />
-
             <PrivateRoute path='/partners'
                 render={props => <Partners {...props} />}
             />
-            
             <PrivateRoute path='/partner/:slug'
-                          render={props => <Partner {...props} />}
+                        render={props => <Partner {...props} />}
             />
-
             <Route path="/404" component={GenericNotFound}/>
             <Redirect to="/404"/>
-
         </Switch>
     );
 }
