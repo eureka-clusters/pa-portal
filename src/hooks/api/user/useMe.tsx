@@ -63,8 +63,6 @@ export function useMe(queryParameter: Props , requestOptions = {}) {
                 data: data
             })
         } catch (error: any) {
-
-            console.log('error catched', error);
             setPartData({
                 state: apiStates.ERROR,
                 error: error
@@ -80,7 +78,6 @@ export function useMe(queryParameter: Props , requestOptions = {}) {
         
         // important unload of unmounted component
         return () => {
-            console.log('when is this called useMe_mountedRef_withCallback');
             mountedRef.current = false
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps

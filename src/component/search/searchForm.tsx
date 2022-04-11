@@ -124,9 +124,9 @@ function SearchForm({ query } : { query: string; }) {
     }
 
 
-    console.log(['error', error]);
-    console.log(['results.length', results.length]);
-    console.log(['state', state]);
+    // console.log(['error', error]);
+    // console.log(['results.length', results.length]);
+    // console.log(['state', state]);
 
     let render = null;
 

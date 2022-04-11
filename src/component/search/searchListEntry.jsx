@@ -30,7 +30,6 @@ export default function searchListEntry(props) {
     let linkLabel;
     let linkTitle;
 
-    console.log(['props', props]);
     htmlType = <span className="search-result-type">{Capitalize(item.type)}:&nbsp;</span>
     linkLabel = <>{htmlType}<p className="search-result-heading">{item.name}</p></>
     linkTitle = item.title;

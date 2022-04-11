@@ -23,6 +23,15 @@ const defaultSettings = {
     parseUrl: false,
 }
 
+
+interface QueryParameterOptions {
+    [x: string]: any;
+}
+
+interface RequestOptions {
+    [x: string]: any;
+}
+
 export function useApi(url: string, queryParameterDefault = {}, requestOptionsDefault = {}, settings = { tokenMethod: defaultSettings.tokenMethod, tokenRequired: defaultSettings.tokenRequired, parseUrl: defaultSettings.parseUrl}) {
 
     const mountedRef = useRef(true);
@@ -31,7 +40,7 @@ export function useApi(url: string, queryParameterDefault = {}, requestOptionsDe
     const queryParameterRef = useRef(queryParameterDefault);
     const requestOptionsRef = useRef(requestOptionsDefault);
     
-    const call = useCallback(async (queryParameter, requestOptions) => {
+    const call = useCallback(async (queryParameter: QueryParameterOptions, requestOptions: RequestOptions) => {
 
         const defaultOptions = {
             method: 'GET',
