@@ -43,6 +43,9 @@ export default function Project(props: Props) {
                     <h1>Project Page</h1>
 
                     <dl className="row">
+                        <dt className="col-sm-3 text-end">Identification Number:</dt>
+                        <dd className="col-sm-9">{project.number}</dd>
+
                         <dt className="col-sm-3 text-end">Project:</dt>
                         <dd className="col-sm-9">{project.name}</dd>
 
@@ -57,6 +60,11 @@ export default function Project(props: Props) {
 
                         <dt className="col-sm-3 text-end">Programme:</dt>
                         <dd className="col-sm-9">{project.programme}</dd>
+
+                        <dt className="col-sm-3 text-end">Programme Call:</dt>
+                        <dd className="col-sm-9">{project.programmeCall}</dd>
+
+                        
 
                         {project.coordinator && <>
                             <dt className="col-sm-3 text-end">Coordinator:</dt>
