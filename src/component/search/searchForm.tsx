@@ -148,12 +148,12 @@ function SearchForm({ query } : { query: string; }) {
                     onPageChange={handlePageChange}
                 />
 
-                <u>debug:</u><br />
-                pageCount: {pageCount} <br />
-                pageSize: {pageSize} <br />
-                page: {page} <br />
-                totalItems: {totalItems}<br />
-                limit: {limit} <br />
+                {/*<u>debug:</u><br />*/}
+                {/*pageCount: {pageCount} <br />*/}
+                {/*pageSize: {pageSize} <br />*/}
+                {/*page: {page} <br />*/}
+                {/*totalItems: {totalItems}<br />*/}
+                {/*limit: {limit} <br />*/}
             </>
             break;
         default:

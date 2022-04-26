@@ -16,7 +16,7 @@ When something is changed in the root of the application (for example different 
 
 ```shell
 docker compose build app
-docker compose up app --force-recreate
+docker compose up app -d --force-recreate
 ```
 
 As the root of the app is not mounted in the container (only /src)
