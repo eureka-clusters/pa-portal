@@ -73,32 +73,34 @@ export default function searchListEntry({item, searchText}: { item: itemProps; s
     let score;
     let itemtype;
 
-    htmlType = <span className="search-result-type">{Capitalize(item.type)}:&nbsp;</span>
-    linkLabel = <>{htmlType}<p className="search-result-heading">{item.name}</p></>
+    htmlType = <span className="search-result-type float-end badge bg-secondary">{Capitalize(item.type)}</span>
+    // htmlType = <span className="search-result-type-2 float-end float-end position-absolute top-0 end-0">{Capitalize(item.type)}</span>
+
+    linkLabel = <><p className="search-result-heading">{htmlType}{item.name}</p></>
     linkTitle = item.title;
     score = <div className="float-end search-result-score"><ScoreFormat value={item.score}/></div>
     itemtype = item.type;
 
     switch (itemtype) {
         case 'project':
-            linkLabel = <>{htmlType}<p className="search-result-heading"><Highlighted text={item.name}
-                                                                                      highlight={searchText}/></p>
+            linkLabel = <><p className="search-result-heading">{htmlType}<Highlighted text={item.name}
+                highlight={searchText} /></p>
                 <div className="d-flex flex-column justify-content-end search-detail">
                     {item.title ? <div className="p-2 search-highlight"><span
                         className="search-detail-label">Title:</span> <Highlighted text={item.title}
-                                                                                  highlight={searchText}/></div> : ''}
+                            highlight={searchText} /></div> : ''}
                     {item.description ? <div className="p-2 search-highlight"><span
                         className="search-detail-label">Description:</span> <Highlighted text={item.description}
-                                                                                        highlight={searchText}/>
+                            highlight={searchText} />
                     </div> : ''}
                 </div>
                 {score}
             </>
             link = <Link className="list-group-item list-group-item-action" to={`/project/${item.slug}`}
-                         title={linkTitle}>{linkLabel}</Link>;
+                title={linkTitle}>{linkLabel}</Link>;
             break;
         case 'organisation':
-            linkLabel = <>{htmlType}<p className="search-result-heading">{item.name}</p>
+            linkLabel = <><p className="search-result-heading">{htmlType}{item.name}</p>
                 <div className="d-flex flex-column justify-content-end search-detail">
                     {item.title ? <div className="p-2 search-highlight"><span
                         className="search-detail-label">Title:</span> <Highlighted text={item.title}

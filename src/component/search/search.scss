@@ -4,7 +4,18 @@
 }
 
 .search-result-type {
-    font-size: smaller;
+    font-size: 0.75rem  !important;
+}
+
+.search-result-type-2 {
+    padding: 6px 12px;
+    border-radius: 0px 0px 0px 10px;
+    font-weight: 600;
+    font-size: small;
+    box-shadow: 0 0px 1px rgba(0, 0, 0, .25);
+    cursor: pointer;
+    background: #2F4058;
+    color: whitesmoke;
 }
 
 .search-detail-label {
