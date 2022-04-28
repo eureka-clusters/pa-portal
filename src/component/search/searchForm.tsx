@@ -58,6 +58,7 @@ function SearchForm({ query } : { query: string; }) {
     }, [location]);
 
     const [searchText, setSearchText] = useState<string>("");
+    const [requestedSearchText, setRequestedSearchText] = useState<string>("");
     
     const divRef = useRef<HTMLDivElement>(null);
     const ulRef = useRef<HTMLUListElement>(null);
@@ -88,7 +89,8 @@ function SearchForm({ query } : { query: string; }) {
     const onSearch = async (query: string, page:number) => {
         if (query) {
             // load({ query: query, page: currentPage, pageSize: limit })
-            load({ query: query, page: page, pageSize: limit })
+            await load({ query: query, page: page, pageSize: limit })
+            setRequestedSearchText(query);
             setShowResults(true);
         } else {
             state = apiStates.LOADING;
@@ -136,7 +138,7 @@ function SearchForm({ query } : { query: string; }) {
             break;
         case apiStates.SUCCESS:
             render = <>
-                {showResults ? <SearchList results={results} ulRef={ulRef} searchText={searchText}/> : null}
+                {showResults ? <SearchList results={results} ulRef={ulRef} searchText={requestedSearchText}/> : null}
                
                 <Pagination
                     className="pagination-bar"

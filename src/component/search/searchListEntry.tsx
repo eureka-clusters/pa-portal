@@ -73,8 +73,7 @@ export default function searchListEntry({item, searchText}: { item: itemProps; s
     let score;
     let itemtype;
 
-    htmlType = <span className="search-result-type float-end badge bg-secondary">{Capitalize(item.type)}</span>
-    // htmlType = <span className="search-result-type-2 float-end float-end position-absolute top-0 end-0">{Capitalize(item.type)}</span>
+    htmlType = <span className="search-result-type  position-absolute top-0 start-0">{Capitalize(item.type)}</span>
 
     linkLabel = <><p className="search-result-heading">{htmlType}{item.name}</p></>
     linkTitle = item.title;
