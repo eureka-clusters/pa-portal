@@ -10,7 +10,8 @@ export default function SearchList({ results, ulRef, searchText}) {
 
     const numRows = data.length
     let noResults = <>
-        <p>Your search for '{searchText}' did not match any items.</p>
+        <p>Your search for '{searchText}' did not match any items. <br /><br /> 
+            <strong>Note:</strong> Currently minimum required char length is 3.</p>
     </>
     return (
         <>
