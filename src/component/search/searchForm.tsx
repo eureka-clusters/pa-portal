@@ -140,7 +140,7 @@ function SearchForm({ query } : { query: string; }) {
             render = <>
                 {showResults ? <SearchList results={results} ulRef={ulRef} searchText={requestedSearchText}/> : null}
                
-                <Pagination
+                {showResults ? <Pagination
                     className="pagination-bar"
                     currentPage={currentPage}
                     totalCount={totalItems}
@@ -148,7 +148,7 @@ function SearchForm({ query } : { query: string; }) {
                     // pageSize={limit}  
                     pageSize={pageSize}
                     onPageChange={handlePageChange}
-                />
+                /> : null}
 
                 {/*<u>debug:</u><br />*/}
                 {/*pageCount: {pageCount} <br />*/}
