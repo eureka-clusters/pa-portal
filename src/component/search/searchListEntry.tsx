@@ -12,11 +12,12 @@ const Highlighted = ({text = '', highlight = ''}: { text: string; highlight: str
         return <span>{text}</span>
     }
 
-    // orgiginal regexp    
+    // orgiginal regexp
     // const regex = new RegExp(`(${_.escapeRegExp(highlight)})`, 'gi')
 
-    // split the highlight text on "space"
-    const highlightArray = highlight.split(' ');
+    var highlightRegex = /'([^']*)'|"([^"]*)"|(\S+)/gi;  // search for all strings but keep strings with "" or '' together
+    var highlightArray = (highlight.match(highlightRegex) || []).map(m => m.replace(highlightRegex, '$1$2$3'));
+    // console.log(['highlightArray', highlightArray]);
 
     // join the escaped parts with | to a string
     const regexpPart= highlightArray.map((a) => `${_.escapeRegExp(a)}`).join('|');
@@ -24,7 +25,7 @@ const Highlighted = ({text = '', highlight = ''}: { text: string; highlight: str
     
     // add the regular expression
     const regex = new RegExp(`(${regexpPart})`, 'gi')
-    
+   
     // console.log(['regex', regex]);
     const parts = text.split(regex)
     return (
