@@ -1,7 +1,7 @@
 import React, {FC} from 'react';
 import {Link} from "react-router-dom";
 import DataTable from 'component/database-table/index';
-import {CostsFormat, EffortFormat} from 'function/utils';
+import { CostsFormat, EffortFormat, BooleanIconFormat } from 'function/utils';
 import {Partner} from "interface/project/partner";
 import {Organisation} from "interface/organisation";
 import { usePartners, apiStates, ApiError } from 'hooks/api/partner/usePartners';
@@ -57,15 +57,16 @@ const PartnerTable: FC<Props> = ({organisation}) => {
             format: (partner: Partner) => <Link to={`/project/${partner.project.slug}`}
                                                 title={partner.project.name}>{partner.project.name}</Link>,
             sortable: true,
-            omit: true,
+            grow: 1,
         },
         {
             id: 'partner',
             name: 'Partner',
             selector: (partner: Partner) => partner.organisation.name,
             format: (partner: Partner) => <Link to={`/partner/${partner.slug}`}
-                                                title={partner.organisation.name}>{partner.organisation.name}</Link>,
+                title={partner.organisation.name}>{partner.organisation.name}</Link>,
             sortable: true,
+            grow: 3,
         },
         {
             id: 'country',
@@ -83,7 +84,7 @@ const PartnerTable: FC<Props> = ({organisation}) => {
             id: 'partner_costs',
             name: 'Partner Costs (€)',
             selector: (partner: Partner) => partner.latestVersionCosts,
-            format: (partner: Partner) => <CostsFormat value={partner.latestVersionCosts} showSuffix={false} showPrefix={false}/>,
+            format: (partner: Partner) => <CostsFormat value={partner.latestVersionCosts} showSuffix={false} showPrefix={false} />,
             sortable: true,
             right: true,
             sortFunction: customLatestVersionCostsSort, // required if number_format(value, 2) is used in backend
@@ -93,11 +94,37 @@ const PartnerTable: FC<Props> = ({organisation}) => {
             id: 'partner_effort',
             name: 'Partner Effort (PY)',
             selector: (partner: Partner) => partner.latestVersionEffort,
-            format: (partner: Partner) => <EffortFormat value={partner.latestVersionEffort} showSuffix={false} showPrefix={false}/>,
+            format: (partner: Partner) => <EffortFormat value={partner.latestVersionEffort} showSuffix={false} showPrefix={false} />,
             sortable: true,
             right: true,
             sortFunction: customLatestVersionEffortSort, // required if number_format(value, 2) is used in backend
         },
+        {
+            id: 'partner_isActive',
+            name: 'isActive',
+            selector: (partner: Partner) => partner.isActive,
+            format: (partner: Partner) => <BooleanIconFormat value={partner.isActive} />,
+            sortable: true,
+            center: true,
+        },
+        {
+            id: 'partner_isSelfFunded',
+            name: 'isSelfFunded',
+            selector: (partner: Partner) => partner.isSelfFunded,
+            // format: (partner: Partner) => <BooleanIconFormat value={partner.isSelfFunded} type="square" showFalse={true} />,
+            format: (partner: Partner) => <BooleanIconFormat value={partner.isSelfFunded} />,
+            sortable: true,
+            center: true,
+        },
+        {
+            id: 'partner_isCoordinator',
+            name: 'isCoordinator',
+            selector: (partner: Partner) => partner.isCoordinator,
+            format: (partner: Partner) => <BooleanIconFormat value={partner.isCoordinator} />,
+            sortable: true,
+            center: true,
+        },
+        
     ];
 
     const { 
