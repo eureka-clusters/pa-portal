@@ -1,12 +1,8 @@
 import React, { useRef, useCallback } from 'react'
 import { useApi, apiStates, iApiError } from 'hooks/api/useApi';
 import { Partner } from "interface/project/partner";
-// import { Project } from "interface/project";
-// import { Organisation } from "interface/organisation";
 
 export { ApiError, apiStates } from 'hooks/api/useApi';
-
-
 interface State {
     state: string,
     error?: iApiError,
@@ -18,8 +14,6 @@ interface State {
 }
 
 interface Props {
-    // project?: Project,
-    // organisation?: Organisation,
     project?: string,
     organisation?: string,
     filter?: string,
@@ -119,9 +113,7 @@ export function usePartners(queryParameter: Props, requestOptions = {}) {
         // why can't i add properties to the "dependecies" ... (sorting etc. doen't work with it..)
         // "load" could be added if its a callback. but still can't get rid of these warnings...
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [load, queryParameter.project, mountedRef]);
-    // }, [load, mountedRef]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [load, project, mountedRef]); // possible solution to load on project change
 
 

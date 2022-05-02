@@ -8,7 +8,7 @@ import Logout from "./logout";
 import Account from "./account";
 import Projects from "./projects";
 import Project from "./project";
-import Partners from "./partners";
+// import Partners from "./partners";
 import Partner from "./partner";
 import Search from "./search";
 
@@ -47,16 +47,6 @@ function HomePage() {
 // screen if you're not yet authenticated.
 function PrivateRoute({children, ...props}) {
     let auth = useAuth();
-
-    // @Johan
-    // with the following code routes like below are working
-    // <PrivateRoute path='/partner'
-    //      render = { props => < Partner {...props } />}
-    // />
-    // also routes given as:
-    //  <PrivateRoute path='/partner'>
-    //      <Partner />
-    //  </PrivateRoute >
 
     const location = useLocation();
 
@@ -120,9 +110,12 @@ export const PageRoutes = () => {
             <PrivateRoute path='/organisation/:slug'
                         render={props => <Organisation {...props} />}
             />
-            <PrivateRoute path='/partners'
+
+            {/* disabled as not used yet */}
+            {/* <PrivateRoute path='/partners'
                 render={props => <Partners {...props} />}
-            />
+            /> */}
+            
             <PrivateRoute path='/partner/:slug'
                         render={props => <Partner {...props} />}
             />

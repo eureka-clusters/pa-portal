@@ -1,5 +1,4 @@
-import React, {FC} from 'react';
-
+import React, { useEffect, FC} from 'react';
 import {Link} from "react-router-dom";
 import DataTable from 'component/database-table/index';
 import { CostsFormat, EffortFormat} from 'function/utils';
@@ -43,49 +42,40 @@ const PartnerTable: FC<Props> = ({filter}) => {
     const [isExportLoading, setIsExportButtonLoading] = React.useState(
         false
     );
-    
+  
     const handlePageChange = async (newpage: number = 1) => {
         setCurrentPage(newpage);
-        setLoading(true);
-        await load({
-            filter: getFilter(filter),
-            page: newpage,
-            pageSize: perPage,
-            sort: sort_ref.current,
-            order: order_ref.current
-        });
-        setLoading(false);
-    };
+    }
 
-    const handlePerRowsChange = async (perPage: any, page: any) => {
-        setLoading(true);
-        await load({
-            filter: getFilter(filter),
-            page: page,
-            pageSize: perPage,
-            sort: sort,
-            order: order
-        });
-        setPerPage(perPage);
-        setLoading(false);
-    };
-  
-    const handleSort = async (column: any, sortDirection: any) => {
-        let sortField = column.sortField;
-        setSort(sortField);
+    //@johan i wanted to get rid of this "any" for column and use the exported TableColumn interface from datatable but it doesn't work. any idea?
+    // const handleSort = async (column: TableColumn, sortDirection: string) => {
+    const handleSort = async (column: any, sortDirection: string) => {
+        setSort(column.sortField);
         setOrder(sortDirection);
-        if (currentPage === 1) {
-            await load({
-                filter: getFilter(filter),
-                page: 1,
-                pageSize: perPage,
-                sort: sortField,
-                order: sortDirection
-            });
-        }
     };
 
-    React.useEffect(() => {
+    const handlePerRowsChange = async (perPage: number, page: number) => {
+        setPerPage(perPage);
+    };
+
+    const loadAsync = async () => {
+        setLoading(true);
+        await load({
+            filter: getFilter(filter),
+            page: currentPage,
+            pageSize: perPage,
+            sort,
+            order
+        });
+        setLoading(false);
+    };
+
+    useEffect(() => {
+        loadAsync();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentPage, perPage, sort, order]);
+
+    useEffect(() => {
         if (isExportLoading) {
             // start the download
             (async () => {

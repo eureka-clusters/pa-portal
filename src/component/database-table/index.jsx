@@ -1,6 +1,7 @@
 import React from 'react';
 import DataTable from 'react-data-table-component';
 
+export { TableProps, TableProps as IDataTableProps, TableColumn, TableRow, TableStyles, Theme, Themes, ConditionalStyles, ExpanderComponentProps, PaginationComponentProps, PaginationOptions, PaginationServerOptions, ContextMessage, SortOrder, SortFunction, Selector, } from 'react-data-table-component';
 // import Checkbox from '@material-ui/core/Checkbox';
 // import ArrowDownward from '@material-ui/icons/ArrowDownward';
 // const sortIcon = <ArrowDownward />;

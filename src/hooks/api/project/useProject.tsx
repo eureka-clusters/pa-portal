@@ -72,8 +72,7 @@ export function useProject(queryParameter: Props, requestOptions = {}) {
         // why can't i add properties to the "dependecies" ... (sorting etc. doen't work with it..)
         // "load" could be added if its a callback. but still can't get rid of these warnings...
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [load, mountedRef]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [load, slug, mountedRef]);
 
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {Link} from 'react-router-dom';
 import BreadcrumbTree from 'component/partial/breadcrumb-tree';
 import DataTable from 'component/database-table/index';
@@ -31,42 +31,32 @@ export default function Organisations() {
     
     const handlePageChange = async (newpage: number = 1) => {
         setCurrentPage(newpage);
-        setLoading(true);
-        await load({
-            page: newpage,
-            pageSize: perPage,
-            sort: sort_ref.current,
-            order: order_ref.current
-        });
-        setLoading(false);
-    };
+    }
 
-    const handlePerRowsChange = async (perPage: any, page: any) => {
-        setLoading(true);
-        await load({
-            page: page,
-            pageSize: perPage,
-            sort: sort,
-            order: order
-        });
-        setPerPage(perPage);
-        setLoading(false);
-    };
-
-    const handleSort = async (column: any, sortDirection: any) => {
-        let sortField = column.sortField;
-        setSort(sortField);
+    const handleSort = async (column: any, sortDirection: string) => {
+        setSort(column.sortField);
         setOrder(sortDirection);
-        if (currentPage === 1) {
-            await load({
-                page: 1,
-                pageSize: perPage,
-                sort: sortField,
-                order: sortDirection
-            });
-        }
     };
 
+    const handlePerRowsChange = async (perPage: number, page: number) => {
+        setPerPage(perPage);
+    };
+
+    const loadAsync = async () => {
+        setLoading(true);
+        await load({
+            page: currentPage,
+            pageSize: perPage,
+            sort,
+            order
+        });
+        setLoading(false);
+    };
+
+    useEffect(() => {
+        loadAsync();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentPage, perPage, sort, order]);
 
     const columns = [
         {

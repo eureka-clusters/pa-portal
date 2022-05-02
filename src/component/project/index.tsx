@@ -6,7 +6,6 @@ import {RouteComponentProps} from "react-router-dom";
 import { useProject, apiStates, ApiError } from 'hooks/api/project/useProject'; 
 import { CostsFormat, EffortFormat } from 'function/utils';
 import { useParams } from "react-router-dom";
-import { Link } from "react-router-dom";
 
 //Create the interface to identify the slug
 interface MatchParams {

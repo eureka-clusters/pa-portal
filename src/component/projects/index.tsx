@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Link} from 'react-router-dom';
 import BreadcrumbTree from 'component/partial/breadcrumb-tree'
 import DataTable from 'component/database-table/index';
@@ -11,15 +11,11 @@ import useState from 'react-usestateref';
 
 export default function Projects() {
 
-    const [perPage, setPerPage] = React.useState(30); // default pageSize
     const [loading, setLoading] = React.useState(false);
-
+    const [perPage, setPerPage] = React.useState(30);           // default pageSize
     const [sort, setSort, sort_ref] = useState('project.name'); // default sort
-    const [order, setOrder, order_ref] = useState('asc'); // default order
-
-    // store the current page (needed for handleSort)
-    const [currentPage, setCurrentPage] = useState(1); // default current page
-
+    const [order, setOrder, order_ref] = useState('asc');       // default order
+    const [currentPage, setCurrentPage] = useState(1);          // default current page
 
     const { 
         state, 
@@ -32,44 +28,34 @@ export default function Projects() {
         totalItems 
     } = useProjects({ filter: '', page: 1, pageSize: perPage });
 
-
     const handlePageChange = async (newpage: number = 1) => {
         setCurrentPage(newpage);
-        setLoading(true);
-        await load({
-            page: newpage,
-            pageSize: perPage,
-            sort: sort_ref.current,
-            order: order_ref.current
-        });
-        setLoading(false);
-    };
+    }
 
-    const handlePerRowsChange = async (perPage: any, page: any) => {
-        setLoading(true);
-        await load({
-            page: page,
-            pageSize: perPage,
-            sort: sort,
-            order: order
-        });
-        setPerPage(perPage);
-        setLoading(false);
-    };
-
-    const handleSort = async (column: any, sortDirection: any) => {
-        let sortField = column.sortField;
-        setSort(sortField);
+    const handleSort = async (column: any, sortDirection: string) => {
+        setSort(column.sortField);
         setOrder(sortDirection);
-        if (currentPage === 1) {
-            await load({
-                page: 1,
-                pageSize: perPage,
-                sort: sortField,
-                order: sortDirection
-            });
-        }
     };
+
+    const handlePerRowsChange = async (perPage: number, page: number) => {
+        setPerPage(perPage);
+    };
+
+    const loadAsync = async () => {
+        setLoading(true);
+        await load({
+            page: currentPage,
+            pageSize: perPage,
+            sort,
+            order
+        });
+        setLoading(false);
+    };
+
+    useEffect(() => {
+        loadAsync();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentPage, perPage, sort, order]);
 
     const columns = [
         // {
