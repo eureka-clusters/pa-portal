@@ -10,7 +10,7 @@ export default function Search() {
     return (
         <>
         <h1>Search</h1>
-            <SearchForm query={searchText}/>
+            <SearchForm searchText={searchText} setSearchText={setSearchText} />
         </>
     )
 }

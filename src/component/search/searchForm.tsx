@@ -1,14 +1,11 @@
 import React from 'react';
-import { useState, useRef, useEffect, useMemo } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { KeyboardEvent } from 'react';
 import SearchList from './searchList';
 import { useLocation } from "react-router-dom";
 import { useHistory } from "react-router-dom";
-
 import { useSearch, apiStates, ApiError } from 'hooks/api/search/useSearch';
-
 import Pagination from 'component/pagination';
-
 interface stateType {
     // from: { pathname: string }
     searchResults: any
@@ -16,7 +13,11 @@ interface stateType {
 
 const DefaultPageSize = 10;
 
-function SearchForm({ query } : { query: string; }) { 
+type Props = {
+    searchText: string;
+    setSearchText: (query: string) => void;
+}
+function SearchForm({ searchText, setSearchText }: Props) {
 
     const [currentPage, setCurrentPage] = useState<number>(1);
 
@@ -57,7 +58,6 @@ function SearchForm({ query } : { query: string; }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location]);
 
-    const [searchText, setSearchText] = useState<string>("");
     const [requestedSearchText, setRequestedSearchText] = useState<string>("");
     
     const divRef = useRef<HTMLDivElement>(null);
@@ -70,9 +70,9 @@ function SearchForm({ query } : { query: string; }) {
         error,
         results,
         load,
-        pageCount,
+        // pageCount,
         pageSize,
-        page,
+        // page,
         totalItems
     } = useSearch({ query: searchText, page: currentPage, pageSize: limit });
 
@@ -121,6 +121,7 @@ function SearchForm({ query } : { query: string; }) {
         changeUrl(searchText, page);
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const handleLimitChange = (limit:number) => {
         setLimit(limit);
     }
