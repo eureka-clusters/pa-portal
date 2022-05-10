@@ -70,7 +70,7 @@ export default function Header() {
                 <div className="container d-flex flex-wrap justify-content-center">
                     <a href="/"
                        className="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto text-dark text-decoration-none">
-                        <img alt={"Eureka Logo"} className={'pe-2'} src={'https://image.itea3.org/CayUWuSF9ZiOx82jngPi3eReA2g=/190x150:443x484/fit-in/30x30/smart/https://eureka-clusters.eu/img/i/14-1614258308.png'}/>
+                        <img alt={"Eureka Logo"} className={'pe-2'} src={process.env.PUBLIC_URL + '/assets/img/logo.png'} />
                         <span className="fs-4">PA Report Portal</span>
                     </a>
                   
