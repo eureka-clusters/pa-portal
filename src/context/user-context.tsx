@@ -43,9 +43,8 @@ export const useAuth = () => {
 
 function useProvideAuth() {
 
-    // let storage = localStorage;
-    let storage = sessionStorage;
-    
+    let storage = localStorage;
+        
     let history = useHistory();
 
     const setUser = (username: string) => {
