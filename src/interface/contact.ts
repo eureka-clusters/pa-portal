@@ -5,5 +5,6 @@ export interface Contact {
     email: string,
     clusterPermissions: Array<string>,
     isFunder: boolean,
+    isEurekaSecretariatStaffMember: boolean,
     funderCountry: string
 }

@@ -1,11 +1,12 @@
-import { useRef, useCallback} from 'react'
+import {useCallback, useRef} from 'react'
 import Config from 'constants/config'
 import {useAuth} from "context/user-context";
 import _ from 'lodash';
 import reactStringReplace from 'react-string-replace';
 import {iApiError} from 'hooks/api/interfaces';
-export type { iApiError }
-export { ApiError } from 'hooks/api/api-error';
+
+export type {iApiError}
+export {ApiError} from 'hooks/api/api-error';
 
 export const getServerUri = () => {
     return Config.SERVER_URI;
@@ -32,14 +33,18 @@ interface RequestOptions {
     [x: string]: any;
 }
 
-export function useApi(url: string, queryParameterDefault = {}, requestOptionsDefault = {}, settings = { tokenMethod: defaultSettings.tokenMethod, tokenRequired: defaultSettings.tokenRequired, parseUrl: defaultSettings.parseUrl}) {
+export function useApi(url: string, queryParameterDefault = {}, requestOptionsDefault = {}, settings = {
+    tokenMethod: defaultSettings.tokenMethod,
+    tokenRequired: defaultSettings.tokenRequired,
+    parseUrl: defaultSettings.parseUrl
+}) {
 
     const mountedRef = useRef(true);
     const auth = useAuth();
 
     const queryParameterRef = useRef(queryParameterDefault);
     const requestOptionsRef = useRef(requestOptionsDefault);
-    
+
     const call = useCallback(async (queryParameter: QueryParameterOptions, requestOptions: RequestOptions) => {
 
         const defaultOptions = {
@@ -47,7 +52,7 @@ export function useApi(url: string, queryParameterDefault = {}, requestOptionsDe
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'Authorization':'',
+                'Authorization': '',
             }
         }
 
@@ -60,13 +65,13 @@ export function useApi(url: string, queryParameterDefault = {}, requestOptionsDe
             var output = reactStringReplace(str, reg, (match, i) => (
                 fetchFromObject(data, match)
             ));
-          
+
             return output.join('');
         }
 
         // function fetchFromObject(obj, prop) {
         // function fetchFromObject(obj: { [x: string]: any; }, prop: string) {
-        function fetchFromObject(obj: any, prop: string):any {
+        function fetchFromObject(obj: any, prop: string): any {
             if (typeof obj === 'undefined') {
                 return false;
             }
@@ -74,13 +79,13 @@ export function useApi(url: string, queryParameterDefault = {}, requestOptionsDe
             if (_index > -1) {
                 return fetchFromObject(obj[prop.substring(0, _index)], prop.substr(_index + 1));
             }
-            
+
             const return_value = obj[prop];
             delete obj[prop];
             return return_value;
         }
 
-        function updateOptions(mergeOptions:any) {
+        function updateOptions(mergeOptions: any) {
             switch (settings.tokenMethod) {
                 case 'jwt':
                 default:
@@ -109,17 +114,17 @@ export function useApi(url: string, queryParameterDefault = {}, requestOptionsDe
         }
 
         async function fetchFunction() {
-            
+
             // console.log(['queryParameterRef in fetchFunction', queryParameterRef.current]);
             // console.log(['requestOptionsRef in fetchFunction', requestOptionsRef.current]);
-            
+
             // create the options with the requestOptions
             // let options = requestOptionsRef.current;
 
             let options = updateOptions(requestOptionsRef.current); // test to add the default settings here or 
-            
+
             // skip request if token ins't set but required
-            if (!mountedRef.current)  {
+            if (!mountedRef.current) {
                 const responseError = {
                     type: 'Error',
                     message: 'Token is not defined but required',
@@ -127,8 +132,8 @@ export function useApi(url: string, queryParameterDefault = {}, requestOptionsDe
                     code: 0
                 }
                 let error = new Error();
-                error = { ...error, ...responseError };
-                throw (error);   
+                error = {...error, ...responseError};
+                throw (error);
             }
 
             // set default baseUrl
@@ -191,7 +196,7 @@ export function useApi(url: string, queryParameterDefault = {}, requestOptionsDe
             };
 
             let error = new Error();
-            error = { ...error, ...responseError };
+            error = {...error, ...responseError};
             throw (error);
         }
 
@@ -203,7 +208,7 @@ export function useApi(url: string, queryParameterDefault = {}, requestOptionsDe
         }
 
         // console.log(['store new requestOptions', requestOptions]);
-        if (requestOptions!== undefined) {
+        if (requestOptions !== undefined) {
             requestOptionsRef.current = requestOptions;
 
             // requestOptionsRef.current = updateOptions(requestOptions);  // update the options with new settings and default options
@@ -211,10 +216,10 @@ export function useApi(url: string, queryParameterDefault = {}, requestOptionsDe
 
         let callbackResult = await fetchFunction()
         // console.log(['callbackResult', callbackResult]);
-        return callbackResult; 
-        
+        return callbackResult;
+
     }, [auth, settings.tokenMethod, settings.tokenRequired, settings.parseUrl, url]);
-    
+
     return call
 }
 

@@ -34,7 +34,7 @@ The build stage of this container is in 2 steps, initiated by calling the produc
 
 ```yaml
 name: Build and push frontend code
-    uses: docker/build-push-action@v2
+    uses: docker/build-push-action@v3
     with:
     context: .
     platforms: linux/amd64
