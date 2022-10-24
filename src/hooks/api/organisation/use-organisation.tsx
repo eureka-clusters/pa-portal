@@ -1,8 +1,8 @@
-import React, { useRef, useCallback } from 'react'
-import { useApi, apiStates, iApiError } from 'hooks/api/useApi';
-import { Organisation } from 'interface/organisation';
+import React, {useCallback, useRef} from 'react'
+import {apiStates, iApiError, useApi} from 'hooks/api/useApi';
+import {Organisation} from 'interface/organisation';
 
-export { ApiError, apiStates } from 'hooks/api/useApi';
+export {ApiError, apiStates} from 'hooks/api/useApi';
 
 interface State {
     state: string,
@@ -14,13 +14,17 @@ interface Props {
     slug: string,
 }
 
-export function useOrganisation(queryParameter: Props, requestOptions = {}) {   
+export function useOrganisation(queryParameter: Props, requestOptions = {}) {
 
     const slug = queryParameter.slug;
 
     let url = '/view/organisation/{slug}';
-    
-    const fetchData = useApi(url, queryParameter, requestOptions, { tokenMethod: 'jwt', tokenRequired: true, parseUrl: true });
+
+    const fetchData = useApi(url, queryParameter, requestOptions, {
+        tokenMethod: 'jwt',
+        tokenRequired: true,
+        parseUrl: true
+    });
 
 
     const mountedRef = useRef(true);
@@ -29,7 +33,7 @@ export function useOrganisation(queryParameter: Props, requestOptions = {}) {
         state: apiStates.LOADING,
         organisation: {} as Organisation
     });
-    
+
     const load = useCallback(async (queryParameter: Props, requestOptions = {}) => {
         const setPartData = (partialData: {
             state: string,
@@ -38,7 +42,7 @@ export function useOrganisation(queryParameter: Props, requestOptions = {}) {
         }) => {
             // Before setState ensure that the component is mounted, otherwise return null and don't allow to unmounted component.
             if (!mountedRef.current) return null;
-            setHookState(hookState => ({ ...hookState, ...partialData }))
+            setHookState(hookState => ({...hookState, ...partialData}))
         }
 
         setPartData({
@@ -77,6 +81,6 @@ export function useOrganisation(queryParameter: Props, requestOptions = {}) {
     }, [load, slug, mountedRef]);
 
 
-    return { ...hookState, load: load };
+    return {...hookState, load: load};
 }
 

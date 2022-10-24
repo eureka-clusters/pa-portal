@@ -1,6 +1,6 @@
 // ./Me2.js
 import React from 'react';
-import { useMeCompact} from 'hooks/api/user/useMeCompact'
+import { useMeCompact} from 'hooks/api/user/use-me-compact'
 
 
 import Button from 'react-bootstrap/Button'

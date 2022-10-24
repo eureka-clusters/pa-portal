@@ -1,14 +1,19 @@
 import React from 'react';
 import Chart from "react-google-charts";
 
-const ResultChart = ({ results }) => {
+type Props = {
+    name: string;
+    latestVersionTotalCosts: string;
+}
+
+const ResultChart = ({results}: { results: any }) => {
 
     //Do some stupid data formatting
-    var $data = [
+    const $data = [
         ['Project', 'Costs']
     ];
 
-    results.forEach(element => {
+    results.forEach((element: Props) => {
         $data.push([
             element.name,
             element.latestVersionTotalCosts
@@ -38,7 +43,7 @@ const ResultChart = ({ results }) => {
                         title: 'Costs',
                     },
                     // For the legend to fit, we make the chart area smaller
-                    chartArea: { width: '50%', height: '70%' },
+                    chartArea: {width: '50%', height: '70%'},
                 }}
                 legendToggle
             />

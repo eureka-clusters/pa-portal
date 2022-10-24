@@ -1,10 +1,10 @@
-import { createContext, FC, useContext, useReducer } from 'react';
-import { useHistory } from "react-router-dom";
-import { iUserinfo } from 'interface/auth/userinfo';
-import jwtDecode, { JwtPayload } from "jwt-decode";
+import {createContext, FC, useContext, useReducer} from 'react';
+import {useNavigate} from "react-router-dom";
+import {iUserinfo} from 'interface/auth/userinfo';
+import jwtDecode, {JwtPayload} from "jwt-decode";
 
 
-import { useApi} from 'hooks/api/useApi';
+import {useApi} from 'hooks/api/useApi';
 
 
 const AuthContext = createContext<any>({}); //Any, might be replaced by more strict objects
@@ -19,13 +19,14 @@ type CallbackHandler = () => void
 interface iLocation {
     pathname: string
 }
+
 interface iProps {
     children: JSX.Element
 }
 
 // Provider component that wraps your app and makes auth object ...
 // ... available to any child component that calls useAuth().
-export const ProvideAuth: FC<iProps> = ({ children }) => {
+export const ProvideAuth: FC<iProps> = ({children}) => {
     const auth = useProvideAuth();
     return (
         <AuthContext.Provider value={auth}>
@@ -44,8 +45,8 @@ export const useAuth = () => {
 function useProvideAuth() {
 
     let storage = localStorage;
-        
-    let history = useHistory();
+
+    let navigate = useNavigate();
 
     const setUser = (username: string) => {
         storage.setItem(KEY_USER, username)
@@ -85,7 +86,7 @@ function useProvideAuth() {
     }
 
     const [state, setState] = useReducer(
-        (state: any, newState: any) => ({ ...state, ...newState }),
+        (state: any, newState: any) => ({...state, ...newState}),
         {
             user: getUser(),
             userInfo: getUserInfo(),
@@ -133,8 +134,8 @@ function useProvideAuth() {
 
     const getJwtToken = () => {
         const token = getJwtTokenStorage();
-        if (token === null )
-            return undefined; 
+        if (token === null)
+            return undefined;
 
         try {
             checkToken(token);
@@ -158,8 +159,7 @@ function useProvideAuth() {
     const userInfoQuery = useApi('/me', {}, {});
     const requestUserInfo = async (jwtToken: string) => {
         try {
-            const data = await userInfoQuery({}, { headers: { Authorization: `Bearer ${jwtToken}` } })
-            return data;
+            return await userInfoQuery({}, {headers: {Authorization: `Bearer ${jwtToken}`}});
         } catch (error) {
             console.error(['requestUserInfo error', error]);
             throw (error);
@@ -171,7 +171,7 @@ function useProvideAuth() {
         try {
             let userinfo = await requestUserInfo(token);
             let user = userinfo.email;
-            
+
             // save items in storage       
             setUser(user);
             setJwtToken(token);
@@ -201,7 +201,7 @@ function useProvideAuth() {
     }
 
     const redirectAfterLogin = () => {
-        history.replace(redirect);
+        navigate(redirect);
     }
 
     return {

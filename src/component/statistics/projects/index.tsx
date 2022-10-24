@@ -3,17 +3,12 @@ import {Form} from "react-bootstrap";
 import ProjectTable from "component/statistics/projects/project-table";
 import ProjectFacets from 'component/statistics/projects/project-facets';
 import TableFilter from 'function/api/table-filter';
-import {RouteComponentProps} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 
-//Create the interface to identify the slug
-interface MatchParams {
-    slug: string
-}
 
-interface Props extends RouteComponentProps<MatchParams> {
-}
+export default function ProjectStatistics() {
 
-export default function ProjectStatistics(props: Props) {
+    const {hash} = useParams();
 
     const defaultFilter = {
         country: [],
@@ -28,7 +23,7 @@ export default function ProjectStatistics(props: Props) {
         year: [],
     };
 
-    const {updateHash, updateFilter, filter, setFilter} = TableFilter({props, defaultFilter});
+    const {updateHash, updateFilter, filter, setFilter} = TableFilter({hash, defaultFilter});
 
  
     const updateResults = () => {

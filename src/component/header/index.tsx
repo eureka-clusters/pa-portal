@@ -17,7 +17,7 @@ export default function Header() {
                     <Navbar.Toggle aria-controls="navbar-main"/>
                     <Navbar.Collapse id="navbar-main">
                         <Nav className='d-flex w-100'>
-                            <Nav.Link as={NavLink} to='/' exact>Home</Nav.Link>
+                            <Nav.Link as={NavLink} to='/'>Home</Nav.Link>
 
                             <NavDropdown
                                 id="nav-dropdown-statistics"
@@ -27,8 +27,8 @@ export default function Header() {
                                 <NavDropdown.Item as={NavLink} to='/statistics/partners'>Partners</NavDropdown.Item>
                             </NavDropdown>
 
-                            <Nav.Link as={NavLink} to='/projects' exact>Projects</Nav.Link>
-                            <Nav.Link as={NavLink} to='/organisations' exact>Organisations</Nav.Link>
+                            <Nav.Link as={NavLink} to='/projects'>Projects</Nav.Link>
+                            <Nav.Link as={NavLink} to='/organisations'>Organisations</Nav.Link>
 
                             {/* test links will be removed */}
                             {/*<NavDropdown*/}

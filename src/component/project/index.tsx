@@ -2,28 +2,20 @@ import React from 'react';
 import PartnerTableWithCharts from "component/project/partner-table-with-charts";
 import BreadcrumbTree from 'component/partial/breadcrumb-tree'
 import moment from 'moment';
-import {RouteComponentProps} from "react-router-dom";
-import { useProject, apiStates, ApiError } from 'hooks/api/project/useProject'; 
-import { CostsFormat, EffortFormat } from 'function/utils';
-import { useParams } from "react-router-dom";
+import {ApiError, apiStates, useProject} from 'hooks/api/project/use-project';
+import {CostsFormat, EffortFormat} from 'function/utils';
+import {useParams} from "react-router-dom";
 
-//Create the interface to identify the slug
-interface MatchParams {
-    slug: string
-}
 
-interface Props extends RouteComponentProps<MatchParams> {
-}
+export default function Project() {
 
-type UrlParams = {
-    slug: string;
-};
+    const {slug} = useParams();
 
-export default function Project(props: Props) {
+    if (slug === undefined) {
+        return <ApiError/>
+    }
 
-    const { slug } = useParams<UrlParams>();
-
-    const { state, error, project } = useProject({ slug: slug });
+    const {state, error, project} = useProject({slug: slug});
 
     switch (state) {
         case apiStates.ERROR:
@@ -53,7 +45,7 @@ export default function Project(props: Props) {
 
                         <dt className="col-sm-3 text-end">Primary Cluster:</dt>
                         <dd className="col-sm-9">{project.primaryCluster && project.primaryCluster.name}</dd>
-                        
+
                         <dt className="col-sm-3 text-end">Secondary Cluster:</dt>
                         <dd className="col-sm-9">{project.secondaryCluster && project.secondaryCluster.name}</dd>
 
@@ -63,12 +55,11 @@ export default function Project(props: Props) {
                         <dt className="col-sm-3 text-end">Programme Call:</dt>
                         <dd className="col-sm-9">{project.programmeCall}</dd>
 
-                        
 
                         {project.coordinator && <>
                             <dt className="col-sm-3 text-end">Coordinator:</dt>
-                            <dd className="col-sm-9">{String(project.coordinator.organisation)}<br />
-                                { project.coordinator.technicalContact && <>
+                            <dd className="col-sm-9">{String(project.coordinator.organisation)}<br/>
+                                {project.coordinator.technicalContact && <>
                                     {String(project.coordinator.technicalContact.fullName)}
                                     {project.coordinator.technicalContact.email ? ` (${String(project.coordinator.technicalContact.email)})` : ''}
                                 </>}

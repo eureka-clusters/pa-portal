@@ -1,13 +1,13 @@
 import React, { useEffect, FC} from 'react';
 import {Link} from "react-router-dom";
-import DataTable from 'component/database-table/index';
+import DataTable from 'component/database-table';
 import { CostsFormat, EffortFormat} from 'function/utils';
 import {Partner} from "interface/project/partner";
 import { getFilter } from 'function/api';
-import { usePartners, apiStates, ApiError } from 'hooks/api/statistics/partners/usePartners';
+import { usePartners, apiStates, ApiError } from 'hooks/api/statistics/partners/use-partners';
 import useState from 'react-usestateref';
 import { useAuth } from "context/user-context";
-import downloadBase64File from "function/DownloadBase64";
+import downloadBase64File from "function/download-base64";
 import { GetServerUri, objToQueryString } from 'function/api';
 import LoadingButton from "component/partial/loading-button";
 

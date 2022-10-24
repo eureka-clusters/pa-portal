@@ -1,16 +1,16 @@
 import React, { useEffect, FC } from 'react';
 import {Link} from "react-router-dom";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import DataTable, { TableColumn } from 'component/database-table/index';
+import DataTable, { TableColumn } from 'component/database-table';
 import { CostsFormat, EffortFormat } from 'function/utils';
 
 import { getFilter } from 'function/api';
-import { useProjects, apiStates, ApiError } from 'hooks/api/statistics/projects/useProjects';
+import { useProjects, apiStates, ApiError } from 'hooks/api/statistics/projects/use-projects';
 
 import {Project} from "interface/project";
 import useState from 'react-usestateref';
 import { useAuth } from "context/user-context";
-import downloadBase64File from "function/DownloadBase64";
+import downloadBase64File from "function/download-base64";
 import { GetServerUri, objToQueryString } from 'function/api';
 import moment from 'moment';
 import LoadingButton from "component/partial/loading-button";

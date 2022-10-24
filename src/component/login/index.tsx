@@ -3,32 +3,21 @@ import Config from "constants/config";
 import {useAuth} from "context/user-context";
 import {useLocation} from "react-router-dom";
 
-// import { useHistory, useLocation } from "react-router-dom";
-// import { Redirect } from 'react-router';
-
-interface iLocation {
-    from: { pathname: string }
-}
-
-
 export default function Login() {
 
     const serverUri = Config.SERVER_URI;
     const clientId = Config.CLIENT_ID;
 
-    // let history = useHistory();
-    let location = useLocation<iLocation>();
+    let location = useLocation();
     let auth = useAuth();
     let {from} = location.state || {from: {pathname: "/"}};
 
-    // save redirect for not logged in users
+    // save redirect for not logged-in users
     auth.saveRedirect(from);
 
-    // if user already logged in redirect him
+    // if user already logged in redirect him or her
     if (auth.hasUser()) {
         auth.redirectAfterLogin();
-        // history.replace(auth.redirect);
-        // return <Redirect to={auth.redirect} />
     }
 
 

@@ -1,7 +1,8 @@
-import React, { useRef, useCallback } from 'react'
-import { useApi, apiStates, iApiError  } from 'hooks/api/useApi';
-import { Organisation } from "interface/organisation";
-export { ApiError, apiStates } from 'hooks/api/useApi';
+import React, {useCallback, useRef} from 'react'
+import {apiStates, iApiError, useApi} from 'hooks/api/useApi';
+import {Organisation} from "interface/organisation";
+
+export {ApiError, apiStates} from 'hooks/api/useApi';
 
 // interface Response {
 //     _embedded: {
@@ -38,11 +39,11 @@ const defaultProps = {
     pageSize: 10,
 }
 
-export function useOrganisations(queryParameter: Props , requestOptions = {}) {   
-    queryParameter = { ...defaultProps, ...queryParameter }
+export function useOrganisations(queryParameter: Props, requestOptions = {}) {
+    queryParameter = {...defaultProps, ...queryParameter}
 
     let url = '/list/organisation';
-   
+
     const fetchData = useApi(url, queryParameter, requestOptions);
 
     const mountedRef = useRef(true);
@@ -64,7 +65,7 @@ export function useOrganisations(queryParameter: Props , requestOptions = {}) {
         }) => {
             // Before setState ensure that the component is mounted, otherwise return null and don't allow to unmounted component.
             if (!mountedRef.current) return null;
-            setHookState(hookState => ({ ...hookState, ...partialData }))
+            setHookState(hookState => ({...hookState, ...partialData}))
         }
 
         // must be removed otherwise datatable pagination doesn't work
@@ -107,5 +108,5 @@ export function useOrganisations(queryParameter: Props , requestOptions = {}) {
     // }, [mountedRef]); // works if load is a function (load couldn't be added if its not a callback)
     // }, [load, mountedRef, properties]);  // sort etc. doesn't work...
 
-    return { ...hookState, load: load };
+    return {...hookState, load: load};
 }

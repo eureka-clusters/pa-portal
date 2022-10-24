@@ -1,7 +1,7 @@
 import React from 'react';
 import {Link} from "react-router-dom";
 import _ from 'lodash';
-import NumberFormat from "react-number-format"
+import {NumericFormat} from "react-number-format"
 
 function Capitalize(str: string) {
     return str.charAt(0).toUpperCase() + str.slice(1);
@@ -12,20 +12,17 @@ const Highlighted = ({text = '', highlight = ''}: { text: string; highlight: str
         return <span>{text}</span>
     }
 
-    // orgiginal regexp
-    // const regex = new RegExp(`(${_.escapeRegExp(highlight)})`, 'gi')
-
-    var highlightRegex = /'([^']*)'|"([^"]*)"|(\S+)/gi;  // search for all strings but keep strings with "" or '' together
-    var highlightArray = (highlight.match(highlightRegex) || []).map(m => m.replace(highlightRegex, '$1$2$3'));
+    const highlightRegex = /'([^']*)'|"([^"]*)"|(\S+)/gi;  // search for all strings but keep strings with "" or '' together
+    const highlightArray = (highlight.match(highlightRegex) || []).map(m => m.replace(highlightRegex, '$1$2$3'));
     // console.log(['highlightArray', highlightArray]);
 
     // join the escaped parts with | to a string
-    const regexpPart= highlightArray.map((a) => `${_.escapeRegExp(a)}`).join('|');
+    const regexpPart = highlightArray.map((a) => `${_.escapeRegExp(a)}`).join('|');
     // console.log(['regexpPart', regexpPart]);
-    
+
     // add the regular expression
     const regex = new RegExp(`(${regexpPart})`, 'gi')
-   
+
     // console.log(['regex', regex]);
     const parts = text.split(regex)
     return (
@@ -51,7 +48,7 @@ export const ScoreFormat = ({value, showPrefix, showSuffix}: ScoreFormatProps) =
     }
 
     return (
-        <NumberFormat
+        <NumericFormat
             value={value}
             thousandSeparator={','}
             prefix={showPrefix ? 'Score: ' : ''}
@@ -68,7 +65,7 @@ ScoreFormat.defaultProps = {
 };
 
 
-interface itemProps {
+export interface itemProps {
     type: string,
     slug: string,
     name: string,
@@ -98,37 +95,38 @@ export default function searchListEntry({item, searchText}: { item: itemProps; s
     switch (itemtype) {
         case 'project':
             linkLabel = <><p className="search-result-heading">{htmlType}<Highlighted text={item.name}
-                highlight={searchText} /></p>
+                                                                                      highlight={searchText}/></p>
                 <div className="d-flex flex-column justify-content-end search-detail">
                     {item.title ? <div className="p-2 search-highlight"><span
                         className="search-detail-label">Title:</span> <Highlighted text={item.title}
-                            highlight={searchText} /></div> : ''}
+                                                                                   highlight={searchText}/></div> : ''}
                     {item.description ? <div className="p-2 search-highlight"><span
                         className="search-detail-label">Description:</span> <Highlighted text={item.description}
-                            highlight={searchText} />
+                                                                                         highlight={searchText}/>
                     </div> : ''}
                 </div>
                 {score}
             </>
             link = <Link className="list-group-item list-group-item-action" to={`/project/${item.slug}`}
-                title={linkTitle}>{linkLabel}</Link>;
+                         title={linkTitle}>{linkLabel}</Link>;
             break;
         case 'organisation':
             linkLabel = <><p className="search-result-heading">{htmlType}{item.name}</p>
                 <div className="d-flex flex-column justify-content-end search-detail">
                     {item.title ? <div className="p-2 search-highlight"><span
                         className="search-detail-label">Title:</span> <Highlighted text={item.title}
-                                                                                  highlight={searchText}/></div> : ''}
+                                                                                   highlight={searchText}/></div> : ''}
                     {item.country ? <div className="p-2 search-highlight"><span
                         className="search-detail-label">Country:</span> <Highlighted text={item.country}
-                                                                                    highlight={searchText}/></div> : ''}
+                                                                                     highlight={searchText}/>
+                    </div> : ''}
                     {item.description ? <div className="p-2 search-highlight"><span
                         className="search-detail-label">Description:</span> <Highlighted text={item.description}
-                                                                                        highlight={searchText}/>
+                                                                                         highlight={searchText}/>
                     </div> : ''}
                     {item.organisationType ? <div className="p-2 search-highlight"><span
                         className="search-detail-label">Type:</span> <Highlighted text={item.organisationType}
-                                                                                 highlight={searchText}/></div> : ''}
+                                                                                  highlight={searchText}/></div> : ''}
                 </div>
                 {score}
             </>

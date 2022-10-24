@@ -1,11 +1,10 @@
 import React, {useEffect} from 'react';
 import {Link} from 'react-router-dom';
 import BreadcrumbTree from 'component/partial/breadcrumb-tree'
-import DataTable from 'component/database-table/index';
+import DataTable from 'component/database-table';
 import {Project} from "interface/project";
 import {CostsFormat, EffortFormat} from 'function/utils';
-import { useProjects, apiStates, ApiError } from 'hooks/api/project/useProjects';
-
+import { useProjects, apiStates, ApiError } from 'hooks/api/project/use-projects';
 
 import useState from 'react-usestateref';
 

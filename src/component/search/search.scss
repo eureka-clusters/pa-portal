@@ -1,39 +1,35 @@
 .search-result-heading {
-    font-weight: bold;
-    font-size: larger;
-    margin-top:1.5em;
+  font-weight: bold;
+  font-size: larger;
+  margin-top: 1.5em;
 }
 
-
-
-
-
 .search-result-type {
-    padding: 6px 12px;
-    border-radius: 0px 0px 10px 0px;
-    font-weight: 600;
-    font-size: small;
-    box-shadow: 0 0px 1px rgba(0, 0, 0, .25);
-    cursor: pointer;
-    background: #2F4058;
-    color: whitesmoke;
+  padding: 6px 12px;
+  border-radius: 0px 0px 10px 0px;
+  font-weight: 600;
+  font-size: small;
+  box-shadow: 0 0px 1px rgba(0, 0, 0, .25);
+  cursor: pointer;
+  background: #2F4058;
+  color: whitesmoke;
 }
 
 .search-detail-label {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 .search-highlight {
-    background-color: #c0c1c226;
-    border: 1px solid rgba(0, 0, 0, 0.08);
+  background-color: #c0c1c226;
+  border: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 .search-result-score {
-    font-style: italic;
+  font-style: italic;
 }
 
 
-.search-bar-results .list-group-item+.list-group-item {
-    margin-top:20px;
-    border-top-width: 1px;
+.search-bar-results .list-group-item + .list-group-item {
+  margin-top: 20px;
+  border-top-width: 1px;
 }

@@ -1,7 +1,7 @@
 import {FC} from 'react';
 import {Form} from "react-bootstrap";
 import {getFilter} from 'function/api';
-import {ApiError, apiStates, useFacets} from 'hooks/api/statistics/partners/useFacets';
+import {ApiError, apiStates, useFacets} from 'hooks/api/statistics/partners/use-facets';
 import { default as ReactSelect } from "react-select";
 
 interface Props {

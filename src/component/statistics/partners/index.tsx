@@ -3,17 +3,11 @@ import {Form} from "react-bootstrap";
 import PartnerTable from "component/statistics/partners/partner-table";
 import PartnerFacets from 'component/statistics/partners/partner-facets';
 import TableFilter from 'function/api/table-filter';
-import {RouteComponentProps} from "react-router-dom";
+import {useParams} from "react-router-dom";
 
-//Create the interface to identify the slug
-interface MatchParams {
-    slug: string
-}
+export default function PartnerStatistics() {
 
-interface Props extends RouteComponentProps<MatchParams> {
-}
-
-export default function PartnerStatistics(props: Props) {
+    const {hash} = useParams();
 
     const defaultFilter = {
         country: [],
@@ -24,7 +18,7 @@ export default function PartnerStatistics(props: Props) {
         year: [],
     };
 
-    const {updateHash, updateFilter, filter, setFilter} = TableFilter({props, defaultFilter});
+    const {updateHash, updateFilter, filter, setFilter} = TableFilter({hash, defaultFilter});
 
     const updateResults = () => {
     }

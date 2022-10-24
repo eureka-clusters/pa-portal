@@ -1,15 +1,15 @@
 import {useEffect} from 'react';
 import useState from 'react-usestateref'; // we need the useState with the .current href
-import {getFilter, fromFilter} from 'function/api/filter-functions';
+import {fromFilter, getFilter} from 'function/api/filter-functions';
 
 
 //For now quite impossible to convert to TS as all params and objects are everywhere
 
-function TableFilter({props, defaultFilter}) {
+function TableFilter({hash, defaultFilter}: { hash: string | undefined, defaultFilter: any }) {
 
-    const getFilterFromHash = (setFilterMethod, useAsFilter = false) => {
-        if (props.location.hash) {
-            const hash = fromFilter(props.location.hash.substring(1));
+    const getFilterFromHash = (hash: string | undefined, setFilterMethod: boolean | undefined, useAsFilter = false) => {
+        if (hash) {
+            const hash = fromFilter(hash.substring(1));
             const newFilter = JSON.parse(hash);
             // console.log(['filter from hash', newFilter]);
             if (useAsFilter && typeof setFilterMethod == "function") {
@@ -73,7 +73,7 @@ function TableFilter({props, defaultFilter}) {
     useEffect(() => {
         getFilterFromHash(setFilter, true);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [props.location.hash]);
+    }, [props]);
 
     return {getDefaultFilter, getFilterFromHash, updateHash, updateFilter, filter, setFilter};
 }

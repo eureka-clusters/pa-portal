@@ -1,6 +1,6 @@
 // ./Me.js
 import React from 'react';
-import { useMe, apiStates } from 'hooks/api/user/useMe'
+import { useMe, apiStates } from 'hooks/api/user/use-me'
 import Button from 'react-bootstrap/Button'
 
 export const Me = () => {

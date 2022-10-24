@@ -2,7 +2,7 @@ import {FC} from 'react';
 import {Form} from "react-bootstrap";
 import BootstrapSwitchButton from "bootstrap-switch-button-react";
 import { getFilter } from 'function/api';
-import { useFacets, apiStates, ApiError } from 'hooks/api/statistics/projects/useFacets';
+import { useFacets, apiStates, ApiError } from 'hooks/api/statistics/projects/use-facets';
 import { default as ReactSelect } from "react-select";
 // import { components } from "react-select"; // required if checkboxes should be added in react-select
 

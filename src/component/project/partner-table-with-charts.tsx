@@ -1,6 +1,6 @@
 import React, { FC, useState, Suspense } from 'react';
 import { Project } from "interface/project";
-import { usePartners, apiStates, ApiError } from 'hooks/api/partner/usePartners';
+import { usePartners, apiStates, ApiError } from 'hooks/api/partner/use-partners';
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
 

@@ -1,22 +1,20 @@
-import React from 'react';
-import { useState, useRef } from 'react';
-import { KeyboardEvent } from 'react';
-import { useHistory } from "react-router-dom";
+import React, {useRef, useState} from 'react';
+import {useNavigate} from "react-router-dom";
 
 function Search() {
 
-    let history = useHistory();
+    let navigate = useNavigate();
 
     const [searchText, setSearchText] = useState("");
     const divRef = useRef<HTMLDivElement>(null);
-    const inputRef = useRef<null | HTMLInputElement >(null);
+    const inputRef = useRef<null | HTMLInputElement>(null);
 
     const onSearch = async (text: string) => {
         // change the url to the search page with the given query
-        history.replace({
+        navigate({
             pathname: "/search",
             search: `query=${text}`, // url /search?query=text
-            
+
             // test so set result data per state directly
             // state: {
             //     searchResults: data._embedded.results,
@@ -29,28 +27,21 @@ function Search() {
         setSearchText(text);
     };
 
-    const handleKeyboardEvent = (e: KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === "Enter") {
-            onSearch(searchText);
-            return;
-        }
-    };
 
     const handleSearchClick = () => {
-        onSearch(searchText);
+        onSearch(searchText).then(() => {
+            return;
+        });
     }
 
     return (
-
-        
         <div
-            className='col-12 col-lg-auto mb-3 mb-lg-0' 
-            >
+            className='col-12 col-lg-auto mb-3 mb-lg-0'
+        >
             <div
-                className='search-bar' 
-                ref={divRef} 
-                style={{ 
-                }}
+                className='search-bar'
+                ref={divRef}
+                style={{}}
             >
                 <div className="input-group">
                     <input
@@ -58,7 +49,6 @@ function Search() {
                         value={searchText}
                         type="search"
                         onChange={handleInput}
-                        onKeyPress={(e) => handleKeyboardEvent(e)}
                         placeholder="Search..."
                         aria-label="Search"
                         aria-describedby="search-button"

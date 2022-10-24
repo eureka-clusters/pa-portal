@@ -1,26 +1,19 @@
 import React from 'react';
-import {RouteComponentProps} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import BreadcrumbTree from 'component/partial/breadcrumb-tree'
 import PartnerTable from "component/organisation/partner-table";
-import { useOrganisation, apiStates, ApiError } from 'hooks/api/organisation/useOrganisation'; 
-import { useParams } from "react-router-dom";
+import {ApiError, apiStates, useOrganisation} from 'hooks/api/organisation/use-organisation';
 
-//Create the interface to identify the slug
-interface MatchParams {
-    slug: string
-}
 
-interface Props extends RouteComponentProps<MatchParams> {
-}
+export default function Organisation() {
 
-type UrlParams = {
-    slug: string;
-};
-export default function Organisation(props: Props) {
+    const {slug} = useParams();
 
-    const { slug } = useParams<UrlParams>();
+    if (slug === undefined) {
+        return <ApiError/>
+    }
 
-    const { state, error, organisation } = useOrganisation({ slug: slug });
+    const {state, error, organisation} = useOrganisation({slug: slug});
 
     switch (state) {
         case apiStates.ERROR:

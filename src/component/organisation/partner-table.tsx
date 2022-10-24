@@ -1,10 +1,10 @@
 import React, {FC} from 'react';
 import {Link} from "react-router-dom";
-import DataTable from 'component/database-table/index';
+import DataTable from 'component/database-table';
 import { CostsFormat, EffortFormat, BooleanIconFormat } from 'function/utils';
 import {Partner} from "interface/project/partner";
 import {Organisation} from "interface/organisation";
-import { usePartners, apiStates, ApiError } from 'hooks/api/partner/usePartners';
+import { usePartners, apiStates, ApiError } from 'hooks/api/partner/use-partners';
 interface Props {
     organisation: Organisation
 }

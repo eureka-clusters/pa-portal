@@ -1,9 +1,8 @@
 import React from 'react';
-import NumberFormat from "react-number-format"
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faCheckCircle, faCheckSquare, faSquare } from '@fortawesome/fontawesome-free-solid';
-import { IconProp } from '@fortawesome/fontawesome-svg-core';
-
+import {NumericFormat} from "react-number-format"
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faCheck, faCheckCircle, faCheckSquare, faSquare} from '@fortawesome/fontawesome-free-solid';
+import {IconProp} from '@fortawesome/fontawesome-svg-core';
 
 
 /******************    CostsFormat BEGIN   ******************/
@@ -12,17 +11,18 @@ interface CostsFormatProps {
     showPrefix?: boolean,
     showSuffix?: boolean,
 }
-export const CostsFormat = ({ value, showPrefix, showSuffix }: CostsFormatProps) => {
-    
+
+export const CostsFormat = ({value, showPrefix, showSuffix}: CostsFormatProps) => {
+
     if (typeof (value) === 'undefined' || value == null) {
         return (<></>);
     }
 
     return (
-        <NumberFormat
+        <NumericFormat
             value={value}
             thousandSeparator={','}
-            prefix={showPrefix ? '€ ':''}
+            prefix={showPrefix ? '€ ' : ''}
             suffix={showSuffix ? ' €' : ''}
             displayType={'text'}
             decimalScale={2}
@@ -34,8 +34,8 @@ CostsFormat.defaultProps = {
     showPrefix: false,
     showSuffix: true,
 };
-/******************    CostsFormat END   ******************/
 
+/******************    CostsFormat END   ******************/
 
 
 /******************    EffortFormat BEGIN   ******************/
@@ -45,18 +45,18 @@ interface EffortFormatProps {
     showSuffix?: boolean,
 }
 
-export const EffortFormat = ({ value, showPrefix, showSuffix }: EffortFormatProps) => {
-    
-    if (typeof (value) === 'undefined' || value == null) { 
+export const EffortFormat = ({value, showPrefix, showSuffix}: EffortFormatProps) => {
+
+    if (typeof (value) === 'undefined' || value == null) {
         return (<></>);
     }
-    
+
     return (
-        <NumberFormat
+        <NumericFormat
             value={value}
             thousandSeparator={','}
-            prefix = { showPrefix? 'PY ': '' }
-            suffix = { showSuffix? ' PY': '' }
+            prefix={showPrefix ? 'PY ' : ''}
+            suffix={showSuffix ? ' PY' : ''}
             displayType={'text'}
             decimalScale={2}
             fixedDecimalScale={true}
@@ -66,17 +66,6 @@ export const EffortFormat = ({ value, showPrefix, showSuffix }: EffortFormatProp
 EffortFormat.defaultProps = {
     showPrefix: false,
     showSuffix: true,
-};
-
-/******************    EffortFormat END   ******************/
-
-export function __delay__(timer: number | undefined) {
-    return new Promise<void>(resolve => {
-        timer = timer || 2000;
-        setTimeout(function () {
-            resolve();
-        }, timer);
-    });
 };
 
 /******************    BooleanIconFormat BEGIN   ******************/
@@ -98,11 +87,11 @@ interface BooleanIconProps {
 
 const faCheckIcon = faCheck as IconProp;
 const faCheckSquareIcon = faCheckSquare as IconProp;
-const faCheckCricleIcon = faCheckCircle as IconProp;
+const faCheckCircleIcon = faCheckCircle as IconProp;
 const faSquareIcon = faSquare as IconProp;
 
 
-export const BooleanIconFormat = ({ value, type, showFalse }: BooleanIconProps) => {
+export const BooleanIconFormat = ({value, type, showFalse}: BooleanIconProps) => {
     let trueValue;
     let falseValue;
 
@@ -112,16 +101,16 @@ export const BooleanIconFormat = ({ value, type, showFalse }: BooleanIconProps) 
             falseValue = showFalse ? value.toString() : '';
             break;
         case 'circle':
-            trueValue = <FontAwesomeIcon icon={faCheckCricleIcon} className="check-true" />;
-            falseValue = showFalse ? <FontAwesomeIcon icon={faCheckCricleIcon} className="check-false" /> : '';
+            trueValue = <FontAwesomeIcon icon={faCheckCircleIcon} className="check-true"/>;
+            falseValue = showFalse ? <FontAwesomeIcon icon={faCheckCircleIcon} className="check-false"/> : '';
             break;
         case 'square':
-            trueValue = <FontAwesomeIcon icon={faCheckSquareIcon} className="check-true" />;
-            falseValue = showFalse ? <FontAwesomeIcon icon={faSquareIcon} className="check-false" /> : '';
+            trueValue = <FontAwesomeIcon icon={faCheckSquareIcon} className="check-true"/>;
+            falseValue = showFalse ? <FontAwesomeIcon icon={faSquareIcon} className="check-false"/> : '';
             break;
         case 'check':
-            trueValue = <FontAwesomeIcon icon={faCheckIcon} className="check-true" />;
-            falseValue = showFalse ? <FontAwesomeIcon icon={faCheckIcon} className="check-false" /> : '';
+            trueValue = <FontAwesomeIcon icon={faCheckIcon} className="check-true"/>;
+            falseValue = showFalse ? <FontAwesomeIcon icon={faCheckIcon} className="check-false"/> : '';
             break;
     }
 

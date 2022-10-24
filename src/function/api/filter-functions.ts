@@ -12,7 +12,7 @@ export const getFilter = (filter: string) => {
     // return btoa(JSON_stringify(filter, false));
 }
 
-export const fromFilter = (filter:string) => {
+export const fromFilter = (filter: string) => {
     return Buffer.from(filter, 'base64').toString('ascii');
     // return atob(filter);
 }

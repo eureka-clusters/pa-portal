@@ -1,12 +1,9 @@
 import React from 'react';
 import DataTable from 'react-data-table-component';
 
-export { TableProps, TableProps as IDataTableProps, TableColumn, TableRow, TableStyles, Theme, Themes, ConditionalStyles, ExpanderComponentProps, PaginationComponentProps, PaginationOptions, PaginationServerOptions, ContextMessage, SortOrder, SortFunction, Selector, } from 'react-data-table-component';
-// import Checkbox from '@material-ui/core/Checkbox';
-// import ArrowDownward from '@material-ui/icons/ArrowDownward';
-// const sortIcon = <ArrowDownward />;
 
-const selectProps = {indeterminate: isIndeterminate => isIndeterminate};
+const selectProps = {indeterminate: (isIndeterminate: any) => isIndeterminate};
+
 
 const customStyles = {
     header: {
@@ -45,7 +42,7 @@ const paginationComponentOptions = {
     selectAllRowsItem: true,  // All in pagination
 };
 
-function DataTableBase(props) {
+function DataTableBase(props: any) {
     return (
         <DataTable
             direction="auto"
@@ -54,7 +51,7 @@ function DataTableBase(props) {
             highlightOnHover={true}
             selectableRowsComponentProps={selectProps}
             // sortIcon={sortIcon}
-            
+
             noDataComponent="No results"
 
             pagination

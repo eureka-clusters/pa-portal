@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import {Link} from 'react-router-dom';
 import BreadcrumbTree from 'component/partial/breadcrumb-tree';
-import DataTable from 'component/database-table/index';
-import { useOrganisations, apiStates, ApiError } from 'hooks/api/organisation/useOrganisations';
+import DataTable from 'component/database-table';
+import { useOrganisations, apiStates, ApiError } from 'hooks/api/organisation/use-organisations';
 
 import {Organisation} from "interface/organisation";
 import useState from 'react-usestateref';

@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import BreadcrumbTree from 'component/partial/breadcrumb-tree';
-import DataTable from 'component/database-table/index';
+import DataTable from 'component/database-table';
 
-import { usePartners, apiStates, ApiError } from 'hooks/api/partner/usePartners';
+import { usePartners, apiStates, ApiError } from 'hooks/api/partner/use-partners';
 import { Partner } from "interface/project/partner";
 import { CostsFormat, EffortFormat } from 'function/utils';
 
