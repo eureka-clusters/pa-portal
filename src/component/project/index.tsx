@@ -2,7 +2,8 @@ import React from 'react';
 import PartnerTableWithCharts from "component/project/partner-table-with-charts";
 import BreadcrumbTree from 'component/partial/breadcrumb-tree'
 import moment from 'moment';
-import {ApiError, apiStates, useProject} from 'hooks/api/project/use-project';
+import {useProject} from 'hooks/api/project/use-project';
+import {ApiStates, RenderApiError} from "hooks/api/api-error";
 import {CostsFormat, EffortFormat} from 'function/utils';
 import {useParams} from "react-router-dom";
 
@@ -10,17 +11,12 @@ import {useParams} from "react-router-dom";
 export default function Project() {
 
     const {slug} = useParams();
-
-    if (slug === undefined) {
-        return <ApiError/>
-    }
-
-    const {state, error, project} = useProject({slug: slug});
+    const {state, error, project} = useProject(slug === undefined ? '' : slug);
 
     switch (state) {
-        case apiStates.ERROR:
-            return <ApiError error={error}/>
-        case apiStates.SUCCESS:
+        case ApiStates.ERROR:
+            return <RenderApiError error={error}/>
+        case ApiStates.SUCCESS:
             return (
                 <>
                     {/* <pre className='debug'>{JSON.stringify(project, undefined, 2)}</pre> */}

@@ -2,26 +2,21 @@ import React from 'react';
 
 import {Link} from "react-router-dom";
 import BreadcrumbTree from 'component/partial/breadcrumb-tree'
-import { usePartner, apiStates, ApiError } from 'hooks/api/partner/use-partner';
+import { usePartner } from 'hooks/api/partner/use-partner';
 import { CostsFormat, EffortFormat } from 'function/utils';
 import { useParams } from "react-router-dom";
+import {ApiStates, RenderApiError} from "hooks/api/api-error";
 
 
 export default function Partner() {
 
     const {slug} = useParams();
-
-    if (slug === undefined) {
-        return <ApiError/>
-    }
-   
-    const { state, error, partner } = usePartner({ slug: slug });
-
+    const { state, error, partner } = usePartner(slug === undefined ? '' : slug);
 
     switch (state) {
-        case apiStates.ERROR:
-            return <ApiError error={error}/>
-        case apiStates.SUCCESS:
+        case ApiStates.ERROR:
+            return <RenderApiError error={error}/>
+        case ApiStates.SUCCESS:
             return (
                 <React.Fragment>
                     {/* <pre className='debug'>{JSON.stringify(partner, undefined, 2)}</pre> */}

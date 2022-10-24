@@ -1,28 +1,27 @@
-import React, { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
+import {Link} from 'react-router-dom';
 import BreadcrumbTree from 'component/partial/breadcrumb-tree';
 import DataTable from 'component/database-table';
 
-import { usePartners, apiStates, ApiError } from 'hooks/api/partner/use-partners';
-import { Partner } from "interface/project/partner";
-import { CostsFormat, EffortFormat } from 'function/utils';
+import {usePartners} from 'hooks/api/partner/use-partners';
+import {Partner} from "interface/project/partner";
+import {CostsFormat, EffortFormat} from 'function/utils';
+import {ApiStates, RenderApiError} from "hooks/api/api-error";
 
-
-import useState from 'react-usestateref';
 
 export default function Partners() {
 
-    const [perPage, setPerPage] = React.useState(30); // default pageSize
-    const [loading, setLoading] = React.useState(false);
+    const [perPage, setPerPage] = useState(30); // default pageSize
+    const [loading, setLoading] = useState(false);
 
-    const [sort, setSort, sort_ref] = useState('partner.organisation.name'); // default sort
-    const [order, setOrder, order_ref] = useState('asc'); // default order
+    const [sort, setSort] = useState('partner.organisation.name'); // default sort
+    const [order, setOrder] = useState('asc'); // default order
 
     // store the current page (needed for handleSort)
     const [currentPage, setCurrentPage] = useState(1); // default current page
-   
 
-    const { 
+
+    const {
         state,
         error,
         partners,
@@ -31,7 +30,7 @@ export default function Partners() {
         pageSize,
         // page,
         totalItems
-    } = usePartners({ filter: '', page: 1, pageSize: perPage });
+    } = usePartners({filter: '', page: 1, pageSize: perPage});
 
     const handlePageChange = async (newpage: number = 1) => {
         setCurrentPage(newpage);
@@ -59,7 +58,7 @@ export default function Partners() {
 
     useEffect(() => {
         loadAsync();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPage, perPage, sort, order]);
 
     const columns = [
@@ -76,7 +75,7 @@ export default function Partners() {
             name: 'Partner',
             selector: (row: Partner) => row.organisation.name,
             format: (row: Partner) => <Link to={`/partner/${row.slug}`}
-                title={row.organisation.name}>{row.organisation.name}</Link>,
+                                            title={row.organisation.name}>{row.organisation.name}</Link>,
             sortable: true,
             sortField: 'organisation.name',
         },
@@ -93,7 +92,8 @@ export default function Partners() {
             id: 'project.name',
             name: 'Project',
             selector: (row: Partner) => row.project.name,
-            format: (row: Partner) => <Link to={`/project/${row.project.slug}`} title={row.project.name}>{row.project.name}</Link>,
+            format: (row: Partner) => <Link to={`/project/${row.project.slug}`}
+                                            title={row.project.name}>{row.project.name}</Link>,
             sortable: true,
             sortField: 'project.name',
         },
@@ -117,7 +117,8 @@ export default function Partners() {
             id: 'partner_costs',
             name: 'Partner Costs (€)',
             selector: (row: Partner) => row.latestVersionCosts,
-            format: (row: Partner) => <CostsFormat value={row.latestVersionCosts} showSuffix={false} showPrefix={false}/>,
+            format: (row: Partner) => <CostsFormat value={row.latestVersionCosts} showSuffix={false}
+                                                   showPrefix={false}/>,
             sortable: true,
             right: true,
         },
@@ -125,7 +126,8 @@ export default function Partners() {
             id: 'partner_effort',
             name: 'Partner Effort (PY)',
             selector: (row: Partner) => row.latestVersionEffort,
-            format: (row: Partner) => <EffortFormat value={row.latestVersionEffort} showSuffix={false} showPrefix={false}/>,
+            format: (row: Partner) => <EffortFormat value={row.latestVersionEffort} showSuffix={false}
+                                                    showPrefix={false}/>,
             sortable: true,
             right: true,
         },
@@ -133,12 +135,12 @@ export default function Partners() {
 
 
     switch (state) {
-        case apiStates.ERROR:
-            return <ApiError error={error}/>
-        case apiStates.SUCCESS:
+        case ApiStates.ERROR:
+            return <RenderApiError error={error}/>
+        case ApiStates.SUCCESS:
             return (
                 <React.Fragment>
-                    <BreadcrumbTree current="partners" data={partners} linkCurrent={false} />
+                    <BreadcrumbTree current="partners" data={partners} linkCurrent={false}/>
                     {/* <pre className='debug'>{JSON.stringify(partners, undefined, 2)}</pre> */}
                     <h1>Partners</h1>
                     <h3>sorting not yet possible</h3>
@@ -147,8 +149,8 @@ export default function Partners() {
                         columns={columns}
                         data={partners}
 
-                        defaultSortFieldId={sort_ref.current}
-                        defaultSortAsc={order_ref.current === 'asc' ? true : false}
+                        defaultSortFieldId={sort}
+                        defaultSortAsc={order === 'asc'}
 
                         progressPending={loading}
                         pagination

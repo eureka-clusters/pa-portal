@@ -46,7 +46,7 @@ export default function Header() {
                                 <React.Fragment>
                                     <NavDropdown
                                         id="nav-dropdown-account"
-                                        // title={`Account (${auth.userInfo.email})`}  // we could also use auth.getUser() 
+                                        // title={`Account (${auth.UserInfo.email})`}  // we could also use auth.getUser() 
                                         title={`Account (${auth.user})`}
                                         className = {'ms-auto'}
                                         align="end"  // align menu to the right 

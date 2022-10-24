@@ -1,15 +1,10 @@
 import {FC} from 'react';
 import {Form} from "react-bootstrap";
 import BootstrapSwitchButton from "bootstrap-switch-button-react";
-import { getFilter } from 'function/api';
-import { useFacets, apiStates, ApiError } from 'hooks/api/statistics/projects/use-facets';
-import { default as ReactSelect } from "react-select";
-// import { components } from "react-select"; // required if checkboxes should be added in react-select
-
-
-/**
- * @TODO get rid fo the any here
- */
+import {getFilter} from 'function/api';
+import {useFacets} from 'hooks/api/statistics/projects/use-facets';
+import {ApiStates, RenderApiError} from "hooks/api/api-error";
+import {default as ReactSelect} from "react-select";
 
 interface Props {
     filter: any,
@@ -22,7 +17,7 @@ interface Props {
 
 const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResults, updateHash}) => {
 
-    const { state, error, facets } = useFacets({ filter: getFilter(filter)});
+    const {state, error, facets} = useFacets(getFilter(filter));
 
     const updateCountryMethod = (event: any) => {
         var updatedValues = {
@@ -47,7 +42,7 @@ const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
         updateResults();
         updateHash();
     }
-    
+
 
     // needed for checkboxes in the react-select component
     // const Option = (props:any) => {
@@ -66,14 +61,14 @@ const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
     // };
 
     switch (state) {
-        case apiStates.ERROR:
+        case ApiStates.ERROR:
             return (
                 <>
-                    <ApiError error={error}/>
+                    <RenderApiError error={error}/>
                     <pre className='debug'>{JSON.stringify(filter, undefined, 2)}</pre>
                 </>
             );
-        case apiStates.SUCCESS:
+        case ApiStates.SUCCESS:
 
             return (
                 <>
@@ -87,39 +82,39 @@ const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
                                                offstyle={'secondary'}
                                                onChange={updateCountryMethod}
                         />
-                        
-                        <div style={{ margin: '5px 0px'}}>
-                        <ReactSelect
-                            isClearable={false}
-                            isMulti
-                            className="react-select"
-                            classNamePrefix="select"
-                            options={facets.countries}
-                            // components needs the complete filter objects therefore filter these by the filter country array
-                            value={
-                                facets.countries.filter(function (itm) {
-                                    return filter['country'].indexOf(itm.name) > -1;
-                                })
-                            }
-                            // getOptionLabel={(option) => `${option.name} (${option.amount})`}
-                            getOptionLabel={(option) => `${option.name}`}
-                            getOptionValue={(option) => `${option['name']}`}
-                            // add the checkboxes
-                            // components={{
-                            //     Option
-                            // }}
-                            // hideSelectedOptions={false}
-                            closeMenuOnSelect={false}
-                            onChange={(choices: any) => {
-                                let updatedValues: { [key: string]: Array<string> } = {};
-                                // get the names of the selected choices
-                                updatedValues['country'] = choices.map((choice: { name: string; amount: number }) => choice.name);
-                                setFilter((prevState: any) => ({
-                                    ...prevState, ...updatedValues
-                                }))
-                                updateHash();
-                            }}
-                        />
+
+                        <div style={{margin: '5px 0px'}}>
+                            <ReactSelect
+                                isClearable={false}
+                                isMulti
+                                className="react-select"
+                                classNamePrefix="select"
+                                options={facets.countries}
+                                // components needs the complete filter objects therefore filter these by the filter country array
+                                value={
+                                    facets.countries.filter(function (itm) {
+                                        return filter['country'].indexOf(itm.name) > -1;
+                                    })
+                                }
+                                // getOptionLabel={(option) => `${option.name} (${option.amount})`}
+                                getOptionLabel={(option) => `${option.name}`}
+                                getOptionValue={(option) => `${option['name']}`}
+                                // add the checkboxes
+                                // components={{
+                                //     Option
+                                // }}
+                                // hideSelectedOptions={false}
+                                closeMenuOnSelect={false}
+                                onChange={(choices: any) => {
+                                    let updatedValues: { [key: string]: Array<string> } = {};
+                                    // get the names of the selected choices
+                                    updatedValues['country'] = choices.map((choice: { name: string; amount: number }) => choice.name);
+                                    setFilter((prevState: any) => ({
+                                        ...prevState, ...updatedValues
+                                    }))
+                                    updateHash();
+                                }}
+                            />
                         </div>
 
 
@@ -196,7 +191,7 @@ const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
                     <fieldset>
                         <legend><small>Programme Call</small></legend>
 
-                        <div style={{ margin: '5px 0px' }}>
+                        <div style={{margin: '5px 0px'}}>
                             <ReactSelect
                                 isClearable={false}
                                 isMulti
@@ -251,7 +246,7 @@ const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
 
                     <fieldset>
                         <legend><small>Clusters</small></legend>
-                        
+
                         {facets.clusters && facets.clusters.map((cluster, i) => (
                             <div key={i}>
                                 <Form.Check type={'checkbox'} id={`check-cluster-${i}`}>

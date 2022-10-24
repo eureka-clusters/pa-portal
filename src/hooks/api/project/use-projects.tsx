@@ -1,13 +1,13 @@
-import React, { useRef, useCallback } from 'react'
-import { useApi, apiStates, iApiError } from 'hooks/api/useApi';
-import { Project } from "interface/project";
-
-export { ApiError, apiStates } from 'hooks/api/useApi';
-
+import React, {useCallback} from 'react'
+import {Project} from "interface/project";
+import {ApiError} from "interface/api/api-error";
+import {ApiStates} from 'hooks/api/api-error';
+import {PaginationProps} from "interface/api/pagination-props";
+import axios from "axios";
 
 interface State {
     state: string,
-    error?: iApiError,
+    error?: ApiError,
     projects: Array<Project>,
     pageCount?: number,
     pageSize?: number,
@@ -15,90 +15,74 @@ interface State {
     page?: number
 }
 
-interface Props {
-    filter?: string,
-    page?: number,
-    pageSize?: number,
-    sort?: string,
-    order?: string,
+
+export interface ProjectResponse {
+    _embedded: {
+        projects: Array<Project>
+    }
+    page_count: number,
+    page_size: number,
+    total_items: number,
+    page: number
 }
 
-const defaultProps = {
-    filter: '',
-    page: 1,
-    pageSize: -1,
-}
 
-export function useProjects(queryParameter: Props, requestOptions = {}) {   
-    queryParameter = { ...defaultProps, ...queryParameter }
-
-    let url = '/list/project';
-
-    const fetchData = useApi(url, queryParameter, requestOptions);
-
-    const mountedRef = useRef(true);
+export function useProjects(queryParameter: PaginationProps) {
 
     const [hookState, setHookState] = React.useState<State>({
-        state: apiStates.LOADING,
-        projects: [],
+        state: ApiStates.LOADING,
+        projects: []
     });
-    
-    const load = useCallback(async (queryParameter: Props, requestOptions = {}) => {
+
+    const load = useCallback(async (queryParameter: PaginationProps) => {
+
+
         const setPartData = (partialData: {
             state: string,
             projects?: Array<Project>,
-            error?: iApiError,
+            error?: ApiError,
             pageCount?: number,
             pageSize?: number,
             totalItems?: number,
             page?: number
         }) => {
-            // Before setState ensure that the component is mounted, otherwise return null and don't allow to unmounted component.
-            if (!mountedRef.current) return null;
-            setHookState(hookState => ({ ...hookState, ...partialData }))
+            setHookState(hookState => ({...hookState, ...partialData}))
         }
-        
-        // must be removed otherwise datatable pagination doesn't work
-        // setPartData({
-        //     state: apiStates.LOADING,
-        //     projects: [],
-        // })
 
         try {
-            // const data = await <Response>fetchData(queryParameter, requestOptions)  // doesn't work don't know how the interface could be used.
-            const data = await fetchData(queryParameter, requestOptions)
-            setPartData({
-                state: apiStates.SUCCESS,
-                projects: data._embedded.projects,
-                pageCount: data.page_count,
-                pageSize: data.page_size,
-                totalItems: data.total_items,
-                page: data.page
-            })
+
+            let url = '/list/project';
+
+            axios.create().get<ProjectResponse>(url)
+                .then(response => {
+
+                    const {data} = response;
+
+                    setPartData({
+                        state: ApiStates.SUCCESS,
+                        projects: data._embedded.projects,
+                        pageCount: data.page_count,
+                        pageSize: data.page_size,
+                        totalItems: data.total_items,
+                        page: data.page
+                    })
+                })
+
+
         } catch (error: any) {
             setPartData({
-                state: apiStates.ERROR,
+                state: ApiStates.ERROR,
                 error: error
             });
         }
-    }, [mountedRef, fetchData]);
+    }, []);
 
     React.useEffect(() => {
-        mountedRef.current = true;
-        load(queryParameter, requestOptions);
-
-        // important unload of unmounted component
-        return () => {
-            mountedRef.current = false
-        }
-
-        // why can't i add properties to the "dependecies" ... (sorting etc. doen't work with it..)
-        // "load" could be added if its a callback. but still can't get rid of these warnings...
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [load, mountedRef]);
+        load(queryParameter).then(() => {
+            return
+        });
+    }, [queryParameter]);
 
 
-    return { ...hookState, load: load };
+    return {...hookState, load: load};
 }
-

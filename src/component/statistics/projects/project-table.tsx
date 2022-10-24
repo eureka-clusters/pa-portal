@@ -1,17 +1,16 @@
-import React, { useEffect, FC } from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import {Link} from "react-router-dom";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import DataTable, { TableColumn } from 'component/database-table';
-import { CostsFormat, EffortFormat } from 'function/utils';
+import DataTable from 'component/database-table';
+import {CostsFormat, EffortFormat} from 'function/utils';
 
-import { getFilter } from 'function/api';
-import { useProjects, apiStates, ApiError } from 'hooks/api/statistics/projects/use-projects';
+import {getFilter, GetServerUri, objToQueryString} from 'function/api';
+import {useProjects} from 'hooks/api/statistics/projects/use-projects';
+import {ApiStates, RenderApiError} from "hooks/api/api-error";
 
 import {Project} from "interface/project";
-import useState from 'react-usestateref';
-import { useAuth } from "context/user-context";
+import {useAuth} from "context/user-context";
 import downloadBase64File from "function/download-base64";
-import { GetServerUri, objToQueryString } from 'function/api';
 import moment from 'moment';
 import LoadingButton from "component/partial/loading-button";
 
@@ -19,20 +18,20 @@ interface Props {
     filter: any,
 }
 
-const ProjectTable: FC<Props> = ({ filter }) => {
+const ProjectTable: FC<Props> = ({filter}) => {
 
     let auth = useAuth();
 
     const [perPage, setPerPage] = useState(30); // default pageSize
     const [loading, setLoading] = useState(false);
 
-    const [sort, setSort, sort_ref] = useState('project.name'); // default sort
-    const [order, setOrder, order_ref] = useState('asc'); // default order
+    const [sort, setSort] = useState('project.name'); // default sort
+    const [order, setOrder] = useState('asc'); // default order
 
     // store the current page (needed for handleSort)
     const [currentPage, setCurrentPage] = useState(1); // default current page
 
-    const { 
+    const {
         state,
         error,
         projects,
@@ -42,9 +41,9 @@ const ProjectTable: FC<Props> = ({ filter }) => {
         // page,
         totalItems
     } = useProjects({filter: getFilter(filter), page: 1, pageSize: perPage, sort: sort, order: order});
-    
+
     const [isExportLoading, setIsExportButtonLoading] = useState(false);
-    
+
 
     const handlePageChange = async (newpage: number = 1) => {
         setCurrentPage(newpage);
@@ -75,9 +74,8 @@ const ProjectTable: FC<Props> = ({ filter }) => {
 
     useEffect(() => {
         loadAsync();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPage, perPage, sort, order]);
-
 
 
     React.useEffect(() => {
@@ -89,8 +87,8 @@ const ProjectTable: FC<Props> = ({ filter }) => {
                 });
             })();
         }
-    // downloadExcel couldn't been added
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // downloadExcel couldn't been added
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isExportLoading]);
 
 
@@ -114,18 +112,20 @@ const ProjectTable: FC<Props> = ({ filter }) => {
                 }
             }
         )
-        .then(res => {
-            if (!res.ok) { throw res }
-            return res.json() 
-        })
-        .then((res) => {
-            let extension = res.extension;
-            let mimetype = res.mimetype;
-            downloadBase64File(mimetype, res.download, 'Download' + extension);
-        })
-        .catch((err) => {
-            console.error(err);
-        });
+            .then(res => {
+                if (!res.ok) {
+                    throw res
+                }
+                return res.json()
+            })
+            .then((res) => {
+                let extension = res.extension;
+                let mimetype = res.mimetype;
+                downloadBase64File(mimetype, res.download, 'Download' + extension);
+            })
+            .catch((err) => {
+                console.error(err);
+            });
     }
 
 
@@ -192,17 +192,19 @@ const ProjectTable: FC<Props> = ({ filter }) => {
             id: 'project.latestVersionTotalCosts',
             name: 'Total Costs (€)',
             selector: (project: Project) => project.latestVersionTotalCosts,
-            format: (project: Project) => <CostsFormat value={project.latestVersionTotalCosts} showSuffix={false} showPrefix={false}/>,
+            format: (project: Project) => <CostsFormat value={project.latestVersionTotalCosts} showSuffix={false}
+                                                       showPrefix={false}/>,
             sortable: true,
             sortField: 'project.latestVersionTotalCosts',
-            right:true,
+            right: true,
             // compact: true,
         },
         {
             id: 'project.latestVersionTotalEffort',
             name: 'Total Effort (PY)',
             selector: (project: Project) => project.latestVersionTotalEffort,
-            format: (project: Project) => <EffortFormat value={project.latestVersionTotalEffort} showSuffix={false} showPrefix={false}/>,
+            format: (project: Project) => <EffortFormat value={project.latestVersionTotalEffort} showSuffix={false}
+                                                        showPrefix={false}/>,
             sortable: true,
             sortField: 'project.latestVersionTotalEffort',
             right: true,
@@ -216,37 +218,36 @@ const ProjectTable: FC<Props> = ({ filter }) => {
             sortable: false,
             sortField: 'project.labelDate',
             // compact: true,
-            grow:2,
+            grow: 2,
             omit: true,  // currently ommited because of not enough space left.
         },
     ];
 
-    
 
     switch (state) {
-        case apiStates.ERROR:
+        case ApiStates.ERROR:
             return (
                 <>
-                    <ApiError error={error}/>
+                    <RenderApiError error={error}/>
                     <br/><br/>Filter used <code className={'pb-2 text-muted'}>{getFilter(filter)}</code>
                     <code className={'pb-2 text-muted'}>{JSON.stringify(filter, undefined, 2)}</code>
                 </>
             );
-        case apiStates.SUCCESS:
+        case ApiStates.SUCCESS:
             return (
                 <React.Fragment>
                     <h2>Projects</h2>
                     {/* <pre className='debug'>{JSON.stringify(filter, undefined, 2)}</pre> */}
                     {/* <pre className='debug'>{JSON.stringify(projects, undefined, 2)}</pre> */}
-                    
+
                     <DataTable
                         // title="Projects"
                         keyField="project.slug"
                         columns={columns}
                         data={projects}
 
-                        defaultSortFieldId={sort_ref.current}
-                        defaultSortAsc={order_ref.current === 'asc' ? true : false}
+                        defaultSortFieldId={sort}
+                        defaultSortAsc={order === 'asc'}
                         // paginationRowsPerPageOptions={[10, 15, 20, 25, 30, 50, 100, 200]}
                         progressPending={loading}
                         pagination

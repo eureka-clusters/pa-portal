@@ -1,26 +1,20 @@
-import React, { FC, useState, Suspense } from 'react';
-import { Project } from "interface/project";
-import { usePartners, apiStates, ApiError } from 'hooks/api/partner/use-partners';
+import React, {FC, Suspense, useState} from 'react';
+import {Project} from "interface/project";
+import {usePartners} from 'hooks/api/partner/use-partners';
+import {ApiStates, RenderApiError} from "hooks/api/api-error";
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
-
 import PartnerTable from './partner-table';
 import OrganisationTypeChart from 'component/project/charts/organisation-type-chart';
 import OrganisationCountryChart from 'component/project/charts/country-chart';
 import BudgetByOrganisationTypeChart from 'component/project/charts/budget-by-organisation-type-chart';
 import BudgetByCountryChart from 'component/project/charts/budget-and-effort-by-country-chart';
 
-// try lazy loading
-// const OrganisationTypeChart = React.lazy(() => import('component/project/charts/organisation-type-chart'));
-// const OrganisationCountryChart = React.lazy(() => import('component/project/charts/country-chart'));
-// const BudgetByOrganisationTypeChart = React.lazy(() => import('component/project/charts/budget-by-organisation-type-chart'));
-// const BudgetByCountryChart = React.lazy(() => import('component/project/charts/budget-and-effort-by-country-chart'));
-
 interface Props {
     project: Project
 }
 
-const PartnerTableWithCharts: FC<Props> = ({ project }) => {
+const PartnerTableWithCharts: FC<Props> = ({project}) => {
 
     const [activeTab, setActiveTab] = useState('table'); // default tab
 
@@ -33,13 +27,13 @@ const PartnerTableWithCharts: FC<Props> = ({ project }) => {
         // pageSize, 
         // page, 
         // totalItems
-    } = usePartners({ project: project.slug });
+    } = usePartners({project: project, filter: '', page: 1, pageSize: 30});
 
 
     switch (state) {
-        case apiStates.ERROR:
-            return <ApiError error={error} />
-        case apiStates.SUCCESS:
+        case ApiStates.ERROR:
+            return <RenderApiError error={error}/>
+        case ApiStates.SUCCESS:
             return (
                 <React.Fragment>
                     <h2>Partners</h2>
@@ -62,24 +56,24 @@ const PartnerTableWithCharts: FC<Props> = ({ project }) => {
                         }}
                     >
                         <Tab eventKey="table" title="Table">
-                            <PartnerTable results={partners} />
+                            <PartnerTable results={partners}/>
                         </Tab>
                         <Tab eventKey="charts" title="Charts">
                             <Suspense fallback={<div>Loading...</div>}>
                                 <div className="container">
                                     <div className="row">
                                         <div className="col">
-                                            <OrganisationTypeChart results={partners} />
+                                            <OrganisationTypeChart results={partners}/>
                                         </div>
                                         <div className="col">
-                                            <OrganisationCountryChart results={partners} />
+                                            <OrganisationCountryChart results={partners}/>
                                         </div>
                                     </div>
                                     <div className="row">
-                                        <BudgetByOrganisationTypeChart results={partners} />
+                                        <BudgetByOrganisationTypeChart results={partners}/>
                                     </div>
                                     <div className="row">
-                                        <BudgetByCountryChart results={partners} />
+                                        <BudgetByCountryChart results={partners}/>
                                     </div>
                                 </div>
                             </Suspense>

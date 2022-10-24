@@ -9,19 +9,19 @@ export default function Account() {
 
         <dl className="row">
             <dt className="col-sm-3 text-end">Email:</dt>
-            <dd className="col-sm-9">{auth.userInfo.email}</dd>
+            <dd className="col-sm-9">{auth.UserInfo.email}</dd>
             <dt className="col-sm-3 text-end">Name:</dt>
-            <dd className="col-sm-9">{auth.userInfo.first_name} {auth.userInfo.last_name}</dd>
+            <dd className="col-sm-9">{auth.UserInfo.first_name} {auth.UserInfo.last_name}</dd>
             <dt className="col-sm-3 text-end">Is Funder:</dt>
-            <dd className="col-sm-9">{auth.userInfo.is_funder ? 'true' : 'false'}</dd>
+            <dd className="col-sm-9">{auth.UserInfo.is_funder ? 'true' : 'false'}</dd>
             <dt className="col-sm-3 text-end">Funder Country:</dt>
-            <dd className="col-sm-9">{auth.userInfo.funder_country}</dd>
-            {auth.userInfo.funder_clusters ? (
+            <dd className="col-sm-9">{auth.UserInfo.funder_country}</dd>
+            {auth.UserInfo.funder_clusters ? (
                 <>
                     <dt className="col-sm-3 text-end">Funder Clusters:</dt>
                     <dd className="col-sm-9">
                         <ul>
-                            {auth.userInfo.funder_clusters && auth.userInfo.funder_clusters.map((cluster: string, i: number) => (
+                            {auth.UserInfo.funder_clusters && auth.UserInfo.funder_clusters.map((cluster: string, i: number) => (
                                 <li key={i}>{cluster}</li>
                             ))}
                         </ul>

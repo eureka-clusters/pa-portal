@@ -1,14 +1,13 @@
-import React, { useEffect, FC} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import {Link} from "react-router-dom";
 import DataTable from 'component/database-table';
-import { CostsFormat, EffortFormat} from 'function/utils';
+import {CostsFormat, EffortFormat} from 'function/utils';
 import {Partner} from "interface/project/partner";
-import { getFilter } from 'function/api';
-import { usePartners, apiStates, ApiError } from 'hooks/api/statistics/partners/use-partners';
-import useState from 'react-usestateref';
-import { useAuth } from "context/user-context";
+import {getFilter, GetServerUri, objToQueryString} from 'function/api';
+import {usePartners} from 'hooks/api/statistics/partners/use-partners';
+import {ApiStates, RenderApiError} from "hooks/api/api-error";
+import {useAuth} from "context/user-context";
 import downloadBase64File from "function/download-base64";
-import { GetServerUri, objToQueryString } from 'function/api';
 import LoadingButton from "component/partial/loading-button";
 
 interface Props {
@@ -21,28 +20,28 @@ const PartnerTable: FC<Props> = ({filter}) => {
 
     const [perPage, setPerPage] = useState(30); // default pageSize
     const [loading, setLoading] = useState(false);
-    
-    const [sort, setSort, sort_ref] = useState('partner.organisation.name'); // default sort
-    const [order, setOrder, order_ref] = useState('asc'); // default order
+
+    const [sort, setSort] = useState('partner.organisation.name'); // default sort
+    const [order, setOrder] = useState('asc'); // default order
 
     // store the current page (needed for handleSort)
     const [currentPage, setCurrentPage] = useState(1); // default current page
 
-    const { 
-        state, 
-        error, 
-        partners, 
-        load, 
+    const {
+        state,
+        error,
+        partners,
+        load,
         // pageCount, 
-        pageSize, 
+        pageSize,
         // page, 
         totalItems
-    } = usePartners({ filter: getFilter(filter), page: 1, pageSize: perPage, sort: sort, order: order });
-    
+    } = usePartners({filter: getFilter(filter), page: 1, pageSize: perPage, sort: sort, order: order});
+
     const [isExportLoading, setIsExportButtonLoading] = React.useState(
         false
     );
-  
+
     const handlePageChange = async (newpage: number = 1) => {
         setCurrentPage(newpage);
     }
@@ -72,7 +71,7 @@ const PartnerTable: FC<Props> = ({filter}) => {
 
     useEffect(() => {
         loadAsync();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPage, perPage, sort, order]);
 
     useEffect(() => {
@@ -84,8 +83,8 @@ const PartnerTable: FC<Props> = ({filter}) => {
                 });
             })();
         }
-    // downloadExcel couldn't been added
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // downloadExcel couldn't been added
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isExportLoading]);
 
     const downloadExcel = async () => {
@@ -108,18 +107,20 @@ const PartnerTable: FC<Props> = ({filter}) => {
                 }
             }
         )
-        .then(res => {
-            if (!res.ok) { throw res }
-            return res.json()
-        })
-        .then((res) => {
-            let extension = res.extension;
-            let mimetype = res.mimetype;
-            downloadBase64File(mimetype, res.download, 'Download' + extension);
-        })
-        .catch((err) => {
-            console.error(err);
-        });
+            .then(res => {
+                if (!res.ok) {
+                    throw res
+                }
+                return res.json()
+            })
+            .then((res) => {
+                let extension = res.extension;
+                let mimetype = res.mimetype;
+                downloadBase64File(mimetype, res.download, 'Download' + extension);
+            })
+            .catch((err) => {
+                console.error(err);
+            });
     }
 
 
@@ -165,7 +166,8 @@ const PartnerTable: FC<Props> = ({filter}) => {
             id: 'partner.latestVersionCosts',
             name: 'Partner Costs (€)',
             selector: (partner: Partner) => partner.latestVersionCosts,
-            format: (partner: Partner) => <CostsFormat value={partner.latestVersionCosts} showSuffix={false} showPrefix={false}/>,
+            format: (partner: Partner) => <CostsFormat value={partner.latestVersionCosts} showSuffix={false}
+                                                       showPrefix={false}/>,
             sortable: true,
             right: true,
             omit: hasYearFilter,
@@ -175,7 +177,8 @@ const PartnerTable: FC<Props> = ({filter}) => {
             id: 'partner.latestVersionEffort',
             name: 'Partner Effort (PY)',
             selector: (partner: Partner) => partner.latestVersionEffort,
-            format: (partner: Partner) => <EffortFormat value={partner.latestVersionEffort} showSuffix={false} showPrefix={false}/>,
+            format: (partner: Partner) => <EffortFormat value={partner.latestVersionEffort} showSuffix={false}
+                                                        showPrefix={false}/>,
             sortable: true,
             right: true,
             omit: hasYearFilter,
@@ -193,7 +196,8 @@ const PartnerTable: FC<Props> = ({filter}) => {
             id: 'partner.latestVersionCostsInYear',
             name: 'Partner Costs in Year (€)',
             selector: (partner: Partner) => partner.latestVersionCostsInYear,
-            format: (partner: Partner) => <CostsFormat value={partner.latestVersionCostsInYear} showSuffix={false} showPrefix={false}/>,
+            format: (partner: Partner) => <CostsFormat value={partner.latestVersionCostsInYear} showSuffix={false}
+                                                       showPrefix={false}/>,
             sortable: true,
             right: true,
             omit: !hasYearFilter,
@@ -203,7 +207,8 @@ const PartnerTable: FC<Props> = ({filter}) => {
             id: 'partner.latestVersionEffortInYear',
             name: 'Partner Effort in Year (PY)',
             selector: (partner: Partner) => partner.latestVersionEffortInYear,
-            format: (partner: Partner) => <EffortFormat value={partner.latestVersionEffortInYear} showSuffix={false} showPrefix={false}/>,
+            format: (partner: Partner) => <EffortFormat value={partner.latestVersionEffortInYear} showSuffix={false}
+                                                        showPrefix={false}/>,
             sortable: true,
             right: true,
             omit: !hasYearFilter,
@@ -213,27 +218,22 @@ const PartnerTable: FC<Props> = ({filter}) => {
 
 
     switch (state) {
-        case apiStates.ERROR:
-            return <ApiError error={error}/>
-        case apiStates.SUCCESS:
+        case ApiStates.ERROR:
+            return <RenderApiError error={error}/>
+        case ApiStates.SUCCESS:
             return (
                 <React.Fragment>
                     <h2>Partners</h2>
-                    {/* <pre className='debug'>{JSON.stringify(partners.length, undefined, 2)}</pre> */}
-                    {/* <pre className='debug'>{JSON.stringify(partners, undefined, 2)}</pre> */}
-                    {/* <pre className='debug'>{JSON.stringify(getFilter(filter), undefined, 2)}</pre> */}
-                    {/* <pre className='debug'>{JSON.stringify(filter, undefined, 2)}</pre> */}
-                    
                     <DataTable
                         // title="Partners"
-                        keyField={hasYearFilter ? ("keyfield"): ("id")}
+                        keyField={hasYearFilter ? ("keyfield") : ("id")}
 
                         columns={columns}
                         data={partners}
                         paginationRowsPerPageOptions={[10, 15, 20, 25, 30, 50, 100, 200]}
 
-                        defaultSortFieldId={sort_ref.current}
-                        defaultSortAsc={order_ref.current === 'asc' ? true : false}
+                        defaultSortFieldId={sort}
+                        defaultSortAsc={order === 'asc'}
 
 
                         progressPending={loading}

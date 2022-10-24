@@ -1,9 +1,9 @@
-import React, {KeyboardEvent, useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import SearchList from './search-list';
 import {useLocation, useNavigate} from "react-router-dom";
-import {ApiError, apiStates, useSearch} from 'hooks/api/search/use-search';
+import {useSearch} from 'hooks/api/search/use-search';
+import {ApiStates, RenderApiError} from "hooks/api/api-error";
 import Pagination from 'component/pagination';
-
 
 const DefaultPageSize = 10;
 
@@ -75,7 +75,7 @@ function SearchForm({searchText, setSearchText}: Props) {
             setRequestedSearchText(query);
             setShowResults(true);
         } else {
-            state = apiStates.LOADING;
+            state = ApiStates.LOADING;
             setShowResults(false);
         }
     }
@@ -98,10 +98,10 @@ function SearchForm({searchText, setSearchText}: Props) {
     let render;
 
     switch (state) {
-        case apiStates.ERROR:
-            render = <ApiError error={error}/>
+        case ApiStates.ERROR:
+            render = <RenderApiError error={error}/>
             break;
-        case apiStates.SUCCESS:
+        case ApiStates.SUCCESS:
             render = <>
                 {showResults ? <SearchList results={results} ulRef={ulRef} searchText={requestedSearchText}/> : null}
 
@@ -114,13 +114,6 @@ function SearchForm({searchText, setSearchText}: Props) {
                     pageSize={pageSize}
                     onPageChange={handlePageChange}
                 /> : null}
-
-                {/*<u>debug:</u><br />*/}
-                {/*pageCount: {pageCount} <br />*/}
-                {/*pageSize: {pageSize} <br />*/}
-                {/*page: {page} <br />*/}
-                {/*totalItems: {totalItems}<br />*/}
-                {/*limit: {limit} <br />*/}
             </>
             break;
         default:

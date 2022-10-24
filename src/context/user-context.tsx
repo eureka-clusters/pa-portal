@@ -1,16 +1,15 @@
 import {createContext, FC, useContext, useReducer} from 'react';
 import {useNavigate} from "react-router-dom";
-import {iUserinfo} from 'interface/auth/userinfo';
+import {UserInfo} from 'interface/auth/user-info';
 import jwtDecode, {JwtPayload} from "jwt-decode";
-
-
-import {useApi} from 'hooks/api/useApi';
+import {configureAxiosHeaders} from "../function/configure-axios-headers";
+import {useMe} from "../hooks/api/user/use-me";
 
 
 const AuthContext = createContext<any>({}); //Any, might be replaced by more strict objects
 
 export const KEY_USER = 'user';
-export const KEY_USER_INFO = 'userInfo';
+export const KEY_USER_INFO = 'UserInfo';
 export const KEY_REDIRECT = 'redirect';
 export const KEY_TOKEN = 'token';
 
@@ -64,15 +63,15 @@ function useProvideAuth() {
         return storage.getItem(KEY_TOKEN)
     }
 
-    const setUserInfo = (userinfo: iUserinfo) => {
-        // userinfo must be saved a json string into storage as no objects could be saved
-        storage.setItem(KEY_USER_INFO, JSON.stringify(userinfo));
+    const setUserInfo = (UserInfo: UserInfo) => {
+        // UserInfo must be saved a json string into storage as no objects could be saved
+        storage.setItem(KEY_USER_INFO, JSON.stringify(UserInfo));
     }
 
     const getUserInfo = () => {
-        let userinfo = storage.getItem(KEY_USER_INFO);
-        if (userinfo) {
-            return JSON.parse(userinfo);
+        let UserInfo = storage.getItem(KEY_USER_INFO);
+        if (UserInfo) {
+            return JSON.parse(UserInfo);
         }
         return null;
     }
@@ -89,7 +88,7 @@ function useProvideAuth() {
         (state: any, newState: any) => ({...state, ...newState}),
         {
             user: getUser(),
-            userInfo: getUserInfo(),
+            UserInfo: getUserInfo(),
             token: getJwtTokenStorage(),
             redirect: getRedirect(),
             loading: false,
@@ -99,7 +98,7 @@ function useProvideAuth() {
 
     // return values for the states
     const user = state.user;
-    const userInfo = state.userInfo;
+    const UserInfo = state.UserInfo;
     const redirect = state.redirect;
     const token = state.token;
     const error = state.errorMessage;
@@ -108,7 +107,7 @@ function useProvideAuth() {
         setState({
             token: null,
             user: null,
-            userInfo: null,
+            UserInfo: null,
         });
         storage.removeItem(KEY_TOKEN)
         storage.removeItem(KEY_USER)
@@ -139,6 +138,10 @@ function useProvideAuth() {
 
         try {
             checkToken(token);
+
+            configureAxiosHeaders(token);
+
+
             return token;
         } catch (error) {
             console.debug('catch error in getJwtToken logout user', error);
@@ -150,46 +153,51 @@ function useProvideAuth() {
 
 
     const hasUser = () => {
-        // must use the states instead.
         return null !== user;
-        // return null !== storage.getItem('user');
     }
 
-    // const userInfoQuery =  useApi('222/me', {}); // for error testing
-    const userInfoQuery = useApi('/me', {}, {});
-    const requestUserInfo = async (jwtToken: string) => {
+
+    const requestUserInfo = async (): UserInfo => {
+        //const {load, user} = useMe();
+
         try {
-            return await userInfoQuery({}, {headers: {Authorization: `Bearer ${jwtToken}`}});
+
+            return user;
         } catch (error) {
             console.error(['requestUserInfo error', error]);
             throw (error);
         }
     }
 
-    const loginWithToken = async (token: string, cb: CallbackHandler) => {
-        // use token to get the userInfo (if this succeeds the token is valid)
+    const loginWithToken = async (token: string) => {
+
+        // use token to get the UserInfo (if this succeeds the token is valid)
+        configureAxiosHeaders(token);
+
         try {
-            let userinfo = await requestUserInfo(token);
-            let user = userinfo.email;
+            let UserInfo = await requestUserInfo();
+            let user = UserInfo.email;
 
             // save items in storage       
             setUser(user);
             setJwtToken(token);
-            setUserInfo(userinfo);
+            setUserInfo(UserInfo);
 
             // set the states (can't be done in the storage functions as each change would create a re-render)        
             setState({
                 token: token,
                 user: user,
-                userInfo: userinfo,
+                UserInfo: UserInfo,
             });
-            typeof cb == "function" && cb();
+
+
+
             return true;
         } catch (error: any) {
             // } catch (error: Error) {
             console.error(error);
             setState({
-                errorMessage: 'Userinfo could not been loaded ' + error.message
+                errorMessage: 'UserInfo could not been loaded ' + error.message
             });
         }
     }
@@ -208,7 +216,7 @@ function useProvideAuth() {
         // states
         error,
         user,
-        userInfo,
+        UserInfo,
         redirect,
         token,
 

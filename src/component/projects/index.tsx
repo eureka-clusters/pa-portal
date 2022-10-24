@@ -1,31 +1,29 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Link} from 'react-router-dom';
 import BreadcrumbTree from 'component/partial/breadcrumb-tree'
 import DataTable from 'component/database-table';
 import {Project} from "interface/project";
 import {CostsFormat, EffortFormat} from 'function/utils';
-import { useProjects, apiStates, ApiError } from 'hooks/api/project/use-projects';
+import {useProjects} from 'hooks/api/project/use-projects';
+import {ApiStates, RenderApiError} from "hooks/api/api-error";
 
-import useState from 'react-usestateref';
 
 export default function Projects() {
 
     const [loading, setLoading] = React.useState(false);
     const [perPage, setPerPage] = React.useState(30);           // default pageSize
-    const [sort, setSort, sort_ref] = useState('project.name'); // default sort
-    const [order, setOrder, order_ref] = useState('asc');       // default order
+    const [sort, setSort] = useState('project.name'); // default sort
+    const [order, setOrder] = useState('asc');       // default order
     const [currentPage, setCurrentPage] = useState(1);          // default current page
 
-    const { 
-        state, 
-        error, 
-        projects, 
-        load, 
-        // pageCount, 
-        pageSize, 
-        // page, 
-        totalItems 
-    } = useProjects({ filter: '', page: 1, pageSize: perPage });
+    const {
+        state,
+        error,
+        projects,
+        load,
+        pageSize,
+        totalItems
+    } = useProjects({filter: '', page: 1, pageSize: perPage});
 
     const handlePageChange = async (newpage: number = 1) => {
         setCurrentPage(newpage);
@@ -53,7 +51,7 @@ export default function Projects() {
 
     useEffect(() => {
         loadAsync();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPage, perPage, sort, order]);
 
     const columns = [
@@ -117,7 +115,8 @@ export default function Projects() {
             id: 'project.latestVersionTotalCosts',
             name: 'Total Costs (€)',
             selector: (row: Project) => row.latestVersionTotalCosts,
-            format: (row: Project) => <CostsFormat value={row.latestVersionTotalCosts} showSuffix={false} showPrefix={false}/>,
+            format: (row: Project) => <CostsFormat value={row.latestVersionTotalCosts} showSuffix={false}
+                                                   showPrefix={false}/>,
             sortable: true,
             right: true,
             sortField: 'project.latestVersionTotalCosts',
@@ -126,7 +125,8 @@ export default function Projects() {
             id: 'project.latestVersionTotalEffort',
             name: 'Total Effort (PY)',
             selector: (row: Project) => row.latestVersionTotalEffort,
-            format: (row: Project) => <EffortFormat value={row.latestVersionTotalEffort} showSuffix={false} showPrefix={false}/>,
+            format: (row: Project) => <EffortFormat value={row.latestVersionTotalEffort} showSuffix={false}
+                                                    showPrefix={false}/>,
             sortable: true,
             right: true,
             sortField: 'project.latestVersionTotalEffort',
@@ -134,9 +134,9 @@ export default function Projects() {
     ];
 
     switch (state) {
-        case apiStates.ERROR:
-            return <ApiError error={error}/>
-        case apiStates.SUCCESS:
+        case ApiStates.ERROR:
+            return <RenderApiError error={error}/>
+        case ApiStates.SUCCESS:
             return (
                 <React.Fragment>
                     <BreadcrumbTree current="projects" data={{}} linkCurrent={false}/>
@@ -147,8 +147,8 @@ export default function Projects() {
                         keyField="project.slug"
                         columns={columns}
                         data={projects}
-                        defaultSortFieldId={sort_ref.current}
-                        defaultSortAsc={order_ref.current === 'asc' ? true : false}
+                        defaultSortFieldId={sort}
+                        defaultSortAsc={order === 'asc'}
                         progressPending={loading}
                         pagination
                         paginationServer

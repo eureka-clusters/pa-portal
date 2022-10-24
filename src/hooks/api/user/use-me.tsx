@@ -1,87 +1,67 @@
-import React, { useRef, useCallback}  from 'react'
-import { useApi, apiStates, iApiError} from 'hooks/api/useApi';
+import React, {useCallback} from 'react'
+import {ApiError} from "interface/api/api-error";
+import {ApiStates} from 'hooks/api/api-error';
+import {UserInfo} from "interface/auth/user-info";
+import axios from "axios";
 
-export { apiStates } from 'hooks/api/useApi';
-
-interface Me {
-    email: string,
-    first_name: string,
-    last_name: string, 
-    funder_clusters: Array<string>
-    funder_country: string,
-    id: number,
-    is_funder: boolean,
-    _links: any,
-}
-
-interface Props {
-    // filter?: string,
-    // page: number,
-    // pageSize: number,
-    // sort?: string,
-    // order?: string,
-}
 
 interface State {
     state: string,
-    error?: iApiError,
-    data: Me,
-    // data: any
+    error?: ApiError,
+    user: UserInfo,
 }
 
-export function useMe(queryParameter: Props , requestOptions = {}) {
 
-    const fetchData = useApi('/me', queryParameter, requestOptions);
+export function useMe() {
 
-    const mountedRef = useRef(true);
-
-    const [hookState, setHookState] = React.useState <State> ({
-        state: apiStates.LOADING,
-        data: {} as Me
+    const [hookState, setHookState] = React.useState <State>({
+        state: ApiStates.LOADING,
+        user: {} as UserInfo
     });
 
-    const load = useCallback(async (queryParameter: Props, requestOptions = {}) => {
+    const load = useCallback(async () => {
 
         const setPartData = (partialData: {
             state: string;
-            data?: Me;
-            error?: iApiError;
+            user?: UserInfo;
+            error?: ApiError;
         }) => {
             // Before setState ensure that the component is mounted, otherwise return null and don't allow to unmounted component.
-            if (!mountedRef.current) return null;
-            setHookState(hookState => ({ ...hookState, ...partialData }))
+            setHookState(hookState => ({...hookState, ...partialData}))
         }
 
         setPartData({
-            state: apiStates.LOADING,
+            state: ApiStates.LOADING,
         })
 
         try {
-            const data = await fetchData(queryParameter, requestOptions)
-            setPartData({
-                state: apiStates.SUCCESS,
-                data: data
-            })
+            let url = '/me';
+            axios.create().get<UserInfo>(url)
+                .then(response => {
+                    const {data} = response;
+
+                    setPartData({
+                        state: ApiStates.SUCCESS,
+                        user: data
+                    })
+                });
+
+
         } catch (error: any) {
             setPartData({
-                state: apiStates.ERROR,
+                state: ApiStates.ERROR,
                 error: error
             });
         }
-    }, [mountedRef, fetchData]);
-
+    }, []);
 
 
     React.useEffect(() => {
-        mountedRef.current = true;
-        load(queryParameter, requestOptions);
-        
-        // important unload of unmounted component
-        return () => {
-            mountedRef.current = false
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [load, mountedRef]);
+        load().then(() => {
+            return;
+        });
 
-    return { ...hookState, load: load };
+    }, [load]);
+
+    return {...hookState, load: load};
 }

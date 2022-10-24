@@ -1,20 +1,22 @@
-import React, {FC} from 'react';
-import { iApiError } from 'hooks/api/interfaces';
+import React from 'react';
+import {ApiError} from 'interface/api/api-error';
 
-interface Props {
-    error?: iApiError
+export const ApiStates = {
+    LOADING: 'LOADING',
+    SUCCESS: 'SUCCESS',
+    ERROR: 'ERROR'
 }
 
-export const ApiError: FC<Props> = ({ error }) => {
-    if (error) {
-        return <>
-            <p className="api-error">
-                <strong>Api Error</strong><br />
-                {error.data}<br />
-                Message: {error.message}<br />
-                Code: {error.code}<br />
-            </p>
-        </>;
+export const RenderApiError = ({error}: { error: ApiError | undefined }) => {
+
+    if (error === undefined) {
+        return <></>;
     }
-    return null;
+
+    return <p className="api-error">
+        <strong>Api Error</strong><br/>
+        {error.data}<br/>
+        Message: {error.message}<br/>
+        Code: {error.code}<br/>
+    </p>;
 }

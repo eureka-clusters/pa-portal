@@ -25,8 +25,7 @@ export default function ProjectStatistics() {
 
     const {updateHash, updateFilter, filter, setFilter} = TableFilter({hash, defaultFilter});
 
- 
-    const updateResults = () => {
+     const updateResults = () => {
     }
 
     return (

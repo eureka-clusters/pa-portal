@@ -2,23 +2,20 @@ import React from 'react';
 import {useParams} from "react-router-dom";
 import BreadcrumbTree from 'component/partial/breadcrumb-tree'
 import PartnerTable from "component/organisation/partner-table";
-import {ApiError, apiStates, useOrganisation} from 'hooks/api/organisation/use-organisation';
+import {useOrganisation} from 'hooks/api/organisation/use-organisation';
+import {ApiStates, RenderApiError} from "hooks/api/api-error";
 
 
 export default function Organisation() {
 
     const {slug} = useParams();
 
-    if (slug === undefined) {
-        return <ApiError/>
-    }
-
-    const {state, error, organisation} = useOrganisation({slug: slug});
+    const {state, error, organisation} = useOrganisation(slug === undefined ? '' : slug);
 
     switch (state) {
-        case apiStates.ERROR:
-            return <ApiError error={error}/>
-        case apiStates.SUCCESS:
+        case ApiStates.ERROR:
+            return <RenderApiError error={error}/>
+        case ApiStates.SUCCESS:
             return (
                 <React.Fragment>
                     <BreadcrumbTree current="organisation" data={organisation} linkCurrent={false}/>

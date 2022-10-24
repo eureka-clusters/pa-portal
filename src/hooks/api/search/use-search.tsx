@@ -1,6 +1,7 @@
-import React, { useRef, useCallback } from 'react'
-import { useApi, apiStates, iApiError  } from 'hooks/api/useApi';
-export { ApiError, apiStates } from 'hooks/api/useApi';
+import React, {useCallback} from 'react'
+import axios from "axios";
+import {ApiError} from "interface/api/api-error";
+import {ApiStates} from 'hooks/api/api-error';
 
 export interface SearchResult {
     id: number,
@@ -8,9 +9,20 @@ export interface SearchResult {
     name: string,
 }
 
+interface SearchResponse {
+    _embedded: {
+        search: Array<SearchResult>
+    },
+    page_count: number,
+    page_size: number,
+    total_items: number,
+    page: number
+
+}
+
 interface State {
     state: string,
-    error?: iApiError,
+    error?: ApiError,
     results: Array<SearchResult>,
     pageCount?: number,
     pageSize?: number,
@@ -26,85 +38,64 @@ interface Props {
     order?: string,
 }
 
-// default properties for page and pageSize
-const defaultProps = {
-    query: '',
-    page: 1,
-    pageSize: 10,
-}
+export function useSearch(queryParameter: Props) {
 
-export function useSearch(queryParameter: Props , requestOptions = {}) {   
-    queryParameter = { ...defaultProps, ...queryParameter }
-
-    let url = '/search/result';
-   
-    const fetchData = useApi(url, queryParameter, requestOptions);
-
-    const mountedRef = useRef(true);
 
     const [hookState, setHookState] = React.useState<State>({
-        state: apiStates.LOADING,
+        state: ApiStates.LOADING,
         results: []
     });
 
-    const load = useCallback(async (queryParameter: Props, requestOptions = {}) => {
+    const load = useCallback(async (queryParameter: Props) => {
+
+        let url = '/search/result';
         const setPartData = (partialData: {
             state: string,
             results?: Array<SearchResult>,
-            error?: iApiError,
+            error?: ApiError,
             pageCount?: number,
             pageSize?: number,
             totalItems?: number,
             page?: number
         }) => {
             // Before setState ensure that the component is mounted, otherwise return null and don't allow to unmounted component.
-            if (!mountedRef.current) return null;
-            setHookState(hookState => ({ ...hookState, ...partialData }))
+            setHookState(hookState => ({...hookState, ...partialData}))
         }
 
-        // must be removed otherwise datatable pagination doesn't work
-        // setPartData({
-        //     state: apiStates.LOADING,
-        //     organisations: []
-        // })
-
         try {
-            // const data = await <Response>fetchData(queryParameter, requestOptions)  // doesn't work don't know how the interface could be used.
-            const data = await fetchData(queryParameter, requestOptions)
-            setPartData({
-                state: apiStates.SUCCESS,
-                results: data._embedded.search,
-                pageCount: data.page_count,
-                pageSize: data.page_size,
-                totalItems: data.total_items,
-                page: data.page
-            })
+
+            url = url + '?query=' + queryParameter.query;
+
+            axios.create().get<SearchResponse>(url)
+                .then(response => {
+                    const {data} = response;
+
+                    setPartData({
+                        state: ApiStates.SUCCESS,
+                        results: data._embedded.search,
+                        pageCount: data.page_count,
+                        pageSize: data.page_size,
+                        totalItems: data.total_items,
+                        page: data.page
+                    })
+                });
+
+
         } catch (error: any) {
             setPartData({
-                state: apiStates.ERROR,
+                state: ApiStates.ERROR,
                 error: error
             });
         }
-    }, [mountedRef, fetchData]);
+    }, [queryParameter]);
 
     React.useEffect(() => {
-        mountedRef.current = true;
+        load(queryParameter).then(() => {
+            return;
+        });
 
-        if (queryParameter.query) {
-            load(queryParameter, requestOptions);
-        }
-        
+    }, [load]);
 
-        // important unload of unmounted component
-        return () => {
-            mountedRef.current = false
-        }
-        // why can't i add properties to the "dependecies" ... (sorting etc. doen't work with it..)
-        // "load" could be added if its a callback. but still can't get rid of these warnings...
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [load, mountedRef]);  // only works if load is a callback but still says properties is dependend
-    // }, [mountedRef]); // works if load is a function (load couldn't be added if its not a callback)
-    // }, [load, mountedRef, properties]);  // sort etc. doesn't work...
 
-    return { ...hookState, load: load };
+    return {...hookState, load: load};
 }

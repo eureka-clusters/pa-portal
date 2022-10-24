@@ -1,8 +1,9 @@
 import {FC} from 'react';
 import {Form} from "react-bootstrap";
 import {getFilter} from 'function/api';
-import {ApiError, apiStates, useFacets} from 'hooks/api/statistics/partners/use-facets';
-import { default as ReactSelect } from "react-select";
+import {useFacets} from 'hooks/api/statistics/partners/use-facets';
+import {ApiStates, RenderApiError} from "hooks/api/api-error";
+import {default as ReactSelect} from "react-select";
 
 interface Props {
     filter: any,
@@ -14,12 +15,12 @@ interface Props {
 
 const PartnerFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResults, updateHash}) => {
 
-    const {state, error, facets} = useFacets({filter: getFilter(filter)});
+    const {state, error, facets} = useFacets(getFilter(filter));
 
     switch (state) {
-        case apiStates.ERROR:
-            return <ApiError error={error}/>;
-        case apiStates.SUCCESS:
+        case ApiStates.ERROR:
+            return <RenderApiError error={error}/>;
+        case ApiStates.SUCCESS:
 
 
             // don't know how to fix typescipt issue...
@@ -44,7 +45,7 @@ const PartnerFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
                         <fieldset>
                             <legend><small>Countries</small></legend>
 
-                            <div style={{ margin: '5px 0px' }}>
+                            <div style={{margin: '5px 0px'}}>
                                 <ReactSelect
                                     isClearable={false}
                                     isMulti
@@ -129,12 +130,12 @@ const PartnerFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
                         </fieldset>
                     ) : ('')}
 
-                  
+
                     {facets.programmeCalls ? (
                         <fieldset>
                             <legend><small>Programme Call</small></legend>
 
-                            <div style={{ margin: '5px 0px' }}>
+                            <div style={{margin: '5px 0px'}}>
                                 <ReactSelect
                                     isClearable={false}
                                     isMulti
@@ -198,7 +199,7 @@ const PartnerFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
                         <fieldset>
                             <legend><small>Years</small></legend>
 
-                            <div style={{ margin: '5px 0px' }}>
+                            <div style={{margin: '5px 0px'}}>
                                 <ReactSelect
                                     isClearable={false}
                                     isMulti

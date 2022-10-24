@@ -14,11 +14,6 @@ function Search() {
         navigate({
             pathname: "/search",
             search: `query=${text}`, // url /search?query=text
-
-            // test so set result data per state directly
-            // state: {
-            //     searchResults: data._embedded.results,
-            // },
         });
     }
 

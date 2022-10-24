@@ -1,16 +1,18 @@
-import {useEffect} from 'react';
-import useState from 'react-usestateref'; // we need the useState with the .current href
+import {useEffect, useState} from 'react';
 import {fromFilter, getFilter} from 'function/api/filter-functions';
+import {useNavigate} from "react-router-dom";
 
 
 //For now quite impossible to convert to TS as all params and objects are everywhere
 
-function TableFilter({hash, defaultFilter}: { hash: string | undefined, defaultFilter: any }) {
+function TableFilter({hash, defaultFilter}) {
 
-    const getFilterFromHash = (hash: string | undefined, setFilterMethod: boolean | undefined, useAsFilter = false) => {
+    let navigate = useNavigate();
+
+    const getFilterFromHash = (setFilterMethod, useAsFilter = false) => {
         if (hash) {
-            const hash = fromFilter(hash.substring(1));
-            const newFilter = JSON.parse(hash);
+            const newHash = fromFilter(hash.substring(1));
+            const newFilter = JSON.parse(newHash);
             // console.log(['filter from hash', newFilter]);
             if (useAsFilter && typeof setFilterMethod == "function") {
                 setFilterMethod(prevState => ({
@@ -64,16 +66,14 @@ function TableFilter({hash, defaultFilter}: { hash: string | undefined, defaultF
     const updateHash = () => {
         // const hash = getFilter(filter.current);
         const hash = getFilter(filter_ref.current);
-        props.history.push({
-            'hash': hash
-        });
+        navigate(hash, {replace: true});
     }
 
     // update the filter depending on the hash in the url
     useEffect(() => {
         getFilterFromHash(setFilter, true);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [props]);
+    }, [hash]);
 
     return {getDefaultFilter, getFilterFromHash, updateHash, updateFilter, filter, setFilter};
 }

@@ -1,24 +1,25 @@
-import React, { useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import {Link} from 'react-router-dom';
 import BreadcrumbTree from 'component/partial/breadcrumb-tree';
 import DataTable from 'component/database-table';
-import { useOrganisations, apiStates, ApiError } from 'hooks/api/organisation/use-organisations';
+import {useOrganisations} from 'hooks/api/organisation/use-organisations';
+import {ApiStates, RenderApiError} from "hooks/api/api-error";
 
 import {Organisation} from "interface/organisation";
-import useState from 'react-usestateref';
+
 
 export default function Organisations() {
 
-    const [perPage, setPerPage] = React.useState(30); // default pageSize
-    const [loading, setLoading] = React.useState(false);
+    const [perPage, setPerPage] = useState(30); // default pageSize
+    const [loading, setLoading] = useState(false);
 
-    const [sort, setSort, sort_ref] = useState('organisation.name'); // default sort
-    const [order, setOrder, order_ref] = useState('asc'); // default order
+    const [sort, setSort] = useState('organisation.name'); // default sort
+    const [order, setOrder] = useState('asc'); // default order
 
     // store the current page (needed for handleSort)
     const [currentPage, setCurrentPage] = useState(1); // default current page
 
-    const { 
+    const {
         state,
         error,
         organisations,
@@ -27,8 +28,8 @@ export default function Organisations() {
         pageSize,
         // page,
         totalItems
-     } = useOrganisations({ filter: '', page: 1, pageSize: perPage }); 
-    
+    } = useOrganisations({filter: '', page: 1, pageSize: perPage});
+
     const handlePageChange = async (newpage: number = 1) => {
         setCurrentPage(newpage);
     }
@@ -55,7 +56,7 @@ export default function Organisations() {
 
     useEffect(() => {
         loadAsync();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPage, perPage, sort, order]);
 
     const columns = [
@@ -75,7 +76,7 @@ export default function Organisations() {
                                                           title={organisation.name}>{organisation.name}</Link>,
             sortable: true,
             sortField: 'organisation.name',
-            grow:2, 
+            grow: 2,
         },
         {
             id: 'organisation.country.country',
@@ -95,9 +96,9 @@ export default function Organisations() {
 
 
     switch (state) {
-        case apiStates.ERROR:
-            return <ApiError error={error}/>
-        case apiStates.SUCCESS:
+        case ApiStates.ERROR:
+            return <RenderApiError error={error}/>
+        case ApiStates.SUCCESS:
             return (
                 <React.Fragment>
                     {/* <pre className='debug'>{JSON.stringify(organisations, undefined, 2)}</pre> */}
@@ -111,8 +112,8 @@ export default function Organisations() {
                         data={organisations}
 
 
-                        defaultSortFieldId= {sort_ref.current}
-                        defaultSortAsc={order_ref.current === 'asc'? true: false}
+                        defaultSortFieldId={sort}
+                        defaultSortAsc={order === 'asc'}
 
                         progressPending={loading}
                         pagination

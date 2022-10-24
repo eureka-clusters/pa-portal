@@ -1,10 +1,12 @@
 import React, {FC} from 'react';
 import {Link} from "react-router-dom";
 import DataTable from 'component/database-table';
-import { CostsFormat, EffortFormat, BooleanIconFormat } from 'function/utils';
+import {BooleanIconFormat, CostsFormat, EffortFormat} from 'function/utils';
 import {Partner} from "interface/project/partner";
 import {Organisation} from "interface/organisation";
-import { usePartners, apiStates, ApiError } from 'hooks/api/partner/use-partners';
+import {usePartners} from 'hooks/api/partner/use-partners';
+import {ApiStates, RenderApiError} from "hooks/api/api-error";
+
 interface Props {
     organisation: Organisation
 }
@@ -64,7 +66,7 @@ const PartnerTable: FC<Props> = ({organisation}) => {
             name: 'Partner',
             selector: (partner: Partner) => partner.organisation.name,
             format: (partner: Partner) => <Link to={`/partner/${partner.slug}`}
-                title={partner.organisation.name}>{partner.organisation.name}</Link>,
+                                                title={partner.organisation.name}>{partner.organisation.name}</Link>,
             sortable: true,
             grow: 3,
         },
@@ -84,7 +86,8 @@ const PartnerTable: FC<Props> = ({organisation}) => {
             id: 'partner_costs',
             name: 'Partner Costs (€)',
             selector: (partner: Partner) => partner.latestVersionCosts,
-            format: (partner: Partner) => <CostsFormat value={partner.latestVersionCosts} showSuffix={false} showPrefix={false} />,
+            format: (partner: Partner) => <CostsFormat value={partner.latestVersionCosts} showSuffix={false}
+                                                       showPrefix={false}/>,
             sortable: true,
             right: true,
             sortFunction: customLatestVersionCostsSort, // required if number_format(value, 2) is used in backend
@@ -94,7 +97,8 @@ const PartnerTable: FC<Props> = ({organisation}) => {
             id: 'partner_effort',
             name: 'Partner Effort (PY)',
             selector: (partner: Partner) => partner.latestVersionEffort,
-            format: (partner: Partner) => <EffortFormat value={partner.latestVersionEffort} showSuffix={false} showPrefix={false} />,
+            format: (partner: Partner) => <EffortFormat value={partner.latestVersionEffort} showSuffix={false}
+                                                        showPrefix={false}/>,
             sortable: true,
             right: true,
             sortFunction: customLatestVersionEffortSort, // required if number_format(value, 2) is used in backend
@@ -103,7 +107,7 @@ const PartnerTable: FC<Props> = ({organisation}) => {
             id: 'partner_isActive',
             name: 'isActive',
             selector: (partner: Partner) => partner.isActive,
-            format: (partner: Partner) => <BooleanIconFormat value={partner.isActive} />,
+            format: (partner: Partner) => <BooleanIconFormat value={partner.isActive}/>,
             sortable: true,
             center: true,
         },
@@ -112,7 +116,7 @@ const PartnerTable: FC<Props> = ({organisation}) => {
             name: 'isSelfFunded',
             selector: (partner: Partner) => partner.isSelfFunded,
             // format: (partner: Partner) => <BooleanIconFormat value={partner.isSelfFunded} type="square" showFalse={true} />,
-            format: (partner: Partner) => <BooleanIconFormat value={partner.isSelfFunded} />,
+            format: (partner: Partner) => <BooleanIconFormat value={partner.isSelfFunded}/>,
             sortable: true,
             center: true,
         },
@@ -120,24 +124,24 @@ const PartnerTable: FC<Props> = ({organisation}) => {
             id: 'partner_isCoordinator',
             name: 'isCoordinator',
             selector: (partner: Partner) => partner.isCoordinator,
-            format: (partner: Partner) => <BooleanIconFormat value={partner.isCoordinator} />,
+            format: (partner: Partner) => <BooleanIconFormat value={partner.isCoordinator}/>,
             sortable: true,
             center: true,
         },
-        
+
     ];
 
-    const { 
+    const {
         state,
         error,
         partners,
-        /*load, pageCount, pageSize, page, totalItems*/ 
-    } = usePartners({ organisation: organisation.slug });
+        /*load, pageCount, pageSize, page, totalItems*/
+    } = usePartners({organisation: organisation, page: 1, pageSize: 1000});
 
     switch (state) {
-        case apiStates.ERROR:
-            return <ApiError error={error}/>
-        case apiStates.SUCCESS:
+        case ApiStates.ERROR:
+            return <RenderApiError error={error}/>
+        case ApiStates.SUCCESS:
             return (
                 <React.Fragment>
                     <h2>Partners</h2>
