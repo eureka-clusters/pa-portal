@@ -1,31 +1,21 @@
 // ./Me.js
 import React from 'react';
-import {useMe} from 'hooks/api/user/use-me'
-import Button from 'react-bootstrap/Button'
-import {ApiStates, RenderApiError} from "hooks/api/api-error";
+import {useAuth} from "../../context/user-context";
 
 export const Me = () => {
     // eslint-disable-next-line no-unused-vars
-    const {state, error, user, load} = useMe();
+    const {userInfo, loading, error} = useAuth();
 
-    switch (state) {
-        case ApiStates.ERROR:
-            return <RenderApiError error={error}/>
-        case ApiStates.SUCCESS:
+    return (
+        <React.Fragment>
+            <ul>
+                <li>{userInfo.first_name}</li>
+                <li>{userInfo.last_name}</li>
+                <li>{userInfo.email}</li>
+            </ul>
 
-            return (
-                <React.Fragment>
-                    <ul>
-                        <li>{user.first_name}</li>
-                        <li>{user.last_name}</li>
-                        <li>{user.email}</li>
-                    </ul>
-                    <Button onClick={() => load()}>reload current url load() </Button>
-                </React.Fragment>
-            );
-        default:
-            return <p>loading..</p>;
-    }
+        </React.Fragment>
+    );
 };
 
 export default Me

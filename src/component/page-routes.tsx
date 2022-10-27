@@ -23,7 +23,8 @@ function GenericNotFound() {
     return (
         <section>
             <h1>Page not found</h1>
-            <button onClick={previousLocation}>Go back</button>
+            <p>The selected page could not be found</p>
+            <button className={'btn btn-primary'} onClick={previousLocation}>Go back</button>
         </section>
     );
 }

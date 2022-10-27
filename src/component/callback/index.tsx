@@ -12,8 +12,7 @@ export default function Callback() {
     useEffect(() => {
         let token = '' + searchParams.get('token');
 
-        auth.loginWithToken(token, () => {
-        }).then(() => {
+        auth.loginWithToken(token).then(() => {
             auth.redirectAfterLogin();
         });
 

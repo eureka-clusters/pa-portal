@@ -43,19 +43,27 @@ export default function Organisations() {
         setPerPage(perPage);
     };
 
-    const loadAsync = async () => {
+
+    // const loadAsync = async () => {
+    //     setLoading(true);
+    //     await load({
+    //         page: currentPage,
+    //         pageSize: perPage,
+    //         sort,
+    //         order
+    //     });
+    //     setLoading(false);
+    // };
+
+    useEffect(() => {
         setLoading(true);
-        await load({
+        load({
             page: currentPage,
             pageSize: perPage,
             sort,
             order
         });
         setLoading(false);
-    };
-
-    useEffect(() => {
-        loadAsync();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPage, perPage, sort, order]);
 
@@ -106,15 +114,11 @@ export default function Organisations() {
 
                     <h1>Organisations</h1>
                     <DataTable
-                        // title="Organisations"
                         keyField="organisation.id"
                         columns={columns}
                         data={organisations}
-
-
                         defaultSortFieldId={sort}
                         defaultSortAsc={order === 'asc'}
-
                         progressPending={loading}
                         pagination
                         paginationServer

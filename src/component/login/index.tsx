@@ -1,25 +1,36 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {useAuth} from "context/user-context";
 import {useLocation} from "react-router-dom";
-import {getServices} from "hooks/api/get-services";
+import axios from "axios";
+import {Service} from "interface/service";
+import {getServerUri} from "function/get-server-uri";
 
 export default function Login() {
 
+    const [services, setServices] = useState<Array<Service>>([]);
     let location = useLocation();
     let auth = useAuth();
     let {from} = location.state || {from: {pathname: "/"}};
-
-    // save redirect for not logged-in users
-    auth.saveRedirect(from);
 
     // if user already logged in redirect him or her
     if (auth.hasUser()) {
         auth.redirectAfterLogin();
     }
 
-    const services = getServices();
+    useEffect(() => {
+        const fetchData = async () => {
+            await axios.get<{ _embedded: { services: Service[] } }>(
+                getServerUri() + '/api/list/service'
+            ).then((response) => {
+                const {data} = response
+                setServices(data._embedded.services);
+            });
 
-    console.log(services);
+
+        };
+
+        fetchData();
+    }, []);
 
     return (
         <React.Fragment>
@@ -30,16 +41,12 @@ export default function Login() {
                 </div>
             </div>
             <div className="d-flex flex-row bd-highlight mb-3">
-                {/*<div className="p-2 bd-highlight"><a className="btn btn-primary btn-lg"*/}
-                {/*                                     href={serverUri + '/oauth2/login/via/itea.html?client=' + clientId}>Login*/}
-                {/*    via ITEA Office</a>*/}
-                {/*</div>*/}
-                {/*<div className="p-2 bd-highlight"><a className="btn btn-primary btn-lg"*/}
-                {/*                                     href={serverUri + '/oauth2/login/via/celtic.html?client=' + clientId}>Login*/}
-                {/*    via Celtic</a></div>*/}
-                {/*<div className="p-2 bd-highlight"><a className="btn btn-primary btn-lg"*/}
-                {/*                                     href={serverUri + '/oauth2/login/via/xecs.html?client=' + clientId}>Login*/}
-                {/*    via Xecs</a></div>*/}
+
+                {services.map((service) => (
+                        <a className="btn btn-lg bg-primary text-white" key={service.id} href={service.loginUrl}>Login
+                            via {service.name}</a>
+                    )
+                )}
             </div>
         </React.Fragment>
     );

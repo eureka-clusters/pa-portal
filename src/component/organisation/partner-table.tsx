@@ -18,9 +18,6 @@ const PartnerTable: FC<Props> = ({organisation}) => {
         const a = parseFloat(rowA.latestVersionCosts.replace(/,/g, ''));
         const b = parseFloat(rowB.latestVersionCosts.replace(/,/g, ''));
 
-        // console.log(['a', rowA.latestVersionCosts, a]);
-        // console.log(['b', rowB.latestVersionCosts, b]);
-
         if (a > b) {
             return 1;
         }
@@ -36,9 +33,6 @@ const PartnerTable: FC<Props> = ({organisation}) => {
 
         const a = parseFloat(rowA.latestVersionEffort.replace(/,/g, ''));
         const b = parseFloat(rowB.latestVersionEffort.replace(/,/g, ''));
-
-        // console.log(['a', rowA.latestVersionEffort, a]);
-        // console.log(['b', rowB.latestVersionEffort, b]);
 
         if (a > b) {
             return 1;

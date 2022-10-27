@@ -2,7 +2,7 @@ import React, {useCallback} from 'react'
 import {Organisation} from "interface/organisation";
 import {ApiError} from "interface/api/api-error";
 import {ApiStates} from 'hooks/api/api-error';
-import {PaginationProps} from "interface/api/pagination-props";
+import {createSearchParams} from "react-router-dom";
 import axios from "axios";
 
 interface State {
@@ -26,16 +26,14 @@ interface OrganisationResponse {
 }
 
 
-export function useOrganisations(queryParameter: PaginationProps) {
+export function useOrganisations(queryParameter: any) {
 
     const [hookState, setHookState] = React.useState<State>({
         state: ApiStates.LOADING,
         organisations: []
     });
 
-    const load = useCallback(async (queryParameter: PaginationProps, requestOptions = {}) => {
-
-
+    const load = useCallback(async (queryParameter: any, requestOptions = {}) => {
         const setPartData = (partialData: {
             state: string,
             organisations?: Array<Organisation>,
@@ -49,9 +47,7 @@ export function useOrganisations(queryParameter: PaginationProps) {
         }
 
         try {
-
-            let url = '/list/organisation';
-
+            let url = '/list/organisation?' + createSearchParams(queryParameter).toString();
             axios.create().get<OrganisationResponse>(url, requestOptions)
                 .then(response => {
 
@@ -77,9 +73,7 @@ export function useOrganisations(queryParameter: PaginationProps) {
     }, []);
 
     React.useEffect(() => {
-        load(queryParameter).then(() => {
-            return
-        });
+        // load(queryParameter);
     }, [queryParameter]);
 
 

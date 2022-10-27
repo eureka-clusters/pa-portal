@@ -4,6 +4,7 @@ import {ApiStates} from 'hooks/api/api-error';
 import {Project} from "interface/project";
 import axios from "axios";
 import {ProjectResponse} from "hooks/api/project/use-projects";
+import {createSearchParams} from "react-router-dom";
 
 
 interface State {
@@ -16,20 +17,12 @@ interface State {
     page?: number
 }
 
-interface Props {
-    filter?: string,
-    page: number,
-    pageSize: number,
-    sort?: string,
-    order?: string,
-}
-
 const defaultProps = {
     page: 1,
     pageSize: 10
 }
 
-export function useProjects(queryParameter: Props = {
+export function useProjects(queryParameter: any = {
     filter: '',
     page: defaultProps.page,
     pageSize: defaultProps.pageSize
@@ -40,7 +33,7 @@ export function useProjects(queryParameter: Props = {
         projects: []
     });
 
-    const load = useCallback(async (queryParameter: Props) => {
+    const load = useCallback(async (queryParameter: any) => {
         const setPartData = (partialData: {
             state: string,
             projects?: Array<Project>,
@@ -57,7 +50,8 @@ export function useProjects(queryParameter: Props = {
 
         try {
 
-            const url = '/statistics/results/project?' + queryParameter
+
+            const url = '/statistics/results/project?' + createSearchParams(queryParameter).toString();
 
             axios.create().get<ProjectResponse>(url)
                 .then(response => {
@@ -82,13 +76,13 @@ export function useProjects(queryParameter: Props = {
         }
     }, [queryParameter]);
 
-    React.useEffect(() => {
-
-        load(queryParameter).then(() => {
-            return;
-        });
-
-    }, [load, queryParameter]);
+    // React.useEffect(() => {
+    //
+    //     load(queryParameter).then(() => {
+    //         return;
+    //     });
+    //
+    // }, [load, queryParameter]);
 
     return {...hookState, load: load};
 }

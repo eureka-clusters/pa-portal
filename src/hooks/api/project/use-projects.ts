@@ -2,7 +2,7 @@ import React, {useCallback} from 'react'
 import {Project} from "interface/project";
 import {ApiError} from "interface/api/api-error";
 import {ApiStates} from 'hooks/api/api-error';
-import {PaginationProps} from "interface/api/pagination-props";
+import {createSearchParams} from "react-router-dom";
 import axios from "axios";
 
 interface State {
@@ -27,14 +27,14 @@ export interface ProjectResponse {
 }
 
 
-export function useProjects(queryParameter: PaginationProps) {
+export function useProjects(queryParameter: any) {
 
     const [hookState, setHookState] = React.useState<State>({
         state: ApiStates.LOADING,
         projects: []
     });
 
-    const load = useCallback(async (queryParameter: PaginationProps) => {
+    const load = useCallback(async (queryParameter: any) => {
 
 
         const setPartData = (partialData: {
@@ -51,7 +51,8 @@ export function useProjects(queryParameter: PaginationProps) {
 
         try {
 
-            let url = '/list/project';
+
+            let url = '/list/project?' + createSearchParams(queryParameter).toString();
 
             axios.create().get<ProjectResponse>(url)
                 .then(response => {
@@ -77,11 +78,11 @@ export function useProjects(queryParameter: PaginationProps) {
         }
     }, []);
 
-    React.useEffect(() => {
-        load(queryParameter).then(() => {
-            return
-        });
-    }, [queryParameter]);
+    // React.useEffect(() => {
+    //     load(queryParameter).then(() => {
+    //         return
+    //     });
+    // }, [queryParameter]);
 
 
     return {...hookState, load: load};

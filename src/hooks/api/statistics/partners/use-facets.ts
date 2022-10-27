@@ -52,14 +52,14 @@ export function useFacets(filter: string) {
         }
     }, [filter]);
 
-    useEffect(() => {
-
-        load(filter).then(() => {
-            return;
-        });
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [filter]);
+    // useEffect(() => {
+    //
+    //     load(filter).then(() => {
+    //         return;
+    //     });
+    //
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [filter]);
 
     return {...hookState, load: load};
 }

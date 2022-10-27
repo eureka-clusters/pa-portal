@@ -1,3 +1,5 @@
+import {Buffer} from "buffer";
+
 export function JSON_stringify(s: string, emit_unicode: boolean) {
     let json = JSON.stringify(s);
     return emit_unicode ? json : json.replace(/[\u007f-\uffff]/g,

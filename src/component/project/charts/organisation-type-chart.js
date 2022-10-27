@@ -51,10 +51,6 @@ const OrganisationTypeChart = ({ results }) => {
     });
 
 
-    // google pie chart renders perceante only with 1 digit. which results in 100.1% total value
-    // i tried to add the percentage data but this produces other issues.
-    // console.log(['data', $data]);
-
     const pieOptions = {
         title: "Partners by organisation type",
         // pieHole: 0.6,

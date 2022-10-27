@@ -13,7 +13,6 @@ function TableFilter({hash, defaultFilter}) {
         if (hash) {
             const newHash = fromFilter(hash.substring(1));
             const newFilter = JSON.parse(newHash);
-            // console.log(['filter from hash', newFilter]);
             if (useAsFilter && typeof setFilterMethod == "function") {
                 setFilterMethod(prevState => ({
                     ...prevState, ...newFilter

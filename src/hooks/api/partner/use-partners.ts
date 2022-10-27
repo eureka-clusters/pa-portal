@@ -2,7 +2,6 @@ import React, {useCallback} from 'react'
 import {Partner} from "interface/project/partner";
 import {ApiError} from "interface/api/api-error";
 import {ApiStates} from 'hooks/api/api-error';
-import {PaginationProps} from "interface/api/pagination-props";
 import axios from "axios";
 
 interface State {
@@ -26,14 +25,14 @@ export interface PartnerResponse {
 }
 
 
-export function usePartners(queryParameter: PaginationProps) {
+export function usePartners(queryParameter: any) {
 
     const [hookState, setHookState] = React.useState<State>({
         state: ApiStates.LOADING,
         partners: []
     });
 
-    const load = useCallback(async (queryParameter: PaginationProps, requestOptions = {}) => {
+    const load = useCallback(async (queryParameter: any, requestOptions = {}) => {
 
 
         const setPartData = (partialData: {

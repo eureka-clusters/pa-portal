@@ -49,7 +49,6 @@ const PartnerTableWithCharts: FC<Props> = ({project}) => {
                                 setActiveTab(k);
                                 // trigger windows resize so that the chart is re-drawn 
                                 if (k === 'charts') {
-                                    // console.log('trigger resize');
                                     window.dispatchEvent(new Event('resize'));
                                 }
                             }

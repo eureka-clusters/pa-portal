@@ -14,16 +14,13 @@ const Highlighted = ({text = '', highlight = ''}: { text: string; highlight: str
 
     const highlightRegex = /'([^']*)'|"([^"]*)"|(\S+)/gi;  // search for all strings but keep strings with "" or '' together
     const highlightArray = (highlight.match(highlightRegex) || []).map(m => m.replace(highlightRegex, '$1$2$3'));
-    // console.log(['highlightArray', highlightArray]);
 
     // join the escaped parts with | to a string
     const regexpPart = highlightArray.map((a) => `${_.escapeRegExp(a)}`).join('|');
-    // console.log(['regexpPart', regexpPart]);
 
     // add the regular expression
     const regex = new RegExp(`(${regexpPart})`, 'gi')
 
-    // console.log(['regex', regex]);
     const parts = text.split(regex)
     return (
         <span>

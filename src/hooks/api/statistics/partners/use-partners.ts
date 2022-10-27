@@ -4,6 +4,7 @@ import {ApiStates} from 'hooks/api/api-error';
 import {Partner} from "interface/project/partner";
 import axios from "axios";
 import {PartnerResponse} from "hooks/api/partner/use-partners";
+import {createSearchParams} from "react-router-dom";
 
 
 interface State {
@@ -16,20 +17,12 @@ interface State {
     page?: number
 }
 
-interface Props {
-    filter?: string,
-    page: number,
-    pageSize: number,
-    sort?: string,
-    order?: string,
-}
-
 const defaultProps = {
     page: 1,
     pageSize: 10
 }
 
-export function usePartners(queryParameter: Props = {
+export function usePartners(queryParameter: any = {
     filter: '',
     page: defaultProps.page,
     pageSize: defaultProps.pageSize
@@ -40,7 +33,7 @@ export function usePartners(queryParameter: Props = {
         partners: []
     });
 
-    const load = useCallback(async (queryParameter: Props) => {
+    const load = useCallback(async (queryParameter: any) => {
         const setPartData = (partialData: {
             state: string,
             partners?: Array<Partner>,
@@ -57,7 +50,7 @@ export function usePartners(queryParameter: Props = {
 
         try {
 
-            const url = '/statistics/results/project?' + queryParameter
+            const url = '/statistics/results/partner?' + createSearchParams(queryParameter).toString();
 
             axios.create().get<PartnerResponse>(url)
                 .then(response => {
@@ -82,13 +75,13 @@ export function usePartners(queryParameter: Props = {
         }
     }, [queryParameter]);
 
-    React.useEffect(() => {
-
-        load(queryParameter).then(() => {
-            return;
-        });
-
-    }, [load, queryParameter]);
+    // React.useEffect(() => {
+    //
+    //     load(queryParameter).then(() => {
+    //         return;
+    //     });
+    //
+    // }, [load, queryParameter]);
 
     return {...hookState, load: load};
 }
