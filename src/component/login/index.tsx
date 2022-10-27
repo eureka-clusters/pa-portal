@@ -1,12 +1,9 @@
 import React from 'react';
-import Config from "constants/config";
 import {useAuth} from "context/user-context";
 import {useLocation} from "react-router-dom";
+import {getServices} from "hooks/api/get-services";
 
 export default function Login() {
-
-    const serverUri = Config.SERVER_URI;
-    const clientId = Config.CLIENT_ID;
 
     let location = useLocation();
     let auth = useAuth();
@@ -20,6 +17,9 @@ export default function Login() {
         auth.redirectAfterLogin();
     }
 
+    const services = getServices();
+
+    console.log(services);
 
     return (
         <React.Fragment>
@@ -30,15 +30,16 @@ export default function Login() {
                 </div>
             </div>
             <div className="d-flex flex-row bd-highlight mb-3">
-                <div className="p-2 bd-highlight"><a className="btn btn-primary btn-lg"
-                                                     href={serverUri + '/oauth2/login/via/itea.html?client=' + clientId}>Login
-                    via ITEA Office</a></div>
-                <div className="p-2 bd-highlight"><a className="btn btn-primary btn-lg"
-                                                     href={serverUri + '/oauth2/login/via/celtic.html?client=' + clientId}>Login
-                    via Celtic</a></div>
-                <div className="p-2 bd-highlight"><a className="btn btn-primary btn-lg"
-                                                     href={serverUri + '/oauth2/login/via/xecs.html?client=' + clientId}>Login
-                    via Xecs</a></div>
+                {/*<div className="p-2 bd-highlight"><a className="btn btn-primary btn-lg"*/}
+                {/*                                     href={serverUri + '/oauth2/login/via/itea.html?client=' + clientId}>Login*/}
+                {/*    via ITEA Office</a>*/}
+                {/*</div>*/}
+                {/*<div className="p-2 bd-highlight"><a className="btn btn-primary btn-lg"*/}
+                {/*                                     href={serverUri + '/oauth2/login/via/celtic.html?client=' + clientId}>Login*/}
+                {/*    via Celtic</a></div>*/}
+                {/*<div className="p-2 bd-highlight"><a className="btn btn-primary btn-lg"*/}
+                {/*                                     href={serverUri + '/oauth2/login/via/xecs.html?client=' + clientId}>Login*/}
+                {/*    via Xecs</a></div>*/}
             </div>
         </React.Fragment>
     );

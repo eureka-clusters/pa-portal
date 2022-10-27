@@ -1,4 +1,4 @@
-import {Navigate, Route, Routes, useLocation, useNavigate} from "react-router-dom";
+import {Navigate, Route, Routes, useNavigate} from "react-router-dom";
 import {useAuth} from 'context/user-context';
 import Login from 'component/login';
 import Callback from 'component/callback';
@@ -14,8 +14,6 @@ import Organisation from 'component/organisation'
 
 import ProjectStatistics from 'component/statistics/projects'
 import PartnerStatistics from 'component/statistics/partners'
-import ProtectedPage from 'component/partial/protected-page';
-import PublicPage from 'component/partial/public-page';
 
 function GenericNotFound() {
     const navigate = useNavigate();
@@ -38,44 +36,42 @@ function HomePage() {
 
 // A wrapper for <Route> that redirects to the login
 // screen if you're not yet authenticated.
-function PrivateRoute({path, element}: { path: string, element: JSX.Element }) {
-    let auth = useAuth();
-    const location = useLocation();
+function ProtectedRoute({auth, children}: { auth: any, children: any }) {
+    if (!auth.hasUser()) {
+        return (
+            <Navigate to={{pathname: "/login"}} replace/>
+        );
+    }
 
-    return auth.hasUser() ? (
-        <Route path={path} element={element}/>
-    ) : (
-        <Navigate
-            to={{
-                pathname: "/login",
-                // state: {from: location}
-            }}
-        />
-    );
+    return children;
 }
 
 export const PageRoutes = () => {
+
+    const auth = useAuth();
+
     return (
         <Routes>
-            <Route path='/' element={<HomePage/>}/>
-            <Route path='/public' element={<PublicPage/>}/>
-            <PrivateRoute path='/protected' element={<ProtectedPage/>}/>
+            <Route index path='/' element={<HomePage/>}/>
+
             <Route path='/login' element={<Login/>}/>
             <Route path='/logout' element={<Logout/>}/>
             <Route path='/callback' element={<Callback/>}/>
-            <PrivateRoute path='/account' element={<Account/>}/>
-            <PrivateRoute path='/search' element={<Search/>}/>
-            <PrivateRoute path='/statistics/projects' element={<ProjectStatistics/>}/>
-            <PrivateRoute path='/statistics/partners' element={<PartnerStatistics/>}/>
-            <PrivateRoute path='/projects' element={<Projects/>}/>
-            <PrivateRoute path='/project/[:slug]' element={<Project/>}/>
-            <PrivateRoute path='/partner/[:slug]' element={<Partner/>}/>
-            <PrivateRoute path='/organisations' element={<Organisations/>}/>
-            <PrivateRoute path='/organisation/[:slug]' element={<Organisation/>}/>
-            <Route path="/404">
-                <GenericNotFound/>
-            </Route>
-            <Navigate to="/404"/>
+
+            <Route path='/account' element={<ProtectedRoute auth={auth}><Account/></ProtectedRoute>}/>
+            <Route path='/search' element={<ProtectedRoute auth={auth}><Search/></ProtectedRoute>}/>
+
+            <Route path='/statistics/projects'
+                   element={<ProtectedRoute auth={auth}><ProjectStatistics/></ProtectedRoute>}/>
+            <Route path='/statistics/partners'
+                   element={<ProtectedRoute auth={auth}><PartnerStatistics/></ProtectedRoute>}/>
+            <Route path='/projects' element={<ProtectedRoute auth={auth}><Projects/></ProtectedRoute>}/>
+            <Route path='/project/[:slug]' element={<ProtectedRoute auth={auth}><Project/></ProtectedRoute>}/>
+            <Route path='/partner/[:slug]' element={<ProtectedRoute auth={auth}><Partner/></ProtectedRoute>}/>
+            <Route path='/organisations' element={<ProtectedRoute auth={auth}><Organisations/></ProtectedRoute>}/>
+            <Route path='/organisation/[:slug]' element={<ProtectedRoute auth={auth}><Organisation/></ProtectedRoute>}/>
+
+            <Route path="*" element={<GenericNotFound/>}/>
         </Routes>
     );
 }
