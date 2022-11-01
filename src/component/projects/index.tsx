@@ -23,7 +23,7 @@ export default function Projects() {
         load,
         pageSize,
         totalItems
-    } = useProjects({filter: '', page: 1, pageSize: perPage});
+    } = useProjects(currentPage, perPage, sort, order);
 
     const handlePageChange = async (newpage: number = 1) => {
         setCurrentPage(newpage);
@@ -40,12 +40,7 @@ export default function Projects() {
 
     const loadAsync = async () => {
         setLoading(true);
-        await load({
-            page: currentPage,
-            pageSize: perPage,
-            sort,
-            order
-        });
+        await load();
         setLoading(false);
     };
 
