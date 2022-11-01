@@ -30,7 +30,7 @@ export default function Partners() {
         pageSize,
         // page,
         totalItems
-    } = usePartners({filter: '', page: 1, pageSize: perPage});
+    } = usePartners({page: 1, pageSize: perPage});
 
     const handlePageChange = async (newpage: number = 1) => {
         setCurrentPage(newpage);
@@ -41,7 +41,7 @@ export default function Partners() {
         setOrder(sortDirection);
     };
 
-    const handlePerRowsChange = async (perPage: number, page: number) => {
+    const handlePerRowsChange = async (perPage: number) => {
         setPerPage(perPage);
     };
 

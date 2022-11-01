@@ -16,10 +16,9 @@ function SearchForm({searchText, setSearchText}: Props) {
 
     const [currentPage, setCurrentPage] = useState<number>(1);
 
-    const [limit, setLimit] = React.useState(DefaultPageSize);
-
     const navigate = useNavigate();
     const location = useLocation();
+    const limit = DefaultPageSize;
 
     useEffect(() => {
         let params = new URLSearchParams(location.search);
@@ -38,7 +37,7 @@ function SearchForm({searchText, setSearchText}: Props) {
         onSearch(query as string, page);
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [location]);
+    }, [searchText, location]);
 
     const [requestedSearchText, setRequestedSearchText] = useState<string>("");
 
@@ -122,7 +121,6 @@ function SearchForm({searchText, setSearchText}: Props) {
 
     return (
         <>
-            {/* <pre className='debug'>{JSON.stringify(results, undefined, 2)}</pre> */}
             <div
                 className='col-12 col-lg-auto mb-3 mb-lg-0'
             >

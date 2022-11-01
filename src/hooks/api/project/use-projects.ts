@@ -27,14 +27,14 @@ export interface ProjectResponse {
 }
 
 
-export function useProjects(queryParameter: any) {
+export function useProjects(page: number, pageSize: number, sort: string, order: string) {
 
     const [hookState, setHookState] = React.useState<State>({
         state: ApiStates.LOADING,
         projects: []
     });
 
-    const load = useCallback(async (queryParameter: any) => {
+    const load = useCallback(async () => {
 
 
         const setPartData = (partialData: {
@@ -51,10 +51,18 @@ export function useProjects(queryParameter: any) {
 
         try {
 
+            const queryParameter = {
+                page: page.toString(),
+                pageSize: pageSize.toString(),
+                sort: sort,
+                order: order
+            };
 
             let url = '/list/project?' + createSearchParams(queryParameter).toString();
 
-            axios.create().get<ProjectResponse>(url)
+            const abortController = new AbortController();
+
+            axios.create().get<ProjectResponse>(url, {signal: abortController.signal})
                 .then(response => {
 
                     const {data} = response;
@@ -67,8 +75,11 @@ export function useProjects(queryParameter: any) {
                         totalItems: data.total_items,
                         page: data.page
                     })
-                })
+                });
 
+            return () => {
+                abortController.abort();
+            }
 
         } catch (error: any) {
             setPartData({

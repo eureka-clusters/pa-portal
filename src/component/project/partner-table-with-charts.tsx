@@ -21,13 +21,8 @@ const PartnerTableWithCharts: FC<Props> = ({project}) => {
     const {
         state,
         error,
-        partners,
-        // load, 
-        // pageCount, 
-        // pageSize, 
-        // page, 
-        // totalItems
-    } = usePartners({project: project, filter: '', page: 1, pageSize: 30});
+        partners
+    } = usePartners({project: project});
 
 
     switch (state) {

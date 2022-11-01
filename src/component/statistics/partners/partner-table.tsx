@@ -53,7 +53,7 @@ const PartnerTable: FC<Props> = ({filter}) => {
         setOrder(sortDirection);
     };
 
-    const handlePerRowsChange = async (perPage: number, page: number) => {
+    const handlePerRowsChange = async (perPage: number) => {
         setPerPage(perPage);
     };
 
@@ -72,7 +72,7 @@ const PartnerTable: FC<Props> = ({filter}) => {
     useEffect(() => {
         loadAsync();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentPage, perPage, sort, order]);
+    }, [filter, currentPage, perPage, sort, order]);
 
     useEffect(() => {
         if (isExportLoading) {

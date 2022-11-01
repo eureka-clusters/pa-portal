@@ -17,7 +17,7 @@ export function useProject(slug: string) {
         project: {} as Project
     });
 
-    const load = useCallback(async (slug: string, requestOptions = {}) => {
+    const load = useCallback(async (slug: string) => {
         let url = '/view/project/' + slug;
 
         const setPartData = (partialData: {
@@ -34,16 +34,21 @@ export function useProject(slug: string) {
             project: {} as Project
         })
 
-        axios.create().get<Project>(url, requestOptions)
-            .then(response => {
+        const abortController = new AbortController();
 
+        axios.create().get<Project>(url, {signal: abortController.signal})
+            .then(response => {
                 const {data} = response;
 
                 setPartData({
                     state: ApiStates.SUCCESS,
                     project: data
                 })
-            })
+            });
+
+        return () => {
+            abortController.abort();
+        }
     }, []);
 
     useEffect(() => {

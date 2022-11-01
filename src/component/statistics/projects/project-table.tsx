@@ -48,26 +48,19 @@ const ProjectTable = ({filter}: { filter: FilterValues }) => {
         setOrder(sortDirection);
     };
 
-    const handlePerRowsChange = async (perPage: number, page: number) => {
+    const handlePerRowsChange = async (perPage: number) => {
         setPerPage(perPage);
     };
 
     const loadAsync = async () => {
         setLoading(true);
-        await load({
-            filter: filter,
-            page: currentPage,
-            pageSize: perPage,
-            sort,
-            order
-        });
+        await load();
         setLoading(false);
     };
 
     useEffect(() => {
         loadAsync();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentPage, perPage, sort, order]);
+    }, [filter, currentPage, perPage, sort, order]);
 
 
     React.useEffect(() => {

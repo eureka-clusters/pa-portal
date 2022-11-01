@@ -131,7 +131,7 @@ const PartnerTable: FC<Props> = ({organisation}) => {
         error,
         partners,
         /*load, pageCount, pageSize, page, totalItems*/
-    } = usePartners({organisation: organisation, page: 1, pageSize: 1000});
+    } = usePartners({organisation: organisation});
 
     switch (state) {
         case ApiStates.ERROR:

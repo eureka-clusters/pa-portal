@@ -65,8 +65,9 @@ export function useSearch(queryParameter: Props) {
         try {
 
             url = url + '?query=' + queryParameter.query;
+            const abortController = new AbortController();
 
-            axios.create().get<SearchResponse>(url)
+            axios.create().get<SearchResponse>(url, {signal: abortController.signal})
                 .then(response => {
                     const {data} = response;
 
@@ -80,6 +81,9 @@ export function useSearch(queryParameter: Props) {
                     })
                 });
 
+            return () => {
+                abortController.abort();
+            }
 
         } catch (error: any) {
             setPartData({
@@ -94,7 +98,7 @@ export function useSearch(queryParameter: Props) {
             return;
         });
 
-    }, [load]);
+    }, [queryParameter]);
 
 
     return {...hookState, load: load};

@@ -17,7 +17,7 @@ export function usePartner(slug: string) {
         partner: {} as Partner
     });
 
-    const load = useCallback(async (slug: string, requestOptions = {}) => {
+    const load = useCallback(async (slug: string) => {
         let url = '/view/partner/' + slug;
 
         const setPartData = (partialData: {
@@ -34,7 +34,9 @@ export function usePartner(slug: string) {
             partner: {} as Partner
         })
 
-        axios.create().get<Partner>(url, requestOptions)
+        const abortController = new AbortController();
+
+        axios.create().get<Partner>(url, {signal: abortController.signal})
             .then(response => {
 
                 const {data} = response;
@@ -43,7 +45,11 @@ export function usePartner(slug: string) {
                     state: ApiStates.SUCCESS,
                     partner: data
                 })
-            })
+            });
+
+        return () => {
+            abortController.abort();
+        }
     }, []);
 
     useEffect(() => {

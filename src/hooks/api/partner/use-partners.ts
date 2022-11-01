@@ -3,6 +3,9 @@ import {Partner} from "interface/project/partner";
 import {ApiError} from "interface/api/api-error";
 import {ApiStates} from 'hooks/api/api-error';
 import axios from "axios";
+import {createSearchParams} from "react-router-dom";
+import {Project} from "../../../interface/project";
+import {Organisation} from "../../../interface/organisation";
 
 interface State {
     state: string,
@@ -25,14 +28,19 @@ export interface PartnerResponse {
 }
 
 
-export function usePartners(queryParameter: any) {
+export function usePartners({
+                                project,
+                                organisation,
+                                page,
+                                pageSize,
+                            }: { project?: Project, organisation?: Organisation, page?: number, pageSize?: number }) {
 
     const [hookState, setHookState] = React.useState<State>({
         state: ApiStates.LOADING,
         partners: []
     });
 
-    const load = useCallback(async (queryParameter: any, requestOptions = {}) => {
+    const load = useCallback(async (queryParameter: any) => {
 
 
         const setPartData = (partialData: {
@@ -49,8 +57,23 @@ export function usePartners(queryParameter: any) {
 
         try {
 
-            let url = '/list/partner';
-            axios.create().get<PartnerResponse>(url, requestOptions)
+            queryParameter = {
+                page: page || 1,
+                pageSize: pageSize || 1000
+            };
+
+            if (project !== undefined) {
+                queryParameter.project = project.slug;
+            }
+
+            if (organisation !== undefined) {
+                queryParameter.organisation = organisation.slug;
+            }
+
+            const abortController = new AbortController();
+
+            let url = '/list/partner?' + createSearchParams(queryParameter).toString();
+            axios.create().get<PartnerResponse>(url, {signal: abortController.signal})
                 .then(response => {
                     const {data} = response;
                     setPartData({
@@ -63,6 +86,9 @@ export function usePartners(queryParameter: any) {
                     })
                 });
 
+            return () => {
+                abortController.abort()
+            };
 
         } catch (error: any) {
             setPartData({
@@ -73,10 +99,10 @@ export function usePartners(queryParameter: any) {
     }, []);
 
     React.useEffect(() => {
-        load(queryParameter).then(() => {
+        load({project, organisation, page, pageSize}).then(() => {
             return
         });
-    }, [queryParameter]);
+    }, [project, organisation, page, pageSize]);
 
 
     return {...hookState, load: load};

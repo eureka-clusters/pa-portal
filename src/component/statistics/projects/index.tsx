@@ -14,7 +14,7 @@ export default function ProjectStatistics() {
             <Form>
                 <h1>Project statistics</h1>
                 <div className={'row'}>
-                    <div className={'col-6'}>
+                    <div className={'col-2'}>
                         <ProjectFacets
                             filter={filter}
                             setFilter={setFilter}
@@ -22,7 +22,7 @@ export default function ProjectStatistics() {
                             updateHash={updateHash}
                         />
                     </div>
-                    <div className={'col-6'}>
+                    <div className={'col-10'}>
                         <ProjectTable filter={filter}/>
                     </div>
                 </div>

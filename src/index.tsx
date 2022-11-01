@@ -4,7 +4,7 @@ import './App.scss';
 import {createRoot} from 'react-dom/client';
 import {BrowserRouter} from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
-import ScrollToTop from "component/ScrollToTop";
+import ScrollToTop from "component/scroll-to-top";
 
 
 const container = document.getElementById('root');

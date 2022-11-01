@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {useNavigate, useParams} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import {FilterValues} from "interface/statistics/filter-values";
 
 
@@ -7,7 +7,6 @@ function TableFilter() {
 
     const [filter, setFilter] = useState<FilterValues>({} as FilterValues);
 
-    let navigate = useNavigate();
     const {hash} = useParams();
 
     const getFilterFromHash = () => {
@@ -17,7 +16,7 @@ function TableFilter() {
     }
 
     useEffect(() => {
-        console.log('filter', filter);
+
     }, [filter]);
 
     const updateFilter = (event: any) => {

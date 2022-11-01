@@ -25,7 +25,7 @@ export function useProjects(filter: FilterValues, page: number, pageSize: number
         projects: []
     });
 
-    const load = useCallback(async (queryParameter: any) => {
+    const load = useCallback(async () => {
         const setPartData = (partialData: {
             state: string,
             projects?: Array<Project>,
@@ -39,9 +39,7 @@ export function useProjects(filter: FilterValues, page: number, pageSize: number
             setHookState(hookState => ({...hookState, ...partialData}))
         }
 
-
         try {
-
             const queryParameter = {
                 filter: btoa(JSON.stringify(filter)),
                 page: page.toString(),
@@ -49,8 +47,6 @@ export function useProjects(filter: FilterValues, page: number, pageSize: number
                 sort: sort,
                 order: order
             };
-
-            console.log(createSearchParams(queryParameter).toString())
 
             const abortController = new AbortController();
             const url = '/statistics/results/project?' + createSearchParams(queryParameter).toString();

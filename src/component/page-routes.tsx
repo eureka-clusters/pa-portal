@@ -67,10 +67,10 @@ export const PageRoutes = () => {
             <Route path='/statistics/partners'
                    element={<ProtectedRoute auth={auth}><PartnerStatistics/></ProtectedRoute>}/>
             <Route path='/projects' element={<ProtectedRoute auth={auth}><Projects/></ProtectedRoute>}/>
-            <Route path='/project/[:slug]' element={<ProtectedRoute auth={auth}><Project/></ProtectedRoute>}/>
-            <Route path='/partner/[:slug]' element={<ProtectedRoute auth={auth}><Partner/></ProtectedRoute>}/>
+            <Route path='/project/:slug' element={<ProtectedRoute auth={auth}><Project/></ProtectedRoute>}/>
+            <Route path='/partner/:slug' element={<ProtectedRoute auth={auth}><Partner/></ProtectedRoute>}/>
             <Route path='/organisations' element={<ProtectedRoute auth={auth}><Organisations/></ProtectedRoute>}/>
-            <Route path='/organisation/[:slug]' element={<ProtectedRoute auth={auth}><Organisation/></ProtectedRoute>}/>
+            <Route path='/organisation/:slug' element={<ProtectedRoute auth={auth}><Organisation/></ProtectedRoute>}/>
 
             <Route path="*" element={<GenericNotFound/>}/>
         </Routes>

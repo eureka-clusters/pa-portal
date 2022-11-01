@@ -17,7 +17,7 @@ export function useOrganisation(slug: string) {
         organisation: {} as Organisation
     });
 
-    const load = useCallback(async (slug: string, requestOptions = {}) => {
+    const load = useCallback(async (slug: string) => {
         let url = '/view/organisation/' + slug;
 
         const setPartData = (partialData: {
@@ -34,7 +34,9 @@ export function useOrganisation(slug: string) {
             organisation: {} as Organisation
         })
 
-        axios.create().get<Organisation>(url, requestOptions)
+        const abortController = new AbortController();
+
+        axios.create().get<Organisation>(url, {signal: abortController.signal})
             .then(response => {
 
                 const {data} = response;
@@ -43,7 +45,11 @@ export function useOrganisation(slug: string) {
                     state: ApiStates.SUCCESS,
                     organisation: data
                 })
-            })
+            });
+
+        return () => {
+            abortController.abort();
+        }
     }, []);
 
     useEffect(() => {
