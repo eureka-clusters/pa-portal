@@ -3,7 +3,7 @@ import {Link} from "react-router-dom";
 import DataTable from 'component/database-table';
 import {CostsFormat, EffortFormat} from 'function/utils';
 import {Partner} from "interface/project/partner";
-import {getFilter, GetServerUri, objToQueryString} from 'function/api';
+import {GetServerUri} from 'function/api';
 import {usePartners} from 'hooks/api/statistics/partners/use-partners';
 import {ApiStates, RenderApiError} from "hooks/api/api-error";
 import {useAuth} from "context/user-context";
@@ -36,9 +36,9 @@ const PartnerTable: FC<Props> = ({filter}) => {
         pageSize,
         // page, 
         totalItems
-    } = usePartners({filter: getFilter(filter), page: 1, pageSize: perPage, sort: sort, order: order});
+    } = usePartners(filter, 1, perPage, sort, order);
 
-    const [isExportLoading, setIsExportButtonLoading] = React.useState(
+    const [isExportLoading, setIsExportButtonLoading] = useState(
         false
     );
 
@@ -60,7 +60,7 @@ const PartnerTable: FC<Props> = ({filter}) => {
     const loadAsync = async () => {
         setLoading(true);
         await load({
-            filter: getFilter(filter),
+            filter: filter,
             page: currentPage,
             pageSize: perPage,
             sort,
@@ -91,11 +91,11 @@ const PartnerTable: FC<Props> = ({filter}) => {
         const serverUri = GetServerUri();
         let jwtToken = auth.getJwtToken();
 
-        const queryString = objToQueryString({
-            filter: getFilter(filter),
+        const queryString = btoa(JSON.stringify({
+            filter: filter,
             sort: sort,
             order: order,
-        });
+        }));
 
         await fetch(serverUri + '/api/statistics/results/partner/download/csv?' + queryString,
             {
@@ -124,7 +124,7 @@ const PartnerTable: FC<Props> = ({filter}) => {
     }
 
 
-    const hasYearFilter = filter.year.length > 0;
+    const hasYearFilter = filter.year !== undefined && filter.year.length > 0;
 
     const columns = [
         {

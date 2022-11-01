@@ -19,13 +19,8 @@ export default function Header() {
                         <Nav className='d-flex w-100'>
                             <Nav.Link as={NavLink} to='/'>Home</Nav.Link>
 
-                            <NavDropdown
-                                id="nav-dropdown-statistics"
-                                title="Statistics"
-                            >
-                                <NavDropdown.Item as={NavLink} to='/statistics/projects'>Projects</NavDropdown.Item>
-                                <NavDropdown.Item as={NavLink} to='/statistics/partners'>Partners</NavDropdown.Item>
-                            </NavDropdown>
+                            <Nav.Link as={NavLink} to='/statistics/projects'>Project statistics</Nav.Link>
+                            <Nav.Link as={NavLink} to='/statistics/partners'>Partners statistics</Nav.Link>
 
                             <Nav.Link as={NavLink} to='/projects'>Projects</Nav.Link>
                             <Nav.Link as={NavLink} to='/organisations'>Organisations</Nav.Link>

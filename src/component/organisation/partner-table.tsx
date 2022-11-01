@@ -125,6 +125,7 @@ const PartnerTable: FC<Props> = ({organisation}) => {
 
     ];
 
+
     const {
         state,
         error,

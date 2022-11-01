@@ -45,19 +45,15 @@ export default function Partners() {
         setPerPage(perPage);
     };
 
-    const loadAsync = async () => {
+    useEffect(() => {
         setLoading(true);
-        await load({
+        load({
             page: currentPage,
             pageSize: perPage,
             sort,
             order
         });
         setLoading(false);
-    };
-
-    useEffect(() => {
-        loadAsync();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPage, perPage, sort, order]);
 

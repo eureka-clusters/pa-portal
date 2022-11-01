@@ -1,35 +1,30 @@
-import {FC} from 'react';
+import {FC, useEffect} from 'react';
 import {Form} from "react-bootstrap";
-import {getFilter} from 'function/api';
 import {useFacets} from 'hooks/api/statistics/partners/use-facets';
 import {ApiStates, RenderApiError} from "hooks/api/api-error";
 import {default as ReactSelect} from "react-select";
+import {FilterValues} from "interface/statistics/filter-values";
 
 interface Props {
-    filter: any,
+    filter: FilterValues,
     setFilter: any,
     updateFilter: any,
-    updateResults: any,
     updateHash: any
 }
 
-const PartnerFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResults, updateHash}) => {
+const PartnerFacets: FC<Props> = ({filter, setFilter, updateFilter, updateHash}) => {
 
-    const {state, error, facets} = useFacets(getFilter(filter));
+    const {state, load, error, facets} = useFacets(filter);
+
+    useEffect(() => {
+        load(filter);
+    }, [filter])
 
     switch (state) {
         case ApiStates.ERROR:
             return <RenderApiError error={error}/>;
         case ApiStates.SUCCESS:
 
-
-            // don't know how to fix typescipt issue...
-            // var yearsFilterOptions = [];
-            // facets.years.forEach(function (element: any) {
-            //     yearsFilterOptions.push({ label: element, value: element })
-            // });
-
-            // this works
             const yearsFilterOptions = facets.years.map((year, index) => {
                 return {
                     label: year,
@@ -54,18 +49,13 @@ const PartnerFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
                                     options={facets.countries}
                                     // components needs the complete filter objects therefore filter these by the filter country array
                                     value={
-                                        facets.countries.filter(function (itm) {
-                                            return filter['country'].indexOf(itm.name) > -1;
+                                        facets.countries.filter(function (item) {
+                                            return filter['country'] !== undefined && filter['country'].indexOf(item.name) > -1;
                                         })
                                     }
                                     // getOptionLabel={(option) => `${option.name} (${option.amount})`}
                                     getOptionLabel={(option) => `${option.name}`}
                                     getOptionValue={(option) => `${option['name']}`}
-                                    // add the checkboxes
-                                    // components={{
-                                    //     Option
-                                    // }}
-                                    // hideSelectedOptions={false}
                                     closeMenuOnSelect={false}
                                     onChange={(choices: any) => {
                                         let updatedValues: { [key: string]: Array<string> } = {};
@@ -89,12 +79,12 @@ const PartnerFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
                                 <div key={i}>
                                     <Form.Check type={'checkbox'} id={`check-type-${i}`}>
                                         <Form.Check.Input
-                                            name="organisation_type"
+                                            name="organisationType"
                                             value={organisationType['name']}
                                             className={'me-2'}
                                             onChange={updateFilter}
                                             checked={
-                                                filter['organisation_type'].indexOf(organisationType['name']) > -1
+                                                filter['organisationType'] !== undefined && filter['organisationType'].indexOf(organisationType['name']) > -1
                                             }
                                         />
                                         {/* <Form.Check.Label>{organisationType['name']} ({organisationType['amount']})</Form.Check.Label> */}
@@ -114,12 +104,12 @@ const PartnerFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
                                 <div key={i}>
                                     <Form.Check type={'checkbox'} id={`check-project-status-${i}`}>
                                         <Form.Check.Input
-                                            name="project_status"
+                                            name="projectStatus"
                                             value={projectStatus['name']}
                                             onChange={updateFilter}
                                             className={'me-2'}
                                             checked={
-                                                filter['project_status'].indexOf(projectStatus['name']) > -1
+                                                filter['projectStatus'] !== undefined && filter['projectStatus'].indexOf(projectStatus['name']) > -1
                                             }
                                         />
                                         {/* <Form.Check.Label>{projectStatus['name']} ({projectStatus['amount']})</Form.Check.Label> */}
@@ -144,8 +134,8 @@ const PartnerFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
                                     options={facets.programmeCalls}
                                     // components needs the complete filter objects therefore filter these by the filter country array
                                     value={
-                                        facets.programmeCalls.filter(function (itm) {
-                                            return filter['programme_call'].indexOf(itm.name) > -1;
+                                        facets.programmeCalls.filter(function (item) {
+                                            return filter['programmeCall'] !== undefined && filter['programmeCall'].indexOf(item.name) > -1;
                                         })
                                     }
                                     // getOptionLabel={(option) => `${option.name} (${option.amount})`}
@@ -160,7 +150,7 @@ const PartnerFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
                                     onChange={(choices: any) => {
                                         let updatedValues: { [key: string]: Array<string> } = {};
                                         // get the names of the selected choices
-                                        updatedValues['programme_call'] = choices.map((choice: { name: string; amount: number }) => choice.name);
+                                        updatedValues['programmeCall'] = choices.map((choice: { name: string; amount: number }) => choice.name);
                                         setFilter((prevState: any) => ({
                                             ...prevState, ...updatedValues
                                         }))
@@ -184,10 +174,9 @@ const PartnerFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
                                             onChange={updateFilter}
                                             className={'me-2'}
                                             checked={
-                                                filter['clusters'].indexOf(cluster['name']) > -1
+                                                filter['clusters'] !== undefined && filter['clusters'].indexOf(cluster['name']) > -1
                                             }
                                         />
-                                        {/* <Form.Check.Label>{cluster['name']} ({cluster['amount']})</Form.Check.Label> */}
                                         <Form.Check.Label>{cluster['name']}</Form.Check.Label>
                                     </Form.Check>
                                 </div>
@@ -207,13 +196,8 @@ const PartnerFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
                                     classNamePrefix="select"
                                     options={yearsFilterOptions}
                                     value={yearsFilterOptions.filter(function (option) {
-                                        return filter['year'].indexOf(option.value) > -1;
+                                        return filter['year'] !== undefined && filter['year'].indexOf(option.value) > -1;
                                     })}
-                                    // add the checkboxes 
-                                    // components={{
-                                    //     Option
-                                    // }}
-                                    // hideSelectedOptions={false}
                                     closeMenuOnSelect={false}
                                     onChange={(choices: any) => {
                                         let updatedValues: { [key: string]: Array<string> } = {};
@@ -232,7 +216,7 @@ const PartnerFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
             );
 
         default:
-            return <p>Loading data...</p>;
+            return <p>Loading facets...</p>;
     }
 
 

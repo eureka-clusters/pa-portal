@@ -33,7 +33,7 @@ export function useOrganisations(queryParameter: any) {
         organisations: []
     });
 
-    const load = useCallback(async (queryParameter: any, requestOptions = {}) => {
+    const load = useCallback(async (queryParameter: any) => {
         const setPartData = (partialData: {
             state: string,
             organisations?: Array<Organisation>,
@@ -46,23 +46,31 @@ export function useOrganisations(queryParameter: any) {
             setHookState(hookState => ({...hookState, ...partialData}))
         }
 
+
         try {
+
+            const abortController = new AbortController();
+
             let url = '/list/organisation?' + createSearchParams(queryParameter).toString();
-            axios.create().get<OrganisationResponse>(url, requestOptions)
-                .then(response => {
+            axios.create().get<OrganisationResponse>(url, {
+                signal: abortController.signal
+            }).then(response => {
 
-                    const {data} = response;
+                const {data} = response;
 
-                    setPartData({
-                        state: ApiStates.SUCCESS,
-                        organisations: data._embedded.organisations,
-                        pageCount: data.page_count,
-                        pageSize: data.page_size,
-                        totalItems: data.total_items,
-                        page: data.page
-                    })
+                setPartData({
+                    state: ApiStates.SUCCESS,
+                    organisations: data._embedded.organisations,
+                    pageCount: data.page_count,
+                    pageSize: data.page_size,
+                    totalItems: data.total_items,
+                    page: data.page
                 })
+            });
 
+            return () => {
+                abortController.abort();
+            }
 
         } catch (error: any) {
             setPartData({
@@ -70,6 +78,8 @@ export function useOrganisations(queryParameter: any) {
                 error: error
             });
         }
+
+
     }, []);
 
     React.useEffect(() => {

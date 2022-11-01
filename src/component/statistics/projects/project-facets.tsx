@@ -1,64 +1,48 @@
-import {FC} from 'react';
+import {FC, useEffect} from 'react';
 import {Form} from "react-bootstrap";
 import BootstrapSwitchButton from "bootstrap-switch-button-react";
-import {getFilter} from 'function/api';
 import {useFacets} from 'hooks/api/statistics/projects/use-facets';
 import {ApiStates, RenderApiError} from "hooks/api/api-error";
 import {default as ReactSelect} from "react-select";
+import {FilterValues} from "../../../interface/statistics/filter-values";
 
 interface Props {
-    filter: any,
+    filter: FilterValues,
     setFilter: any,
     updateFilter: any,
-    updateResults: any,
     updateHash: any
 }
 
 
-const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResults, updateHash}) => {
+const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter, updateHash}) => {
 
-    const {state, error, facets} = useFacets(getFilter(filter));
+    const {state, load, error, facets} = useFacets(filter);
+
+    useEffect(() => {
+        load(filter);
+    }, [filter])
 
     const updateCountryMethod = (event: any) => {
-        var updatedValues = {
-            country_method: (event ? 'and' : 'or')
+        const updatedValues = {
+            countryMethod: (event ? 'and' : 'or')
         };
         setFilter((prevState: any) => ({
             ...prevState, ...updatedValues
         }))
 
-        updateResults();
         updateHash();
     }
 
     const updateOrganisationTypeMethod = (event: any) => {
-        var updatedValues = {
-            organisation_type_method: (event ? 'and' : 'or')
+        const updatedValues = {
+            organisationTypeMethod: (event ? 'and' : 'or')
         };
         setFilter((prevState: any) => ({
             ...prevState, ...updatedValues
         }))
 
-        updateResults();
         updateHash();
     }
-
-
-    // needed for checkboxes in the react-select component
-    // const Option = (props:any) => {
-    //     return (
-    //         <div>
-    //             <components.Option {...props}>
-    //                 <input
-    //                     type="checkbox"
-    //                     checked={props.isSelected}
-    //                     onChange={() => null}
-    //                 />{" "}
-    //                 <label>{props.label}</label>
-    //             </components.Option>
-    //         </div>
-    //     );
-    // };
 
     switch (state) {
         case ApiStates.ERROR:
@@ -74,7 +58,7 @@ const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
                 <>
                     <fieldset>
                         <legend><small>Countries</small></legend>
-                        <BootstrapSwitchButton checked={filter['country_method'] === 'and'}
+                        <BootstrapSwitchButton checked={filter['countryMethod'] === 'and'}
                                                size="sm"
                                                onlabel={"and"}
                                                offlabel={"or"}
@@ -93,17 +77,13 @@ const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
                                 // components needs the complete filter objects therefore filter these by the filter country array
                                 value={
                                     facets.countries.filter(function (itm) {
-                                        return filter['country'].indexOf(itm.name) > -1;
+                                        return filter['country'] !== undefined && filter['country'].indexOf(itm.name) > -1;
                                     })
                                 }
-                                // getOptionLabel={(option) => `${option.name} (${option.amount})`}
+
                                 getOptionLabel={(option) => `${option.name}`}
                                 getOptionValue={(option) => `${option['name']}`}
-                                // add the checkboxes
-                                // components={{
-                                //     Option
-                                // }}
-                                // hideSelectedOptions={false}
+
                                 closeMenuOnSelect={false}
                                 onChange={(choices: any) => {
                                     let updatedValues: { [key: string]: Array<string> } = {};
@@ -116,31 +96,12 @@ const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
                                 }}
                             />
                         </div>
-
-
-                        {/* // old checkbox filter */}
-                        {/* {facets.countries && facets.countries.map((country, i) => (
-                            <div key={i}>
-                                <Form.Check type={'checkbox'} id={`check-country-${i}`}>
-                                    <Form.Check.Input
-                                        name="country"
-                                        value={country['name']}
-                                        className={'me-2'}
-                                        onChange={updateFilter}
-                                        checked={
-                                            filter['country'].indexOf(country['name']) > -1
-                                        }
-                                    />
-                                    <Form.Check.Label>{country['name']} ({country['amount']})</Form.Check.Label>
-                                </Form.Check>
-                            </div>
-                        ))} */}
                     </fieldset>
 
                     <fieldset>
                         <legend><small>Organisation type</small></legend>
 
-                        <BootstrapSwitchButton checked={filter['organisation_type_method'] === 'and'}
+                        <BootstrapSwitchButton checked={filter['organisationTypeMethod'] === 'and'}
                                                size="sm"
                                                onlabel={"and"}
                                                offlabel={"or"}
@@ -151,15 +112,14 @@ const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
                             <div key={i}>
                                 <Form.Check type={'checkbox'} id={`check-type-${i}`}>
                                     <Form.Check.Input
-                                        name="organisation_type"
+                                        name="organisationType"
                                         value={organisationType['name']}
                                         onChange={updateFilter}
                                         className={'me-2'}
                                         checked={
-                                            filter['organisation_type'].indexOf(organisationType['name']) > -1
+                                            filter['organisationType'] !== undefined && filter['organisationType'].indexOf(organisationType['name']) > -1
                                         }
                                     />
-                                    {/* <Form.Check.Label>{organisationType['name']} ({organisationType['amount']})</Form.Check.Label> */}
                                     <Form.Check.Label>{organisationType['name']}</Form.Check.Label>
                                 </Form.Check>
                             </div>
@@ -173,15 +133,14 @@ const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
                             <div key={i}>
                                 <Form.Check type={'checkbox'} id={`check-project-status-${i}`}>
                                     <Form.Check.Input
-                                        name="project_status"
+                                        name="projectStatus"
                                         value={projectStatus['name']}
                                         onChange={updateFilter}
                                         className={'me-2'}
                                         checked={
-                                            filter['project_status'].indexOf(projectStatus['name']) > -1
+                                            filter['projectStatus'] !== undefined && filter['projectStatus'].indexOf(projectStatus['name']) > -1
                                         }
                                     />
-                                    {/* <Form.Check.Label>{projectStatus['name']} ({projectStatus['amount']})</Form.Check.Label> */}
                                     <Form.Check.Label>{projectStatus['name']}</Form.Check.Label>
                                 </Form.Check>
                             </div>
@@ -201,22 +160,18 @@ const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
                                 // components needs the complete filter objects therefore filter these by the filter country array
                                 value={
                                     facets.programmeCalls.filter(function (itm) {
-                                        return filter['programme_call'].indexOf(itm.name) > -1;
+                                        return filter['programmeCall'] !== undefined && filter['programmeCall'].indexOf(itm.name) > -1;
                                     })
                                 }
                                 // getOptionLabel={(option) => `${option.name} (${option.amount})`}
                                 getOptionLabel={(option) => `${option.name}`}
                                 getOptionValue={(option) => `${option['name']}`}
-                                // add the checkboxes 
-                                // components={{
-                                //     Option
-                                // }}
-                                // hideSelectedOptions={false}
+
                                 closeMenuOnSelect={false}
                                 onChange={(choices: any) => {
                                     let updatedValues: { [key: string]: Array<string> } = {};
                                     // get the names of the selected choices
-                                    updatedValues['programme_call'] = choices.map((choice: { name: string; amount: number }) => choice.name);
+                                    updatedValues['programmeCall'] = choices.map((choice: { name: string; amount: number }) => choice.name);
                                     setFilter((prevState: any) => ({
                                         ...prevState, ...updatedValues
                                     }))
@@ -224,24 +179,6 @@ const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
                                 }}
                             />
                         </div>
-
-                        {/* old checkbox filters */}
-                        {/* {facets.programmeCalls && facets.programmeCalls.map((programmeCall, i) => (
-                            <div key={i}>
-                                <Form.Check type={'checkbox'} id={`check-project-programmecall-${i}`}>
-                                    <Form.Check.Input
-                                        name="programme_call"
-                                        value={programmeCall['name']}
-                                        onChange={updateFilter}
-                                        className={'me-2'}
-                                        checked={
-                                            filter['programme_call'].indexOf(programmeCall['name']) > -1
-                                        }
-                                    />
-                                    <Form.Check.Label>{programmeCall['name']} ({programmeCall['amount']})</Form.Check.Label>
-                                </Form.Check>
-                            </div>
-                        ))} */}
                     </fieldset>
 
                     <fieldset>
@@ -256,10 +193,9 @@ const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter, updateResult
                                         onChange={updateFilter}
                                         className={'filter'}
                                         checked={
-                                            filter['clusters'].indexOf(cluster['name']) > -1
+                                            filter['clusters'] !== undefined && filter['clusters'].indexOf(cluster['name']) > -1
                                         }
                                     />
-                                    {/* <Form.Check.Label>{cluster['name']} ({cluster['amount']})</Form.Check.Label> */}
                                     <Form.Check.Label>{cluster['name']}</Form.Check.Label>
                                 </Form.Check>
                             </div>

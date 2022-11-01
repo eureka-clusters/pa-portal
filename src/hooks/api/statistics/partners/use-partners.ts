@@ -5,6 +5,7 @@ import {Partner} from "interface/project/partner";
 import axios from "axios";
 import {PartnerResponse} from "hooks/api/partner/use-partners";
 import {createSearchParams} from "react-router-dom";
+import {FilterValues} from "interface/statistics/filter-values";
 
 
 interface State {
@@ -22,11 +23,7 @@ const defaultProps = {
     pageSize: 10
 }
 
-export function usePartners(queryParameter: any = {
-    filter: '',
-    page: defaultProps.page,
-    pageSize: defaultProps.pageSize
-}) {
+export function usePartners(filter: FilterValues, page: number, pageSize: number, sort: string, order: string) {
 
     const [hookState, setHookState] = React.useState<State>({
         state: ApiStates.LOADING,
@@ -50,22 +47,36 @@ export function usePartners(queryParameter: any = {
 
         try {
 
+            const queryParameter = {
+                filter: btoa(JSON.stringify(filter)),
+                page: page.toString(),
+                pageSize: pageSize.toString(),
+                sort: sort,
+                order: order
+            };
+
+            const abortController = new AbortController();
             const url = '/statistics/results/partner?' + createSearchParams(queryParameter).toString();
 
-            axios.create().get<PartnerResponse>(url)
-                .then(response => {
+            axios.create().get<PartnerResponse>(url, {
+                signal: abortController.signal
+            }).then(response => {
 
-                    const {data} = response;
+                const {data} = response;
 
-                    setPartData({
-                        state: ApiStates.SUCCESS,
-                        partners: data._embedded.partners,
-                        pageCount: data.page_count,
-                        pageSize: data.page_size,
-                        totalItems: data.total_items,
-                        page: data.page
-                    })
+                setPartData({
+                    state: ApiStates.SUCCESS,
+                    partners: data._embedded.partners,
+                    pageCount: data.page_count,
+                    pageSize: data.page_size,
+                    totalItems: data.total_items,
+                    page: data.page
                 })
+            });
+
+            return () => {
+                abortController.abort();
+            }
 
         } catch (error: any) {
             setPartData({
@@ -73,7 +84,7 @@ export function usePartners(queryParameter: any = {
                 error: error
             });
         }
-    }, [queryParameter]);
+    }, [filter, page, pageSize, sort, order]);
 
     // React.useEffect(() => {
     //

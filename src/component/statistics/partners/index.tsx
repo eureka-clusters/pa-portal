@@ -7,21 +7,7 @@ import {useParams} from "react-router-dom";
 
 export default function PartnerStatistics() {
 
-    const {hash} = useParams();
-
-    const defaultFilter = {
-        country: [],
-        organisation_type: [],
-        project_status: [],
-        clusters: [],
-        programme_call: [],
-        year: [],
-    };
-
-    const {updateHash, updateFilter, filter, setFilter} = TableFilter({hash, defaultFilter});
-
-    const updateResults = () => {
-    }
+    const {updateHash, updateFilter, filter, setFilter} = TableFilter();
 
     return (
         <React.Fragment>
@@ -33,8 +19,10 @@ export default function PartnerStatistics() {
                 </div>
                 <div className={'row'}>
                     <div className={'col-2'}>
-                        <PartnerFacets filter={filter} setFilter={setFilter} updateFilter={updateFilter}
-                                       updateHash={updateHash} updateResults={updateResults}/>
+                        <PartnerFacets filter={filter}
+                                       setFilter={setFilter}
+                                       updateFilter={updateFilter}
+                                       updateHash={updateHash} />
                     </div>
                     <div className={'col-10'}>
                         <PartnerTable filter={filter}/>

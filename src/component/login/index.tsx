@@ -8,6 +8,7 @@ import {getServerUri} from "function/get-server-uri";
 export default function Login() {
 
     const [services, setServices] = useState<Array<Service>>([]);
+
     let location = useLocation();
     let auth = useAuth();
     let {from} = location.state || {from: {pathname: "/"}};
@@ -18,18 +19,22 @@ export default function Login() {
     }
 
     useEffect(() => {
-        const fetchData = async () => {
-            await axios.get<{ _embedded: { services: Service[] } }>(
-                getServerUri() + '/api/list/service'
-            ).then((response) => {
-                const {data} = response
-                setServices(data._embedded.services);
-            });
 
+        const abortController = new AbortController();
 
-        };
+        axios.get<{ _embedded: { services: Service[] } }>(
+            getServerUri() + '/api/list/service', {
+                signal: abortController.signal
+            }
+        ).then((response) => {
+            const {data} = response
+            setServices(data._embedded.services);
 
-        fetchData();
+        })
+
+        return () => {
+            abortController.abort();
+        }
     }, []);
 
     return (
@@ -41,7 +46,6 @@ export default function Login() {
                 </div>
             </div>
             <div className="d-flex flex-row bd-highlight mb-3">
-
                 {services.map((service) => (
                         <a className="btn btn-lg bg-primary text-white" key={service.id} href={service.loginUrl}>Login
                             via {service.name}</a>

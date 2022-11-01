@@ -1,9 +1,9 @@
-import React, {useCallback, useEffect} from 'react'
+import React, {useCallback} from 'react'
 import {ApiError} from "interface/api/api-error";
 import {ApiStates} from 'hooks/api/api-error';
 import {Facets} from "interface/statistics/project/facets";
+import {FilterValues} from "interface/statistics/filter-values";
 import axios from "axios";
-
 
 interface State {
     state: string,
@@ -12,7 +12,7 @@ interface State {
 }
 
 
-export function useFacets(filter: string) {
+export function useFacets(filter: FilterValues) {
 
     const [hookState, setHookState] = React.useState<State>({
         state: ApiStates.LOADING,
@@ -21,7 +21,7 @@ export function useFacets(filter: string) {
     });
 
 
-    const load = useCallback(async (filter: string) => {
+    const load = useCallback(async (filter: FilterValues) => {
         const setPartData = (partialData: {
             state: string,
             facets?: Facets,
@@ -32,18 +32,23 @@ export function useFacets(filter: string) {
 
         try {
 
-            const url = "/statistics/facets/project/" + filter;
+            const abortController = new AbortController();
+            const url = "/statistics/facets/project/" + btoa(JSON.stringify(filter));
 
-            axios.create().get<Facets>(url)
-                .then(response => {
+            axios.create().get<Facets>(url, {
+                signal: abortController.signal
+            }).then(response => {
+                const {data} = response;
 
-                    const {data} = response;
-
-                    setPartData({
-                        state: ApiStates.SUCCESS,
-                        facets: data
-                    })
+                setPartData({
+                    state: ApiStates.SUCCESS,
+                    facets: data
                 })
+            });
+
+            return () => {
+                abortController.abort();
+            }
         } catch (error: any) {
             setPartData({
                 state: ApiStates.ERROR,

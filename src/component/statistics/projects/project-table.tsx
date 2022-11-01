@@ -1,26 +1,18 @@
-import React, {FC, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Link} from "react-router-dom";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import DataTable from 'component/database-table';
 import {CostsFormat, EffortFormat} from 'function/utils';
-
-import {getFilter, GetServerUri, objToQueryString} from 'function/api';
 import {useProjects} from 'hooks/api/statistics/projects/use-projects';
 import {ApiStates, RenderApiError} from "hooks/api/api-error";
 
 import {Project} from "interface/project";
-import {useAuth} from "context/user-context";
 import downloadBase64File from "function/download-base64";
 import moment from 'moment';
 import LoadingButton from "component/partial/loading-button";
+import axios from "axios";
+import {FilterValues} from "interface/statistics/filter-values";
 
-interface Props {
-    filter: any,
-}
-
-const ProjectTable: FC<Props> = ({filter}) => {
-
-    let auth = useAuth();
+const ProjectTable = ({filter}: { filter: FilterValues }) => {
 
     const [perPage, setPerPage] = useState(30); // default pageSize
     const [loading, setLoading] = useState(false);
@@ -40,7 +32,7 @@ const ProjectTable: FC<Props> = ({filter}) => {
         pageSize,
         // page,
         totalItems
-    } = useProjects({filter: getFilter(filter), page: 1, pageSize: perPage, sort: sort, order: order});
+    } = useProjects(filter, 1, perPage, sort, order);
 
     const [isExportLoading, setIsExportButtonLoading] = useState(false);
 
@@ -63,7 +55,7 @@ const ProjectTable: FC<Props> = ({filter}) => {
     const loadAsync = async () => {
         setLoading(true);
         await load({
-            filter: getFilter(filter),
+            filter: filter,
             page: currentPage,
             pageSize: perPage,
             sort,
@@ -93,32 +85,14 @@ const ProjectTable: FC<Props> = ({filter}) => {
 
 
     const downloadExcel = async () => {
-        var serverUri = GetServerUri();
-        let jwtToken = auth.getJwtToken();
-
-        const queryString = objToQueryString({
-            filter: getFilter(filter),
+        const queryString = btoa(JSON.stringify({
+            filter: filter,
             sort: sort,
             order: order,
-        });
+        }));
 
-        await fetch(serverUri + '/api/statistics/results/project/download/csv?' + queryString,
-            {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${jwtToken}`
-                }
-            }
-        )
-            .then(res => {
-                if (!res.ok) {
-                    throw res
-                }
-                return res.json()
-            })
-            .then((res) => {
+        await axios.create().get('/statistics/results/project/download/csv?' + queryString)
+            .then((res: any) => {
                 let extension = res.extension;
                 let mimetype = res.mimetype;
                 downloadBase64File(mimetype, res.download, 'Download' + extension);
@@ -229,7 +203,7 @@ const ProjectTable: FC<Props> = ({filter}) => {
             return (
                 <>
                     <RenderApiError error={error}/>
-                    <br/><br/>Filter used <code className={'pb-2 text-muted'}>{getFilter(filter)}</code>
+                    <br/><br/>Filter used <code className={'pb-2 text-muted'}>{JSON.stringify(filter)}</code>
                     <code className={'pb-2 text-muted'}>{JSON.stringify(filter, undefined, 2)}</code>
                 </>
             );
