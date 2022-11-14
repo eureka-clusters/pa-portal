@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Link} from 'react-router-dom';
 import BreadcrumbTree from 'component/partial/breadcrumb-tree';
-import DataTable from 'component/database-table';
 import {useOrganisations} from 'hooks/api/organisation/use-organisations';
 import {ApiStates, RenderApiError} from "hooks/api/api-error";
 
@@ -113,23 +112,9 @@ export default function Organisations() {
                     <BreadcrumbTree current="organisations" data={organisations} linkCurrent={false}/>
 
                     <h1>Organisations</h1>
-                    <DataTable
-                        keyField="organisation.id"
-                        columns={columns}
-                        data={organisations}
-                        defaultSortFieldId={sort}
-                        defaultSortAsc={order === 'asc'}
-                        progressPending={loading}
-                        pagination
-                        paginationServer
-                        paginationPerPage={pageSize}
-                        paginationTotalRows={totalItems}
-                        onChangeRowsPerPage={handlePerRowsChange}
-                        onChangePage={handlePageChange}
-                        sortServer
-                        onSort={handleSort}
-                    />
+
                 </React.Fragment>
+
             );
         default:
             return <p>Loading organisations...</p>;

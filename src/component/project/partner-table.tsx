@@ -1,6 +1,5 @@
 import React, {FC} from 'react';
 import {Link} from "react-router-dom";
-import DataTable from 'component/database-table';
 import {BooleanIconFormat, CostsFormat, EffortFormat} from 'function/utils';
 import {Partner} from "interface/project/partner";
 
@@ -123,14 +122,7 @@ const PartnerTable: FC<Props> = ({results}) => {
 
     return (
         <React.Fragment>
-            {/* <pre className='debug'>{JSON.stringify(results, undefined, 2)}</pre> */}
-            <DataTable
-                // title="Partners"
-                keyField="id"
-                columns={columns}
-                data={results}
-                pagination={false}
-            />
+
         </React.Fragment>
     );
 }

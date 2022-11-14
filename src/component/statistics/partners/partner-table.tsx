@@ -1,22 +1,18 @@
 import React, {FC, useEffect, useState} from 'react';
 import {Link} from "react-router-dom";
-import DataTable from 'component/database-table';
 import {CostsFormat, EffortFormat} from 'function/utils';
 import {Partner} from "interface/project/partner";
-import {GetServerUri} from 'function/api';
 import {usePartners} from 'hooks/api/statistics/partners/use-partners';
 import {ApiStates, RenderApiError} from "hooks/api/api-error";
-import {useAuth} from "context/user-context";
 import downloadBase64File from "function/download-base64";
 import LoadingButton from "component/partial/loading-button";
+import axios from "axios";
 
 interface Props {
     filter: any
 }
 
 const PartnerTable: FC<Props> = ({filter}) => {
-
-    let auth = useAuth();
 
     const [perPage, setPerPage] = useState(30); // default pageSize
     const [loading, setLoading] = useState(false);
@@ -88,8 +84,6 @@ const PartnerTable: FC<Props> = ({filter}) => {
     }, [isExportLoading]);
 
     const downloadExcel = async () => {
-        const serverUri = GetServerUri();
-        let jwtToken = auth.getJwtToken();
 
         const queryString = btoa(JSON.stringify({
             filter: filter,
@@ -97,23 +91,9 @@ const PartnerTable: FC<Props> = ({filter}) => {
             order: order,
         }));
 
-        await fetch(serverUri + '/api/statistics/results/partner/download/csv?' + queryString,
-            {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${jwtToken}`
-                }
-            }
+        axios.create().get('/statistics/results/partner/download/csv?' + queryString,
         )
-            .then(res => {
-                if (!res.ok) {
-                    throw res
-                }
-                return res.json()
-            })
-            .then((res) => {
+            .then((res: any) => {
                 let extension = res.extension;
                 let mimetype = res.mimetype;
                 downloadBase64File(mimetype, res.download, 'Download' + extension);
@@ -224,29 +204,7 @@ const PartnerTable: FC<Props> = ({filter}) => {
             return (
                 <React.Fragment>
                     <h2>Partners</h2>
-                    <DataTable
-                        // title="Partners"
-                        keyField={hasYearFilter ? ("keyfield") : ("id")}
 
-                        columns={columns}
-                        data={partners}
-                        paginationRowsPerPageOptions={[10, 15, 20, 25, 30, 50, 100, 200]}
-
-                        defaultSortFieldId={sort}
-                        defaultSortAsc={order === 'asc'}
-
-
-                        progressPending={loading}
-                        pagination
-                        // paginationDefaultPage = {currentPage}
-                        paginationServer
-                        paginationPerPage={pageSize}
-                        paginationTotalRows={totalItems}
-                        onChangeRowsPerPage={handlePerRowsChange}
-                        onChangePage={handlePageChange}
-                        sortServer
-                        onSort={handleSort}
-                    />
 
                     <div className="datatable-download">
                         <LoadingButton

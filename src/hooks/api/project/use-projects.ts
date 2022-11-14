@@ -8,7 +8,7 @@ import axios from "axios";
 interface State {
     state: string,
     error?: ApiError,
-    projects: Array<Project>,
+    projects: Project[],
     pageCount?: number,
     pageSize?: number,
     totalItems?: number,
@@ -18,7 +18,7 @@ interface State {
 
 export interface ProjectResponse {
     _embedded: {
-        projects: Array<Project>
+        projects: Project[]
     }
     page_count: number,
     page_size: number,
@@ -50,6 +50,9 @@ export function useProjects(page: number, pageSize: number, sort: string, order:
         }
 
         try {
+
+            console.log('order in hook', order);
+
 
             const queryParameter = {
                 page: page.toString(),

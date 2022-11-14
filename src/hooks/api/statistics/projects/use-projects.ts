@@ -40,6 +40,7 @@ export function useProjects(filter: FilterValues, page: number, pageSize: number
         }
 
         try {
+
             const queryParameter = {
                 filter: btoa(JSON.stringify(filter)),
                 page: page.toString(),

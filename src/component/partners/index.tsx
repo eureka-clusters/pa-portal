@@ -1,8 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Link} from 'react-router-dom';
 import BreadcrumbTree from 'component/partial/breadcrumb-tree';
-import DataTable from 'component/database-table';
-
 import {usePartners} from 'hooks/api/partner/use-partners';
 import {Partner} from "interface/project/partner";
 import {CostsFormat, EffortFormat} from 'function/utils';
@@ -140,24 +138,7 @@ export default function Partners() {
                     {/* <pre className='debug'>{JSON.stringify(partners, undefined, 2)}</pre> */}
                     <h1>Partners</h1>
                     <h3>sorting not yet possible</h3>
-                    <DataTable
-                        keyField="partner.id"
-                        columns={columns}
-                        data={partners}
 
-                        defaultSortFieldId={sort}
-                        defaultSortAsc={order === 'asc'}
-
-                        progressPending={loading}
-                        pagination
-                        paginationServer
-                        paginationPerPage={pageSize}
-                        paginationTotalRows={totalItems}
-                        onChangeRowsPerPage={handlePerRowsChange}
-                        onChangePage={handlePageChange}
-                        sortServer
-                        onSort={handleSort}
-                    />
                 </React.Fragment>
             );
         default:

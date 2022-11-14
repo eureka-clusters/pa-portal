@@ -1,10 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {Link} from "react-router-dom";
-import DataTable from 'component/database-table';
 import {CostsFormat, EffortFormat} from 'function/utils';
 import {useProjects} from 'hooks/api/statistics/projects/use-projects';
 import {ApiStates, RenderApiError} from "hooks/api/api-error";
-
 import {Project} from "interface/project";
 import downloadBase64File from "function/download-base64";
 import moment from 'moment';
@@ -28,9 +26,7 @@ const ProjectTable = ({filter}: { filter: FilterValues }) => {
         error,
         projects,
         load,
-        // pageCount,
         pageSize,
-        // page,
         totalItems
     } = useProjects(filter, 1, perPage, sort, order);
 
@@ -41,8 +37,6 @@ const ProjectTable = ({filter}: { filter: FilterValues }) => {
         setCurrentPage(newpage);
     }
 
-    //@johan i wanted to get rid of this "any" for column and use the exported TableColumn interface from datatable but it doesn't work. any idea?
-    // const handleSort = async (column: TableColumn, sortDirection: string) => {
     const handleSort = async (column: any, sortDirection: string) => {
         setSort(column.sortField);
         setOrder(sortDirection);
@@ -53,13 +47,12 @@ const ProjectTable = ({filter}: { filter: FilterValues }) => {
     };
 
     const loadAsync = async () => {
-        setLoading(true);
         await load();
-        setLoading(false);
     };
 
     useEffect(() => {
-        loadAsync();
+        setLoading(true);
+        loadAsync().then(() => setLoading(false));
     }, [filter, currentPage, perPage, sort, order]);
 
 
@@ -94,7 +87,6 @@ const ProjectTable = ({filter}: { filter: FilterValues }) => {
                 console.error(err);
             });
     }
-
 
     const columns = [
         {
@@ -204,29 +196,7 @@ const ProjectTable = ({filter}: { filter: FilterValues }) => {
             return (
                 <React.Fragment>
                     <h2>Projects</h2>
-                    {/* <pre className='debug'>{JSON.stringify(filter, undefined, 2)}</pre> */}
-                    {/* <pre className='debug'>{JSON.stringify(projects, undefined, 2)}</pre> */}
 
-                    <DataTable
-                        // title="Projects"
-                        keyField="project.slug"
-                        columns={columns}
-                        data={projects}
-
-                        defaultSortFieldId={sort}
-                        defaultSortAsc={order === 'asc'}
-                        // paginationRowsPerPageOptions={[10, 15, 20, 25, 30, 50, 100, 200]}
-                        progressPending={loading}
-                        pagination
-
-                        paginationServer
-                        paginationPerPage={pageSize}
-                        paginationTotalRows={totalItems}
-                        onChangeRowsPerPage={handlePerRowsChange}
-                        onChangePage={handlePageChange}
-                        sortServer
-                        onSort={handleSort}
-                    />
 
                     <div className="datatable-download">
                         <LoadingButton
@@ -237,6 +207,7 @@ const ProjectTable = ({filter}: { filter: FilterValues }) => {
                             Export to Excel
                         </LoadingButton>
                     </div>
+
 
                 </React.Fragment>
             );
