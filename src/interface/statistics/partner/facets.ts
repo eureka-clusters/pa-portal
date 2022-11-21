@@ -15,5 +15,9 @@ export interface Facets {
         name: string,
         amount: number
     }>,
+    programmeCalls: Array<{
+        name: string,
+        amount: number
+    }>,
     years: Array<number>,
 }

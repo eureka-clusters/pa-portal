@@ -3,8 +3,7 @@ import {Link} from "react-router-dom";
 import {BooleanIconFormat, CostsFormat, EffortFormat} from 'function/utils';
 import {Partner} from "interface/project/partner";
 import {Organisation} from "interface/organisation";
-import {usePartners} from 'hooks/api/partner/use-partners';
-import {ApiStates, RenderApiError} from "hooks/api/api-error";
+import {useGetPartners} from "hooks/partner/use-get-partners";
 
 interface Props {
     organisation: Organisation
@@ -125,26 +124,18 @@ const PartnerTable: FC<Props> = ({organisation}) => {
     ];
 
 
-    const {
-        state,
-        error,
-        partners,
-        /*load, pageCount, pageSize, page, totalItems*/
-    } = usePartners({organisation: organisation});
+    const {state} = useGetPartners({organisation: organisation});
 
-    switch (state) {
-        case ApiStates.ERROR:
-            return <RenderApiError error={error}/>
-        case ApiStates.SUCCESS:
-            return (
-                <React.Fragment>
-                    <h2>Partners</h2>
-
-                </React.Fragment>
-            );
-        default:
-            return <p>Loading data...</p>;
+    if (state.isLoading) {
+        return <div>Loading...</div>
     }
+
+    return (
+        <React.Fragment>
+            <h2>Partners</h2>
+
+        </React.Fragment>
+    );
 }
 
 export default PartnerTable;

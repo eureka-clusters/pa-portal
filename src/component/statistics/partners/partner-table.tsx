@@ -2,8 +2,7 @@ import React, {FC, useEffect, useState} from 'react';
 import {Link} from "react-router-dom";
 import {CostsFormat, EffortFormat} from 'function/utils';
 import {Partner} from "interface/project/partner";
-import {usePartners} from 'hooks/api/statistics/partners/use-partners';
-import {ApiStates, RenderApiError} from "hooks/api/api-error";
+import {useGetPartners} from "hooks/partner/use-get-partners";
 import downloadBase64File from "function/download-base64";
 import LoadingButton from "component/partial/loading-button";
 import axios from "axios";
@@ -25,14 +24,7 @@ const PartnerTable: FC<Props> = ({filter}) => {
 
     const {
         state,
-        error,
-        partners,
-        load,
-        // pageCount, 
-        pageSize,
-        // page, 
-        totalItems
-    } = usePartners(filter, 1, perPage, sort, order);
+    } = useGetPartners({filter: filter, page: 1, pageSize: perPage, sort: sort, order: order});
 
     const [isExportLoading, setIsExportButtonLoading] = useState(
         false
@@ -53,22 +45,6 @@ const PartnerTable: FC<Props> = ({filter}) => {
         setPerPage(perPage);
     };
 
-    const loadAsync = async () => {
-        setLoading(true);
-        await load({
-            filter: filter,
-            page: currentPage,
-            pageSize: perPage,
-            sort,
-            order
-        });
-        setLoading(false);
-    };
-
-    useEffect(() => {
-        loadAsync();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [filter, currentPage, perPage, sort, order]);
 
     useEffect(() => {
         if (isExportLoading) {
@@ -197,30 +173,23 @@ const PartnerTable: FC<Props> = ({filter}) => {
     ];
 
 
-    switch (state) {
-        case ApiStates.ERROR:
-            return <RenderApiError error={error}/>
-        case ApiStates.SUCCESS:
-            return (
-                <React.Fragment>
-                    <h2>Partners</h2>
+    return (
+        <React.Fragment>
+            <h2>Partners</h2>
 
 
-                    <div className="datatable-download">
-                        <LoadingButton
-                            isLoading={isExportLoading}
-                            loadingText='Exporting...'
-                            onClick={() => setIsExportButtonLoading(true)}
-                        >
-                            Export to Excel
-                        </LoadingButton>
-                    </div>
+            <div className="datatable-download">
+                <LoadingButton
+                    isLoading={isExportLoading}
+                    loadingText='Exporting...'
+                    onClick={() => setIsExportButtonLoading(true)}
+                >
+                    Export to Excel
+                </LoadingButton>
+            </div>
 
-                </React.Fragment>
-            );
-        default:
-            return <p>Loading data...</p>;
-    }
+        </React.Fragment>
+    );
 }
 
 export default PartnerTable;

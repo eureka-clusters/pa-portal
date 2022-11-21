@@ -1,10 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {Link} from 'react-router-dom';
 import BreadcrumbTree from 'component/partial/breadcrumb-tree';
-import {useOrganisations} from 'hooks/api/organisation/use-organisations';
-import {ApiStates, RenderApiError} from "hooks/api/api-error";
-
 import {Organisation} from "interface/organisation";
+import {useGetOrganisations} from "hooks/organisation/use-get-organisations";
 
 
 export default function Organisations() {
@@ -18,16 +16,7 @@ export default function Organisations() {
     // store the current page (needed for handleSort)
     const [currentPage, setCurrentPage] = useState(1); // default current page
 
-    const {
-        state,
-        error,
-        organisations,
-        load,
-        // pageCount,
-        pageSize,
-        // page,
-        totalItems
-    } = useOrganisations({filter: '', page: 1, pageSize: perPage});
+    const {state} = useGetOrganisations({page: 1, pageSize: perPage});
 
     const handlePageChange = async (newpage: number = 1) => {
         setCurrentPage(newpage);
@@ -42,29 +31,6 @@ export default function Organisations() {
         setPerPage(perPage);
     };
 
-
-    // const loadAsync = async () => {
-    //     setLoading(true);
-    //     await load({
-    //         page: currentPage,
-    //         pageSize: perPage,
-    //         sort,
-    //         order
-    //     });
-    //     setLoading(false);
-    // };
-
-    useEffect(() => {
-        setLoading(true);
-        load({
-            page: currentPage,
-            pageSize: perPage,
-            sort,
-            order
-        });
-        setLoading(false);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentPage, perPage, sort, order]);
 
     const columns = [
         {
@@ -101,22 +67,18 @@ export default function Organisations() {
         },
     ];
 
-
-    switch (state) {
-        case ApiStates.ERROR:
-            return <RenderApiError error={error}/>
-        case ApiStates.SUCCESS:
-            return (
-                <React.Fragment>
-                    {/* <pre className='debug'>{JSON.stringify(organisations, undefined, 2)}</pre> */}
-                    <BreadcrumbTree current="organisations" data={organisations} linkCurrent={false}/>
-
-                    <h1>Organisations</h1>
-
-                </React.Fragment>
-
-            );
-        default:
-            return <p>Loading organisations...</p>;
+    if (state.isLoading) {
+        return <p>Loading organisations...</p>;
     }
+
+    return (
+        <React.Fragment>
+            {/* <pre className='debug'>{JSON.stringify(organisations, undefined, 2)}</pre> */}
+            <BreadcrumbTree current="organisations" data={state.data} linkCurrent={false}/>
+
+            <h1>Organisations</h1>
+
+        </React.Fragment>
+
+    );
 }

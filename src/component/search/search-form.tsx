@@ -1,9 +1,8 @@
 import React, {useEffect, useRef, useState} from 'react';
 import SearchList from './search-list';
 import {useLocation, useNavigate} from "react-router-dom";
-import {useSearch} from 'hooks/api/search/use-search';
-import {ApiStates, RenderApiError} from "hooks/api/api-error";
 import Pagination from 'component/pagination';
+import {useGetSearchResults} from "hooks/search/use-get-search-results";
 
 const DefaultPageSize = 10;
 
@@ -19,6 +18,9 @@ function SearchForm({searchText, setSearchText}: Props) {
     const navigate = useNavigate();
     const location = useLocation();
     const limit = DefaultPageSize;
+
+    const totalItems = 100;
+    const pageSize = 10;
 
     useEffect(() => {
         let params = new URLSearchParams(location.search);
@@ -46,17 +48,9 @@ function SearchForm({searchText, setSearchText}: Props) {
     const inputRef = useRef<null | HTMLInputElement>(null);
     const [showResults, setShowResults] = useState(false);
 
-    let {
-        state,
-        error,
-        results,
-        load,
-        // pageCount,
-        pageSize,
-        // page,
-        totalItems
-    } = useSearch({query: searchText, page: currentPage, pageSize: limit});
+    let {state} = useGetSearchResults({query: searchText, page: currentPage, pageSize: limit});
 
+    let results = state.data;
 
     const changeUrl = (query: string, page: number) => {
         // change the current url
@@ -68,15 +62,15 @@ function SearchForm({searchText, setSearchText}: Props) {
     };
 
     const onSearch = async (query: string, page: number) => {
-        if (query) {
-            // load({ query: query, page: currentPage, pageSize: limit })
-            await load({query: query, page: page, pageSize: limit})
-            setRequestedSearchText(query);
-            setShowResults(true);
-        } else {
-            state = ApiStates.LOADING;
-            setShowResults(false);
-        }
+        // if (query) {
+        //     // load({ query: query, page: currentPage, pageSize: limit })
+        //     await load({query: query, page: page, pageSize: limit})
+        //     setRequestedSearchText(query);
+        //     setShowResults(true);
+        // } else {
+        //     state = ApiStates.LOADING;
+        //     setShowResults(false);
+        // }
     }
 
     const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -94,30 +88,19 @@ function SearchForm({searchText, setSearchText}: Props) {
         changeUrl(searchText, page);
     }
 
-    let render;
+    let render = <>
+        {showResults ? <SearchList results={results} ulRef={ulRef} searchText={requestedSearchText}/> : null}
 
-    switch (state) {
-        case ApiStates.ERROR:
-            render = <RenderApiError error={error}/>
-            break;
-        case ApiStates.SUCCESS:
-            render = <>
-                {showResults ? <SearchList results={results} ulRef={ulRef} searchText={requestedSearchText}/> : null}
-
-                {showResults ? <Pagination
-                    className="pagination-bar"
-                    currentPage={currentPage}
-                    totalCount={totalItems}
-                    // as the result of the api query doesn't use given pageSize for the limit i must use the returned pageSize to get correct pagination.
-                    // pageSize={limit}  
-                    pageSize={pageSize}
-                    onPageChange={handlePageChange}
-                /> : null}
-            </>
-            break;
-        default:
-            render = <></>
-    }
+        {showResults ? <Pagination
+            className="pagination-bar"
+            currentPage={currentPage}
+            totalCount={totalItems}
+            // as the result of the api query doesn't use given pageSize for the limit i must use the returned pageSize to get correct pagination.
+            // pageSize={limit}
+            pageSize={pageSize}
+            onPageChange={handlePageChange}
+        /> : null}
+    </>
 
     return (
         <>

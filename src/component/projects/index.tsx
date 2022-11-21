@@ -1,8 +1,4 @@
-import {useState} from "react";
 import {QueryClient} from 'react-query'
-import {createColumnHelper, flexRender, getCoreRowModel, useReactTable} from '@tanstack/react-table'
-import {Project} from "interface/project";
-import {useProject} from "hooks/api/project/use-project";
 
 
 const queryClient = new QueryClient()
@@ -10,14 +6,14 @@ const queryClient = new QueryClient()
 // Then, use it in a component.
 export default function Projects() {
 
-    const {project, isLoading} = useProject('aissi');
+    // const {project, isLoading} = useProject('aissi');
     // const {project, isLoading2} = useProject('aidems');
 
-    const defaultData = [project];
-    const [data, setData] = useState(() => [...defaultData])
+    // const defaultData = [project];
+    // const [data, setData] = useState(() => [...defaultData])
 
 
-    console.log(data);
+    // console.log(data);
 
     return <div>Test</div>;
 

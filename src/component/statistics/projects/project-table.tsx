@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Link} from "react-router-dom";
 import {CostsFormat, EffortFormat} from 'function/utils';
-import {useProjects} from 'hooks/api/statistics/projects/use-projects';
-import {ApiStates, RenderApiError} from "hooks/api/api-error";
+import {useGetProjects} from "hooks/project/use-get-projects";
 import {Project} from "interface/project";
 import downloadBase64File from "function/download-base64";
 import moment from 'moment';
@@ -21,14 +20,7 @@ const ProjectTable = ({filter}: { filter: FilterValues }) => {
     // store the current page (needed for handleSort)
     const [currentPage, setCurrentPage] = useState(1); // default current page
 
-    const {
-        state,
-        error,
-        projects,
-        load,
-        pageSize,
-        totalItems
-    } = useProjects(filter, 1, perPage, sort, order);
+    const {state} = useGetProjects({filter: filter, page: 1, pageSize: perPage, sort: sort, order: order});
 
     const [isExportLoading, setIsExportButtonLoading] = useState(false);
 
@@ -46,17 +38,8 @@ const ProjectTable = ({filter}: { filter: FilterValues }) => {
         setPerPage(perPage);
     };
 
-    const loadAsync = async () => {
-        await load();
-    };
 
     useEffect(() => {
-        setLoading(true);
-        loadAsync().then(() => setLoading(false));
-    }, [filter, currentPage, perPage, sort, order]);
-
-
-    React.useEffect(() => {
         if (isExportLoading) {
             // start the download
             (async () => {
@@ -183,37 +166,25 @@ const ProjectTable = ({filter}: { filter: FilterValues }) => {
     ];
 
 
-    switch (state) {
-        case ApiStates.ERROR:
-            return (
-                <>
-                    <RenderApiError error={error}/>
-                    <br/><br/>Filter used <code className={'pb-2 text-muted'}>{JSON.stringify(filter)}</code>
-                    <code className={'pb-2 text-muted'}>{JSON.stringify(filter, undefined, 2)}</code>
-                </>
-            );
-        case ApiStates.SUCCESS:
-            return (
-                <React.Fragment>
-                    <h2>Projects</h2>
+
+    return (
+        <React.Fragment>
+            <h2>Projects</h2>
 
 
-                    <div className="datatable-download">
-                        <LoadingButton
-                            isLoading={isExportLoading}
-                            loadingText='Exporting...'
-                            onClick={() => setIsExportButtonLoading(true)}
-                        >
-                            Export to Excel
-                        </LoadingButton>
-                    </div>
+            <div className="datatable-download">
+                <LoadingButton
+                    isLoading={isExportLoading}
+                    loadingText='Exporting...'
+                    onClick={() => setIsExportButtonLoading(true)}
+                >
+                    Export to Excel
+                </LoadingButton>
+            </div>
 
 
-                </React.Fragment>
-            );
-        default:
-            return <p>Loading data...</p>;
-    }
+        </React.Fragment>
+    );
 }
 
 export default ProjectTable;

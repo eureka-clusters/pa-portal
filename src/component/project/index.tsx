@@ -2,8 +2,7 @@ import React from 'react';
 import PartnerTableWithCharts from "component/project/partner-table-with-charts";
 import BreadcrumbTree from 'component/partial/breadcrumb-tree'
 import moment from 'moment';
-import {useProject} from 'hooks/api/project/use-project';
-import {ApiStates, RenderApiError} from "hooks/api/api-error";
+import {useGetProject} from "hooks/project/use-get-project";
 import {CostsFormat, EffortFormat} from 'function/utils';
 import {useParams} from "react-router-dom";
 
@@ -11,15 +10,13 @@ import {useParams} from "react-router-dom";
 export default function Project() {
 
     const {slug} = useParams();
-    const {project, isLoading, isError, apiError} = useProject(slug === undefined ? '' : slug);
+    const {state} = useGetProject(slug === undefined ? '' : slug);
 
-    if (isError) {
-        return <RenderApiError error={apiError}/>
-    }
-
-    if (isLoading || project === undefined) {
+    if (state.isLoading) {
         return <div>Loading...</div>
     }
+
+    const project = state.data;
 
     return <>
         <BreadcrumbTree current="project" data={{

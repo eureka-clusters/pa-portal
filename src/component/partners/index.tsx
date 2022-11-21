@@ -1,10 +1,9 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {Link} from 'react-router-dom';
 import BreadcrumbTree from 'component/partial/breadcrumb-tree';
-import {usePartners} from 'hooks/api/partner/use-partners';
 import {Partner} from "interface/project/partner";
 import {CostsFormat, EffortFormat} from 'function/utils';
-import {ApiStates, RenderApiError} from "hooks/api/api-error";
+import {useGetPartners} from "hooks/partner/use-get-partners";
 
 
 export default function Partners() {
@@ -19,16 +18,7 @@ export default function Partners() {
     const [currentPage, setCurrentPage] = useState(1); // default current page
 
 
-    const {
-        state,
-        error,
-        partners,
-        load,
-        // pageCount,
-        pageSize,
-        // page,
-        totalItems
-    } = usePartners({page: 1, pageSize: perPage});
+    const {state} = useGetPartners({page: 1, pageSize: perPage});
 
     const handlePageChange = async (newpage: number = 1) => {
         setCurrentPage(newpage);
@@ -43,17 +33,7 @@ export default function Partners() {
         setPerPage(perPage);
     };
 
-    useEffect(() => {
-        setLoading(true);
-        load({
-            page: currentPage,
-            pageSize: perPage,
-            sort,
-            order
-        });
-        setLoading(false);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentPage, perPage, sort, order]);
+    let partners: Partner[] = state.data;
 
     const columns = [
         {
@@ -127,21 +107,17 @@ export default function Partners() {
         },
     ];
 
-
-    switch (state) {
-        case ApiStates.ERROR:
-            return <RenderApiError error={error}/>
-        case ApiStates.SUCCESS:
-            return (
-                <React.Fragment>
-                    <BreadcrumbTree current="partners" data={partners} linkCurrent={false}/>
-                    {/* <pre className='debug'>{JSON.stringify(partners, undefined, 2)}</pre> */}
-                    <h1>Partners</h1>
-                    <h3>sorting not yet possible</h3>
-
-                </React.Fragment>
-            );
-        default:
-            return <p>Loading partners...</p>;
+    if (state.isLoading) {
+        return <div>Loading...</div>
     }
+
+    return (
+        <React.Fragment>
+            <BreadcrumbTree current="partners" data={partners} linkCurrent={false}/>
+            {/* <pre className='debug'>{JSON.stringify(partners, undefined, 2)}</pre> */}
+            <h1>Partners</h1>
+            <h3>sorting not yet possible</h3>
+
+        </React.Fragment>
+    )
 }
