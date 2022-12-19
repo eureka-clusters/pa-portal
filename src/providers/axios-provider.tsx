@@ -1,10 +1,8 @@
 import React, {createContext, useContext} from 'react';
 import axios, {AxiosInstance} from 'axios';
-import {AuthContext, AuthContextContent} from '@providers/auth-provider';
+import {AuthContext, AuthContextContent} from 'providers/auth-provider';
 import createAuthRefreshInterceptor from 'axios-auth-refresh';
-import {getServerUri} from "@functions/get-server-uri";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import Config from "@constants/config";
+import {getServerUri} from "functions/get-server-uri";
 
 const AxiosContext = createContext<AxiosContextContent>({} as AxiosContextContent);
 const {Provider} = AxiosContext;
@@ -23,8 +21,11 @@ const AxiosProvider = ({children}: { children: any }) => {
     authAxios.interceptors.request.use(
         (config: any) => {
             if (!config.headers.Authorization) {
-                config.headers.Authorization = `Bearer ${authContext.getJwtToken()}`;
+                config.headers.Authorization = `Bearer ${authContext.authState.accessToken}`;
             }
+
+            axios.defaults.headers.common["Accept"] = 'application/json';
+            axios.defaults.headers.common["Content-Type"] = 'application/json';
 
             return config;
         },
@@ -36,28 +37,28 @@ const AxiosProvider = ({children}: { children: any }) => {
     const refreshAuthLogic = (failedRequest: any) => {
         const data = {};
 
-        console.log('test');
-
         const options = {
             method: 'GET',
             data,
-            url: getServerUri() + '/oauth2/renew?client_id=' + Config.CLIENT_ID,
+            url: getServerUri() + '/oauth/refresh',
         };
 
         return axios(options)
             .then(async tokenRefreshResponse => {
                 failedRequest.response.config.headers.Authorization =
-                    'Bearer ' + tokenRefreshResponse.data.jwtToken;
+                    'Bearer ' + tokenRefreshResponse.data.accessToken;
 
                 authContext.setAuthState({
                     ...authContext.authState,
-                    jwtToken: tokenRefreshResponse.data.jwtToken,
+                    accessToken: tokenRefreshResponse.data.accessToken,
+                    refreshToken: tokenRefreshResponse.data.refreshToken,
                 });
 
-                await AsyncStorage.setItem(
+                await localStorage.setItem(
                     'token',
                     JSON.stringify({
-                        jwtToken: tokenRefreshResponse.data.jwtToken,
+                        accessToken: tokenRefreshResponse.data.accessToken,
+                        refreshToken: tokenRefreshResponse.data.refreshToken,
                     }),
                 );
 
@@ -65,7 +66,8 @@ const AxiosProvider = ({children}: { children: any }) => {
             })
             .catch(e => {
                 authContext.setAuthState({
-                    jwtToken: null,
+                    accessToken: null,
+                    refreshToken: null,
                     authenticated: false
                 });
             });

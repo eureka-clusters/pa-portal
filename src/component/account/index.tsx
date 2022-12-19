@@ -1,10 +1,11 @@
-import {useAuth} from "context/user-context";
+import {useContext} from "react";
+import {AuthContext} from "providers/auth-provider";
 
 export default function Account() {
 
-    let auth = useAuth();
-    
-    const userInfo = auth.getUserInfo();
+    let authContext = useContext(AuthContext);
+
+    const userInfo = authContext.getUser();
 
     return <>
         <h1>Account</h1>

@@ -2,7 +2,7 @@ import React from 'react';
 import {Form} from "react-bootstrap";
 import PartnerTable from "component/statistics/partners/partner-table";
 import PartnerFacets from 'component/statistics/partners/partner-facets';
-import TableFilter from 'function/api/table-filter';
+import TableFilter from 'functions/api/table-filter';
 import {useParams} from "react-router-dom";
 
 export default function PartnerStatistics() {

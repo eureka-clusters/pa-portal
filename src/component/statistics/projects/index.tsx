@@ -2,7 +2,7 @@ import React from 'react';
 import {Form} from "react-bootstrap";
 import ProjectTable from "component/statistics/projects/project-table";
 import ProjectFacets from 'component/statistics/projects/project-facets';
-import TableFilter from 'function/api/table-filter';
+import TableFilter from 'functions/api/table-filter';
 
 
 export default function ProjectStatistics() {

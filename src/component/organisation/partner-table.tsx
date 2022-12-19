@@ -1,6 +1,6 @@
 import React, {FC} from 'react';
 import {Link} from "react-router-dom";
-import {BooleanIconFormat, CostsFormat, EffortFormat} from 'function/utils';
+import {BooleanIconFormat, CostsFormat, EffortFormat} from 'functions/utils';
 import {Partner} from "interface/project/partner";
 import {Organisation} from "interface/organisation";
 import {useGetPartners} from "hooks/partner/use-get-partners";

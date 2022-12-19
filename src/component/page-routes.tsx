@@ -1,5 +1,5 @@
 import {Navigate, Route, Routes, useNavigate} from "react-router-dom";
-import {useAuth} from 'context/user-context';
+
 import Login from 'component/login';
 import Callback from 'component/callback';
 import Logout from 'component/logout';
@@ -14,6 +14,8 @@ import Organisation from 'component/organisation'
 
 import ProjectStatistics from 'component/statistics/projects'
 import PartnerStatistics from 'component/statistics/partners'
+import {useContext} from "react";
+import {AuthContext, AuthState} from "../providers/auth-provider";
 
 function GenericNotFound() {
     const navigate = useNavigate();
@@ -37,8 +39,8 @@ function HomePage() {
 
 // A wrapper for <Route> that redirects to the login
 // screen if you're not yet authenticated.
-function ProtectedRoute({auth, children}: { auth: any, children: any }) {
-    if (!auth.hasUser()) {
+function ProtectedRoute({authState, children}: { authState: AuthState, children: any }) {
+    if (!authState.authenticated) {
         return (
             <Navigate to={{pathname: "/login"}} replace/>
         );
@@ -49,7 +51,7 @@ function ProtectedRoute({auth, children}: { auth: any, children: any }) {
 
 export const PageRoutes = () => {
 
-    const auth = useAuth();
+    const authContext = useContext(AuthContext);
 
     return (
         <Routes>
@@ -59,18 +61,25 @@ export const PageRoutes = () => {
             <Route path='/logout' element={<Logout/>}/>
             <Route path='/callback' element={<Callback/>}/>
 
-            <Route path='/account' element={<ProtectedRoute auth={auth}><Account/></ProtectedRoute>}/>
-            <Route path='/search' element={<ProtectedRoute auth={auth}><Search/></ProtectedRoute>}/>
+            <Route path='/account'
+                   element={<ProtectedRoute authState={authContext.authState}><Account/></ProtectedRoute>}/>
+            <Route path='/search'
+                   element={<ProtectedRoute authState={authContext.authState}><Search/></ProtectedRoute>}/>
 
             <Route path='/statistics/projects'
-                   element={<ProtectedRoute auth={auth}><ProjectStatistics/></ProtectedRoute>}/>
+                   element={<ProtectedRoute authState={authContext.authState}><ProjectStatistics/></ProtectedRoute>}/>
             <Route path='/statistics/partners'
-                   element={<ProtectedRoute auth={auth}><PartnerStatistics/></ProtectedRoute>}/>
-            <Route path='/projects' element={<ProtectedRoute auth={auth}><Projects/></ProtectedRoute>}/>
-            <Route path='/project/:slug' element={<ProtectedRoute auth={auth}><Project/></ProtectedRoute>}/>
-            <Route path='/partner/:slug' element={<ProtectedRoute auth={auth}><Partner/></ProtectedRoute>}/>
-            <Route path='/organisations' element={<ProtectedRoute auth={auth}><Organisations/></ProtectedRoute>}/>
-            <Route path='/organisation/:slug' element={<ProtectedRoute auth={auth}><Organisation/></ProtectedRoute>}/>
+                   element={<ProtectedRoute authState={authContext.authState}><PartnerStatistics/></ProtectedRoute>}/>
+            <Route path='/projects'
+                   element={<ProtectedRoute authState={authContext.authState}><Projects/></ProtectedRoute>}/>
+            <Route path='/project/:slug'
+                   element={<ProtectedRoute authState={authContext.authState}><Project/></ProtectedRoute>}/>
+            <Route path='/partner/:slug'
+                   element={<ProtectedRoute authState={authContext.authState}><Partner/></ProtectedRoute>}/>
+            <Route path='/organisations'
+                   element={<ProtectedRoute authState={authContext.authState}><Organisations/></ProtectedRoute>}/>
+            <Route path='/organisation/:slug'
+                   element={<ProtectedRoute authState={authContext.authState}><Organisation/></ProtectedRoute>}/>
 
             <Route path="*" element={<GenericNotFound/>}/>
         </Routes>

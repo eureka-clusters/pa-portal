@@ -1,6 +1,5 @@
 import {createContext, useState} from "react";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {User} from "@interfaces/user";
+import {User} from "interface/auth/user";
 
 /**
  * Script taken from: https://www.bigbinary.com/blog/handling-authentication-state-in-react-native
@@ -12,34 +11,39 @@ const AuthContext = createContext<AuthContextContent>({} as AuthContextContent);
 interface AuthContextContent {
     authState: AuthState,
     setAuthState: (authState: AuthState) => void,
-    getJwtToken: () => string | null,
+    getToken: () => string | null,
     getUser: () => User,
     logout: () => void
 }
 
-interface AuthState {
-    jwtToken: string | null,
+export interface AuthState {
+    accessToken: string | null,
+    refreshToken: string | null,
     authenticated: boolean,
 }
 
 const AuthProvider = ({children}: { children: any }) => {
 
+    let storage = localStorage;
+
     const [authState, setAuthState] = useState<AuthState>({
-        jwtToken: null,
+        accessToken: null,
+        refreshToken: null,
         authenticated: false,
     });
 
 
     const logout = async () => {
-        await AsyncStorage.removeItem('token');
+        await storage.removeItem('token');
         setAuthState({
-            jwtToken: null,
+            accessToken: null,
+            refreshToken: null,
             authenticated: false,
         });
     };
 
-    const getJwtToken = () => {
-        return authState.jwtToken;
+    const getToken = () => {
+        return authState.accessToken;
     }
 
     const getUser = () => {
@@ -48,7 +52,13 @@ const AuthProvider = ({children}: { children: any }) => {
             id: 1,
             first_name: 'John',
             last_name: 'Doe',
-            initials: 'JD',
+            is_funder: false,
+            is_eureka_secretariat_staff_member: false,
+            funder_country: 'BE',
+            funder_clusters: [
+                'ITEA',
+                'CELTIC_NEXT'
+            ],
             email: 'info@example.com'
         }
 
@@ -57,10 +67,12 @@ const AuthProvider = ({children}: { children: any }) => {
 
     return (
         <AuthContext.Provider
-            value={{authState, setAuthState, getJwtToken, getUser, logout}}>
+            value={{authState, setAuthState, getToken, getUser, logout}}>
             {children}
         </AuthContext.Provider>
     );
 };
 
-export {AuthContext, AuthProvider, AuthContextContent};
+export {AuthContext, AuthProvider};
+
+export type {AuthContextContent};

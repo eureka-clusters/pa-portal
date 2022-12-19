@@ -1,21 +1,23 @@
-import React, {useEffect, useState} from 'react';
-import {useAuth} from "context/user-context";
+import React, {useContext, useEffect, useState} from 'react';
+
 import {useLocation} from "react-router-dom";
 import axios from "axios";
 import {Service} from "interface/service";
-import {getServerUri} from "function/get-server-uri";
+import {getServerUri} from "functions/get-server-uri";
+import {AuthContext} from "providers/auth-provider";
 
 export default function Login() {
 
     const [services, setServices] = useState<Array<Service>>([]);
 
     let location = useLocation();
-    let auth = useAuth();
+    let authContext = useContext(AuthContext);
     let {from} = location.state || {from: {pathname: "/"}};
 
     // if user already logged in redirect him or her
-    if (auth.hasUser()) {
-        auth.redirectAfterLogin();
+    if (authContext.authState.authenticated) {
+        //return <div>Already authenticated</div>
+        // auth.redirectAfterLogin();
     }
 
     useEffect(() => {

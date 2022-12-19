@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {Link} from 'react-router-dom';
 import BreadcrumbTree from 'component/partial/breadcrumb-tree';
 import {Partner} from "interface/project/partner";
-import {CostsFormat, EffortFormat} from 'function/utils';
+import {CostsFormat, EffortFormat} from 'functions/utils';
 import {useGetPartners} from "hooks/partner/use-get-partners";
 
 

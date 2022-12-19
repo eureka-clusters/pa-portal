@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {Link} from "react-router-dom";
-import {CostsFormat, EffortFormat} from 'function/utils';
+import {CostsFormat, EffortFormat} from 'functions/utils';
 import {useGetProjects} from "hooks/project/use-get-projects";
 import {Project} from "interface/project";
-import downloadBase64File from "function/download-base64";
+import downloadBase64File from "functions/download-base64";
 import moment from 'moment';
 import LoadingButton from "component/partial/loading-button";
 import axios from "axios";
@@ -164,7 +164,6 @@ const ProjectTable = ({filter}: { filter: FilterValues }) => {
             omit: true,  // currently ommited because of not enough space left.
         },
     ];
-
 
 
     return (

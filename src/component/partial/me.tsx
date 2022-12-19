@@ -1,10 +1,10 @@
 // ./Me.js
-import React from 'react';
-import {useAuth} from "../../context/user-context";
+import React, {useContext} from 'react';
+import {AuthContext} from "providers/auth-provider";
 
 export const Me = () => {
-    // eslint-disable-next-line no-unused-vars
-    const {userInfo, loading, error} = useAuth();
+    const authContext = useContext(AuthContext);
+    const userInfo = authContext.getUser();
 
     return (
         <React.Fragment>

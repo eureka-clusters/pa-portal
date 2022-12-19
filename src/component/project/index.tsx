@@ -3,7 +3,7 @@ import PartnerTableWithCharts from "component/project/partner-table-with-charts"
 import BreadcrumbTree from 'component/partial/breadcrumb-tree'
 import moment from 'moment';
 import {useGetProject} from "hooks/project/use-get-project";
-import {CostsFormat, EffortFormat} from 'function/utils';
+import {CostsFormat, EffortFormat} from 'functions/utils';
 import {useParams} from "react-router-dom";
 
 
