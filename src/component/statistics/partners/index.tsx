@@ -25,7 +25,7 @@ export default function PartnerStatistics() {
                                        updateHash={updateHash} />
                     </div>
                     <div className={'col-10'}>
-                        <PartnerTable filter={filter}/>
+                        <PartnerTable />
                     </div>
                 </div>
             </Form>

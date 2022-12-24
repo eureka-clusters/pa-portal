@@ -5,10 +5,12 @@ import Search from "component/header/search-form/search";
 import {AuthContext} from "providers/auth-provider";
 
 import './header.scss';
+import {UserContext} from "../../providers/user-provider";
 
 export default function Header() {
     // Get auth state and re-render anytime it changes
     let authContext = useContext(AuthContext);
+    let userContext = useContext(UserContext);
 
     return (
         <>
@@ -25,12 +27,12 @@ export default function Header() {
                             <Nav.Link as={NavLink} to='/projects'>Projects</Nav.Link>
                             <Nav.Link as={NavLink} to='/organisations'>Organisations</Nav.Link>
 
-                            {authContext.authState.authenticated ? (
+                            {authContext.isAuthenticated() ? (
                                 <React.Fragment>
                                     <NavDropdown
                                         id="nav-dropdown-account"
                                         // title={`Account (${auth.UserInfo.email})`}  // we could also use auth.getUser() 
-                                        title={`Account (${authContext.getUser().email})`}
+                                        title={`Account (${userContext.getUser().email})`}
                                         className={'ms-auto'}
                                         align="end"  // align menu to the right 
 

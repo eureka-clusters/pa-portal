@@ -1,71 +1,20 @@
-import React, {useEffect, useState} from 'react';
-import {Link} from 'react-router-dom';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import BreadcrumbTree from 'component/partial/breadcrumb-tree';
-import {Organisation} from "interface/organisation";
-import {useGetOrganisations} from "hooks/organisation/use-get-organisations";
-
+import { Organisation } from "interface/organisation";
+import { useGetOrganisations } from "hooks/organisation/use-get-organisations";
+import { useQuery } from 'functions/filter-functions';
+import SortableTableHeader from 'component/partial/sortable-table-header';
 
 export default function Organisations() {
 
-    const [perPage, setPerPage] = useState(30); // default pageSize
-    const [loading, setLoading] = useState(false);
+    const filterOptions = useQuery();
 
-    const [sort, setSort] = useState('organisation.name'); // default sort
-    const [order, setOrder] = useState('asc'); // default order
+    const { state, setLocalFilterOptions } = useGetOrganisations({ filterOptions });
 
-    // store the current page (needed for handleSort)
-    const [currentPage, setCurrentPage] = useState(1); // default current page
-
-    const {state} = useGetOrganisations({page: 1, pageSize: perPage});
-
-    const handlePageChange = async (newpage: number = 1) => {
-        setCurrentPage(newpage);
-    }
-
-    const handleSort = async (column: any, sortDirection: string) => {
-        setSort(column.sortField);
-        setOrder(sortDirection);
-    };
-
-    const handlePerRowsChange = async (perPage: number, page: number) => {
-        setPerPage(perPage);
-    };
-
-
-    const columns = [
-        {
-            id: 'organisation.id',
-            name: 'Id',
-            selector: (organisation: Organisation) => organisation.id,
-            sortable: true,
-            omit: true,
-            sortField: 'organisation.id',
-        },
-        {
-            id: 'organisation.name',
-            name: 'Organisation',
-            selector: (organisation: Organisation) => organisation.name,
-            format: (organisation: Organisation) => <Link to={`/organisation/${organisation.slug}`}
-                                                          title={organisation.name}>{organisation.name}</Link>,
-            sortable: true,
-            sortField: 'organisation.name',
-            grow: 2,
-        },
-        {
-            id: 'organisation.country.country',
-            name: 'Country',
-            selector: (organisation: Organisation) => organisation.country ? organisation.country.country : '',
-            sortable: true,
-            sortField: 'organisation.country.country',
-        },
-        {
-            id: 'organisation.type.type',
-            name: 'Type',
-            selector: (organisation: Organisation) => organisation.type ? organisation.type.type : '',
-            sortable: true,
-            sortField: 'organisation.type.type',
-        },
-    ];
+    useEffect(() => {
+        setLocalFilterOptions(filterOptions);
+    }, [filterOptions]);
 
     if (state.isLoading) {
         return <p>Loading organisations...</p>;
@@ -73,12 +22,34 @@ export default function Organisations() {
 
     return (
         <React.Fragment>
-            {/* <pre className='debug'>{JSON.stringify(organisations, undefined, 2)}</pre> */}
-            <BreadcrumbTree current="organisations" data={state.data} linkCurrent={false}/>
+            <BreadcrumbTree current="organisations" data={state.data} linkCurrent={false} />
 
             <h1>Organisations</h1>
 
-        </React.Fragment>
+            <table className="table table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th><SortableTableHeader sort='name' filterOptions={filterOptions} >Name</SortableTableHeader></th>
+                        <th><SortableTableHeader sort='country' filterOptions={filterOptions} >Country</SortableTableHeader></th>
+                        <th><SortableTableHeader sort='type' filterOptions={filterOptions} >Type</SortableTableHeader></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {state.data._embedded.organisations.map(
+                        (organisation: Organisation, key: number) => (
+                            <tr key={organisation.id}>
+                                <td><small className="text-muted">{key}</small></td>
+                                <td><Link to={`/organisation/${organisation.slug}`}>{organisation.name}</Link></td>
+                                <td>{organisation.country.country}</td>
+                                <td>{organisation.type.type}</td>
+                            </tr>
+                        )
+                    )}
+                </tbody>
+            </table>
+
+        </React.Fragment >
 
     );
 }

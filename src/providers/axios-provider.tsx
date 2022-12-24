@@ -1,17 +1,17 @@
-import React, {createContext, useContext} from 'react';
-import axios, {AxiosInstance} from 'axios';
-import {AuthContext, AuthContextContent} from 'providers/auth-provider';
+import React, { createContext, useContext } from 'react';
+import axios, { AxiosInstance } from 'axios';
+import { AuthContext, AuthContextContent } from 'providers/auth-provider';
 import createAuthRefreshInterceptor from 'axios-auth-refresh';
-import {getServerUri} from "functions/get-server-uri";
+import { getServerUri } from "functions/get-server-uri";
 
 const AxiosContext = createContext<AxiosContextContent>({} as AxiosContextContent);
-const {Provider} = AxiosContext;
+const { Provider } = AxiosContext;
 
 interface AxiosContextContent {
     authAxios: AxiosInstance,
 }
 
-const AxiosProvider = ({children}: { children: any }) => {
+const AxiosProvider = ({ children }: { children: any }) => {
     const authContext = useContext<AuthContextContent>(AuthContext);
 
     const authAxios = axios.create({
@@ -21,7 +21,7 @@ const AxiosProvider = ({children}: { children: any }) => {
     authAxios.interceptors.request.use(
         (config: any) => {
             if (!config.headers.Authorization) {
-                config.headers.Authorization = `Bearer ${authContext.authState.accessToken}`;
+                config.headers.Authorization = `Bearer ${authContext.getToken()}`;
             }
 
             axios.defaults.headers.common["Accept"] = 'application/json';
@@ -35,12 +35,15 @@ const AxiosProvider = ({children}: { children: any }) => {
     );
 
     const refreshAuthLogic = (failedRequest: any) => {
-        const data = {};
+        const data = {
+            clientId: authContext.getClientId(),
+            token: authContext.getToken(),
+        };
 
         const options = {
             method: 'GET',
             data,
-            url: getServerUri() + '/oauth/refresh',
+            url: getServerUri() + '/oauth2/refresh.html',
         };
 
         return axios(options)
@@ -48,26 +51,17 @@ const AxiosProvider = ({children}: { children: any }) => {
                 failedRequest.response.config.headers.Authorization =
                     'Bearer ' + tokenRefreshResponse.data.accessToken;
 
-                authContext.setAuthState({
-                    ...authContext.authState,
-                    accessToken: tokenRefreshResponse.data.accessToken,
-                    refreshToken: tokenRefreshResponse.data.refreshToken,
+                authContext.saveAuthState({
+                    ...authContext.getAuthState(),
+                    jwtToken: tokenRefreshResponse.data.token,
                 });
-
-                await localStorage.setItem(
-                    'token',
-                    JSON.stringify({
-                        accessToken: tokenRefreshResponse.data.accessToken,
-                        refreshToken: tokenRefreshResponse.data.refreshToken,
-                    }),
-                );
 
                 return Promise.resolve();
             })
             .catch(e => {
-                authContext.setAuthState({
-                    accessToken: null,
-                    refreshToken: null,
+                authContext.saveAuthState({
+                    jwtToken: null,
+                    clientId: null,
                     authenticated: false
                 });
             });
@@ -77,10 +71,10 @@ const AxiosProvider = ({children}: { children: any }) => {
 
     return (
         <Provider
-            value={{authAxios}}>
+            value={{ authAxios }}>
             {children}
         </Provider>
     );
 };
 
-export {AxiosContext, AxiosProvider};
+export { AxiosContext, AxiosProvider };

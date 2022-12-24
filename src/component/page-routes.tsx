@@ -15,7 +15,7 @@ import Organisation from 'component/organisation'
 import ProjectStatistics from 'component/statistics/projects'
 import PartnerStatistics from 'component/statistics/partners'
 import {useContext} from "react";
-import {AuthContext, AuthState} from "../providers/auth-provider";
+import {AuthContext, AuthState} from "providers/auth-provider";
 
 function GenericNotFound() {
     const navigate = useNavigate();
@@ -39,8 +39,8 @@ function HomePage() {
 
 // A wrapper for <Route> that redirects to the login
 // screen if you're not yet authenticated.
-function ProtectedRoute({authState, children}: { authState: AuthState, children: any }) {
-    if (!authState.authenticated) {
+function ProtectedRoute({isAuthenticated, children}: { isAuthenticated: boolean, children: any }) {
+    if (!isAuthenticated) {
         return (
             <Navigate to={{pathname: "/login"}} replace/>
         );
@@ -62,24 +62,24 @@ export const PageRoutes = () => {
             <Route path='/callback' element={<Callback/>}/>
 
             <Route path='/account'
-                   element={<ProtectedRoute authState={authContext.authState}><Account/></ProtectedRoute>}/>
+                   element={<ProtectedRoute isAuthenticated={authContext.isAuthenticated()}><Account/></ProtectedRoute>}/>
             <Route path='/search'
-                   element={<ProtectedRoute authState={authContext.authState}><Search/></ProtectedRoute>}/>
+                   element={<ProtectedRoute isAuthenticated={authContext.isAuthenticated()}><Search/></ProtectedRoute>}/>
 
             <Route path='/statistics/projects'
-                   element={<ProtectedRoute authState={authContext.authState}><ProjectStatistics/></ProtectedRoute>}/>
+                   element={<ProtectedRoute isAuthenticated={authContext.isAuthenticated()}><ProjectStatistics/></ProtectedRoute>}/>
             <Route path='/statistics/partners'
-                   element={<ProtectedRoute authState={authContext.authState}><PartnerStatistics/></ProtectedRoute>}/>
+                   element={<ProtectedRoute isAuthenticated={authContext.isAuthenticated()}><PartnerStatistics/></ProtectedRoute>}/>
             <Route path='/projects'
-                   element={<ProtectedRoute authState={authContext.authState}><Projects/></ProtectedRoute>}/>
+                   element={<ProtectedRoute isAuthenticated={authContext.isAuthenticated()}><Projects/></ProtectedRoute>}/>
             <Route path='/project/:slug'
-                   element={<ProtectedRoute authState={authContext.authState}><Project/></ProtectedRoute>}/>
+                   element={<ProtectedRoute isAuthenticated={authContext.isAuthenticated()}><Project/></ProtectedRoute>}/>
             <Route path='/partner/:slug'
-                   element={<ProtectedRoute authState={authContext.authState}><Partner/></ProtectedRoute>}/>
+                   element={<ProtectedRoute isAuthenticated={authContext.isAuthenticated()}><Partner/></ProtectedRoute>}/>
             <Route path='/organisations'
-                   element={<ProtectedRoute authState={authContext.authState}><Organisations/></ProtectedRoute>}/>
+                   element={<ProtectedRoute isAuthenticated={authContext.isAuthenticated()}><Organisations/></ProtectedRoute>}/>
             <Route path='/organisation/:slug'
-                   element={<ProtectedRoute authState={authContext.authState}><Organisation/></ProtectedRoute>}/>
+                   element={<ProtectedRoute isAuthenticated={authContext.isAuthenticated()}><Organisation/></ProtectedRoute>}/>
 
             <Route path="*" element={<GenericNotFound/>}/>
         </Routes>

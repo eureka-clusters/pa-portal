@@ -1,11 +1,12 @@
-import {useContext} from "react";
+import {useContext, useEffect} from "react";
 import {AuthContext} from "providers/auth-provider";
+import {UserContext} from "providers/user-provider";
 
 export default function Account() {
 
-    let authContext = useContext(AuthContext);
+    let userContext = useContext(UserContext);
 
-    const userInfo = authContext.getUser();
+    const userInfo = userContext.getUser();
 
     return <>
         <h1>Account</h1>

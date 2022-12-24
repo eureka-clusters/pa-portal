@@ -1,13 +1,5 @@
-$primary: blue;
-
-p.api-error {
-  white-space: pre;
-} 
-
-pre.debug {
-  --bs-text-opacity: 1;
-  color: #6c757d !important;
-}
+$primary: rgb(51, 144, 65);
+$link-decoration: none;
 
 div.datatable-download {
   margin-bottom: 1.5em;

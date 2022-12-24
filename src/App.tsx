@@ -4,13 +4,16 @@ import Content from 'component/content';
 import './App.scss';
 import {AuthProvider} from "providers/auth-provider";
 import {AxiosProvider} from "providers/axios-provider";
+import {UserProvider} from "./providers/user-provider";
 
 
 function App() {
     return (
         <AuthProvider>
             <AxiosProvider>
-                <Content/>
+                <UserProvider>
+                    <Content/>
+                </UserProvider>
             </AxiosProvider>
         </AuthProvider>
     );

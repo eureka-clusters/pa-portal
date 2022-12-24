@@ -9,17 +9,13 @@ import {AuthContext} from "providers/auth-provider";
 export default function Login() {
 
     const [services, setServices] = useState<Array<Service>>([]);
+    const [error, setError] = useState<string | null>(null);
 
     let location = useLocation();
     let authContext = useContext(AuthContext);
     let {from} = location.state || {from: {pathname: "/"}};
 
-    // if user already logged in redirect him or her
-    if (authContext.authState.authenticated) {
-        //return <div>Already authenticated</div>
-        // auth.redirectAfterLogin();
-    }
-
+    
     useEffect(() => {
 
         const abortController = new AbortController();
@@ -31,8 +27,11 @@ export default function Login() {
         ).then((response) => {
             const {data} = response
             setServices(data._embedded.services);
+        }).catch((error) => {
+            console.log(error);
 
-        })
+            setError(error.message);
+        });
 
         return () => {
             abortController.abort();
@@ -43,11 +42,12 @@ export default function Login() {
         <React.Fragment>
             <div className="d-flex p-2 bd-highlight">
                 <div className="jumbotron">
-                    <h1 className="display-4">Welcome to Eureka Clusters Backend</h1>
+                    <h1 className="display-4">Welcome to Eureka Clusters Portal</h1>
                     <p>You must log in to view the page at {from.pathname}</p>
                 </div>
             </div>
             <div className="d-flex flex-row bd-highlight mb-3">
+                {error && <div className="alert alert-danger" role="alert">{error}</div>}
                 {services.map((service) => (
                         <a className="btn btn-lg bg-primary text-white" key={service.id} href={service.loginUrl}>Login
                             via {service.name}</a>

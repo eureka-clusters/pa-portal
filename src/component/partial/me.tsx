@@ -1,10 +1,10 @@
 // ./Me.js
 import React, {useContext} from 'react';
-import {AuthContext} from "providers/auth-provider";
+import {UserContext} from "providers/user-provider";
 
 export const Me = () => {
-    const authContext = useContext(AuthContext);
-    const userInfo = authContext.getUser();
+    const userContext = useContext(UserContext);
+    const userInfo = userContext.getUser();
 
     return (
         <React.Fragment>

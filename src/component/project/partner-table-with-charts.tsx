@@ -8,6 +8,7 @@ import OrganisationCountryChart from 'component/project/charts/country-chart';
 import BudgetByOrganisationTypeChart from 'component/project/charts/budget-by-organisation-type-chart';
 import BudgetByCountryChart from 'component/project/charts/budget-and-effort-by-country-chart';
 import {useGetPartners} from "hooks/partner/use-get-partners";
+import { useQuery } from 'functions/filter-functions';
 
 interface Props {
     project: Project
@@ -16,8 +17,9 @@ interface Props {
 const PartnerTableWithCharts: FC<Props> = ({project}) => {
 
     const [activeTab, setActiveTab] = useState('table'); // default tab
+    const filterOptions = useQuery();
 
-    const {state} = useGetPartners({project: project});
+    const {state} = useGetPartners({filterOptions: filterOptions, project: project});
 
     const partners = state.data;
 

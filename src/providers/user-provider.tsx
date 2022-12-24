@@ -1,71 +1,48 @@
-import {createContext, useState} from "react";
-import {User} from "interface/auth/user";
+import { createContext } from "react";
+import { User } from "interface/auth/user";
 import axios from "axios";
-import {getServerUri} from "../functions/get-server-uri";
+import { getServerUri } from "../functions/get-server-uri";
 
-/**
- * Script taken from: https://www.bigbinary.com/blog/handling-authentication-state-in-react-native
- *
- * https://blog.logrocket.com/react-native-jwt-authentication-using-axios-interceptors/
- */
-const AuthContext = createContext<AuthContextContent>({} as AuthContextContent);
+const UserContext = createContext<UserContextContent>({} as UserContextContent);
 
-interface AuthContextContent {
-    authState: AuthState,
-    setAuthState: (authState: AuthState) => void,
-    getToken: () => string | null,
-    getUser: () => any,
-    logout: () => void
+interface UserContextContent {
+    getUser: () => User,
+    loadUser: (token: string) => void
 }
 
-export interface AuthState {
-    accessToken: string | null,
-    refreshToken: string | null,
-    authenticated: boolean,
-}
 
-const AuthProvider = ({children}: { children: any }) => {
+const UserProvider = ({ children }: { children: any }) => {
 
     let storage = localStorage;
 
-    const [authState, setAuthState] = useState<AuthState>({
-        accessToken: null,
-        refreshToken: null,
-        authenticated: false,
-    });
-
-    const logout = async () => {
-        await storage.removeItem('token');
-        setAuthState({
-            accessToken: null,
-            refreshToken: null,
-            authenticated: false,
+    const loadUser = async (token: string) => {
+        const response = await axios.get<User>(getServerUri() + '/api/me', {
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
         });
-    };
 
-    const getToken = () => {
-        return authState.accessToken;
+        storage.setItem('user', JSON.stringify(response.data));
     }
 
-    function getUser() {
-        return axios.get<User>(getServerUri() + '/api/me', {
-            headers: {
-                'Authorization': 'Bearer ' + getToken()
-            }
-        }).then((response) => {
+    const getUser = (): User => {
 
-            return response.data;
-        });
+        const user = storage.getItem('user');
+
+        if (user) {
+            return JSON.parse(user);
+        }
+
+        return {} as User;
     }
 
     return (
-        <AuthContext.Provider
-            value={{authState, setAuthState, getToken, getUser, logout}}>
+        <UserContext.Provider
+            value={{ getUser, loadUser }}>
             {children}
-        </AuthContext.Provider>
+        </UserContext.Provider>
     );
 };
 
-export {AuthContext, AuthProvider};
+export { UserContext, UserProvider };
 
-export type {AuthContextContent};

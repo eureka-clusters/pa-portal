@@ -1,5 +1,4 @@
 import {createContext, useState} from "react";
-import {User} from "interface/auth/user";
 
 /**
  * Script taken from: https://www.bigbinary.com/blog/handling-authentication-state-in-react-native
@@ -9,16 +8,17 @@ import {User} from "interface/auth/user";
 const AuthContext = createContext<AuthContextContent>({} as AuthContextContent);
 
 interface AuthContextContent {
-    authState: AuthState,
-    setAuthState: (authState: AuthState) => void,
+    saveAuthState: (authState: AuthState) => void,
+    getAuthState: () => AuthState,
+    isAuthenticated: () => boolean,
     getToken: () => string | null,
-    getUser: () => User,
+    getClientId: () => string | null,
     logout: () => void
 }
 
 export interface AuthState {
-    accessToken: string | null,
-    refreshToken: string | null,
+    jwtToken: string | null,
+    clientId: string | null,
     authenticated: boolean,
 }
 
@@ -27,47 +27,57 @@ const AuthProvider = ({children}: { children: any }) => {
     let storage = localStorage;
 
     const [authState, setAuthState] = useState<AuthState>({
-        accessToken: null,
-        refreshToken: null,
+        jwtToken: 'token',
+        clientId: 'client',
         authenticated: false,
     });
 
-
     const logout = async () => {
-        await storage.removeItem('token');
+        storage.removeItem('authState');
         setAuthState({
-            accessToken: null,
-            refreshToken: null,
+            jwtToken: null,
+            clientId: null,
             authenticated: false,
         });
     };
 
-    const getToken = () => {
-        return authState.accessToken;
-    }
+    const saveAuthState = (authState: AuthState) => {
+        storage.setItem('authState', JSON.stringify(authState));
 
-    const getUser = () => {
+        setAuthState(authState);
+    };
 
-        const user: User = {
-            id: 1,
-            first_name: 'John',
-            last_name: 'Doe',
-            is_funder: false,
-            is_eureka_secretariat_staff_member: false,
-            funder_country: 'BE',
-            funder_clusters: [
-                'ITEA',
-                'CELTIC_NEXT'
-            ],
-            email: 'info@example.com'
+    const getAuthState = () : AuthState => {
+        const authState = storage.getItem('authState');
+
+        if (authState) {
+            return JSON.parse(authState);
         }
 
-        return user;
+        return {} as AuthState;
+    }
+
+    //Funcion which returns the auth state from the local storage
+    
+    const isAuthenticated  = (): boolean => {
+        if (null === getAuthState()) {
+            return false;
+        }
+
+        return getAuthState()!.authenticated;
+    }
+
+    const getToken = () => {
+        return getAuthState().jwtToken;
+    }
+
+    const getClientId = () => {
+        return getAuthState().clientId;
     }
 
     return (
         <AuthContext.Provider
-            value={{authState, setAuthState, getToken, getUser, logout}}>
+            value={{isAuthenticated, getAuthState, saveAuthState, getToken, getClientId, logout}}>
             {children}
         </AuthContext.Provider>
     );

@@ -1,27 +1,13 @@
-import {useEffect, useReducer} from 'react'
-import axios from 'axios';
+import { useContext, useEffect, useReducer, useState } from 'react'
 import dataFetchReducer from "hooks/data-fetch-reducer";
-import {createSearchParams} from "react-router-dom";
-import {Organisation} from "interface/organisation";
-import {Project} from "interface/project";
-import {FilterValues} from "interface/statistics/filter-values";
+import { createSearchParams } from "react-router-dom";
+import { AxiosContext } from 'providers/axios-provider';
+import { FilterOptions } from 'functions/filter-functions';
+import { Organisation } from 'interface/organisation';
+import { Project } from 'interface/project';
 
-export const useGetPartners = ({
-                                   organisation,
-                                   project: project,
-                                   filter,
-                                   page,
-                                   pageSize,
-                                   sort,
-                                   order
-                               }: {
-    organisation?: Organisation,
-    project?: Project,
-    filter?: FilterValues,
-    page?: number,
-    pageSize?: number,
-    sort?: string,
-    order?: string
+export const useGetPartners = ({ filterOptions, organisation, project }: {
+    filterOptions: FilterOptions, organisation?: Organisation, project?: Project
 }) => {
     const [state, dispatch] = useReducer(dataFetchReducer, {
         isLoading: true,
@@ -29,24 +15,21 @@ export const useGetPartners = ({
         data: [],
     });
 
-    const queryParameter = {
-        filter: btoa(JSON.stringify(filter)),
-        page: page ? page.toString() : '1',
-        pageSize: pageSize ? pageSize.toString() : '50',
-        sort: sort ?? 'default',
-        order: order ?? 'asc'
-    };
+    const axiosContext = useContext(AxiosContext);
+
+    const [localFilterOptions, setLocalFilterOptions] = useState<FilterOptions>(filterOptions);
+
 
     useEffect(() => {
         let didCancel = false;
 
         const fetchData = async () => {
-            dispatch({type: 'FETCH_INIT'});
+            dispatch({ type: 'FETCH_INIT' });
 
             try {
                 const controller = new AbortController();
 
-                let url = 'list/partner?' + createSearchParams(queryParameter).toString();
+                let url = 'list/partner?' + createSearchParams(localFilterOptions).toString();
 
                 if (organisation !== undefined) {
                     url += '&organisation=' + organisation.slug;
@@ -55,17 +38,17 @@ export const useGetPartners = ({
                     url += '&project=' + project.slug;
                 }
 
-                const result = await axios.get(url, {signal: controller.signal});
+                const result = await axiosContext.authAxios.get(url, { signal: controller.signal });
 
                 if (!didCancel) {
-                    dispatch({type: 'FETCH_SUCCESS', payload: result.data});
+                    dispatch({ type: 'FETCH_SUCCESS', payload: result.data });
                 }
 
                 controller.abort();
 
             } catch (error: any) {
                 if (!didCancel) {
-                    dispatch({type: 'FETCH_FAILURE'});
+                    dispatch({ type: 'FETCH_FAILURE' });
                 }
             }
         };
@@ -76,7 +59,7 @@ export const useGetPartners = ({
             didCancel = true;
         };
 
-    }, []);
+    }, [localFilterOptions]);
 
-    return {state};
+    return { state, setLocalFilterOptions };
 }
