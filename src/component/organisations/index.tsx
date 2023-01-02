@@ -4,6 +4,7 @@ import {Organisation} from "@/interface/organisation";
 import {useGetOrganisations} from "@/hooks/organisation/use-get-organisations";
 import {useQuery} from '@/functions/filter-functions';
 import SortableTableHeader from '@/component/partial/sortable-table-header';
+import PaginationLinks from "@/component/partial/pagination-links";
 
 export default function Organisations() {
 
@@ -15,14 +16,12 @@ export default function Organisations() {
         setLocalFilterOptions(filterOptions);
     }, [filterOptions]);
 
-    if (state.isLoading) {
-        return <p>Loading organisations...</p>;
+    function setPage(page: string) {
+        setLocalFilterOptions({...filterOptions, page});
     }
 
     return (
         <React.Fragment>
-            <h1>Organisations</h1>
-
             <table className="table table-striped">
                 <thead>
                 <tr>
@@ -34,11 +33,11 @@ export default function Organisations() {
                 </tr>
                 </thead>
                 <tbody>
-                {state.data._embedded.organisations.map(
+                {state.data.items && state.data.items.map(
                     (organisation: Organisation, key: number) => (
                         <tr key={organisation.id}>
                             <td><small className="text-muted">{key}</small></td>
-                            <td><Link to={`/organisation/${organisation.slug}`}>{organisation.name}</Link></td>
+                            <td><Link to={`/organisations/organisation/${organisation.slug}`}>{organisation.name}</Link></td>
                             <td>{organisation.country.country}</td>
                             <td>{organisation.type.type}</td>
                         </tr>
@@ -46,6 +45,8 @@ export default function Organisations() {
                 )}
                 </tbody>
             </table>
+
+            <PaginationLinks state={state} setPage={setPage}/>
 
         </React.Fragment>
 

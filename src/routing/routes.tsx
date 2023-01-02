@@ -47,14 +47,14 @@ export default function pageRoutes(): RoutePathDefinition[] {
             nav: authContext.isAuthenticated(),
             children: [
                 {
-                    title: "Projects",
+                    title: 'Projects (stats)',
                     path: "projects",
                     element: <ProtectedRoute
                         isAuthenticated={authContext.isAuthenticated()}><ProjectStatistics/></ProtectedRoute>,
                     nav: true
                 },
                 {
-                    title: "Partners",
+                    title: "Partners (stats)",
                     path: "partners",
                     element: <ProtectedRoute
                         isAuthenticated={authContext.isAuthenticated()}><PartnerStatistics/></ProtectedRoute>,
@@ -66,42 +66,40 @@ export default function pageRoutes(): RoutePathDefinition[] {
             title: "Projects",
             path: "/projects",
             element: <Page title="Projects" withOutlet/>,
-            nav: true,
+            nav: authContext.isAuthenticated(),
             children: [
                 {
                     title: "Project list",
-                    path: "list",
+                    path: "",
                     element: <ProtectedRoute
                         isAuthenticated={authContext.isAuthenticated()}><Projects/></ProtectedRoute>,
                     nav: true
                 },
                 {
                     title: ({match}: ActiveRoutePathTitleCallbackParams<'id'>) => `Param-${match.params.id}`,
-                    path: "project/:slug",
+                    path: ":slug",
                     element: <ProtectedRoute
                         isAuthenticated={authContext.isAuthenticated()}><Project/></ProtectedRoute>,
                     nav: true,
-                    children: [
-                        {
-                            title: ({match}: ActiveRoutePathTitleCallbackParams<'id'>) => `Param-${match.params.id}`,
-                            path: "project/partner/:slug",
-                            element: <ProtectedRoute
-                                isAuthenticated={authContext.isAuthenticated()}><Partner/></ProtectedRoute>,
-                            nav: true
-                        },
-                    ]
                 },
+                {
+                    title: ({match}: ActiveRoutePathTitleCallbackParams<'id'>) => `Param-${match.params.id}`,
+                    path: "partner/:slug",
+                    element: <ProtectedRoute
+                        isAuthenticated={authContext.isAuthenticated()}><Partner/></ProtectedRoute>,
+                    nav: true
+                }
             ]
         },
         {
             title: "Organisations",
             path: "/organisations",
-            element: <Page title="organisations" withOutlet/>,
-            nav: false,
+            element: <Page title="Organisations" withOutlet/>,
+            nav: authContext.isAuthenticated(),
             children: [
                 {
-                    title: "Organisations",
-                    path: "list/:page",
+                    title: "Organisations (list)",
+                    path: "list",
                     element: <ProtectedRoute
                         isAuthenticated={authContext.isAuthenticated()}><Organisations/></ProtectedRoute>,
                     nav: true

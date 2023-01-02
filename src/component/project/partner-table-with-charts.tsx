@@ -21,9 +21,13 @@ const PartnerTableWithCharts: FC<Props> = ({project}) => {
     const [activeTab, setActiveTab] = useState('table'); // default tab
     const filterOptions = useQuery();
 
-    const {state} = useGetPartners({filterOptions: filterOptions, project: project});
+    const {state, setLocalFilterOptions} = useGetPartners({filterOptions: filterOptions, project: project});
 
-    const partners = state.data;
+    const partners = state.data.items;
+
+    if (state.isLoading) {
+        return <div>Loading...</div>
+    }
 
     return (
         <React.Fragment>
@@ -46,7 +50,7 @@ const PartnerTableWithCharts: FC<Props> = ({project}) => {
                 }}
             >
                 <Tab eventKey="table" title="Table">
-                    <PartnerTable results={partners}/>
+                    <PartnerTable project={project}/>
                 </Tab>
                 <Tab eventKey="charts" title="Charts">
                     <Suspense fallback={<div>Loading...</div>}>

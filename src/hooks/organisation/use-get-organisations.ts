@@ -1,10 +1,12 @@
-import { useContext, useEffect, useReducer, useState } from 'react'
+import {useContext, useEffect, useReducer, useState} from 'react'
 import dataFetchReducer from "@/hooks/data-fetch-reducer";
-import { createSearchParams } from "react-router-dom";
-import { AxiosContext } from '@/providers/axios-provider';
-import { FilterOptions } from '@/functions/filter-functions';
+import {createSearchParams} from "react-router-dom";
+import {AxiosContext} from '@/providers/axios-provider';
+import {FilterOptions, ListResponse} from '@/functions/filter-functions';
+import {Project} from "@/interface/project";
+import {Organisation} from "@/interface/organisation";
 
-export const useGetOrganisations = ({ filterOptions }: { filterOptions: FilterOptions }) => {
+export const useGetOrganisations = ({filterOptions}: { filterOptions: FilterOptions }) => {
 
     const [state, dispatch] = useReducer(dataFetchReducer, {
         isLoading: true,
@@ -20,24 +22,32 @@ export const useGetOrganisations = ({ filterOptions }: { filterOptions: FilterOp
         let didCancel = false;
 
         const fetchData = async () => {
-            dispatch({ type: 'FETCH_INIT' });
+            dispatch({type: 'FETCH_INIT'});
 
             try {
                 const controller = new AbortController();
 
-                let url = 'list/organisation?' + createSearchParams(filterOptions).toString();
+                let url = 'list/organisation?' + createSearchParams(localFilterOptions).toString();
 
-                const result = await axiosContext.authAxios.get(url, { signal: controller.signal });
+                const result = await axiosContext.authAxios.get(url, {signal: controller.signal});
 
                 if (!didCancel) {
-                    dispatch({ type: 'FETCH_SUCCESS', payload: result.data });
+
+                    let payload: ListResponse<Organisation> = {
+                        items: result.data._embedded.items,
+                        page: result.data.page,
+                        page_count: result.data.page_count,
+                        total_items: result.data.total_items,
+                    }
+
+                    dispatch({type: 'FETCH_SUCCESS', payload: payload});
                 }
 
                 controller.abort();
 
             } catch (error: any) {
                 if (!didCancel) {
-                    dispatch({ type: 'FETCH_FAILURE' });
+                    dispatch({type: 'FETCH_FAILURE'});
                 }
             }
         };
@@ -50,5 +60,5 @@ export const useGetOrganisations = ({ filterOptions }: { filterOptions: FilterOp
 
     }, [localFilterOptions]);
 
-    return { state, setLocalFilterOptions };
+    return {state, setLocalFilterOptions};
 }

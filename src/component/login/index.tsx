@@ -12,24 +12,21 @@ export default function Login() {
     const [error, setError] = useState<string | null>(null);
 
     let location = useLocation();
-    let authContext = useContext(AuthContext);
     let {from} = location.state || {from: {pathname: "/"}};
 
-    
+
     useEffect(() => {
 
         const abortController = new AbortController();
 
-        axios.get<{ _embedded: { services: Service[] } }>(
+        axios.get<{ _embedded: { items: Service[] } }>(
             getServerUri() + '/api/list/service', {
                 signal: abortController.signal
             }
         ).then((response) => {
             const {data} = response
-            setServices(data._embedded.services);
+            setServices(data._embedded.items);
         }).catch((error) => {
-            console.log(error);
-
             setError(error.message);
         });
 

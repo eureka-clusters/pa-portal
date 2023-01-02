@@ -1,128 +1,61 @@
-import React, {FC} from 'react';
-import {Link} from "react-router-dom";
-import {BooleanIconFormat, CostsFormat, EffortFormat} from '@/functions/utils';
+import React, {FC, useEffect} from 'react';
 import {Partner} from "@/interface/project/partner";
+import SortableTableHeader from "@/component/partial/sortable-table-header";
+import {Link} from "react-router-dom";
+import PaginationLinks from "@/component/partial/pagination-links";
+import {useQuery} from "@/functions/filter-functions";
+import {useGetPartners} from "@/hooks/partner/use-get-partners";
+import {Project} from "@/interface/project";
 
 interface Props {
-    results: Array<Partner>
+    project: Project
 }
 
-const PartnerTable: FC<Props> = ({results}) => {
+const PartnerTable: FC<Props> = ({project}) => {
 
-    const customLatestVersionCostsSort = (rowA: { latestVersionCosts: string; }, rowB: { latestVersionCosts: string; }) => {
+    const filterOptions = useQuery();
+    const {state, setLocalFilterOptions} = useGetPartners({filterOptions: filterOptions, project: project});
 
-        const a = parseFloat(rowA.latestVersionCosts.replace(/,/g, ''));
-        const b = parseFloat(rowB.latestVersionCosts.replace(/,/g, ''));
+    useEffect(() => {
+        setLocalFilterOptions(filterOptions);
+    }, [filterOptions]);
 
-        if (a > b) {
-            return 1;
-        }
-
-        if (b > a) {
-            return -1;
-        }
-
-        return 0;
-    };
-
-    const customLatestVersionEffortSort = (rowA: { latestVersionEffort: string; }, rowB: { latestVersionEffort: string; }) => {
-
-        const a = parseFloat(rowA.latestVersionEffort.replace(/,/g, ''));
-        const b = parseFloat(rowB.latestVersionEffort.replace(/,/g, ''));
-
-        if (a > b) {
-            return 1;
-        }
-
-        if (b > a) {
-            return -1;
-        }
-
-        return 0;
-    };
-
-    const columns = [
-        {
-            id: 'project',
-            name: 'Project',
-            selector: (partner: Partner) => partner.project.name,
-            format: (partner: Partner) => <Link to={`/project/${partner.project.slug}`}
-                                                title={partner.project.name}>{partner.project.name}</Link>,
-            sortable: true,
-            omit: true,
-        },
-        {
-            id: 'partner',
-            name: 'Partner',
-            selector: (partner: Partner) => partner.organisation.name,
-            format: (partner: Partner) => <Link to={`/partner/${partner.slug}`}
-                                                title={partner.organisation.name}>{partner.organisation.name}</Link>,
-            sortable: true,
-            grow: 4,
-        },
-        {
-            id: 'country',
-            name: 'Country',
-            selector: (partner: Partner) => partner.organisation && partner.organisation.country ? partner.organisation.country.country : '',
-            sortable: true,
-        },
-        {
-            id: 'type',
-            name: 'Type',
-            selector: (partner: Partner) => partner.organisation && partner.organisation.type ? partner.organisation.type.type : '',
-            sortable: true,
-        },
-        {
-            id: 'partner_costs',
-            name: 'Partner Costs (€)',
-            selector: (partner: Partner) => partner.latestVersionCosts,
-            format: (partner: Partner) => <CostsFormat value={partner.latestVersionCosts} showSuffix={false}
-                                                       showPrefix={false}/>,
-            sortable: true,
-            right: true,
-            sortFunction: customLatestVersionCostsSort, // required if number_format(value, 2) is used in backend
-            // reorder: true,
-        },
-        {
-            id: 'partner_effort',
-            name: 'Partner Effort (PY)',
-            selector: (partner: Partner) => partner.latestVersionEffort,
-            format: (partner: Partner) => <EffortFormat value={partner.latestVersionEffort} showSuffix={false}
-                                                        showPrefix={false}/>,
-            sortable: true,
-            right: true,
-            sortFunction: customLatestVersionEffortSort, // required if number_format(value, 2) is used in backend
-        },
-        {
-            id: 'partner_isActive',
-            name: 'isActive',
-            selector: (partner: Partner) => partner.isActive,
-            format: (partner: Partner) => <BooleanIconFormat value={partner.isActive}/>,
-            sortable: true,
-            center: true,
-        },
-        {
-            id: 'partner_isSelfFunded',
-            name: 'isSelfFunded',
-            selector: (partner: Partner) => partner.isSelfFunded,
-            // format: (partner: Partner) => <BooleanIconFormat value={partner.isSelfFunded} type="square" showFalse={true} />,
-            format: (partner: Partner) => <BooleanIconFormat value={partner.isSelfFunded}/>,
-            sortable: true,
-            center: true,
-        },
-        {
-            id: 'partner_isCoordinator',
-            name: 'isCoordinator',
-            selector: (partner: Partner) => partner.isCoordinator,
-            format: (partner: Partner) => <BooleanIconFormat value={partner.isCoordinator}/>,
-            sortable: true,
-            center: true,
-        },
-    ];
+    function setPage(page: string) {
+        setLocalFilterOptions({...filterOptions, page});
+    }
 
     return (
         <React.Fragment>
+            <table className="table table-striped">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th><SortableTableHeader sort='name' filterOptions={filterOptions}>Name</SortableTableHeader></th>
+                    <th><SortableTableHeader sort='country' filterOptions={filterOptions}>Country</SortableTableHeader>
+                    </th>
+                    <th><SortableTableHeader sort='type' filterOptions={filterOptions}>Type</SortableTableHeader></th>
+                    <th><SortableTableHeader sort='latestVersionCosts' filterOptions={filterOptions}>Latest version costs</SortableTableHeader></th>
+                    <th><SortableTableHeader sort='latestVersionEffort' filterOptions={filterOptions}>Latest version effort</SortableTableHeader></th>
+                </tr>
+                </thead>
+                <tbody>
+                {state.data.items && state.data.items.map(
+                    (partner: Partner, key: number) => (
+                        <tr key={partner.id}>
+                            <td><small className="text-muted">{key}</small></td>
+                            <td><Link to={`/projects/partner/${partner.slug}`}>{partner.organisation.name}</Link>
+                            </td>
+                            <td>{partner.organisation.country.country}</td>
+                            <td>{partner.organisation.type.type}</td>
+                            <td>{partner.latestVersionCosts}</td>
+                            <td>{partner.latestVersionEffort}</td>
+                        </tr>
+                    )
+                )}
+                </tbody>
+            </table>
 
+            <PaginationLinks state={state} setPage={setPage}/>
         </React.Fragment>
     );
 }

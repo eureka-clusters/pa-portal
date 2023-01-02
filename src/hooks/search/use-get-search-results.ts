@@ -1,35 +1,20 @@
-import {useEffect, useReducer} from 'react'
-import axios from 'axios';
+import {useContext, useEffect, useReducer, useState} from 'react'
 import dataFetchReducer from "@/hooks/data-fetch-reducer";
-import {Project} from "@/interface/project";
 import {createSearchParams} from "react-router-dom";
+import {FilterOptions} from "@/functions/filter-functions";
+import {AxiosContext} from "@/providers/axios-provider";
 
-export const useGetSearchResults = ({
-                                   query,
-                                   page,
-                                   pageSize,
-                                   sort,
-                                   order
-                               }: {
-    query: string,
-    page?: number,
-    pageSize?: number,
-    sort?: string,
-    order?: string
-}) => {
+export const useGetSearchResults = ({filterOptions}: { filterOptions: FilterOptions }) => {
     const [state, dispatch] = useReducer(dataFetchReducer, {
         isLoading: true,
         isError: false,
         data: [],
     });
 
-    const queryParameter = {
-        query: query,
-        page: page ? page.toString() : '1',
-        pageSize: pageSize ? pageSize.toString() : '50',
-        sort: sort ?? 'default',
-        order: order ?? 'asc'
-    };
+    const axiosContext = useContext(AxiosContext);
+
+    const [localFilterOptions, setLocalFilterOptions] = useState<FilterOptions>(filterOptions);
+
 
     useEffect(() => {
         let didCancel = false;
@@ -40,9 +25,9 @@ export const useGetSearchResults = ({
             try {
                 const controller = new AbortController();
 
-                let url = 'search/result?' + createSearchParams(queryParameter).toString();
+                let url = 'search/result?' + createSearchParams(localFilterOptions).toString();
 
-                const result = await axios.get(url, {signal: controller.signal});
+                const result = await axiosContext.authAxios.get(url, {signal: controller.signal});
 
                 if (!didCancel) {
                     dispatch({type: 'FETCH_SUCCESS', payload: result.data});
@@ -63,7 +48,7 @@ export const useGetSearchResults = ({
             didCancel = true;
         };
 
-    }, []);
+    }, [localFilterOptions]);
 
-    return {state};
+    return {state, setLocalFilterOptions};
 }

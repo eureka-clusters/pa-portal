@@ -7,16 +7,19 @@ import {Facets} from "@/interface/statistics/partner/facets";
 
 interface Props {
     filter: FilterValues,
-    setFilter: any,
-    updateFilter: any,
-    updateHash: any
+    setFilter: (filterValues: any) => void,
+    updateFilter: (filterValues: any) => void,
 }
 
-const PartnerFacets: FC<Props> = ({filter, setFilter, updateFilter, updateHash}) => {
+const PartnerFacets: FC<Props> = ({filter, setFilter, updateFilter}) => {
 
     const {state} = useGetPartnerFacets(filter);
 
     const facets: Facets = state.data;
+
+    if (state.isLoading) {
+        return <div>Loading...</div>
+    }
 
     const yearsFilterOptions = facets.years.map((year: number, index: number) => {
         return {
@@ -57,7 +60,7 @@ const PartnerFacets: FC<Props> = ({filter, setFilter, updateFilter, updateHash})
                                 setFilter((prevState: any) => ({
                                     ...prevState, ...updatedValues
                                 }))
-                                updateHash();
+
                             }}
                         />
                     </div>
@@ -147,7 +150,7 @@ const PartnerFacets: FC<Props> = ({filter, setFilter, updateFilter, updateHash})
                                 setFilter((prevState: any) => ({
                                     ...prevState, ...updatedValues
                                 }))
-                                updateHash();
+
                             }}
                         />
                     </div>
@@ -199,7 +202,7 @@ const PartnerFacets: FC<Props> = ({filter, setFilter, updateFilter, updateHash})
                                 setFilter((prevState: any) => ({
                                     ...prevState, ...updatedValues
                                 }))
-                                updateHash();
+
                             }}
                         />
                     </div>

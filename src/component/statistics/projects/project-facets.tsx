@@ -8,13 +8,12 @@ import {Facets} from "@/interface/statistics/project/facets";
 
 interface Props {
     filter: FilterValues,
-    setFilter: any,
-    updateFilter: any,
-    updateHash: any
+    setFilter: (filterValues: any) => void,
+    updateFilter: (filterValues: any) => void,
 }
 
 
-const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter, updateHash}) => {
+const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter}) => {
 
     const {state} = useGetPartnerFacets(filter);
 
@@ -22,11 +21,9 @@ const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter, updateHash})
         const updatedValues = {
             countryMethod: (event ? 'and' : 'or')
         };
-        setFilter((prevState: any) => ({
+        setFilter((prevState: FilterValues) => ({
             ...prevState, ...updatedValues
         }))
-
-        updateHash();
     }
 
     const updateOrganisationTypeMethod = (event: any) => {
@@ -36,8 +33,6 @@ const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter, updateHash})
         setFilter((prevState: any) => ({
             ...prevState, ...updatedValues
         }))
-
-        updateHash();
     }
 
     let facets: Facets = state.data;
@@ -84,7 +79,6 @@ const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter, updateHash})
                             setFilter((prevState: any) => ({
                                 ...prevState, ...updatedValues
                             }))
-                            updateHash();
                         }}
                     />
                 </div>
@@ -158,7 +152,6 @@ const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter, updateHash})
                         // getOptionLabel={(option) => `${option.name} (${option.amount})`}
                         getOptionLabel={(option) => `${option.name}`}
                         getOptionValue={(option) => `${option['name']}`}
-
                         closeMenuOnSelect={false}
                         onChange={(choices: any) => {
                             let updatedValues: { [key: string]: Array<string> } = {};
@@ -167,7 +160,6 @@ const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter, updateHash})
                             setFilter((prevState: any) => ({
                                 ...prevState, ...updatedValues
                             }))
-                            updateHash();
                         }}
                     />
                 </div>

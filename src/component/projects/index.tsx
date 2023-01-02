@@ -40,7 +40,7 @@ export default function Projects() {
                     (project: Project, key: number) => (
                         <tr key={project.number}>
                             <td><small className="text-muted">{key}</small></td>
-                            <td><Link to={`/project/${project.slug}`}>{project.name}</Link></td>
+                            <td><Link to={`/projects/${project.slug}`}>{project.name}</Link></td>
                             <td>{project.primaryCluster.name}</td>
                             <td>{project.secondaryCluster?.name}</td>
                         </tr>

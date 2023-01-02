@@ -2,6 +2,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import SearchList from './search-list';
 import {useLocation, useNavigate} from "react-router-dom";
 import {useGetSearchResults} from "@/hooks/search/use-get-search-results";
+import {useQuery} from "@/functions/filter-functions";
 
 const DefaultPageSize = 10;
 
@@ -47,7 +48,9 @@ function SearchForm({searchText, setSearchText}: Props) {
     const inputRef = useRef<null | HTMLInputElement>(null);
     const [showResults, setShowResults] = useState(false);
 
-    let {state} = useGetSearchResults({query: searchText, page: currentPage, pageSize: limit});
+    const filterOptions = useQuery();
+
+    let {state} = useGetSearchResults({filterOptions});
 
     let results = state.data;
 

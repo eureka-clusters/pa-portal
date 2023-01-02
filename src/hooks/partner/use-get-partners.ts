@@ -1,12 +1,13 @@
-import { useContext, useEffect, useReducer, useState } from 'react'
+import {useContext, useEffect, useReducer, useState} from 'react'
 import dataFetchReducer from "@/hooks/data-fetch-reducer";
-import { createSearchParams } from "react-router-dom";
-import { AxiosContext } from '@/providers/axios-provider';
-import { FilterOptions } from '@/functions/filter-functions';
-import { Organisation } from '@/interface/organisation';
-import { Project } from '@/interface/project';
+import {createSearchParams} from "react-router-dom";
+import {AxiosContext} from '@/providers/axios-provider';
+import {FilterOptions, ListResponse} from '@/functions/filter-functions';
+import {Organisation} from '@/interface/organisation';
+import {Project} from '@/interface/project';
+import {Partner} from "@/interface/project/partner";
 
-export const useGetPartners = ({ filterOptions, organisation, project }: {
+export const useGetPartners = ({filterOptions, organisation, project}: {
     filterOptions: FilterOptions, organisation?: Organisation, project?: Project
 }) => {
     const [state, dispatch] = useReducer(dataFetchReducer, {
@@ -24,7 +25,7 @@ export const useGetPartners = ({ filterOptions, organisation, project }: {
         let didCancel = false;
 
         const fetchData = async () => {
-            dispatch({ type: 'FETCH_INIT' });
+            dispatch({type: 'FETCH_INIT'});
 
             try {
                 const controller = new AbortController();
@@ -38,17 +39,25 @@ export const useGetPartners = ({ filterOptions, organisation, project }: {
                     url += '&project=' + project.slug;
                 }
 
-                const result = await axiosContext.authAxios.get(url, { signal: controller.signal });
+                const result = await axiosContext.authAxios.get(url, {signal: controller.signal});
 
                 if (!didCancel) {
-                    dispatch({ type: 'FETCH_SUCCESS', payload: result.data });
+
+                    let payload: ListResponse<Partner> = {
+                        items: result.data._embedded.items,
+                        page: result.data.page,
+                        page_count: result.data.page_count,
+                        total_items: result.data.total_items,
+                    }
+
+                    dispatch({type: 'FETCH_SUCCESS', payload: payload});
                 }
 
                 controller.abort();
 
             } catch (error: any) {
                 if (!didCancel) {
-                    dispatch({ type: 'FETCH_FAILURE' });
+                    dispatch({type: 'FETCH_FAILURE'});
                 }
             }
         };
@@ -61,5 +70,5 @@ export const useGetPartners = ({ filterOptions, organisation, project }: {
 
     }, [localFilterOptions]);
 
-    return { state, setLocalFilterOptions };
+    return {state, setLocalFilterOptions};
 }

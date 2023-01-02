@@ -1,5 +1,5 @@
-import {PathMatch} from 'react-router-dom';
-import {RoutePathDefinition} from '@/routing/route-part-definition';
+import { PathMatch } from 'react-router-dom';
+import { RoutePathDefinition } from '@/routing/route-part-definition';
 
 export type ActiveRoutePathTitleCallbackParams<ParamKey extends string = string> = {
     definition: RoutePathDefinition;

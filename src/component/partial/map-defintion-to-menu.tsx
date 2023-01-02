@@ -17,12 +17,15 @@ export function mapDefinitionToMenu(definitions: RoutePathDefinition[], parent: 
                     to = generatePath(builtPath);
                 } catch (err) {
                 }
+
+                //This has to be done because the title should be a ReactNode
+                const title: string = definition.title.toString()
+
                 return (
                     <React.Fragment key={index}>
                         {to ? (
                             <>
-                                <Nav.Link as={NavLink} key={index} to={to}>{definition.title}</Nav.Link>
-
+                                <Nav.Link as={NavLink} key={index} to={to}>{title}</Nav.Link>
                                 {definition.children ? mapDefinitionToMenu(definition.children, builtPath) : undefined}
                             </>
 

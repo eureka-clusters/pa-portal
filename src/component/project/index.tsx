@@ -1,9 +1,9 @@
 import React from 'react';
-import PartnerTableWithCharts from "@/component/project/partner-table-with-charts";
 import moment from 'moment';
 import {useGetProject} from "@/hooks/project/use-get-project";
 import {CostsFormat, EffortFormat} from '@/functions/utils';
 import {useParams} from "react-router-dom";
+import PartnerTableWithCharts from "@/component/project/partner-table-with-charts";
 
 export default function Project() {
 
@@ -17,8 +17,6 @@ export default function Project() {
     const project = state.data;
 
     return <>
-        <h1>Project Page</h1>
-
         <dl className="row">
             <dt className="col-sm-3 text-end">Identification Number:</dt>
             <dd className="col-sm-9">{project.number}</dd>

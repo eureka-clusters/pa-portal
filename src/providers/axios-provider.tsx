@@ -1,17 +1,17 @@
-import React, { createContext, useContext } from 'react';
-import axios, { AxiosInstance } from 'axios';
-import { AuthContext, AuthContextContent } from '@/providers/auth-provider';
+import React, {createContext, useContext} from 'react';
+import axios, {AxiosInstance} from 'axios';
+import {AuthContext, AuthContextContent} from '@/providers/auth-provider';
 import createAuthRefreshInterceptor from 'axios-auth-refresh';
-import { getServerUri } from "@/functions/get-server-uri";
+import {getServerUri} from "@/functions/get-server-uri";
 
 const AxiosContext = createContext<AxiosContextContent>({} as AxiosContextContent);
-const { Provider } = AxiosContext;
+const {Provider} = AxiosContext;
 
 interface AxiosContextContent {
     authAxios: AxiosInstance,
 }
 
-const AxiosProvider = ({ children }: { children: any }) => {
+const AxiosProvider = ({children}: { children: any }) => {
     const authContext = useContext<AuthContextContent>(AuthContext);
 
     const authAxios = axios.create({
@@ -36,12 +36,12 @@ const AxiosProvider = ({ children }: { children: any }) => {
 
     const refreshAuthLogic = (failedRequest: any) => {
         const data = {
-            clientId: authContext.getClientId(),
+            client_id: authContext.getClientId(),
             token: authContext.getToken(),
         };
 
         const options = {
-            method: 'GET',
+            method: 'POST',
             data,
             url: getServerUri() + '/oauth2/refresh.html',
         };
@@ -71,10 +71,10 @@ const AxiosProvider = ({ children }: { children: any }) => {
 
     return (
         <Provider
-            value={{ authAxios }}>
+            value={{authAxios}}>
             {children}
         </Provider>
     );
 };
 
-export { AxiosContext, AxiosProvider };
+export {AxiosContext, AxiosProvider};

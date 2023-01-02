@@ -7,6 +7,7 @@ import {Partner as PartnerInterface} from "@/interface/project/partner";
 
 export default function Partner() {
 
+
     const {slug} = useParams();
     const {state} = useGetPartner(slug === undefined ? '' : slug);
 

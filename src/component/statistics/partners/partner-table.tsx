@@ -1,26 +1,37 @@
-import React, {FC, useEffect, useState} from 'react';
-import {Link} from "react-router-dom";
-import {CostsFormat, EffortFormat} from '@/functions/utils';
-import {Partner} from "@/interface/project/partner";
+import React, {useEffect, useState} from 'react';
 import {useGetPartners} from "@/hooks/partner/use-get-partners";
 import downloadBase64File from "@/functions/download-base64";
 import LoadingButton from "@/component/partial/loading-button";
 import axios from "axios";
-import { Organisation } from '@/interface/organisation';
-import { Project } from '@/interface/project';
-import { useQuery } from '@/functions/filter-functions';
+import {useQuery} from '@/functions/filter-functions';
+import {FilterValues} from "@/interface/statistics/filter-values";
+import SortableTableHeader from "@/component/partial/sortable-table-header";
+import {Partner} from "@/interface/project/partner";
+import {Link} from "react-router-dom";
+import PaginationLinks from "@/component/partial/pagination-links";
 
-const PartnerTable = ({organisation, project}: {organisation?: Organisation, project?: Project}) => {
+const PartnerTable = ({filter}: { filter: FilterValues }) => {
 
     const filterOptions = useQuery();
 
-    const { state } = useGetPartners({filterOptions, organisation, project});
-
+    const {state, setLocalFilterOptions} = useGetPartners({filterOptions});
     const [isExportLoading, setIsExportButtonLoading] = useState(
         false
     );
 
-  
+    useEffect(() => {
+
+        //Add the filter (bzipped) to the filterOptions
+        filterOptions.filter = btoa(JSON.stringify(filter));
+
+        setLocalFilterOptions({...filterOptions, filter: btoa(JSON.stringify(filter))});
+
+    }, [filterOptions, filter]);
+
+    function setPage(page: string) {
+        setLocalFilterOptions({...filterOptions, page});
+    }
+
 
     useEffect(() => {
         if (isExportLoading) {
@@ -52,11 +63,47 @@ const PartnerTable = ({organisation, project}: {organisation?: Organisation, pro
 
     // const hasYearFilter = filterOptions.filter.year !== undefined && filterOptions.filter.year.length > 0;
 
-   
 
     return (
         <React.Fragment>
             <h2>Partners</h2>
+
+            <table className="table table-striped">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th><SortableTableHeader sort='name'
+                                             filterOptions={filterOptions}>Organisation</SortableTableHeader>
+                    </th>
+                    <th><SortableTableHeader sort='project'
+                                             filterOptions={filterOptions}>Project</SortableTableHeader></th>
+                    <th><SortableTableHeader sort='secondary_cluster' filterOptions={filterOptions}>Primary
+                        cluster</SortableTableHeader></th>
+                    <th><SortableTableHeader sort='country'
+                                             filterOptions={filterOptions}>Country</SortableTableHeader>
+                    </th>
+                    <th><SortableTableHeader sort='type'
+                                             filterOptions={filterOptions}>Type</SortableTableHeader>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                {state.data.items && state.data.items.map(
+                    (partner: Partner, key: number) => (
+                        <tr key={key}>
+                            <td><small className="text-muted">{partner.id}</small></td>
+                            <td><Link to={`/projects/partner/${partner.slug}`}>{partner.organisation.name}</Link></td>
+                            <td><Link to={`/projects/${partner.project.slug}`}>{partner.project.name}</Link></td>
+                            <td>{partner.project.primaryCluster.name}</td>
+                            <td>{partner.organisation.country.country}</td>
+                            <td>{partner.organisation.type.type}</td>
+                        </tr>
+                    )
+                )}
+                </tbody>
+            </table>
+
+            <PaginationLinks state={state} setPage={setPage}/>
 
 
             <div className="datatable-download">

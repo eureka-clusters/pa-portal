@@ -3,11 +3,10 @@ import {Form} from "react-bootstrap";
 import PartnerTable from "@/component/statistics/partners/partner-table";
 import PartnerFacets from '@/component/statistics/partners/partner-facets';
 import TableFilter from '@/functions/api/table-filter';
-import {useParams} from "react-router-dom";
 
 export default function PartnerStatistics() {
 
-    const {updateHash, updateFilter, filter, setFilter} = TableFilter();
+    const {updateFilter, filter, setFilter} = TableFilter();
 
     return (
         <React.Fragment>
@@ -22,10 +21,10 @@ export default function PartnerStatistics() {
                         <PartnerFacets filter={filter}
                                        setFilter={setFilter}
                                        updateFilter={updateFilter}
-                                       updateHash={updateHash} />
+                        />
                     </div>
                     <div className={'col-10'}>
-                        <PartnerTable />
+                        <PartnerTable filter={filter}/>
                     </div>
                 </div>
             </Form>

@@ -1,24 +1,34 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from "react-router-dom";
-import { CostsFormat, EffortFormat } from '@/functions/utils';
-import { useGetProjects } from "@/hooks/project/use-get-projects";
-import { Project } from "@/interface/project";
+import React, {useEffect, useState} from 'react';
+import {Link} from "react-router-dom";
+import {useGetProjects} from "@/hooks/project/use-get-projects";
+import {Project} from "@/interface/project";
 import downloadBase64File from "@/functions/download-base64";
-import moment from 'moment';
 import LoadingButton from "@/component/partial/loading-button";
 import axios from "axios";
-import { FilterValues } from "@/interface/statistics/filter-values";
-import { useQuery } from '@/functions/filter-functions';
+import {FilterValues} from "@/interface/statistics/filter-values";
+import {useQuery} from '@/functions/filter-functions';
+import SortableTableHeader from "@/component/partial/sortable-table-header";
+import PaginationLinks from "@/component/partial/pagination-links";
 
-const ProjectTable = ({ filter }: { filter: FilterValues }) => {
-
+const ProjectTable = ({filter}: { filter: FilterValues }) => {
 
     const filterOptions = useQuery();
 
-    const { state, setLocalFilterOptions } = useGetProjects({ filterOptions });
-
-
+    const {state, setLocalFilterOptions} = useGetProjects({filterOptions});
     const [isExportLoading, setIsExportButtonLoading] = useState(false);
+
+    useEffect(() => {
+
+        //Add the filter (bzipped) to the filterOptions
+        filterOptions.filter = btoa(JSON.stringify(filter));
+
+        setLocalFilterOptions({...filterOptions, filter: btoa(JSON.stringify(filter))});
+
+    }, [filterOptions, filter]);
+
+    function setPage(page: string) {
+        setLocalFilterOptions({...filterOptions, page});
+    }
 
 
     useEffect(() => {
@@ -36,8 +46,6 @@ const ProjectTable = ({ filter }: { filter: FilterValues }) => {
 
 
     const downloadExcel = async () => {
-
-
         await axios.create().get('/statistics/results/project/download/csv?' + filterOptions)
             .then((res: any) => {
                 let extension = res.extension;
@@ -53,7 +61,35 @@ const ProjectTable = ({ filter }: { filter: FilterValues }) => {
     return (
         <React.Fragment>
             <h2>Projects</h2>
+            <table className="table table-striped">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th><SortableTableHeader sort='name' filterOptions={filterOptions}>Project</SortableTableHeader>
+                    </th>
+                    <th><SortableTableHeader sort='primary_cluster' filterOptions={filterOptions}>Primary
+                        Cluster</SortableTableHeader></th>
+                    <th><SortableTableHeader sort='secondary_cluster' filterOptions={filterOptions}>Secondary
+                        Cluster</SortableTableHeader></th>
+                    <th><SortableTableHeader sort='status' filterOptions={filterOptions}>Status</SortableTableHeader></th>
+                </tr>
+                </thead>
+                <tbody>
+                {state.data.items && state.data.items.map(
+                    (project: Project, key: number) => (
+                        <tr key={project.number}>
+                            <td><small className="text-muted">{key}</small></td>
+                            <td><Link to={`/projects/${project.slug}`}>{project.name}</Link></td>
+                            <td>{project.primaryCluster.name}</td>
+                            <td>{project.secondaryCluster?.name}</td>
+                            <td>{project.status.status}</td>
+                        </tr>
+                    )
+                )}
+                </tbody>
+            </table>
 
+            <PaginationLinks state={state} setPage={setPage}/>
 
             <div className="datatable-download">
                 <LoadingButton

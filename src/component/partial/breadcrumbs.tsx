@@ -10,7 +10,7 @@ export interface BreadcrumbsProps {
 export function Breadcrumbs({routes}: BreadcrumbsProps) {
     const activeRoutePaths = useActiveRoutePaths(routes);
     return (
-        <><span>Breadcrumb: </span>
+        <>
             {activeRoutePaths.map((active, index, {length}) => (
                 <span key={index}>
           {index === 0 ? "" : " > "}

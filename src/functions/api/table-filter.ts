@@ -1,23 +1,10 @@
-import {useEffect, useState} from 'react';
-import {useParams} from "react-router-dom";
+import {useState} from 'react';
 import {FilterValues} from "@/interface/statistics/filter-values";
 
 
 function TableFilter() {
 
     const [filter, setFilter] = useState<FilterValues>({} as FilterValues);
-
-    const {hash} = useParams();
-
-    const getFilterFromHash = () => {
-        console.log('Update from hash: ', hash);
-
-        return {};
-    }
-
-    useEffect(() => {
-
-    }, [filter]);
 
     const updateFilter = (event: any) => {
         const target = event.target;
@@ -44,25 +31,10 @@ function TableFilter() {
         setFilter((prevState: any) => ({
             ...prevState, ...updatedValues
         }))
-
-        updateHash();
     }
 
-    const updateHash = () => {
-        if (hash) {
-            //navigate(hash, {replace: true});
-        }
-    }
-
-    // update the filter depending on the hash in the url
-    useEffect(() => {
-        updateHash();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [hash]);
 
     return {
-        getFilterFromHash,
-        updateHash,
         updateFilter,
         filter,
         setFilter

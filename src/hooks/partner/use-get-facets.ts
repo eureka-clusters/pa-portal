@@ -1,7 +1,6 @@
-import {useEffect, useReducer} from 'react'
-import axios from 'axios';
+import {useContext, useEffect, useReducer} from 'react'
 import dataFetchReducer from "@/hooks/data-fetch-reducer";
-import {Project} from "@/interface/project";
+import {AxiosContext} from '@/providers/axios-provider';
 
 export const useGetPartnerFacets = (filter: any) => {
     const [state, dispatch] = useReducer(dataFetchReducer, {
@@ -9,6 +8,8 @@ export const useGetPartnerFacets = (filter: any) => {
         isError: false,
         data: null,
     });
+
+    const axiosContext = useContext(AxiosContext);
 
     useEffect(() => {
         let didCancel = false;
@@ -21,7 +22,7 @@ export const useGetPartnerFacets = (filter: any) => {
 
                 const url = "/statistics/facets/partner/" + btoa(JSON.stringify(filter));
 
-                const result = await axios.get(url, {signal: controller.signal});
+                const result = await axiosContext.authAxios.get(url, {signal: controller.signal});
 
                 if (!didCancel) {
                     dispatch({type: 'FETCH_SUCCESS', payload: result.data});
