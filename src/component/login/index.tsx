@@ -2,9 +2,9 @@ import React, {useContext, useEffect, useState} from 'react';
 
 import {useLocation} from "react-router-dom";
 import axios from "axios";
-import {Service} from "interface/service";
-import {getServerUri} from "functions/get-server-uri";
-import {AuthContext} from "providers/auth-provider";
+import {Service} from "@/interface/service";
+import {getServerUri} from "@/functions/get-server-uri";
+import {AuthContext} from "@/providers/auth-provider";
 
 export default function Login() {
 

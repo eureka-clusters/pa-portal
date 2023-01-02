@@ -1,7 +1,7 @@
 import {useEffect, useReducer} from 'react'
 import axios from 'axios';
-import dataFetchReducer from "hooks/data-fetch-reducer";
-import {Project} from "interface/project";
+import dataFetchReducer from "@/hooks/data-fetch-reducer";
+import {Project} from "@/interface/project";
 
 export const useGetPartnerFacets = (filter: any) => {
     const [state, dispatch] = useReducer(dataFetchReducer, {

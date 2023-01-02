@@ -1,17 +1,11 @@
 import React from 'react';
 import Chart from "react-google-charts";
-// import NumberFormat from "react-number-format"
 
-const OrganisationTypeChart = ({ results }) => {
+const OrganisationTypeChart = ({results}: { results: any[] }) => {
 
-
-    // function percentageFormat(num) {
-    //     return parseFloat(num.toFixed(2));
-    // }
-
-    var $data = [
+    const $data = [
         [
-            'Organisation Type', 
+            'Organisation Type',
             'Amount',
             // 'Percentage'
         ]
@@ -38,7 +32,7 @@ const OrganisationTypeChart = ({ results }) => {
             // instead of adding element.count  use one of these lines
             // 100 / element.total * element.count  // needs formating for 2 digits
             // percentageFormat(100 / element.total * element.count)
-            
+
             // doesn't work as the chart requires a value not a string.
             // error thrown Uncaught (in promise) Error: Unknown type of value, [object Object] ?
             // <NumberFormat
@@ -110,7 +104,7 @@ const OrganisationTypeChart = ({ results }) => {
                 data={$data}
                 options={pieOptions}
                 // graphID="PartnersByOrganisationTypeChart"
-                rootProps={{ 'data-testid': '1' }}
+                rootProps={{'data-testid': '1'}}
             />
         </React.Fragment>
     );

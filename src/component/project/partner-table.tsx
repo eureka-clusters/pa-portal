@@ -1,7 +1,7 @@
 import React, {FC} from 'react';
 import {Link} from "react-router-dom";
-import {BooleanIconFormat, CostsFormat, EffortFormat} from 'functions/utils';
-import {Partner} from "interface/project/partner";
+import {BooleanIconFormat, CostsFormat, EffortFormat} from '@/functions/utils';
+import {Partner} from "@/interface/project/partner";
 
 interface Props {
     results: Array<Partner>

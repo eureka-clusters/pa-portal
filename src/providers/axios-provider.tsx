@@ -1,8 +1,8 @@
 import React, { createContext, useContext } from 'react';
 import axios, { AxiosInstance } from 'axios';
-import { AuthContext, AuthContextContent } from 'providers/auth-provider';
+import { AuthContext, AuthContextContent } from '@/providers/auth-provider';
 import createAuthRefreshInterceptor from 'axios-auth-refresh';
-import { getServerUri } from "functions/get-server-uri";
+import { getServerUri } from "@/functions/get-server-uri";
 
 const AxiosContext = createContext<AxiosContextContent>({} as AxiosContextContent);
 const { Provider } = AxiosContext;

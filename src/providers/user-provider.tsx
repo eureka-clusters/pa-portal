@@ -1,7 +1,7 @@
 import { createContext } from "react";
-import { User } from "interface/auth/user";
+import { User } from "@/interface/auth/user";
 import axios from "axios";
-import { getServerUri } from "../functions/get-server-uri";
+import { getServerUri } from "@/functions/get-server-uri";
 
 const UserContext = createContext<UserContextContent>({} as UserContextContent);
 

@@ -1,7 +1,7 @@
 import {useContext, useEffect} from 'react';
-import {AuthContext} from 'providers/auth-provider';
-import {Navigate, redirect, useNavigate, useSearchParams} from "react-router-dom";
-import {UserContext} from "providers/user-provider";
+import {AuthContext} from '@/providers/auth-provider';
+import {Navigate, useSearchParams} from "react-router-dom";
+import {UserContext} from "@/providers/user-provider";
 
 
 const LoadingComponent = () => <div> Waiting for login... </div>
@@ -10,8 +10,7 @@ export default function Callback() {
 
     const authContext = useContext(AuthContext);
     const userContext = useContext(UserContext);
-    const navigate = useNavigate();
-    
+
     const [searchParams] = useSearchParams();
 
     useEffect(() => {
@@ -28,12 +27,11 @@ export default function Callback() {
         )
 
         userContext.loadUser(token);
-                
+
 
     }, [searchParams]);
 
-    if (authContext.isAuthenticated())
-    {
+    if (authContext.isAuthenticated()) {
         return <Navigate to={'/account'}/>
     }
 

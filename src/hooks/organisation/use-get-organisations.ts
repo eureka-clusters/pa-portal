@@ -1,8 +1,8 @@
 import { useContext, useEffect, useReducer, useState } from 'react'
-import dataFetchReducer from "hooks/data-fetch-reducer";
+import dataFetchReducer from "@/hooks/data-fetch-reducer";
 import { createSearchParams } from "react-router-dom";
-import { AxiosContext } from 'providers/axios-provider';
-import { FilterOptions } from 'functions/filter-functions';
+import { AxiosContext } from '@/providers/axios-provider';
+import { FilterOptions } from '@/functions/filter-functions';
 
 export const useGetOrganisations = ({ filterOptions }: { filterOptions: FilterOptions }) => {
 

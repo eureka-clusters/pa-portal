@@ -1,10 +1,9 @@
 import React from 'react';
 
 import {Link, useParams} from "react-router-dom";
-import BreadcrumbTree from 'component/partial/breadcrumb-tree'
-import {CostsFormat, EffortFormat} from 'functions/utils';
-import {useGetPartner} from "hooks/partner/use-get-partner";
-import {Partner as PartnerInterface} from "interface/project/partner";
+import {CostsFormat, EffortFormat} from '@/functions/utils';
+import {useGetPartner} from "@/hooks/partner/use-get-partner";
+import {Partner as PartnerInterface} from "@/interface/project/partner";
 
 export default function Partner() {
 
@@ -19,17 +18,6 @@ export default function Partner() {
 
     return (
         <React.Fragment>
-            {/* <pre className='debug'>{JSON.stringify(partner, undefined, 2)}</pre> */}
-
-            <BreadcrumbTree current="partner" data={{
-                ...partner, ...{
-                    project_name: partner.project.name,
-                    project_slug: partner.project.slug,
-                    partner_name: partner.organisation.name,
-                    partner_slug: partner.slug
-                }
-            }} linkCurrent={true}/>
-
             <h1>{partner.organisation.name} in {partner.project.name}</h1>
 
             <dl className="row">

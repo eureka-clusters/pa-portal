@@ -2,9 +2,9 @@ import {FC} from 'react';
 import {Form} from "react-bootstrap";
 import BootstrapSwitchButton from "bootstrap-switch-button-react";
 import {default as ReactSelect} from "react-select";
-import {FilterValues} from "interface/statistics/filter-values";
-import {useGetPartnerFacets} from "hooks/partner/use-get-facets";
-import {Facets} from "interface/statistics/project/facets";
+import {FilterValues} from "@/interface/statistics/filter-values";
+import {useGetPartnerFacets} from "@/hooks/partner/use-get-facets";
+import {Facets} from "@/interface/statistics/project/facets";
 
 interface Props {
     filter: FilterValues,

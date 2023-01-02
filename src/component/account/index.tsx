@@ -1,6 +1,5 @@
-import {useContext, useEffect} from "react";
-import {AuthContext} from "providers/auth-provider";
-import {UserContext} from "providers/user-provider";
+import {useContext} from "react";
+import {UserContext} from "@/providers/user-provider";
 
 export default function Account() {
 

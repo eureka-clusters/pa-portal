@@ -1,14 +1,14 @@
 import React, {FC, useEffect, useState} from 'react';
 import {Link} from "react-router-dom";
-import {CostsFormat, EffortFormat} from 'functions/utils';
-import {Partner} from "interface/project/partner";
-import {useGetPartners} from "hooks/partner/use-get-partners";
-import downloadBase64File from "functions/download-base64";
-import LoadingButton from "component/partial/loading-button";
+import {CostsFormat, EffortFormat} from '@/functions/utils';
+import {Partner} from "@/interface/project/partner";
+import {useGetPartners} from "@/hooks/partner/use-get-partners";
+import downloadBase64File from "@/functions/download-base64";
+import LoadingButton from "@/component/partial/loading-button";
 import axios from "axios";
-import { Organisation } from 'interface/organisation';
-import { Project } from 'interface/project';
-import { useQuery } from 'functions/filter-functions';
+import { Organisation } from '@/interface/organisation';
+import { Project } from '@/interface/project';
+import { useQuery } from '@/functions/filter-functions';
 
 const PartnerTable = ({organisation, project}: {organisation?: Organisation, project?: Project}) => {
 

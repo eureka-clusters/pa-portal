@@ -1,8 +1,8 @@
-import {Contact} from "interface/contact";
-import {Version} from "interface/project/version";
-import {Cluster} from "interface/cluster";
-import {Status} from "interface/project/status";
-import {Coordinator} from "interface/project/coordinator";
+import {Contact} from "@/interface/contact";
+import {Version} from "@/interface/project/version";
+import {Cluster} from "@/interface/cluster";
+import {Status} from "@/interface/project/status";
+import {Coordinator} from "@/interface/project/coordinator";
 
 export interface Project {
     slug: string,

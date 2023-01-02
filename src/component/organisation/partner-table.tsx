@@ -1,11 +1,11 @@
 import React, {FC} from 'react';
 import {Link} from "react-router-dom";
-import {BooleanIconFormat, CostsFormat, EffortFormat} from 'functions/utils';
-import {Partner} from "interface/project/partner";
-import {Organisation} from "interface/organisation";
-import {useGetPartners} from "hooks/partner/use-get-partners";
-import { useQuery } from 'functions/filter-functions';
-import SortableTableHeader from 'component/partial/sortable-table-header';
+import {BooleanIconFormat, CostsFormat, EffortFormat} from '@/functions/utils';
+import {Partner} from "@/interface/project/partner";
+import {Organisation} from "@/interface/organisation";
+import {useGetPartners} from "@/hooks/partner/use-get-partners";
+import { useQuery } from '@/functions/filter-functions';
+import SortableTableHeader from '@/component/partial/sortable-table-header';
 
 interface Props {
     organisation: Organisation

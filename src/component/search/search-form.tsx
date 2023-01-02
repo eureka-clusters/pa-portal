@@ -1,8 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import SearchList from './search-list';
 import {useLocation, useNavigate} from "react-router-dom";
-import Pagination from 'component/pagination';
-import {useGetSearchResults} from "hooks/search/use-get-search-results";
+import {useGetSearchResults} from "@/hooks/search/use-get-search-results";
 
 const DefaultPageSize = 10;
 
@@ -91,15 +90,7 @@ function SearchForm({searchText, setSearchText}: Props) {
     let render = <>
         {showResults ? <SearchList results={results} ulRef={ulRef} searchText={requestedSearchText}/> : null}
 
-        {showResults ? <Pagination
-            className="pagination-bar"
-            currentPage={currentPage}
-            totalCount={totalItems}
-            // as the result of the api query doesn't use given pageSize for the limit i must use the returned pageSize to get correct pagination.
-            // pageSize={limit}
-            pageSize={pageSize}
-            onPageChange={handlePageChange}
-        /> : null}
+
     </>
 
     return (

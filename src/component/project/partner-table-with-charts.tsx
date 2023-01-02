@@ -1,14 +1,16 @@
 import React, {FC, Suspense, useState} from 'react';
-import {Project} from "interface/project";
+import {Project} from "@/interface/project";
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
 import PartnerTable from './partner-table';
-import OrganisationTypeChart from 'component/project/charts/organisation-type-chart';
-import OrganisationCountryChart from 'component/project/charts/country-chart';
-import BudgetByOrganisationTypeChart from 'component/project/charts/budget-by-organisation-type-chart';
-import BudgetByCountryChart from 'component/project/charts/budget-and-effort-by-country-chart';
-import {useGetPartners} from "hooks/partner/use-get-partners";
-import { useQuery } from 'functions/filter-functions';
+
+import OrganisationTypeChart from '@/component/project/charts/organisation-type-chart';
+import OrganisationCountryChart from '@/component/project/charts/country-chart';
+import BudgetByOrganisationTypeChart from '@/component/project/charts/budget-by-organisation-type-chart';
+import BudgetByCountryChart from '@/component/project/charts/budget-and-effort-by-country-chart';
+
+import {useGetPartners} from "@/hooks/partner/use-get-partners";
+import {useQuery} from '@/functions/filter-functions';
 
 interface Props {
     project: Project

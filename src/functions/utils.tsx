@@ -1,7 +1,7 @@
 import React from 'react';
 import {NumericFormat} from "react-number-format"
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faCheck, faCheckCircle, faCheckSquare, faSquare} from '@fortawesome/fontawesome-free-solid';
+import {faCheck, faCheckCircle, faCheckSquare, faSquare} from '@fortawesome/free-solid-svg-icons';
 import {IconProp} from '@fortawesome/fontawesome-svg-core';
 
 

@@ -1,9 +1,9 @@
 import {FC} from 'react';
 import {Form} from "react-bootstrap";
 import {default as ReactSelect} from "react-select";
-import {FilterValues} from "interface/statistics/filter-values";
-import {useGetPartnerFacets} from "hooks/partner/use-get-facets";
-import {Facets} from "interface/statistics/partner/facets";
+import {FilterValues} from "@/interface/statistics/filter-values";
+import {useGetPartnerFacets} from "@/hooks/partner/use-get-facets";
+import {Facets} from "@/interface/statistics/partner/facets";
 
 interface Props {
     filter: FilterValues,

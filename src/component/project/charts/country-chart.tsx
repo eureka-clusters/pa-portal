@@ -1,10 +1,10 @@
 import React from 'react';
 import Chart from "react-google-charts";
 
-const OrganisationCountryChart = ({ results }) => {
+const OrganisationCountryChart = ({results}: { results: any[] }) => {
 
     //Do some stupid data formatting
-    var $data = [
+    let $data = [
         ['Country', 'Amount']
     ];
 
@@ -40,7 +40,7 @@ const OrganisationCountryChart = ({ results }) => {
                     title: 'Partners by Countries',
                 }}
                 // graphID="PartnersByCountryChart"
-                rootProps={{ 'data-testid': '1' }}
+                rootProps={{'data-testid': '1'}}
             />
         </React.Fragment>
     );

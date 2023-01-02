@@ -1,8 +1,7 @@
 import React from 'react';
 import {useParams} from "react-router-dom";
-import BreadcrumbTree from 'component/partial/breadcrumb-tree'
-import PartnerTable from "component/organisation/partner-table";
-import {useGetOrganisation} from "hooks/organisation/use-get-organisation";
+import PartnerTable from "@/component/organisation/partner-table";
+import {useGetOrganisation} from "@/hooks/organisation/use-get-organisation";
 
 export default function Organisation() {
 
@@ -18,8 +17,6 @@ export default function Organisation() {
 
     return (
         <React.Fragment>
-            <BreadcrumbTree current="organisation" data={organisation} linkCurrent={false}/>
-
             <h1>{organisation.name}</h1>
 
             <dl className="row">

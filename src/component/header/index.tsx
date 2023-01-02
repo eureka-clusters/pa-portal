@@ -1,16 +1,19 @@
 import React, {useContext} from 'react';
 import {NavLink} from "react-router-dom";
 import {Container, Nav, Navbar, NavDropdown} from 'react-bootstrap';
-import Search from "component/header/search-form/search";
-import {AuthContext} from "providers/auth-provider";
+import Search from "@/component/header/search-form/search";
+import {AuthContext} from "@/providers/auth-provider";
+import {UserContext} from "@/providers/user-provider";
 
 import './header.scss';
-import {UserContext} from "../../providers/user-provider";
+import {Navigation} from "@/component/partial/navigation";
+import pageRoutes from "@/routing/routes";
 
 export default function Header() {
     // Get auth state and re-render anytime it changes
     let authContext = useContext(AuthContext);
     let userContext = useContext(UserContext);
+    let routes = pageRoutes();
 
     return (
         <>
@@ -19,13 +22,8 @@ export default function Header() {
                     <Navbar.Toggle aria-controls="navbar-main"/>
                     <Navbar.Collapse id="navbar-main">
                         <Nav className='d-flex w-100'>
-                            <Nav.Link as={NavLink} to='/'>Home</Nav.Link>
 
-                            <Nav.Link as={NavLink} to='/statistics/projects'>Project statistics</Nav.Link>
-                            <Nav.Link as={NavLink} to='/statistics/partners'>Partners statistics</Nav.Link>
-
-                            <Nav.Link as={NavLink} to='/projects'>Projects</Nav.Link>
-                            <Nav.Link as={NavLink} to='/organisations'>Organisations</Nav.Link>
+                            <Navigation routes={routes}/>
 
                             {authContext.isAuthenticated() ? (
                                 <React.Fragment>
@@ -56,7 +54,7 @@ export default function Header() {
                     <a href="/"
                        className="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto text-dark text-decoration-none">
                         <img alt={"Eureka Logo"} className={'pe-2'}
-                             src={process.env.PUBLIC_URL + '/assets/img/logo.png'}/>
+                             src={'/assets/img/logo.png'}/>
                         <span className="fs-4">PA Report Portal</span>
                     </a>
 

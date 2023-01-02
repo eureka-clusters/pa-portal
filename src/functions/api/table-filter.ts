@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 import {useParams} from "react-router-dom";
-import {FilterValues} from "interface/statistics/filter-values";
+import {FilterValues} from "@/interface/statistics/filter-values";
 
 
 function TableFilter() {

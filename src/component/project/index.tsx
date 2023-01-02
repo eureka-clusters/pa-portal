@@ -1,11 +1,9 @@
 import React from 'react';
-import PartnerTableWithCharts from "component/project/partner-table-with-charts";
-import BreadcrumbTree from 'component/partial/breadcrumb-tree'
+import PartnerTableWithCharts from "@/component/project/partner-table-with-charts";
 import moment from 'moment';
-import {useGetProject} from "hooks/project/use-get-project";
-import {CostsFormat, EffortFormat} from 'functions/utils';
+import {useGetProject} from "@/hooks/project/use-get-project";
+import {CostsFormat, EffortFormat} from '@/functions/utils';
 import {useParams} from "react-router-dom";
-
 
 export default function Project() {
 
@@ -19,13 +17,6 @@ export default function Project() {
     const project = state.data;
 
     return <>
-        <BreadcrumbTree current="project" data={{
-            ...project, ...{
-                project_name: project.name,
-                project_slug: project.slug,
-            }
-        }} linkCurrent={true}/>
-
         <h1>Project Page</h1>
 
         <dl className="row">

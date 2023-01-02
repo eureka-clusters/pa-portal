@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
-import { CostsFormat, EffortFormat } from 'functions/utils';
-import { useGetProjects } from "hooks/project/use-get-projects";
-import { Project } from "interface/project";
-import downloadBase64File from "functions/download-base64";
+import { CostsFormat, EffortFormat } from '@/functions/utils';
+import { useGetProjects } from "@/hooks/project/use-get-projects";
+import { Project } from "@/interface/project";
+import downloadBase64File from "@/functions/download-base64";
 import moment from 'moment';
-import LoadingButton from "component/partial/loading-button";
+import LoadingButton from "@/component/partial/loading-button";
 import axios from "axios";
-import { FilterValues } from "interface/statistics/filter-values";
-import { useQuery } from 'functions/filter-functions';
+import { FilterValues } from "@/interface/statistics/filter-values";
+import { useQuery } from '@/functions/filter-functions';
 
 const ProjectTable = ({ filter }: { filter: FilterValues }) => {
 

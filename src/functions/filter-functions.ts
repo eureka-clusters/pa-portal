@@ -9,6 +9,13 @@ export type FilterOptions = {
     order: string
 }
 
+export type ListResponse<T> = {
+    items: T[],
+    page: number,
+    page_count: number,
+    total_items: number
+}
+
 export function useQuery(): FilterOptions {
     const { search } = useLocation();
 
