@@ -1,19 +1,11 @@
-import React, {useContext, useEffect, useState} from 'react';
-
-import {useLocation} from "react-router-dom";
+import React, {useEffect, useState} from 'react';
 import axios from "axios";
 import {Service} from "@/interface/service";
 import {getServerUri} from "@/functions/get-server-uri";
-import {AuthContext} from "@/providers/auth-provider";
 
 export default function Login() {
 
     const [services, setServices] = useState<Array<Service>>([]);
-    const [error, setError] = useState<string | null>(null);
-
-    let location = useLocation();
-    let {from} = location.state || {from: {pathname: "/"}};
-
 
     useEffect(() => {
 
@@ -26,8 +18,8 @@ export default function Login() {
         ).then((response) => {
             const {data} = response
             setServices(data._embedded.items);
-        }).catch((error) => {
-            setError(error.message);
+        }).catch(() => {
+
         });
 
         return () => {
@@ -40,13 +32,12 @@ export default function Login() {
             <div className="d-flex p-2 bd-highlight">
                 <div className="jumbotron">
                     <h1 className="display-4">Welcome to Eureka Clusters Portal</h1>
-                    <p>You must log in to view the page at {from.pathname}</p>
+                    <p>You can log in using your account in one of the Cluster Portals show below</p>
                 </div>
             </div>
             <div className="d-flex flex-row bd-highlight mb-3">
-                {error && <div className="alert alert-danger" role="alert">{error}</div>}
                 {services.map((service) => (
-                        <a className="btn btn-lg bg-primary text-white" key={service.id} href={service.loginUrl}>Login
+                        <a className="btn btn-lg bg-primary text-white mx-2" key={service.id} href={service.loginUrl}>Login
                             via {service.name}</a>
                     )
                 )}

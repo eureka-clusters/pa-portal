@@ -50,17 +50,17 @@ export default function Partner() {
 
                 <dt className="col-sm-3 text-end">Total costs (latest version)</dt>
                 <dd className="col-sm-9">
-                    <CostsFormat value={partner.latestVersionCosts}/>
+                    <CostsFormat>{partner.latestVersionCosts}</CostsFormat>
                 </dd>
 
                 <dt className="col-sm-3 text-end">Total effort (latest version)</dt>
                 <dd className="col-sm-9">
-                    <EffortFormat value={partner.latestVersionEffort}/>
+                    <EffortFormat>{partner.latestVersionEffort}</EffortFormat>
                 </dd>
 
                 <dt className="col-sm-3 text-end">Project:</dt>
                 <dd className="col-sm-9"><Link
-                    to={`/project/${partner.project.slug}`}>{partner.project.name}</Link></dd>
+                    to={`/projects/${partner.project.slug}`}>{partner.project.name}</Link></dd>
 
                 <dt className="col-sm-3 text-end">Project leader</dt>
                 <dd className="col-sm-9">

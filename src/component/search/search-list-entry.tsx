@@ -104,7 +104,7 @@ export default function searchListEntry({item, searchText}: { item: itemProps; s
                 </div>
                 {score}
             </>
-            link = <Link className="list-group-item list-group-item-action" to={`/project/${item.slug}`}
+            link = <Link className="list-group-item list-group-item-action" to={`/projects/${item.slug}`}
                          title={linkTitle}>{linkLabel}</Link>;
             break;
         case 'organisation':
@@ -127,7 +127,7 @@ export default function searchListEntry({item, searchText}: { item: itemProps; s
                 </div>
                 {score}
             </>
-            link = <Link className="list-group-item list-group-item-action" to={`/organisation/${item.slug}`}
+            link = <Link className="list-group-item list-group-item-action" to={`/organisations/${item.slug}`}
                          title={linkTitle}>{linkLabel}</Link>;
             break;
 

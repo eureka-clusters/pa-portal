@@ -24,22 +24,9 @@ export default function pageRoutes(): RoutePathDefinition[] {
     const authContext = useContext(AuthContext);
 
     return [
-        {title: "Home", path: "/", element: <Page title="Home"/>, nav: true},
-        {title: "Login", path: "/login", element: <Login/>, nav: !authContext.isAuthenticated()},
-        {title: "Logout", path: "/logout", element: <Logout/>, nav: authContext.isAuthenticated()},
-        {title: "Callback", path: "/callback", element: <Callback/>, nav: false},
-        {
-            title: "Account",
-            path: "/account",
-            element: <ProtectedRoute isAuthenticated={authContext.isAuthenticated()}><Account/></ProtectedRoute>,
-            nav: authContext.isAuthenticated()
-        },
-        {
-            title: "Search",
-            path: "/search",
-            element: <ProtectedRoute isAuthenticated={authContext.isAuthenticated()}><Search/></ProtectedRoute>,
-            nav: authContext.isAuthenticated()
-        },
+        {title: "Home", path: "/", element: authContext.isAuthenticated() ? <Page title="Home"/> : <Login />, nav: true},
+        {title: "Login", path: "/login", element: <Login/>, nav: false},
+
         {
             title: "Statistics",
             path: "/statistics",
@@ -47,14 +34,14 @@ export default function pageRoutes(): RoutePathDefinition[] {
             nav: authContext.isAuthenticated(),
             children: [
                 {
-                    title: 'Projects (stats)',
+                    title: 'Projects',
                     path: "projects",
                     element: <ProtectedRoute
                         isAuthenticated={authContext.isAuthenticated()}><ProjectStatistics/></ProtectedRoute>,
                     nav: true
                 },
                 {
-                    title: "Partners (stats)",
+                    title: "Partners",
                     path: "partners",
                     element: <ProtectedRoute
                         isAuthenticated={authContext.isAuthenticated()}><PartnerStatistics/></ProtectedRoute>,
@@ -98,21 +85,36 @@ export default function pageRoutes(): RoutePathDefinition[] {
             nav: authContext.isAuthenticated(),
             children: [
                 {
-                    title: "Organisations (list)",
-                    path: "list",
+                    title: "Organisation list",
+                    path: "",
                     element: <ProtectedRoute
                         isAuthenticated={authContext.isAuthenticated()}><Organisations/></ProtectedRoute>,
                     nav: true
                 },
                 {
                     title: ({match}: ActiveRoutePathTitleCallbackParams<'id'>) => `Param-${match.params.id}`,
-                    path: "organisation/:slug",
+                    path: ":slug",
                     element: <ProtectedRoute
                         isAuthenticated={authContext.isAuthenticated()}><Organisation/></ProtectedRoute>,
                     nav: true
                 },
             ]
         },
+        {
+            title: "Search",
+            path: "/search",
+            element: <ProtectedRoute isAuthenticated={authContext.isAuthenticated()}><Search/></ProtectedRoute>,
+            nav: authContext.isAuthenticated()
+        },
+        {title: "Logout", path: "/logout", element: <Logout/>, nav: authContext.isAuthenticated()},
+        {title: "Callback", path: "/callback", element: <Callback/>, nav: false},
+        {
+            title: "Account",
+            path: "/account",
+            element: <ProtectedRoute isAuthenticated={authContext.isAuthenticated()}><Account/></ProtectedRoute>,
+            nav: authContext.isAuthenticated()
+        },
+
         {
             title: "Catch All - 404",
             path: "*",

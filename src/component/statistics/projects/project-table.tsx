@@ -1,18 +1,19 @@
-import React, {useEffect, useState} from 'react';
-import {Link} from "react-router-dom";
+import React, {useContext, useEffect, useState} from 'react';
+import {createSearchParams, Link} from "react-router-dom";
 import {useGetProjects} from "@/hooks/project/use-get-projects";
 import {Project} from "@/interface/project";
 import downloadBase64File from "@/functions/download-base64";
 import LoadingButton from "@/component/partial/loading-button";
-import axios from "axios";
 import {FilterValues} from "@/interface/statistics/filter-values";
 import {useQuery} from '@/functions/filter-functions';
 import SortableTableHeader from "@/component/partial/sortable-table-header";
 import PaginationLinks from "@/component/partial/pagination-links";
+import {AxiosContext} from "@/providers/axios-provider";
 
 const ProjectTable = ({filter}: { filter: FilterValues }) => {
 
     const filterOptions = useQuery();
+    const axiosContext = useContext(AxiosContext);
 
     const {state, setLocalFilterOptions} = useGetProjects({filterOptions});
     const [isExportLoading, setIsExportButtonLoading] = useState(false);
@@ -46,11 +47,11 @@ const ProjectTable = ({filter}: { filter: FilterValues }) => {
 
 
     const downloadExcel = async () => {
-        await axios.create().get('/statistics/results/project/download/csv?' + filterOptions)
+        await axiosContext.authAxios.get('/statistics/results/project/download/csv?' + createSearchParams(filterOptions))
             .then((res: any) => {
-                let extension = res.extension;
-                let mimetype = res.mimetype;
-                downloadBase64File(mimetype, res.download, 'Download' + extension);
+                let extension = res.data.extension;
+                let mimetype = res.data.mimetype;
+                downloadBase64File(mimetype, res.data.download, 'Download' + extension);
             })
             .catch((err) => {
                 console.error(err);
@@ -71,7 +72,8 @@ const ProjectTable = ({filter}: { filter: FilterValues }) => {
                         Cluster</SortableTableHeader></th>
                     <th><SortableTableHeader sort='secondary_cluster' filterOptions={filterOptions}>Secondary
                         Cluster</SortableTableHeader></th>
-                    <th><SortableTableHeader sort='status' filterOptions={filterOptions}>Status</SortableTableHeader></th>
+                    <th><SortableTableHeader sort='status' filterOptions={filterOptions}>Status</SortableTableHeader>
+                    </th>
                 </tr>
                 </thead>
                 <tbody>

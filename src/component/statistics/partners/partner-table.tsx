@@ -1,18 +1,19 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {useGetPartners} from "@/hooks/partner/use-get-partners";
 import downloadBase64File from "@/functions/download-base64";
 import LoadingButton from "@/component/partial/loading-button";
-import axios from "axios";
 import {useQuery} from '@/functions/filter-functions';
 import {FilterValues} from "@/interface/statistics/filter-values";
 import SortableTableHeader from "@/component/partial/sortable-table-header";
 import {Partner} from "@/interface/project/partner";
-import {Link} from "react-router-dom";
+import {createSearchParams, Link} from "react-router-dom";
 import PaginationLinks from "@/component/partial/pagination-links";
+import {AxiosContext} from "@/providers/axios-provider";
 
 const PartnerTable = ({filter}: { filter: FilterValues }) => {
 
     const filterOptions = useQuery();
+    const axiosContext = useContext(AxiosContext);
 
     const {state, setLocalFilterOptions} = useGetPartners({filterOptions});
     const [isExportLoading, setIsExportButtonLoading] = useState(
@@ -48,12 +49,12 @@ const PartnerTable = ({filter}: { filter: FilterValues }) => {
 
     const downloadExcel = async () => {
 
-        axios.create().get('/statistics/results/partner/download/csv?' + filterOptions,
+        axiosContext.authAxios.get('/statistics/results/partner/download/csv?' + createSearchParams(filterOptions),
         )
             .then((res: any) => {
-                let extension = res.extension;
-                let mimetype = res.mimetype;
-                downloadBase64File(mimetype, res.download, 'Download' + extension);
+                let extension = res.data.extension;
+                let mimetype = res.data.mimetype;
+                downloadBase64File(mimetype, res.data.download, 'Download' + extension);
             })
             .catch((err) => {
                 console.error(err);

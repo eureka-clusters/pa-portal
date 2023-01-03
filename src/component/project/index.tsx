@@ -30,8 +30,10 @@ export default function Project() {
             <dt className="col-sm-3 text-end">Primary Cluster:</dt>
             <dd className="col-sm-9">{project.primaryCluster && project.primaryCluster.name}</dd>
 
-            <dt className="col-sm-3 text-end">Secondary Cluster:</dt>
-            <dd className="col-sm-9">{project.secondaryCluster && project.secondaryCluster.name}</dd>
+            {project.secondaryCluster && <React.Fragment>
+                <dt className="col-sm-3 text-end">Secondary Cluster:</dt>
+                <dd className="col-sm-9">{project.secondaryCluster.name}</dd>
+            </React.Fragment>}
 
             <dt className="col-sm-3 text-end">Programme:</dt>
             <dd className="col-sm-9">{project.programme}</dd>
@@ -62,12 +64,12 @@ export default function Project() {
 
             <dt className="col-sm-3 text-end">Total costs:</dt>
             <dd className="col-sm-9">
-                <CostsFormat value={project.latestVersionTotalCosts}/>
+                <CostsFormat>{project.latestVersionTotalCosts}</CostsFormat>
             </dd>
 
             <dt className="col-sm-3 text-end">Total effort:</dt>
             <dd className="col-sm-9">
-                <EffortFormat value={project.latestVersionTotalEffort}/>
+                <EffortFormat>{project.latestVersionTotalEffort}</EffortFormat>
             </dd>
 
             <dt className="col-sm-3 text-end">Description:</dt>

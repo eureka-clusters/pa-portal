@@ -12,11 +12,6 @@ export default function PartnerStatistics() {
         <React.Fragment>
             <Form>
                 <div className={'row'}>
-                    <div className={'col-12'}>
-                        <h1>Partner statistics</h1>
-                    </div>
-                </div>
-                <div className={'row'}>
                     <div className={'col-2'}>
                         <PartnerFacets filter={filter}
                                        setFilter={setFilter}

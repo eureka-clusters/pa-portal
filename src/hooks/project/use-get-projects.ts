@@ -25,10 +25,7 @@ export const useGetProjects = ({filterOptions}: { filterOptions: FilterOptions }
             try {
                 const controller = new AbortController();
 
-                console.log(localFilterOptions);
-
                 let url = 'list/project?' + createSearchParams(localFilterOptions).toString();
-
                 const result = await axiosContext.authAxios.get(url, {signal: controller.signal});
 
                 if (!didCancel) {

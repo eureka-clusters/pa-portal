@@ -55,7 +55,7 @@ export default function Header() {
                        className="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto text-dark text-decoration-none">
                         <img alt={"Eureka Logo"} className={'pe-2'}
                              src={'/assets/img/logo.png'}/>
-                        <span className="fs-4">PA Report Portal</span>
+                        <span className="fs-4">Eureka Clusters PA Portal</span>
                     </a>
 
                     <Search/>

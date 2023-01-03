@@ -5,7 +5,6 @@ import Header from "@/component/header";
 import Footer from "@/component/footer";
 import {RoutesRenderer} from "@/routing/routes-renderer";
 import {Breadcrumbs} from "@/component/partial/breadcrumbs";
-import {Navigation} from "@/component/partial/navigation";
 
 
 export default function Content() {
@@ -15,14 +14,14 @@ export default function Content() {
     return (
         <React.Fragment>
             <Header/>
-            <Container className="mb-4">
-                <main role="main" className="flex-shrink-0">
+            <main role="main" className="flex-shrink-0">
+                <Container className="mb-4">
                     <Breadcrumbs routes={routes}/>
                     <section>
                         <RoutesRenderer routes={routes}/>
                     </section>
-                </main>
-            </Container>
+                </Container>
+            </main>
             <Footer/>
         </React.Fragment>
     );

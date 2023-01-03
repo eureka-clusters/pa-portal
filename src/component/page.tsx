@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import {Outlet} from "react-router-dom";
 import React from "react";
 
 interface PageProps {
@@ -6,12 +6,12 @@ interface PageProps {
     withOutlet?: boolean;
 }
 
-export function Page({ title, withOutlet: hasOutlet = false, children }: React.PropsWithChildren<PageProps>) {
+export function Page({title, withOutlet: hasOutlet = false, children}: React.PropsWithChildren<PageProps>) {
     return (
         <>
             <h1>{title}</h1>
             {children}
-            {hasOutlet ? <Outlet /> : undefined}
+            {hasOutlet ? <Outlet/> : undefined}
         </>
     );
 }

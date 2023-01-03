@@ -16,18 +16,19 @@ export default function Account() {
             <dt className="col-sm-3 text-end">Name:</dt>
             <dd className="col-sm-9">{userInfo.first_name} {userInfo.last_name}</dd>
             <dt className="col-sm-3 text-end">Is Funder:</dt>
-            <dd className="col-sm-9">{userInfo.is_funder ? 'true' : 'false'}</dd>
+            <dd className="col-sm-9">{userInfo.is_funder ? 'Yes' : 'No'}</dd>
+            <dt className="col-sm-3 text-end">Is ESE Staff:</dt>
+            <dd className="col-sm-9">{userInfo.is_eureka_secretariat_staff_member ? 'Yes' : 'No'}</dd>
             <dt className="col-sm-3 text-end">Funder Country:</dt>
             <dd className="col-sm-9">{userInfo.funder_country}</dd>
-            {userInfo.funder_clusters ? (
+            {userInfo.funder_clusters && userInfo.funder_clusters.length > 0 ? (
                 <>
                     <dt className="col-sm-3 text-end">Funder Clusters:</dt>
                     <dd className="col-sm-9">
-                        <ul>
-                            {userInfo.funder_clusters && userInfo.funder_clusters.map((cluster: string, i: number) => (
-                                <li key={i}>{cluster}</li>
-                            ))}
-                        </ul>
+                        {userInfo.funder_clusters && userInfo.funder_clusters.map((cluster: string, i: number) => (
+                            <span key={i}>{cluster}<br/></span>
+                        ))}
+
                     </dd>
                 </>
             ) : null}

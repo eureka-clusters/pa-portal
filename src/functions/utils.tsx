@@ -7,20 +7,16 @@ import {IconProp} from '@fortawesome/fontawesome-svg-core';
 
 /******************    CostsFormat BEGIN   ******************/
 interface CostsFormatProps {
-    value?: number
     showPrefix?: boolean,
     showSuffix?: boolean,
+    children: number,
 }
 
-export const CostsFormat = ({value, showPrefix, showSuffix}: CostsFormatProps) => {
-
-    if (typeof (value) === 'undefined' || value == null) {
-        return (<></>);
-    }
+export const CostsFormat = ({showPrefix, showSuffix, children}: CostsFormatProps) => {
 
     return (
         <NumericFormat
-            value={value}
+            value={children}
             thousandSeparator={','}
             prefix={showPrefix ? '€ ' : ''}
             suffix={showSuffix ? ' €' : ''}
@@ -40,20 +36,16 @@ CostsFormat.defaultProps = {
 
 /******************    EffortFormat BEGIN   ******************/
 interface EffortFormatProps {
-    value?: number
     showPrefix?: boolean,
     showSuffix?: boolean,
+    children: number,
 }
 
-export const EffortFormat = ({value, showPrefix, showSuffix}: EffortFormatProps) => {
-
-    if (typeof (value) === 'undefined' || value == null) {
-        return (<></>);
-    }
+export const EffortFormat = ({showPrefix, showSuffix, children}: EffortFormatProps) => {
 
     return (
         <NumericFormat
-            value={value}
+            value={children}
             thousandSeparator={','}
             prefix={showPrefix ? 'PY ' : ''}
             suffix={showSuffix ? ' PY' : ''}

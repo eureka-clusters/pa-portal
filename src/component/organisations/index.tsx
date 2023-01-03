@@ -25,7 +25,6 @@ export default function Organisations() {
             <table className="table table-striped">
                 <thead>
                 <tr>
-                    <th>#</th>
                     <th><SortableTableHeader sort='name' filterOptions={filterOptions}>Name</SortableTableHeader></th>
                     <th><SortableTableHeader sort='country' filterOptions={filterOptions}>Country</SortableTableHeader>
                     </th>
@@ -35,9 +34,8 @@ export default function Organisations() {
                 <tbody>
                 {state.data.items && state.data.items.map(
                     (organisation: Organisation, key: number) => (
-                        <tr key={organisation.id}>
-                            <td><small className="text-muted">{key}</small></td>
-                            <td><Link to={`/organisations/organisation/${organisation.slug}`}>{organisation.name}</Link></td>
+                        <tr key={key}>
+                            <td><Link to={`/organisations/${organisation.slug}`}>{organisation.name}</Link></td>
                             <td>{organisation.country.country}</td>
                             <td>{organisation.type.type}</td>
                         </tr>

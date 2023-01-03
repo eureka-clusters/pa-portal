@@ -3,7 +3,6 @@ import dataFetchReducer from "@/hooks/data-fetch-reducer";
 import {createSearchParams} from "react-router-dom";
 import {AxiosContext} from '@/providers/axios-provider';
 import {FilterOptions, ListResponse} from '@/functions/filter-functions';
-import {Project} from "@/interface/project";
 import {Organisation} from "@/interface/organisation";
 
 export const useGetOrganisations = ({filterOptions}: { filterOptions: FilterOptions }) => {
@@ -15,6 +14,8 @@ export const useGetOrganisations = ({filterOptions}: { filterOptions: FilterOpti
     });
 
     const axiosContext = useContext(AxiosContext);
+
+    filterOptions.pageSize = '100';
 
     const [localFilterOptions, setLocalFilterOptions] = useState<FilterOptions>(filterOptions);
 

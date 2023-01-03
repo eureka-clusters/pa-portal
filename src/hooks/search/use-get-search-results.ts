@@ -1,8 +1,10 @@
 import {useContext, useEffect, useReducer, useState} from 'react'
 import dataFetchReducer from "@/hooks/data-fetch-reducer";
 import {createSearchParams} from "react-router-dom";
-import {FilterOptions} from "@/functions/filter-functions";
+import {FilterOptions, ListResponse} from "@/functions/filter-functions";
 import {AxiosContext} from "@/providers/axios-provider";
+import {Project} from "@/interface/project";
+import {Organisation} from "@/interface/organisation";
 
 export const useGetSearchResults = ({filterOptions}: { filterOptions: FilterOptions }) => {
     const [state, dispatch] = useReducer(dataFetchReducer, {
@@ -30,7 +32,15 @@ export const useGetSearchResults = ({filterOptions}: { filterOptions: FilterOpti
                 const result = await axiosContext.authAxios.get(url, {signal: controller.signal});
 
                 if (!didCancel) {
-                    dispatch({type: 'FETCH_SUCCESS', payload: result.data});
+
+                    let payload: ListResponse<Project | Organisation> = {
+                        items: result.data._embedded.items,
+                        page: result.data.page,
+                        page_count: result.data.page_count,
+                        total_items: result.data.total_items,
+                    }
+
+                    dispatch({type: 'FETCH_SUCCESS', payload: payload});
                 }
 
                 controller.abort();
