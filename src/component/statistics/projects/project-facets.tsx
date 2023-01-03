@@ -1,6 +1,6 @@
 import {FC} from 'react';
 import {Form} from "react-bootstrap";
-import BootstrapSwitchButton from "bootstrap-switch-button-react";
+// import BootstrapSwitchButton from "bootstrap-switch-button-react";
 import RS from 'react-select';
 import {FilterValues} from "@/interface/statistics/filter-values";
 import {useGetPartnerFacets} from "@/hooks/partner/use-get-facets";
@@ -47,14 +47,14 @@ const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter}) => {
         state.data && <>
             <fieldset>
                 <legend><small>Countries</small></legend>
-                <BootstrapSwitchButton checked={filter['countryMethod'] === 'and'}
-                                       size="sm"
-                                       onlabel={"and"}
-                                       offlabel={"or"}
-                                       onstyle={'primary'}
-                                       offstyle={'secondary'}
-                                       onChange={updateCountryMethod}
-                />
+                {/*<BootstrapSwitchButton checked={filter['countryMethod'] === 'and'}*/}
+                {/*                       size="sm"*/}
+                {/*                       onlabel={"and"}*/}
+                {/*                       offlabel={"or"}*/}
+                {/*                       onstyle={'primary'}*/}
+                {/*                       offstyle={'secondary'}*/}
+                {/*                       onChange={updateCountryMethod}*/}
+                {/*/>*/}
 
                 <div style={{margin: '5px 0px'}}>
                     <ReactSelect
@@ -89,12 +89,12 @@ const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter}) => {
             <fieldset>
                 <legend><small>Organisation type</small></legend>
 
-                <BootstrapSwitchButton checked={filter['organisationTypeMethod'] === 'and'}
-                                       size="sm"
-                                       onlabel={"and"}
-                                       offlabel={"or"}
-                                       onstyle={'primary'}
-                                       offstyle={'secondary'} onChange={updateOrganisationTypeMethod}/>
+                {/*<BootstrapSwitchButton checked={filter['organisationTypeMethod'] === 'and'}*/}
+                {/*                       size="sm"*/}
+                {/*                       onlabel={"and"}*/}
+                {/*                       offlabel={"or"}*/}
+                {/*                       onstyle={'primary'}*/}
+                {/*                       offstyle={'secondary'} onChange={updateOrganisationTypeMethod}/>*/}
 
                 {facets.organisationTypes && facets.organisationTypes.map((organisationType, i) => (
                     <div key={i}>
