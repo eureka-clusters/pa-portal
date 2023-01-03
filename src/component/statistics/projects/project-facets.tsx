@@ -1,7 +1,7 @@
 import {FC} from 'react';
 import {Form} from "react-bootstrap";
 import BootstrapSwitchButton from "bootstrap-switch-button-react";
-import {default as ReactSelect} from "react-select";
+import RS from 'react-select';
 import {FilterValues} from "@/interface/statistics/filter-values";
 import {useGetPartnerFacets} from "@/hooks/partner/use-get-facets";
 import {Facets} from "@/interface/statistics/project/facets";
@@ -16,6 +16,8 @@ interface Props {
 const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter}) => {
 
     const {state} = useGetPartnerFacets(filter);
+    //https://github.com/vitejs/vite/issues/2139#issuecomment-1230773695
+    const ReactSelect = (RS as any).default ? (RS as any).default : RS;
 
     const updateCountryMethod = (event: any) => {
         const updatedValues = {
@@ -68,8 +70,8 @@ const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter}) => {
                             })
                         }
 
-                        getOptionLabel={(option) => `${option.name}`}
-                        getOptionValue={(option) => `${option['name']}`}
+                        getOptionLabel={(option: { name: any; }) => `${option.name}`}
+                        getOptionValue={(option: { [x: string]: any; }) => `${option['name']}`}
 
                         closeMenuOnSelect={false}
                         onChange={(choices: any) => {
@@ -150,8 +152,8 @@ const ProjectFacets: FC<Props> = ({filter, setFilter, updateFilter}) => {
                             })
                         }
                         // getOptionLabel={(option) => `${option.name} (${option.amount})`}
-                        getOptionLabel={(option) => `${option.name}`}
-                        getOptionValue={(option) => `${option['name']}`}
+                        getOptionLabel={(option: { name: any; }) => `${option.name}`}
+                        getOptionValue={(option: { [x: string]: any; }) => `${option['name']}`}
                         closeMenuOnSelect={false}
                         onChange={(choices: any) => {
                             let updatedValues: { [key: string]: Array<string> } = {};
