@@ -5,7 +5,7 @@ import {AxiosProvider} from "@/providers/axios-provider";
 import {UserProvider} from "@/providers/user-provider";
 import Content from "@/component/content";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
-import {ReactQueryDevtools} from "@tanstack/react-query-devtools";
+// import {ReactQueryDevtools} from "@tanstack/react-query-devtools";
 import {BrowserRouter} from "react-router-dom";
 import './App.scss';
 
