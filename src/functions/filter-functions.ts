@@ -17,7 +17,7 @@ export type ListResponse<T> = {
     total_items: number
 }
 
-export function useQuery(): FilterOptions {
+export function useGetFilterOptions(): FilterOptions {
     const {search} = useLocation();
 
     return useMemo(() => {

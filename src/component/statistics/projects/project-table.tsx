@@ -1,35 +1,31 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {createSearchParams, Link} from "react-router-dom";
-import {useGetProjects} from "@/hooks/project/use-get-projects";
+import {getProjects} from "@/hooks/project/get-projects";
 import {Project} from "@/interface/project";
 import downloadBase64File from "@/functions/download-base64";
 import LoadingButton from "@/component/partial/loading-button";
 import {FilterValues} from "@/interface/statistics/filter-values";
-import {useQuery} from '@/functions/filter-functions';
+import {useGetFilterOptions} from '@/functions/filter-functions';
 import SortableTableHeader from "@/component/partial/sortable-table-header";
 import PaginationLinks from "@/component/partial/pagination-links";
 import {AxiosContext} from "@/providers/axios-provider";
+import {useQuery} from "@tanstack/react-query";
+import {CostsFormat, EffortFormat} from "@/functions/utils";
 
-const ProjectTable = ({filter}: { filter: FilterValues }) => {
+const ProjectTable = ({filterValues}: { filterValues: FilterValues }) => {
 
-    const filterOptions = useQuery();
+    const filterOptions = useGetFilterOptions();
     const axiosContext = useContext(AxiosContext);
 
-    const {state, setLocalFilterOptions} = useGetProjects({filterOptions});
     const [isExportLoading, setIsExportButtonLoading] = useState(false);
 
-    useEffect(() => {
+    const authAxios = useContext(AxiosContext).authAxios;
 
-        //Add the filter (bzipped) to the filterOptions
-        filterOptions.filter = btoa(JSON.stringify(filter));
-
-        setLocalFilterOptions({...filterOptions, filter: btoa(JSON.stringify(filter))});
-
-    }, [filterOptions, filter]);
-
-    function setPage(page: string) {
-        setLocalFilterOptions({...filterOptions, page});
-    }
+    const {isLoading, isError, data} = useQuery({
+        queryKey: ['projectStatistics', filterOptions, filterValues],
+        keepPreviousData: true,
+        queryFn: () => getProjects({authAxios, filterOptions, filterValues})
+    });
 
 
     useEffect(() => {
@@ -58,6 +54,14 @@ const ProjectTable = ({filter}: { filter: FilterValues }) => {
             });
     }
 
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
+
+    if (isError) {
+        return <div>Error</div>;
+    }
+
 
     return (
         <React.Fragment>
@@ -65,7 +69,6 @@ const ProjectTable = ({filter}: { filter: FilterValues }) => {
             <table className="table table-striped">
                 <thead>
                 <tr>
-                    <th>#</th>
                     <th><SortableTableHeader sort='name' filterOptions={filterOptions}>Project</SortableTableHeader>
                     </th>
                     <th><SortableTableHeader sort='primary_cluster' filterOptions={filterOptions}>Primary
@@ -74,24 +77,29 @@ const ProjectTable = ({filter}: { filter: FilterValues }) => {
                         Cluster</SortableTableHeader></th>
                     <th><SortableTableHeader sort='status' filterOptions={filterOptions}>Status</SortableTableHeader>
                     </th>
+                    <th><SortableTableHeader sort='latest_version_effort' filterOptions={filterOptions}>Effort (latest
+                        version)</SortableTableHeader></th>
+                    <th><SortableTableHeader sort='latest_version_costs' filterOptions={filterOptions}>Costs (latest
+                        version)</SortableTableHeader></th>
                 </tr>
                 </thead>
                 <tbody>
-                {state.data.items && state.data.items.map(
+                {data.projects?.map(
                     (project: Project, key: number) => (
                         <tr key={project.number}>
-                            <td><small className="text-muted">{key}</small></td>
                             <td><Link to={`/projects/${project.slug}`}>{project.name}</Link></td>
                             <td>{project.primaryCluster.name}</td>
                             <td>{project.secondaryCluster?.name}</td>
                             <td>{project.status.status}</td>
+                            <td><EffortFormat>{project.latestVersionTotalEffort}</EffortFormat></td>
+                            <td><CostsFormat>{project.latestVersionTotalCosts}</CostsFormat></td>
                         </tr>
                     )
                 )}
                 </tbody>
             </table>
 
-            <PaginationLinks state={state} setPage={setPage}/>
+            <PaginationLinks data={data}/>
 
             <div className="datatable-download">
                 <LoadingButton

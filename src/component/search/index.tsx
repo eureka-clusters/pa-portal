@@ -1,36 +1,44 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import './search.scss';
-import {useQuery} from "@/functions/filter-functions";
-import {useGetSearchResults} from "@/hooks/search/use-get-search-results";
+import {useGetFilterOptions} from "@/functions/filter-functions";
+import {getSearchResults} from "@/hooks/search/get-search-results";
 import SearchList from "@/component/search/search-list";
 import {Form} from "react-bootstrap";
+import {AxiosContext} from "@/providers/axios-provider";
+import {useQuery} from "@tanstack/react-query";
 
 export default function Search() {
 
-    const filterOptions = useQuery();
+    const filterOptions = useGetFilterOptions();
 
     const [searchText, setSearchText] = useState<string>('');
     const [searching, setSearching] = useState<boolean>(false);
 
+    const authAxios = useContext(AxiosContext).authAxios;
 
-    let {state, setLocalFilterOptions} = useGetSearchResults({filterOptions});
+    const {isLoading, isError, data} = useQuery({
+        queryKey: ['searchResults', filterOptions, searchText],
+        keepPreviousData: true,
+        enabled: !searching,
+        queryFn: () => getSearchResults({authAxios, filterOptions, query: searchText})
+    });
+
 
     useEffect(() => {
         setSearchText(filterOptions.query);
 
         setTimeout(() => {
-            setLocalFilterOptions(filterOptions);
             setSearching(false);
         }, 1000);
     }, [filterOptions]);
 
     const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         const {value} = e.target;
+
         setSearchText(value);
         setSearching(true);
         //Update search with delay
         setTimeout(() => {
-            setLocalFilterOptions({...filterOptions, query: value});
             setSearching(false);
         }, 1000);
     };
@@ -53,7 +61,7 @@ export default function Search() {
 
             {searching && <p>Searching...</p>}
 
-            {searchText && state.data.items && <SearchList results={state.data.items} searchText={searchText}/>}
+            {searchText && data?.results && <SearchList results={data.results} searchText={searchText}/>}
         </>
     );
 }

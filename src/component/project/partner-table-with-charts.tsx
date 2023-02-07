@@ -1,16 +1,17 @@
-import React, {FC, Suspense, useState} from 'react';
+import React, {FC, Suspense, useContext, useState} from 'react';
 import {Project} from "@/interface/project";
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
 import PartnerTable from './partner-table';
-
 import OrganisationTypeChart from '@/component/project/charts/organisation-type-chart';
 import OrganisationCountryChart from '@/component/project/charts/country-chart';
 import BudgetByOrganisationTypeChart from '@/component/project/charts/budget-by-organisation-type-chart';
 import BudgetByCountryChart from '@/component/project/charts/budget-and-effort-by-country-chart';
-
-import {useGetPartners} from "@/hooks/partner/use-get-partners";
-import {useQuery} from '@/functions/filter-functions';
+import {getPartners} from "@/hooks/partner/get-partners";
+import {useGetFilterOptions} from '@/functions/filter-functions';
+import {useQuery} from "@tanstack/react-query";
+import {AxiosContext} from "@/providers/axios-provider";
+import {Partner} from "@/interface/project/partner";
 
 interface Props {
     project: Project
@@ -19,15 +20,20 @@ interface Props {
 const PartnerTableWithCharts: FC<Props> = ({project}) => {
 
     const [activeTab, setActiveTab] = useState('table'); // default tab
-    const filterOptions = useQuery();
+    const filterOptions = useGetFilterOptions();
+    const authAxios = useContext(AxiosContext).authAxios;
 
-    const {state, setLocalFilterOptions} = useGetPartners({filterOptions: filterOptions, project: project});
+    const {isLoading, isError, data} = useQuery({
+        queryKey: ['projectPartners', filterOptions, project],
+        keepPreviousData: true,
+        queryFn: () => getPartners({authAxios, filterOptions, project})
+    });
 
-    const partners = state.data.items;
-
-    if (state.isLoading) {
+    if (isLoading) {
         return <div>Loading...</div>
     }
+
+    const partners: Partner[] = data!.partners
 
     return (
         <React.Fragment>

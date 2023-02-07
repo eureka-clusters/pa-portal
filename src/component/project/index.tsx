@@ -1,20 +1,35 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import moment from 'moment';
-import {useGetProject} from "@/hooks/project/use-get-project";
+import {getProject} from "@/hooks/project/get-project";
 import {CostsFormat, EffortFormat} from '@/functions/utils';
 import {useParams} from "react-router-dom";
 import PartnerTableWithCharts from "@/component/project/partner-table-with-charts";
+import {AxiosContext} from "@/providers/axios-provider";
+import {useQuery} from "@tanstack/react-query";
 
 export default function Project() {
 
     const {slug} = useParams();
-    const {state} = useGetProject(slug === undefined ? '' : slug);
 
-    if (state.isLoading) {
-        return <div>Loading...</div>
+    if (slug === undefined) {
+        return <div>Error</div>;
     }
 
-    const project = state.data;
+    const authAxios = useContext(AxiosContext).authAxios;
+
+    const {isLoading, isError, data: project} = useQuery({
+        queryKey: ['project', slug],
+        keepPreviousData: true,
+        queryFn: () => getProject({authAxios, slug})
+    });
+
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
+
+    if (isError) {
+        return <div>Error</div>;
+    }
 
     return <>
         <dl className="row">

@@ -1,21 +1,33 @@
-import React from 'react';
+import React, {useContext} from 'react';
 
 import {Link, useParams} from "react-router-dom";
 import {CostsFormat, EffortFormat} from '@/functions/utils';
-import {useGetPartner} from "@/hooks/partner/use-get-partner";
-import {Partner as PartnerInterface} from "@/interface/project/partner";
+import {AxiosContext} from "@/providers/axios-provider";
+import {useQuery} from "@tanstack/react-query";
+import {getPartner} from "@/hooks/partner/get-partner";
 
 export default function Partner() {
 
-
     const {slug} = useParams();
-    const {state} = useGetPartner(slug === undefined ? '' : slug);
-
-    if (state.isLoading) {
-        return <div>Loading...</div>
+    if (slug === undefined) {
+        return <div>Error</div>;
     }
 
-    let partner: PartnerInterface = state.data;
+    const authAxios = useContext(AxiosContext).authAxios;
+
+    const {isLoading, isError, data: partner} = useQuery({
+        queryKey: ['partner', slug],
+        keepPreviousData: true,
+        queryFn: () => getPartner({authAxios, slug})
+    });
+
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
+
+    if (isError) {
+        return <div>Error</div>;
+    }
 
     return (
         <React.Fragment>
@@ -25,7 +37,7 @@ export default function Partner() {
 
                 <dt className="col-sm-3 text-end">Organisation:</dt>
                 <dd className="col-sm-9"><Link
-                    to={`/organisation/${partner.organisation.slug}`}>{partner.organisation.name}</Link></dd>
+                    to={`/organisations/${partner.organisation.slug}`}>{partner.organisation.name}</Link></dd>
 
                 <dt className="col-sm-3 text-end">Type:</dt>
                 <dd className="col-sm-9">{partner.organisation.type.type}</dd>

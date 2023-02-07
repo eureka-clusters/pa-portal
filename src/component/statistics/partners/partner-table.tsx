@@ -1,38 +1,30 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {useGetPartners} from "@/hooks/partner/use-get-partners";
+import {getPartners} from "@/hooks/partner/get-partners";
 import downloadBase64File from "@/functions/download-base64";
 import LoadingButton from "@/component/partial/loading-button";
-import {useQuery} from '@/functions/filter-functions';
+import {useGetFilterOptions} from '@/functions/filter-functions';
 import {FilterValues} from "@/interface/statistics/filter-values";
 import SortableTableHeader from "@/component/partial/sortable-table-header";
 import {Partner} from "@/interface/project/partner";
 import {createSearchParams, Link} from "react-router-dom";
 import PaginationLinks from "@/component/partial/pagination-links";
 import {AxiosContext} from "@/providers/axios-provider";
+import {useQuery} from "@tanstack/react-query";
 
-const PartnerTable = ({filter}: { filter: FilterValues }) => {
+const PartnerTable = ({filterValues}: { filterValues: FilterValues }) => {
 
-    const filterOptions = useQuery();
+    const filterOptions = useGetFilterOptions();
     const axiosContext = useContext(AxiosContext);
 
-    const {state, setLocalFilterOptions} = useGetPartners({filterOptions});
-    const [isExportLoading, setIsExportButtonLoading] = useState(
-        false
-    );
+    const [isExportLoading, setIsExportButtonLoading] = useState(false);
 
-    useEffect(() => {
+    const authAxios = useContext(AxiosContext).authAxios;
 
-        //Add the filter (bzipped) to the filterOptions
-        filterOptions.filter = btoa(JSON.stringify(filter));
-
-        setLocalFilterOptions({...filterOptions, filter: btoa(JSON.stringify(filter))});
-
-    }, [filterOptions, filter]);
-
-    function setPage(page: string) {
-        setLocalFilterOptions({...filterOptions, page});
-    }
-
+    const {isLoading, isError, data} = useQuery({
+        queryKey: ['partnerStatistics', filterOptions, filterValues],
+        keepPreviousData: true,
+        queryFn: () => getPartners({authAxios, filterOptions, filterValues})
+    });
 
     useEffect(() => {
         if (isExportLoading) {
@@ -61,6 +53,13 @@ const PartnerTable = ({filter}: { filter: FilterValues }) => {
             });
     }
 
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
+
+    if (isError) {
+        return <div>Error</div>;
+    }
 
     // const hasYearFilter = filterOptions.filter.year !== undefined && filterOptions.filter.year.length > 0;
 
@@ -72,7 +71,6 @@ const PartnerTable = ({filter}: { filter: FilterValues }) => {
             <table className="table table-striped">
                 <thead>
                 <tr>
-                    <th>#</th>
                     <th><SortableTableHeader sort='name'
                                              filterOptions={filterOptions}>Organisation</SortableTableHeader>
                     </th>
@@ -89,10 +87,9 @@ const PartnerTable = ({filter}: { filter: FilterValues }) => {
                 </tr>
                 </thead>
                 <tbody>
-                {state.data.items && state.data.items.map(
+                {data.partners?.map(
                     (partner: Partner, key: number) => (
                         <tr key={key}>
-                            <td><small className="text-muted">{partner.id}</small></td>
                             <td><Link to={`/projects/partner/${partner.slug}`}>{partner.organisation.name}</Link></td>
                             <td><Link to={`/projects/${partner.project.slug}`}>{partner.project.name}</Link></td>
                             <td>{partner.project.primaryCluster.name}</td>
@@ -104,7 +101,7 @@ const PartnerTable = ({filter}: { filter: FilterValues }) => {
                 </tbody>
             </table>
 
-            <PaginationLinks state={state} setPage={setPage}/>
+            <PaginationLinks data={data}/>
 
 
             <div className="datatable-download">

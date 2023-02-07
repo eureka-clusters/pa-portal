@@ -4,14 +4,14 @@ import {FilterValues} from "@/interface/statistics/filter-values";
 
 function TableFilter() {
 
-    const [filter, setFilter] = useState<FilterValues>({} as FilterValues);
+    const [filterValues, setFilter] = useState<FilterValues>({} as FilterValues);
 
     const updateFilter = (event: any) => {
         const target = event.target;
 
         let targetName = target.name;
         const value = target.value;
-        const updatedValues: any = {...filter};
+        const updatedValues: any = {...filterValues};
 
         if (target.type === 'checkbox') {
             // slice is required otherwise currentValue would be reference to filter[name] and any modification will change filter directly
@@ -36,7 +36,7 @@ function TableFilter() {
 
     return {
         updateFilter,
-        filter,
+        filterValues,
         setFilter
     };
 }

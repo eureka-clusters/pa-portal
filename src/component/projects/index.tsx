@@ -1,25 +1,32 @@
-import {useGetProjects} from '@/hooks/project/use-get-projects';
-import React, {useEffect} from 'react';
+import {getProjects} from '@/hooks/project/get-projects';
+import React, {useContext} from 'react';
 import {Link} from 'react-router-dom';
-import {useQuery} from '@/functions/filter-functions';
+import {useGetFilterOptions} from '@/functions/filter-functions';
 import {Project} from '@/interface/project';
 import SortableTableHeader from '@/component/partial/sortable-table-header';
-import PaginationLinks from "@/component/partial/pagination-links";
 import {CostsFormat, EffortFormat} from "@/functions/utils";
+import {useQuery} from "@tanstack/react-query";
+import {AxiosContext} from "@/providers/axios-provider";
+import PaginationLinks from "@/component/partial/pagination-links";
 
 // Then, use it in a component.
 export default function Projects() {
 
-    const filterOptions = useQuery();
+    const filterOptions = useGetFilterOptions();
+    const authAxios = useContext(AxiosContext).authAxios;
 
-    const {state, setLocalFilterOptions} = useGetProjects({filterOptions});
+    const {isLoading, isError, data} = useQuery({
+        queryKey: ['projects', filterOptions],
+        keepPreviousData: true,
+        queryFn: () => getProjects({authAxios, filterOptions})
+    });
 
-    useEffect(() => {
-        setLocalFilterOptions(filterOptions);
-    }, [filterOptions]);
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
 
-    function setPage(page: string) {
-        setLocalFilterOptions({...filterOptions, page});
+    if (isError) {
+        return <div>Error</div>;
     }
 
     return (
@@ -27,7 +34,8 @@ export default function Projects() {
             <table className="table table-striped">
                 <thead>
                 <tr>
-                    <th><SortableTableHeader sort='number' filterOptions={filterOptions}>Number</SortableTableHeader></th>
+                    <th><SortableTableHeader sort='number' filterOptions={filterOptions}>Number</SortableTableHeader>
+                    </th>
                     <th><SortableTableHeader sort='name' filterOptions={filterOptions}>Project</SortableTableHeader>
                     </th>
                     <th><SortableTableHeader sort='primary_cluster' filterOptions={filterOptions}>Primary
@@ -43,7 +51,7 @@ export default function Projects() {
                 </tr>
                 </thead>
                 <tbody>
-                {state.data.items && state.data.items.map(
+                {data.projects?.map(
                     (project: Project, key: number) => (
                         <tr key={key}>
                             <td><small className="text-muted">{project.number}</small></td>
@@ -59,7 +67,7 @@ export default function Projects() {
                 </tbody>
             </table>
 
-            <PaginationLinks state={state} setPage={setPage}/>
+            <PaginationLinks data={data}/>
 
         </React.Fragment>
     );

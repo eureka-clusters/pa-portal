@@ -7,7 +7,7 @@ import TableFilter from '@/functions/api/table-filter';
 
 export default function ProjectStatistics() {
 
-    const {updateFilter, filter, setFilter} = TableFilter();
+    const {updateFilter, filterValues, setFilter} = TableFilter();
 
     return (
         <React.Fragment>
@@ -15,13 +15,13 @@ export default function ProjectStatistics() {
                 <div className={'row'}>
                     <div className={'col-2'}>
                         <ProjectFacets
-                            filter={filter}
+                            filterValues={filterValues}
                             setFilter={setFilter}
                             updateFilter={updateFilter}
                         />
                     </div>
                     <div className={'col-10'}>
-                        <ProjectTable filter={filter}/>
+                        <ProjectTable filterValues={filterValues}/>
                     </div>
                 </div>
             </Form>

@@ -1,10 +1,12 @@
-import React, {FC} from 'react';
+import React, {FC, useContext} from 'react';
 import {Link} from "react-router-dom";
 import {Partner} from "@/interface/project/partner";
 import {Organisation} from "@/interface/organisation";
-import {useGetPartners} from "@/hooks/partner/use-get-partners";
-import {useQuery} from '@/functions/filter-functions';
+import {getPartners} from "@/hooks/partner/get-partners";
+import {useGetFilterOptions} from '@/functions/filter-functions';
+import {AxiosContext} from "@/providers/axios-provider";
 import SortableTableHeader from '@/component/partial/sortable-table-header';
+import {useQuery} from "@tanstack/react-query";
 
 interface Props {
     organisation: Organisation
@@ -12,11 +14,22 @@ interface Props {
 
 const PartnerTable: FC<Props> = ({organisation}) => {
 
-    const filterOptions = useQuery();
-    const {state, setLocalFilterOptions} = useGetPartners({filterOptions, organisation});
+    const filterOptions = useGetFilterOptions();
 
-    function setPage(page: string) {
-        setLocalFilterOptions({...filterOptions, page});
+    const authAxios = useContext(AxiosContext).authAxios;
+
+    const {isLoading, isError, data} = useQuery({
+        queryKey: ['partner_projects', organisation, filterOptions],
+        keepPreviousData: true,
+        queryFn: () => getPartners({authAxios, filterOptions, organisation})
+    });
+
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
+
+    if (isError) {
+        return <div>Error</div>;
     }
 
     return (
@@ -26,22 +39,22 @@ const PartnerTable: FC<Props> = ({organisation}) => {
             <table className="table table-striped">
                 <thead>
                 <tr>
-                    <th>#</th>
                     <th><SortableTableHeader sort='name' filterOptions={filterOptions}>Name</SortableTableHeader></th>
                     <th><SortableTableHeader sort='country' filterOptions={filterOptions}>Country</SortableTableHeader>
                     </th>
+                    <th><SortableTableHeader sort='project' filterOptions={filterOptions}>Project</SortableTableHeader></th>
                     <th><SortableTableHeader sort='type' filterOptions={filterOptions}>Type</SortableTableHeader></th>
                 </tr>
                 </thead>
                 <tbody>
-                {state.data.items && state.data.items.map(
+                {data?.partners.map(
                     (partner: Partner, key: number) => (
                         <tr key={partner.id}>
-                            <td><small className="text-muted">{key}</small></td>
                             <td><Link
                                 to={`/projects/partner/${partner.slug}`}>{partner.organisation.name}</Link>
                             </td>
                             <td>{partner.organisation.country.country}</td>
+                            <td><Link to={`/projects/${partner.project.slug}`}>{partner.project.name}</Link></td>
                             <td>{partner.organisation.type.type}</td>
                         </tr>
                     )

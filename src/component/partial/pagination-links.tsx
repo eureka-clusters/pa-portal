@@ -1,14 +1,14 @@
 import Pagination from 'react-bootstrap/Pagination';
+import {Link} from "react-router-dom";
 
-const PaginationLinks = ({state, setPage}: { state: any, setPage: any }) => {
+const PaginationLinks = ({data}: { data: any, }) => {
 
-    let active = state.data.page;
     let items = [];
-    for (let number = 1; number <= state.data.page_count; number++) {
+    for (let number = 1; number <= data.amountOfPages; number++) {
         items.push(
-            <Pagination.Item key={number} active={number === active} onClick={() => setPage(number)}>
-                {number}
-            </Pagination.Item>,
+            <li className={data.currentPage === number ? 'page-item active' : 'page-item'} key={number}>
+                <Link className={'page-link'} to={`?page=${number}`}>{number}</Link>
+            </li>
         );
     }
 

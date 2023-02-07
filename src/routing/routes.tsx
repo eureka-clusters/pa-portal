@@ -63,14 +63,14 @@ export default function pageRoutes(): RoutePathDefinition[] {
                     nav: true
                 },
                 {
-                    title: ({match}: ActiveRoutePathTitleCallbackParams<'id'>) => `Param-${match.params.id}`,
+                    title: ({match}: ActiveRoutePathTitleCallbackParams<'id'>) => `Project`,
                     path: ":slug",
                     element: <ProtectedRoute
                         isAuthenticated={authContext.isAuthenticated()}><Project/></ProtectedRoute>,
                     nav: true,
                 },
                 {
-                    title: ({match}: ActiveRoutePathTitleCallbackParams<'id'>) => `Param-${match.params.id}`,
+                    title: ({match}: ActiveRoutePathTitleCallbackParams<'id'>) => `Project Partner`,
                     path: "partner/:slug",
                     element: <ProtectedRoute
                         isAuthenticated={authContext.isAuthenticated()}><Partner/></ProtectedRoute>,
@@ -92,7 +92,7 @@ export default function pageRoutes(): RoutePathDefinition[] {
                     nav: true
                 },
                 {
-                    title: ({match}: ActiveRoutePathTitleCallbackParams<'id'>) => `Param-${match.params.id}`,
+                    title: ({match}: ActiveRoutePathTitleCallbackParams<'id'>) => `Organisation`,
                     path: ":slug",
                     element: <ProtectedRoute
                         isAuthenticated={authContext.isAuthenticated()}><Organisation/></ProtectedRoute>,
