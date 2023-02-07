@@ -25,7 +25,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
                     <QueryClientProvider client={queryClient}>
                         <UserProvider>
                             <Content/>
-                            <ReactQueryDevtools/>
+                            {/*<ReactQueryDevtools/>*/}
                         </UserProvider>
                     </QueryClientProvider>
                 </AxiosProvider>
