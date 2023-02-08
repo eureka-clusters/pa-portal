@@ -1,28 +1,31 @@
-import { createContext } from "react";
-import { User } from "@/interface/auth/user";
+import {createContext} from "react";
+import {User} from "@/interface/auth/user";
 import axios from "axios";
-import { getServerUri } from "@/functions/get-server-uri";
+import {getServerUri} from "@/functions/get-server-uri";
 
 const UserContext = createContext<UserContextContent>({} as UserContextContent);
 
 interface UserContextContent {
     getUser: () => User,
-    loadUser: (token: string) => void
+    loadUser: (token: string) => Promise<User>
 }
 
 
-const UserProvider = ({ children }: { children: any }) => {
+const UserProvider = ({children}: { children: any }) => {
 
     let storage = localStorage;
 
-    const loadUser = async (token: string) => {
-        const response = await axios.get<User>(getServerUri() + '/api/me', {
+    const loadUser = (token: string) => {
+
+        return axios.get<User>(getServerUri() + '/api/me', {
             headers: {
                 'Authorization': 'Bearer ' + token
             }
-        });
+        }).then(response => {
+            storage.setItem('user', JSON.stringify(response.data));
 
-        storage.setItem('user', JSON.stringify(response.data));
+            return response.data;
+        });
     }
 
     const getUser = (): User => {
@@ -38,11 +41,11 @@ const UserProvider = ({ children }: { children: any }) => {
 
     return (
         <UserContext.Provider
-            value={{ getUser, loadUser }}>
+            value={{getUser, loadUser}}>
             {children}
         </UserContext.Provider>
     );
 };
 
-export { UserContext, UserProvider };
+export {UserContext, UserProvider};
 

@@ -1,4 +1,4 @@
-import {useContext, useEffect} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import {AuthContext} from '@/providers/auth-provider';
 import {Navigate, useSearchParams} from "react-router-dom";
 import {UserContext} from "@/providers/user-provider";
@@ -10,6 +10,7 @@ export default function Callback() {
 
     const authContext = useContext(AuthContext);
     const userContext = useContext(UserContext);
+    const [hasUser, setHasUser] = useState(false);
 
     const [searchParams] = useSearchParams();
 
@@ -26,12 +27,15 @@ export default function Callback() {
             }
         )
 
-        userContext.loadUser(token);
+        const user = userContext.loadUser(token);
 
+        user.then(() => {
+            setHasUser(true);
+        });
 
     }, [searchParams]);
 
-    if (authContext.isAuthenticated()) {
+    if (authContext.isAuthenticated() && hasUser) {
         return <Navigate to={'/account'}/>
     }
 
