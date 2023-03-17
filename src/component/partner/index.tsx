@@ -5,6 +5,7 @@ import {CostsFormat, EffortFormat} from '@/functions/utils';
 import {AxiosContext} from "@/providers/axios-provider";
 import {useQuery} from "@tanstack/react-query";
 import {getPartner} from "@/hooks/partner/get-partner";
+import {UserContext} from "@/providers/user-provider";
 
 export default function Partner() {
 
@@ -14,6 +15,7 @@ export default function Partner() {
     }
 
     const authAxios = useContext(AxiosContext).authAxios;
+    const user = useContext(UserContext).getUser();
 
     const {isLoading, isError, data: partner} = useQuery({
         queryKey: ['partner', slug],
@@ -56,8 +58,11 @@ export default function Partner() {
 
                 <dt className="col-sm-3 text-end">Technical contact:</dt>
                 <dd className="col-sm-9">
-                    {String(partner.technicalContact.fullName)} (<a
-                    href={`mailto:${partner.technicalContact.email}`}>{partner.technicalContact.email}</a>)
+                    {String(partner.technicalContact.fullName)}
+
+                    {partner.technicalContact.email && !user.is_eureka_secretariat_staff_member ?
+                        ` (${String(partner.technicalContact.email)})` : ''
+                    }
                 </dd>
 
                 <dt className="col-sm-3 text-end">Total costs (latest version)</dt>
@@ -76,8 +81,11 @@ export default function Partner() {
 
                 <dt className="col-sm-3 text-end">Project leader</dt>
                 <dd className="col-sm-9">
-                    {String(partner.project.projectLeader.fullName)} (<a
-                    href={`mailto:${partner.project.projectLeader.email}`}>{partner.project.projectLeader.email}</a>)
+                    {String(partner.project.projectLeader.fullName)}
+
+                    {partner.project.projectLeader.email && !user.is_eureka_secretariat_staff_member ?
+                        ` (${String(partner.project.projectLeader.email)})` : ''
+                    }
                 </dd>
             </dl>
 

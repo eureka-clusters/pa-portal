@@ -6,6 +6,7 @@ import {useParams} from "react-router-dom";
 import PartnerTableWithCharts from "@/component/project/partner-table-with-charts";
 import {AxiosContext} from "@/providers/axios-provider";
 import {useQuery} from "@tanstack/react-query";
+import {UserContext} from "@/providers/user-provider";
 
 export default function Project() {
 
@@ -16,6 +17,7 @@ export default function Project() {
     }
 
     const authAxios = useContext(AxiosContext).authAxios;
+    const user = useContext(UserContext).getUser();
 
     const {isLoading, isError, data: project} = useQuery({
         queryKey: ['project', slug],
@@ -62,14 +64,18 @@ export default function Project() {
                 <dd className="col-sm-9">{String(project.coordinator.organisation)}<br/>
                     {project.coordinator.technicalContact && <>
                         {String(project.coordinator.technicalContact.fullName)}
-                        {project.coordinator.technicalContact.email ? ` (${String(project.coordinator.technicalContact.email)})` : ''}
+                        {project.coordinator.technicalContact.email && !user.is_eureka_secretariat_staff_member ? ` (${String(project.coordinator.technicalContact.email)})` : ''}
                     </>}
                 </dd>
             </>}
 
 
             <dt className="col-sm-3 text-end">Project leader:</dt>
-            <dd className="col-sm-9">{String(project.projectLeader.fullName)} ({String(project.projectLeader.email)})</dd>
+            <dd className="col-sm-9">{String(project.projectLeader.fullName)}
+
+                {project.projectLeader.email && !user.is_eureka_secretariat_staff_member ? ` (${String(project.projectLeader.email)})` : ''}
+
+            </dd>
 
             <dt className="col-sm-3 text-end">TechnicalArea:</dt>
             <dd className="col-sm-9">{project.technicalArea}</dd>
