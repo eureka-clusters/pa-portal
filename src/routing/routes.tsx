@@ -11,20 +11,19 @@ import ProjectStatistics from "@/component/statistics/projects";
 import PartnerStatistics from "@/component/statistics/partners";
 import Projects from "@/component/projects";
 import Project from "@/component/project";
+import Contact from "@/component/contact";
 import {ActiveRoutePathTitleCallbackParams} from "@/routing/active-route-path-title-callback";
 import Organisations from "@/component/organisations";
 import Organisation from "@/component/organisation";
 import Partner from "@/component/partner";
 import {RoutePathDefinition} from "@/routing/route-part-definition";
 
-
-//export const routes: RoutePathDefinition[] = [
 export default function pageRoutes(): RoutePathDefinition[] {
 
     const authContext = useContext(AuthContext);
 
     return [
-        {title: "Home", path: "/", element: authContext.isAuthenticated() ? <Page title="Home"/> : <Login />, nav: true},
+        {title: "Home", path: "/", element: authContext.isAuthenticated() ? <Page title="Home"/> : <Login/>, nav: true},
         {title: "Login", path: "/login", element: <Login/>, nav: false},
 
         {
@@ -107,6 +106,7 @@ export default function pageRoutes(): RoutePathDefinition[] {
             nav: authContext.isAuthenticated()
         },
         {title: "Logout", path: "/logout", element: <Logout/>, nav: authContext.isAuthenticated()},
+        {title: "Contact", path: "/contact", element: <Contact/>, nav: true},
         {title: "Callback", path: "/callback", element: <Callback/>, nav: false},
         {
             title: "Account",
