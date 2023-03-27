@@ -3,11 +3,11 @@ import ReactDOM from 'react-dom/client'
 import {AuthProvider} from "@/providers/auth-provider";
 import {AxiosProvider} from "@/providers/axios-provider";
 import {UserProvider} from "@/providers/user-provider";
-import Content from "@/component/content";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 // import {ReactQueryDevtools} from "@tanstack/react-query-devtools";
 import {BrowserRouter} from "react-router-dom";
 import './App.scss';
+import Maintenance from "@/component/maintenance";
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -24,7 +24,8 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
                 <AxiosProvider>
                     <QueryClientProvider client={queryClient}>
                         <UserProvider>
-                            <Content/>
+                            <Maintenance/>
+                            {/*<Content/>*/}
                             {/*<ReactQueryDevtools/>*/}
                         </UserProvider>
                     </QueryClientProvider>
