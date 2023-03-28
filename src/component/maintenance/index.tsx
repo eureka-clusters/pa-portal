@@ -20,7 +20,7 @@ export default function Maintenance() {
             <main role="main" className="flex-shrink-0">
                 <Container className="mb-4">
                     <section>
-                        <h1 className={'display-1'}>The PA portal is currently unavailable.</h1>
+                        <h1 className={'display-1'}>The PA portal is currently under maintenance.</h1>
                         <p>Please check back later, we apologise for the inconvenience. For questions please reach out
                             to us via <a href={"mailto:feedback@eurekaclusters.eu"}>feedback@eurekaclusters.eu</a>.</p>
                     </section>
