@@ -7,7 +7,7 @@ import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 // import {ReactQueryDevtools} from "@tanstack/react-query-devtools";
 import {BrowserRouter} from "react-router-dom";
 import './App.scss';
-import Maintenance from "@/component/maintenance";
+import Content from "@/component/content";
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -24,8 +24,8 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
                 <AxiosProvider>
                     <QueryClientProvider client={queryClient}>
                         <UserProvider>
-                            <Maintenance/>
-                            {/*<Content/>*/}
+                            {/*<Maintenance/>*/}
+                            <Content/>
                             {/*<ReactQueryDevtools/>*/}
                         </UserProvider>
                     </QueryClientProvider>
