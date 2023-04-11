@@ -14,10 +14,11 @@ interface SearchResponse {
 }
 
 
-export const getSearchResults = ({authAxios, filterOptions, query}: {
+export const getSearchResults = ({authAxios, filterOptions, query, page}: {
     authAxios: AxiosInstance,
     filterOptions: FilterOptions,
-    query: string
+    query: string,
+    page: number
 }) => {
 
     filterOptions.query = query;
@@ -34,8 +35,8 @@ export const getSearchResults = ({authAxios, filterOptions, query}: {
             amountOfPages: data.page_count,
             currentPage: data.page,
             totalItems: data.total_items,
-            nextPage: hasNext ? filterOptions.page + 1 : undefined,
-            previousPage: hasPrevious ? parseInt(filterOptions.page) - 1 : undefined,
+            nextPage: hasNext ? page + 1 : undefined,
+            previousPage: hasPrevious ? page - 1 : undefined,
         };
     });
 }

@@ -20,7 +20,7 @@ export default function Search() {
         queryKey: ['searchResults', filterOptions, searchText],
         keepPreviousData: true,
         enabled: !searching,
-        queryFn: () => getSearchResults({authAxios, filterOptions, query: searchText})
+        queryFn: () => getSearchResults({authAxios, filterOptions, query: searchText, page: 1})
     });
 
 
