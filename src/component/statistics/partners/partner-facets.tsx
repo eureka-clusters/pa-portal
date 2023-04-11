@@ -36,7 +36,7 @@ const PartnerFacets: FC<Props> = ({filterValues, setFilter, updateFilter}) => {
 
     let facets: Facets = data;
 
-    const yearsFilterOptions = facets.years.map((year: number, index: number) => {
+    const yearsFilterOptions = facets.years?.map((year: number, index: number) => {
         return {
             label: year,
             value: year,

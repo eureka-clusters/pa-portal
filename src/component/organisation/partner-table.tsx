@@ -21,7 +21,7 @@ const PartnerTable: FC<Props> = ({organisation}) => {
     const {isLoading, isError, data} = useQuery({
         queryKey: ['partner_projects', organisation, filterOptions],
         keepPreviousData: true,
-        queryFn: () => getPartners({authAxios, filterOptions, organisation})
+        queryFn: () => getPartners({authAxios, filterOptions, organisation, page: 1})
     });
 
     if (isLoading) {
@@ -39,11 +39,12 @@ const PartnerTable: FC<Props> = ({organisation}) => {
             <table className="table table-striped">
                 <thead>
                 <tr>
-                    <th><SortableTableHeader sort='name' filterOptions={filterOptions}>Name</SortableTableHeader></th>
-                    <th><SortableTableHeader sort='country' filterOptions={filterOptions}>Country</SortableTableHeader>
+                    <th><SortableTableHeader order='name' filterOptions={filterOptions}>Name</SortableTableHeader></th>
+                    <th><SortableTableHeader order='country' filterOptions={filterOptions}>Country</SortableTableHeader>
                     </th>
-                    <th><SortableTableHeader sort='project' filterOptions={filterOptions}>Project</SortableTableHeader></th>
-                    <th><SortableTableHeader sort='type' filterOptions={filterOptions}>Type</SortableTableHeader></th>
+                    <th><SortableTableHeader order='project' filterOptions={filterOptions}>Project</SortableTableHeader>
+                    </th>
+                    <th><SortableTableHeader order='type' filterOptions={filterOptions}>Type</SortableTableHeader></th>
                 </tr>
                 </thead>
                 <tbody>

@@ -22,13 +22,15 @@ export const getPartners = (
         filterOptions,
         filterValues,
         organisation,
-        project
+        project,
+        page
     }: {
         authAxios: AxiosInstance,
         filterOptions: FilterOptions,
         filterValues?: FilterValues
         organisation?: Organisation,
-        project?: Project
+        project?: Project,
+        page: number
     }) => {
 
     if (filterValues) {
@@ -44,6 +46,8 @@ export const getPartners = (
         url += '&project=' + project.slug;
     }
 
+    url += '&page=' + page;
+
     return authAxios.get<PartnerResponse>(url).then(response => {
         const {data} = response;
 
@@ -55,8 +59,8 @@ export const getPartners = (
             amountOfPages: data.page_count,
             currentPage: data.page,
             totalItems: data.total_items,
-            nextPage: hasNext ? filterOptions.page + 1 : undefined,
-            previousPage: hasPrevious ? parseInt(filterOptions.page) - 1 : undefined,
+            nextPage: hasNext ? page + 1 : undefined,
+            previousPage: hasPrevious ? page - 1 : undefined,
         };
     });
 

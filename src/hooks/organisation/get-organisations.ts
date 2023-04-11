@@ -13,15 +13,18 @@ interface OrganisationResponse {
 }
 
 
-export const getOrganisations = ({authAxios, filterOptions}: {
+export const getOrganisations = ({authAxios, filterOptions, page}: {
     authAxios: AxiosInstance,
-    filterOptions: FilterOptions
+    filterOptions: FilterOptions,
+    page: number
 }) => {
 
     let url = 'list/organisation?' + createSearchParams(filterOptions).toString();
+
+    url += '&page=' + page;
+
     return authAxios.get<OrganisationResponse>(url).then(response => {
         const {data} = response;
-
         const hasNext = data.page_count > data.page;
         const hasPrevious = data.page_count < data.page;
 
@@ -30,8 +33,8 @@ export const getOrganisations = ({authAxios, filterOptions}: {
             amountOfPages: data.page_count,
             currentPage: data.page,
             totalItems: data.total_items,
-            nextPage: hasNext ? filterOptions.page + 1 : undefined,
-            previousPage: hasPrevious ? parseInt(filterOptions.page) - 1 : undefined,
+            nextPage: hasNext ? page + 1 : undefined,
+            previousPage: hasPrevious ? page - 1 : undefined,
         };
     });
 }

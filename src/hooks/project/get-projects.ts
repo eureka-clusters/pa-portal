@@ -14,10 +14,11 @@ interface ProjectResponse {
 }
 
 
-export const getProjects = ({authAxios, filterOptions, filterValues}: {
+export const getProjects = ({authAxios, filterOptions, filterValues, page}: {
     authAxios: AxiosInstance,
     filterOptions: FilterOptions,
-    filterValues?: FilterValues
+    filterValues?: FilterValues,
+    page: number
 }) => {
 
     if (filterValues) {
@@ -25,6 +26,9 @@ export const getProjects = ({authAxios, filterOptions, filterValues}: {
     }
 
     let url = 'list/project?' + createSearchParams(filterOptions).toString();
+
+    url += '&page=' + page;
+
     return authAxios.get<ProjectResponse>(url).then(response => {
         const {data} = response;
 
@@ -36,8 +40,8 @@ export const getProjects = ({authAxios, filterOptions, filterValues}: {
             amountOfPages: data.page_count,
             currentPage: data.page,
             totalItems: data.total_items,
-            nextPage: hasNext ? filterOptions.page + 1 : undefined,
-            previousPage: hasPrevious ? parseInt(filterOptions.page) - 1 : undefined,
+            nextPage: hasNext ? page + 1 : undefined,
+            previousPage: hasPrevious ? page - 1 : undefined,
         };
     });
 }

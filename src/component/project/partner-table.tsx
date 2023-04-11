@@ -2,7 +2,6 @@ import React, {FC, useContext} from 'react';
 import {Partner} from "@/interface/project/partner";
 import SortableTableHeader from "@/component/partial/sortable-table-header";
 import {Link} from "react-router-dom";
-import PaginationLinks from "@/component/partial/pagination-links";
 import {useGetFilterOptions} from "@/functions/filter-functions";
 import {getPartners} from "@/hooks/partner/get-partners";
 import {Project} from "@/interface/project";
@@ -22,7 +21,7 @@ const PartnerTable: FC<Props> = ({project}) => {
     const {isLoading, isError, data} = useQuery({
         queryKey: ['projectPartners', filterOptions, project],
         keepPreviousData: true,
-        queryFn: () => getPartners({authAxios, filterOptions, project})
+        queryFn: () => getPartners({authAxios, filterOptions, project, page: 1})
     });
 
     if (isLoading) {
@@ -34,13 +33,13 @@ const PartnerTable: FC<Props> = ({project}) => {
             <table className="table table-striped">
                 <thead>
                 <tr>
-                    <th><SortableTableHeader sort='name' filterOptions={filterOptions}>Name</SortableTableHeader></th>
-                    <th><SortableTableHeader sort='country' filterOptions={filterOptions}>Country</SortableTableHeader>
+                    <th><SortableTableHeader order='name' filterOptions={filterOptions}>Name</SortableTableHeader></th>
+                    <th><SortableTableHeader order='country' filterOptions={filterOptions}>Country</SortableTableHeader>
                     </th>
-                    <th><SortableTableHeader sort='type' filterOptions={filterOptions}>Type</SortableTableHeader></th>
-                    <th><SortableTableHeader sort='latestVersionCosts' filterOptions={filterOptions}>Latest version
+                    <th><SortableTableHeader order='type' filterOptions={filterOptions}>Type</SortableTableHeader></th>
+                    <th><SortableTableHeader order='latestVersionCosts' filterOptions={filterOptions}>Latest version
                         costs</SortableTableHeader></th>
-                    <th><SortableTableHeader sort='latestVersionEffort' filterOptions={filterOptions}>Latest version
+                    <th><SortableTableHeader order='latestVersionEffort' filterOptions={filterOptions}>Latest version
                         effort</SortableTableHeader></th>
                 </tr>
                 </thead>
@@ -60,7 +59,7 @@ const PartnerTable: FC<Props> = ({project}) => {
                 </tbody>
             </table>
 
-            <PaginationLinks data={data}/>
+
         </React.Fragment>
     );
 }

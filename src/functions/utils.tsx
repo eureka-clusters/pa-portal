@@ -14,6 +14,10 @@ interface CostsFormatProps {
 
 export const CostsFormat = ({showPrefix, showSuffix, children}: CostsFormatProps) => {
 
+    if (children === null ) {
+        return null;
+    }
+
     return (
         <NumericFormat
             value={children}

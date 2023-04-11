@@ -1,14 +1,19 @@
 import {FilterOptions} from "@/functions/filter-functions";
 import {Link} from "react-router-dom";
 
-const SortableTableHeader = ({
-                                 sort,
-                                 filterOptions,
-                                 children
-                             }: { sort: string, filterOptions: FilterOptions, children: any }) => {
+const SortableTableHeader = (
+    {
+        order,
+        filterOptions,
+        children
+    }: {
+        order: string,
+        filterOptions: FilterOptions,
+        children: any
+    }) => {
     return (
         <Link to={{
-            search: "?sort=" + sort + "&order=" + (filterOptions.order === "asc" ? "desc" : "asc")
+            search: "?order=" + order + "&direction=" + (filterOptions.direction === "asc" ? "desc" : "asc")
         }}>
             {children}
         </Link>
