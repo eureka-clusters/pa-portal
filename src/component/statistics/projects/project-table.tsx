@@ -21,7 +21,7 @@ const ProjectTable = ({filterValues}: { filterValues: FilterValues }) => {
     const authAxios = useContext(AxiosContext).authAxios;
     const [page, setPage] = React.useState(1)
 
-    const {status, data, error, isFetching, isPreviousData} = useQuery({
+    const {status, data, isFetching, isPreviousData} = useQuery({
         queryKey: ['projectStatistics', filterOptions, filterValues, page],
         keepPreviousData: false,
         queryFn: () => getProjects({authAxios, filterOptions, filterValues, page})
@@ -101,7 +101,7 @@ const ProjectTable = ({filterValues}: { filterValues: FilterValues }) => {
                         <tbody>
                         {data.projects?.map(
                             (project: Project, key: number) => (
-                                <tr key={project.number}>
+                                <tr key={key}>
                                     <td><Link to={`/projects/${project.slug}`}>{project.name}</Link></td>
                                     <td>{project.primaryCluster.name}</td>
                                     <td>{project.secondaryCluster?.name}</td>

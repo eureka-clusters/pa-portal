@@ -28,6 +28,8 @@ function TableFilter() {
             updatedValues[targetName] = value;
         }
 
+        console.log(updatedValues);
+
         setFilter((prevState: any) => ({
             ...prevState, ...updatedValues
         }))

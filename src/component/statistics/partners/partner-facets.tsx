@@ -18,7 +18,7 @@ const PartnerFacets: FC<Props> = ({filterValues, setFilter, updateFilter}) => {
     const authAxios = useContext(AxiosContext).authAxios;
 
     const {isLoading, isError, data} = useQuery({
-        queryKey: ['projectFacets', filterValues],
+        queryKey: ['partnerFacets', filterValues],
         keepPreviousData: true,
         queryFn: () => getPartnerFacets({authAxios, filterValues})
     });
@@ -61,12 +61,12 @@ const PartnerFacets: FC<Props> = ({filterValues, setFilter, updateFilter}) => {
                             // components needs the complete filter objects therefore filter these by the filter country array
                             value={
                                 facets.countries.filter(function (item) {
-                                    return filterValues['country'] !== undefined && filterValues['country'].indexOf(item.name) > -1;
+                                    return filterValues['country'] !== undefined && filterValues['country'].indexOf(item.id.toString()) > -1;
                                 })
                             }
                             // getOptionLabel={(option) => `${option.name} (${option.amount})`}
                             getOptionLabel={(option: { name: any; }) => `${option.name}`}
-                            getOptionValue={(option: { [x: string]: any; }) => `${option['name']}`}
+                            getOptionValue={(option: { [x: string]: any; }) => `${option['id']}`}
                             closeMenuOnSelect={false}
                             onChange={(choices: any) => {
                                 let updatedValues: { [key: string]: Array<string> } = {};
@@ -94,11 +94,11 @@ const PartnerFacets: FC<Props> = ({filterValues, setFilter, updateFilter}) => {
                             <Form.Check type={'checkbox'} id={`check-type-${i}`}>
                                 <Form.Check.Input
                                     name="organisationType"
-                                    value={organisationType['name']}
+                                    value={organisationType['id']}
                                     className={'me-2'}
                                     onChange={updateFilter}
                                     checked={
-                                        filterValues['organisationType'] !== undefined && filterValues['organisationType'].indexOf(organisationType['name']) > -1
+                                        filterValues['organisationType'] !== undefined && filterValues['organisationType'].indexOf(organisationType['id'].toString()) > -1
                                     }
                                 />
                                 {/* <Form.Check.Label>{organisationType['name']} ({organisationType['amount']})</Form.Check.Label> */}
@@ -119,11 +119,11 @@ const PartnerFacets: FC<Props> = ({filterValues, setFilter, updateFilter}) => {
                             <Form.Check type={'checkbox'} id={`check-project-status-${i}`}>
                                 <Form.Check.Input
                                     name="projectStatus"
-                                    value={projectStatus['name']}
+                                    value={projectStatus['id']}
                                     onChange={updateFilter}
                                     className={'me-2'}
                                     checked={
-                                        filterValues['projectStatus'] !== undefined && filterValues['projectStatus'].indexOf(projectStatus['name']) > -1
+                                        filterValues['projectStatus'] !== undefined && filterValues['projectStatus'].indexOf(projectStatus['id'].toString()) > -1
                                     }
                                 />
                                 {/* <Form.Check.Label>{projectStatus['name']} ({projectStatus['amount']})</Form.Check.Label> */}
@@ -154,7 +154,7 @@ const PartnerFacets: FC<Props> = ({filterValues, setFilter, updateFilter}) => {
                             }
                             // getOptionLabel={(option) => `${option.name} (${option.amount})`}
                             getOptionLabel={(option: { name: any; }) => `${option.name}`}
-                            getOptionValue={(option: { [x: string]: any; }) => `${option['name']}`}
+                            getOptionValue={(option: { [x: string]: any; }) => `${option['id']}`}
                             // add the checkboxes
                             // components={{
                             //     Option
@@ -165,9 +165,10 @@ const PartnerFacets: FC<Props> = ({filterValues, setFilter, updateFilter}) => {
                                 let updatedValues: { [key: string]: Array<string> } = {};
                                 // get the names of the selected choices
                                 updatedValues['programmeCall'] = choices.map((choice: {
+                                    id: string;
                                     name: string;
                                     amount: number
-                                }) => choice.name);
+                                }) => choice.id);
                                 setFilter((prevState: any) => ({
                                     ...prevState, ...updatedValues
                                 }))
@@ -178,23 +179,23 @@ const PartnerFacets: FC<Props> = ({filterValues, setFilter, updateFilter}) => {
                 </fieldset>
             ) : ('')}
 
-            {facets.clusters ? (
+            {facets.clusterGroups ? (
                 <fieldset>
                     <legend><small>Clusters</small></legend>
 
-                    {facets.clusters && facets.clusters.map((cluster, i) => (
+                    {facets.clusterGroups && facets.clusterGroups.map((clusterGroup, i) => (
                         <div key={i}>
                             <Form.Check type={'checkbox'} id={`check-cluster-${i}`}>
                                 <Form.Check.Input
-                                    name="clusters"
-                                    value={cluster['name']}
+                                    name="clusterGroups"
+                                    value={clusterGroup['id']}
                                     onChange={updateFilter}
                                     className={'me-2'}
                                     checked={
-                                        filterValues['clusters'] !== undefined && filterValues['clusters'].indexOf(cluster['name']) > -1
+                                        filterValues['clusterGroups'] !== undefined && filterValues['clusterGroups'].indexOf(clusterGroup['id'].toString()) > -1
                                     }
                                 />
-                                <Form.Check.Label>{cluster['name']}</Form.Check.Label>
+                                <Form.Check.Label>{clusterGroup['name']}</Form.Check.Label>
                             </Form.Check>
                         </div>
                     ))}

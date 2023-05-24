@@ -1,5 +1,5 @@
 import {AxiosInstance} from "axios";
-import {Facets} from "@/interface/statistics/project/facets";
+import {Facets} from "@/interface/statistics/partner/facets";
 import {FilterValues} from "@/interface/statistics/filter-values";
 
 export const getPartnerFacets = ({authAxios, filterValues}: {

@@ -6,8 +6,8 @@ export interface FilterValues {
     projectStatus?: string[],
     projectStatusMethod?: string,
     programmeCall?: string[],
-    clusters?: string[],
-    clustersMethod?: string,
+    clusterGroups?: string[],
+    clusterGroupsMethod?: string,
     year?: number[],
-    organisation?: number[],
+    organisation?: string[],
 }
