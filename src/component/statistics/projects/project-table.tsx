@@ -27,6 +27,9 @@ const ProjectTable = ({filterValues}: { filterValues: FilterValues }) => {
         queryFn: () => getProjects({authAxios, filterOptions, filterValues, page})
     });
 
+
+    //https://tanstack.com/table/v8/docs/examples/react/pagination-controlled
+
     useEffect(() => {
         if (!isPreviousData && data?.nextPage) {
             queryClient.prefetchQuery({
