@@ -35,7 +35,7 @@ const PartnerTable: FC<Props> = ({project}) => {
 
     return (
         <React.Fragment>
-            <table className="table table-striped">
+            <table className="table table-striped table-sm">
                 <thead>
                 <tr>
                     <th><SortableTableHeader order='name' filterOptions={filterOptions}>Name</SortableTableHeader></th>

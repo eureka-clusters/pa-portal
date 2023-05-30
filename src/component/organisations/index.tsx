@@ -1,92 +1,229 @@
-import React, {useContext, useEffect} from 'react';
-import {Link} from 'react-router-dom';
+import React, {useContext, useState} from 'react';
 import {Organisation} from "@/interface/organisation";
-import {getOrganisations} from "@/hooks/organisation/get-organisations";
+import {FacetValues} from "@/interface/statistics/facet-values";
 import {useGetFilterOptions} from '@/functions/filter-functions';
 import {AxiosContext} from "@/providers/axios-provider";
-import {useQuery, useQueryClient} from "@tanstack/react-query";
-import SortableTableHeader from '@/component/partial/sortable-table-header';
-import {Button} from "react-bootstrap";
+import {useQuery} from "@tanstack/react-query";
+import {
+    ColumnDef,
+    flexRender,
+    getCoreRowModel,
+    getFilteredRowModel,
+    getPaginationRowModel,
+    PaginationState,
+    SortingState,
+    useReactTable,
+} from '@tanstack/react-table'
+import {Link} from "react-router-dom";
+import {getOrganisations} from "@/hooks/organisation/get-organisations";
 
-export default function Organisations() {
+const organisationTable = ({facetValues}: { facetValues?: FacetValues }) => {
 
-    const queryClient = useQueryClient()
+    const defaultData = React.useMemo(() => [], [])
     const filterOptions = useGetFilterOptions();
+    const axiosContext = useContext(AxiosContext);
+    const [isExportLoading, setIsExportButtonLoading] = useState(false);
     const authAxios = useContext(AxiosContext).authAxios;
-    const [page, setPage] = React.useState(1)
 
-    const {status, data, error, isFetching, isPreviousData} = useQuery({
-        queryKey: ['organisations', filterOptions, page],
-        keepPreviousData: true,
-        staleTime: 5000,
-        queryFn: () => getOrganisations({authAxios, filterOptions, page})
-    });
+    const columns = React.useMemo<ColumnDef<Organisation>[]>(
+        () => [
 
-    useEffect(() => {
-        if (!isPreviousData && data?.nextPage) {
-            queryClient.prefetchQuery({
-                queryKey: ['organisations', filterOptions, page + 1],
-                queryFn: () => getOrganisations({authAxios, filterOptions, page: page + 1}),
-            })
-        }
-    }, [data, isPreviousData, page, queryClient])
-
-    return (
-        <React.Fragment>
-            {status === 'loading' ? (
-                <div>Loading...</div>
-            ) : status === 'error' ? (
-                <div>Something went wrong</div>
-            ) : (
-
-                <table className="table table-striped">
-                    <thead>
-                    <tr>
-                        <th><SortableTableHeader order='name' filterOptions={filterOptions}>Name</SortableTableHeader>
-                        </th>
-                        <th><SortableTableHeader order='country'
-                                                 filterOptions={filterOptions}>Country</SortableTableHeader>
-                        </th>
-                        <th><SortableTableHeader order='type' filterOptions={filterOptions}>Type</SortableTableHeader>
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {data.organisations?.map(
-                        (organisation: Organisation, key: number) => (
-                            <tr key={key}>
-                                <td><Link to={`/organisations/${organisation.slug}`}>{organisation.name}</Link></td>
-                                <td>{organisation.country.country}</td>
-                                <td>{organisation.type.type}</td>
-                            </tr>
-                        )
-                    )}
-                    </tbody>
-                </table>
-            )}
-            <div>Current Page: {page}</div>
-            <Button variant={'primary'}
-                    onClick={() => setPage((old) => Math.max(old - 1, 0))}
-                    disabled={page === 1}
-            >
-                Previous Page
-            </Button>
-            {' '}
-            <Button variant={'primary'}
-                    onClick={() => {
-                        setPage((old) => (data?.nextPage ? old + 1 : old))
-                    }}
-                    disabled={isPreviousData || !data?.nextPage}
-            >
-                Next Page
-            </Button>
             {
-                // Since the last page's data potentially sticks around between page requests,
-                // we can use `isFetching` to show a background loading
-                // indicator since our `status === 'loading'` state won't be triggered
-                isFetching ? <span> Loading...</span> : null
-            }
-        </React.Fragment>
+                accessorKey: 'organisation',
+                cell: ({row}) => (
+                    <Link to={{pathname: `/organisations/${row.original.slug}`}}>{row.original.name}</Link>),
+                header: () => <span>Organisation</span>,
+            },
+            {
+                accessorKey: 'country',
+                header: () => <span>Country</span>,
+                cell: ({row}) => row.original.country.country
+            },
+            {
+                accessorKey: 'name',
+                header: () => <span>Type</span>,
+                cell: ({row}) => row.original.type.type
+            },
+
+        ],
+        []
     )
 
+    const [pagination, setPagination] =
+        useState<PaginationState>({
+            pageIndex: 0,
+            pageSize: 20,
+        })
+    const [sorting, setSorting] = React.useState<SortingState>([])
+
+    const dataQuery = useQuery(
+        ['organisation_data', facetValues, filterOptions, pagination, sorting],
+        () => getOrganisations({
+            authAxios: authAxios,
+            filterOptions: filterOptions,
+            paginationOptions: pagination,
+            sortingOptions: sorting,
+        }),
+        {keepPreviousData: true}
+    )
+
+    const table = useReactTable({
+        data: dataQuery.data?.organisations ?? defaultData,
+        columns,
+        pageCount: dataQuery.data?.amountOfPages ?? -1,
+        state: {
+            pagination,
+            sorting,
+        },
+        onPaginationChange: setPagination,
+        onSortingChange: setSorting,
+        getCoreRowModel: getCoreRowModel(),
+        getFilteredRowModel: getFilteredRowModel(),
+        getSortedRowModel: getFilteredRowModel(),
+        manualPagination: true,
+        getPaginationRowModel: getPaginationRowModel(),
+        debugTable: false,
+    })
+
+    return (
+        <div className="p-0">
+            <div className="h-2"/>
+            <table className={'table table-striped table-sm'}>
+                <thead>
+                {table.getHeaderGroups().map(headerGroup => (
+                    <tr key={headerGroup.id}>
+                        {headerGroup.headers.map(header => {
+                            return (
+                                <th key={header.id} colSpan={header.colSpan}>
+                                    {header.isPlaceholder ? null : (
+                                        <div
+                                            {...{
+                                                className: header.column.getCanSort()
+                                                    ? 'cursor-pointer select-none'
+                                                    : '',
+                                                onClick: header.column.getToggleSortingHandler(),
+                                            }}
+                                        >
+                                            {flexRender(
+                                                header.column.columnDef.header,
+                                                header.getContext()
+                                            )}
+                                            {{
+                                                asc: ' 🔼',
+                                                desc: ' 🔽',
+                                            }[header.column.getIsSorted() as string] ?? null}
+                                        </div>
+                                    )}
+                                </th>
+                            )
+                        })}
+                    </tr>
+                ))}
+                </thead>
+                <tbody>
+                {table.getRowModel().rows.map(row => {
+                    return (
+                        <tr key={row.id}>
+                            {row.getVisibleCells().map(cell => {
+                                return (
+                                    <td key={cell.id}>
+                                        {flexRender(
+                                            cell.column.columnDef.cell,
+                                            cell.getContext()
+                                        )}
+                                    </td>
+                                )
+                            })}
+                        </tr>
+                    )
+                })}
+                </tbody>
+            </table>
+            <div className="h-2"/>
+
+
+            <div className="d-flex align-content-start gap-2">
+                <div>
+                    <button
+                        className="border rounded p-1"
+                        onClick={e => {
+                            e.preventDefault();
+                            table.setPageIndex(0)
+                        }}
+                        disabled={!table.getCanPreviousPage()}
+                    >
+                        {'<<'}
+                    </button>
+                    <button
+                        className="border rounded p-1"
+                        onClick={e => {
+                            e.preventDefault();
+                            table.previousPage()
+                        }}
+                        disabled={!table.getCanPreviousPage()}
+                    >
+                        {'<'}
+                    </button>
+                    <button
+                        className="border rounded p-1"
+                        onClick={e => {
+                            e.preventDefault();
+                            table.nextPage()
+                        }}
+                        disabled={!table.getCanNextPage()}
+                    >
+                        {'>'}
+                    </button>
+                    <button
+                        className="border rounded p-1"
+                        onClick={e => {
+                            e.preventDefault();
+                            table.setPageIndex(table.getPageCount() - 1)
+                        }}
+                        disabled={!table.getCanNextPage()}
+                    >
+                        {'>>'}
+                    </button>
+                </div>
+                <div>
+
+                    <strong>
+                        Page {table.getState().pagination.pageIndex + 1} of{' '}
+                        {table.getPageCount()}
+                    </strong>
+
+                    <span className={'px-3'}> Go to page: </span>
+                    <input
+                        type="number"
+                        defaultValue={table.getState().pagination.pageIndex + 1}
+                        onChange={e => {
+                            const page = e.target.value ? Number(e.target.value) - 1 : 0
+                            table.setPageIndex(page)
+                        }}
+                        className="border p-1 rounded w-16"
+                    />
+                </div>
+                <div>
+                    <select
+                        className={'form-select'}
+                        value={table.getState().pagination.pageSize}
+                        onChange={e => {
+                            table.setPageSize(Number(e.target.value))
+                        }}
+                    >
+                        {[10, 20, 30, 40, 50].map(pageSize => (
+                            <option key={pageSize} value={pageSize}>
+                                Show {pageSize}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+                <div>
+                    {dataQuery.isFetching ? 'Loading...' : null}
+                </div>
+            </div>
+        </div>
+    )
 }
+
+export default organisationTable;

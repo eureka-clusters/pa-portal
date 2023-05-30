@@ -77,7 +77,7 @@ export default function Partner() {
 
                 <dt className="col-sm-3 text-end">Project:</dt>
                 <dd className="col-sm-9"><Link
-                    to={`/projects/${partner.project.slug}`}>{partner.project.name}</Link></dd>
+                    to={`/project/${partner.project.slug}`}>{partner.project.name}</Link></dd>
 
                 <dt className="col-sm-3 text-end">Project leader</dt>
                 <dd className="col-sm-9">

@@ -41,7 +41,7 @@ const PartnerTable: FC<Props> = ({organisation}) => {
         <React.Fragment>
             <h2>Partners</h2>
 
-            <table className="table table-striped">
+            <table className="table table-striped table-sm">
                 <thead>
                 <tr>
                     <th><SortableTableHeader order='name' filterOptions={filterOptions}>Name</SortableTableHeader></th>
@@ -57,7 +57,7 @@ const PartnerTable: FC<Props> = ({organisation}) => {
                     (partner: Partner, key: number) => (
                         <tr key={partner.id}>
                             <td><Link
-                                to={`/project/partner/view/${partner.slug}`}>{partner.organisation.name}</Link>
+                                to={`/project/partner/${partner.slug}`}>{partner.organisation.name}</Link>
                             </td>
                             <td>{partner.organisation.country.country}</td>
                             <td><Link to={`/project/${partner.project.slug}`}>{partner.project.name}</Link></td>

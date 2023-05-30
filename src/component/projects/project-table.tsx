@@ -20,7 +20,6 @@ import downloadBase64File from "@/functions/download-base64";
 import {Link} from "react-router-dom";
 import {CostsFormat, EffortFormat} from "@/functions/utils";
 
-
 const ProjectTable = ({facetValues}: { facetValues?: FacetValues }) => {
 
     const defaultData = React.useMemo(() => [], [])
