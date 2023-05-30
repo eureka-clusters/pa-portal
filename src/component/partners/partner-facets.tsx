@@ -1,26 +1,26 @@
 import {FC, useContext} from 'react';
 import {Form} from "react-bootstrap";
 import RS, {default as ReactSelect} from "react-select";
-import {FilterValues} from "@/interface/statistics/filter-values";
+import {FacetValues} from "@/interface/statistics/facet-values";
 import {getPartnerFacets} from "@/hooks/partner/get-facets";
 import {Facets} from "@/interface/statistics/partner/facets";
 import {AxiosContext} from "@/providers/axios-provider";
 import {useQuery} from "@tanstack/react-query";
 
 interface Props {
-    filterValues: FilterValues,
-    setFilter: (filterValues: (prevState: FilterValues) => FilterValues) => void,
-    updateFilter: (filterValues: any) => void,
+    facetValues: FacetValues,
+    setFilter: (facetValues: (prevState: FacetValues) => FacetValues) => void,
+    updateFilter: (facetValues: any) => void,
 }
 
-const PartnerFacets: FC<Props> = ({filterValues, setFilter, updateFilter}) => {
+const PartnerFacets: FC<Props> = ({facetValues, setFilter, updateFilter}) => {
 
     const authAxios = useContext(AxiosContext).authAxios;
 
     const {isLoading, isError, data} = useQuery({
-        queryKey: ['partnerFacets', filterValues],
+        queryKey: ['partnerFacets', facetValues],
         keepPreviousData: true,
-        queryFn: () => getPartnerFacets({authAxios, filterValues})
+        queryFn: () => getPartnerFacets({authAxios, facetValues})
     });
 
     if (isLoading) {
@@ -60,25 +60,26 @@ const PartnerFacets: FC<Props> = ({filterValues, setFilter, updateFilter}) => {
                             options={facets.countries}
                             // components needs the complete filter objects therefore filter these by the filter country array
                             value={
-                                facets.countries.filter(function (item) {
-                                    return filterValues['country'] !== undefined && filterValues['country'].indexOf(item.id.toString()) > -1;
+                                facets.countries.filter(function (itm) {
+                                    return facetValues['country'] !== undefined && facetValues['country'].indexOf(itm.id) > -1;
                                 })
                             }
-                            // getOptionLabel={(option) => `${option.name} (${option.amount})`}
+
                             getOptionLabel={(option: { name: any; }) => `${option.name}`}
                             getOptionValue={(option: { [x: string]: any; }) => `${option['id']}`}
+
                             closeMenuOnSelect={false}
                             onChange={(choices: any) => {
                                 let updatedValues: { [key: string]: Array<string> } = {};
                                 // get the names of the selected choices
                                 updatedValues['country'] = choices.map((choice: {
+                                    id: number;
                                     name: string;
                                     amount: number
-                                }) => choice.name);
+                                }) => choice.id);
                                 setFilter((prevState: any) => ({
                                     ...prevState, ...updatedValues
                                 }))
-
                             }}
                         />
                     </div>
@@ -98,7 +99,7 @@ const PartnerFacets: FC<Props> = ({filterValues, setFilter, updateFilter}) => {
                                     className={'me-2'}
                                     onChange={updateFilter}
                                     checked={
-                                        filterValues['organisationType'] !== undefined && filterValues['organisationType'].indexOf(organisationType['id'].toString()) > -1
+                                        facetValues['organisationType'] !== undefined && facetValues['organisationType'].indexOf(organisationType['id'].toString()) > -1
                                     }
                                 />
                                 {/* <Form.Check.Label>{organisationType['name']} ({organisationType['amount']})</Form.Check.Label> */}
@@ -123,7 +124,7 @@ const PartnerFacets: FC<Props> = ({filterValues, setFilter, updateFilter}) => {
                                     onChange={updateFilter}
                                     className={'me-2'}
                                     checked={
-                                        filterValues['projectStatus'] !== undefined && filterValues['projectStatus'].indexOf(projectStatus['id'].toString()) > -1
+                                        facetValues['projectStatus'] !== undefined && facetValues['projectStatus'].indexOf(projectStatus['id'].toString()) > -1
                                     }
                                 />
                                 {/* <Form.Check.Label>{projectStatus['name']} ({projectStatus['amount']})</Form.Check.Label> */}
@@ -149,7 +150,7 @@ const PartnerFacets: FC<Props> = ({filterValues, setFilter, updateFilter}) => {
                             // components needs the complete filter objects therefore filter these by the filter country array
                             value={
                                 facets.programmeCalls.filter(function (item) {
-                                    return filterValues['programmeCall'] !== undefined && filterValues['programmeCall'].indexOf(item.name) > -1;
+                                    return facetValues['programmeCall'] !== undefined && facetValues['programmeCall'].indexOf(item.name) > -1;
                                 })
                             }
                             // getOptionLabel={(option) => `${option.name} (${option.amount})`}
@@ -192,7 +193,7 @@ const PartnerFacets: FC<Props> = ({filterValues, setFilter, updateFilter}) => {
                                     onChange={updateFilter}
                                     className={'me-2'}
                                     checked={
-                                        filterValues['clusterGroups'] !== undefined && filterValues['clusterGroups'].indexOf(clusterGroup['id'].toString()) > -1
+                                        facetValues['clusterGroups'] !== undefined && facetValues['clusterGroups'].indexOf(clusterGroup['id'].toString()) > -1
                                     }
                                 />
                                 <Form.Check.Label>{clusterGroup['name']}</Form.Check.Label>
@@ -214,7 +215,7 @@ const PartnerFacets: FC<Props> = ({filterValues, setFilter, updateFilter}) => {
                             classNamePrefix="select"
                             options={yearsFilterOptions}
                             value={yearsFilterOptions.filter(function (option) {
-                                return filterValues['year'] !== undefined && filterValues['year'].indexOf(option.value) > -1;
+                                return facetValues['year'] !== undefined && facetValues['year'].indexOf(option.value) > -1;
                             })}
                             closeMenuOnSelect={false}
                             onChange={(choices: any) => {

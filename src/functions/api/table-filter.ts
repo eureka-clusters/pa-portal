@@ -1,17 +1,17 @@
 import {useState} from 'react';
-import {FilterValues} from "@/interface/statistics/filter-values";
+import {FacetValues} from "@/interface/statistics/facet-values";
 
 
 function TableFilter() {
 
-    const [filterValues, setFilter] = useState<FilterValues>({} as FilterValues);
+    const [facetValues, setFilter] = useState<FacetValues>({} as FacetValues);
 
     const updateFilter = (event: any) => {
         const target = event.target;
 
         let targetName = target.name;
         const value = target.value;
-        const updatedValues: any = {...filterValues};
+        const updatedValues: any = {...facetValues};
 
         if (target.type === 'checkbox') {
             // slice is required otherwise currentValue would be reference to filter[name] and any modification will change filter directly
@@ -28,8 +28,6 @@ function TableFilter() {
             updatedValues[targetName] = value;
         }
 
-        console.log(updatedValues);
-
         setFilter((prevState: any) => ({
             ...prevState, ...updatedValues
         }))
@@ -38,7 +36,7 @@ function TableFilter() {
 
     return {
         updateFilter,
-        filterValues,
+        facetValues,
         setFilter
     };
 }

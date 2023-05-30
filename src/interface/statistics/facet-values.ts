@@ -1,5 +1,5 @@
-export interface FilterValues {
-    country?: string[],
+export interface FacetValues {
+    country?: number[],
     countryMethod?: string,
     organisationType?: string[],
     organisationTypeMethod?: string,

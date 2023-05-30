@@ -64,7 +64,7 @@ export default function Project() {
                 <dd className="col-sm-9">{String(project.coordinator.organisation)}<br/>
                     {project.coordinator.technicalContact && <>
                         {String(project.coordinator.technicalContact.fullName)}
-                        {project.coordinator.technicalContact.email && !user.is_eureka_secretariat_staff_member ? ` (${String(project.coordinator.technicalContact.email)})` : ''}
+                        {project.coordinator.technicalContact.email && !user.isEurekaSecretariatStaffMember ? ` (${String(project.coordinator.technicalContact.email)})` : ''}
                     </>}
                 </dd>
             </>}
@@ -73,7 +73,7 @@ export default function Project() {
             <dt className="col-sm-3 text-end">Project leader:</dt>
             <dd className="col-sm-9">{String(project.projectLeader.fullName)}
 
-                {project.projectLeader.email && !user.is_eureka_secretariat_staff_member ? ` (${String(project.projectLeader.email)})` : ''}
+                {project.projectLeader.email && !user.isEurekaSecretariatStaffMember ? ` (${String(project.projectLeader.email)})` : ''}
 
             </dd>
 

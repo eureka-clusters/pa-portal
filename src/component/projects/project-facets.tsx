@@ -2,27 +2,27 @@ import {FC, useContext} from 'react';
 import {Form} from "react-bootstrap";
 // import BootstrapSwitchButton from "bootstrap-switch-button-react";
 import RS from 'react-select';
-import {FilterValues} from "@/interface/statistics/filter-values";
+import {FacetValues} from "@/interface/statistics/facet-values";
 import {Facets} from "@/interface/statistics/project/facets";
 import {useQuery} from "@tanstack/react-query";
 import {AxiosContext} from "@/providers/axios-provider";
 import {getProjectFacets} from "@/hooks/project/get-facets";
 
 interface Props {
-    filterValues: FilterValues,
-    setFilter: (filterValues: (prevState: FilterValues) => FilterValues) => void,
-    updateFilter: (filterValues: any) => void,
+    facetValues: FacetValues,
+    setFilter: (facetValues: (prevState: FacetValues) => FacetValues) => void,
+    updateFilter: (facetValues: any) => void,
 }
 
 
-const ProjectFacets: FC<Props> = ({filterValues, setFilter, updateFilter}) => {
+const ProjectFacets: FC<Props> = ({facetValues, setFilter, updateFilter}) => {
 
     const authAxios = useContext(AxiosContext).authAxios;
 
     const {isLoading, isError, data} = useQuery({
-        queryKey: ['projectFacets', filterValues],
+        queryKey: ['projectFacets', facetValues],
         keepPreviousData: true,
-        queryFn: () => getProjectFacets({authAxios, filterValues})
+        queryFn: () => getProjectFacets({authAxios, facetValues})
     });
 
     if (isLoading) {
@@ -32,7 +32,6 @@ const ProjectFacets: FC<Props> = ({filterValues, setFilter, updateFilter}) => {
     if (isError) {
         return <div>Error</div>;
     }
-
 
     //https://github.com/vitejs/vite/issues/2139#issuecomment-1230773695
     const ReactSelect = (RS as any).default ? (RS as any).default : RS;
@@ -54,7 +53,7 @@ const ProjectFacets: FC<Props> = ({filterValues, setFilter, updateFilter}) => {
                         // components needs the complete filter objects therefore filter these by the filter country array
                         value={
                             facets.countries.filter(function (itm) {
-                                return filterValues['country'] !== undefined && filterValues['country'].indexOf(itm.id.toString()) > -1;
+                                return facetValues['country'] !== undefined && facetValues['country'].indexOf(itm.id) > -1;
                             })
                         }
 
@@ -97,7 +96,7 @@ const ProjectFacets: FC<Props> = ({filterValues, setFilter, updateFilter}) => {
                                 onChange={updateFilter}
                                 className={'me-2'}
                                 checked={
-                                    filterValues['organisationType'] !== undefined && filterValues['organisationType'].indexOf(organisationType['id'].toString()) > -1
+                                    facetValues['organisationType'] !== undefined && facetValues['organisationType'].indexOf(organisationType['id'].toString()) > -1
                                 }
                             />
                             <Form.Check.Label>{organisationType['name']}</Form.Check.Label>
@@ -118,7 +117,7 @@ const ProjectFacets: FC<Props> = ({filterValues, setFilter, updateFilter}) => {
                                 onChange={updateFilter}
                                 className={'me-2'}
                                 checked={
-                                    filterValues['projectStatus'] !== undefined && filterValues['projectStatus'].indexOf(projectStatus['id'].toString()) > -1
+                                    facetValues['projectStatus'] !== undefined && facetValues['projectStatus'].indexOf(projectStatus['id'].toString()) > -1
                                 }
                             />
                             <Form.Check.Label>{projectStatus['name']}</Form.Check.Label>
@@ -140,7 +139,7 @@ const ProjectFacets: FC<Props> = ({filterValues, setFilter, updateFilter}) => {
                         // components needs the complete filter objects therefore filter these by the filter country array
                         value={
                             facets.programmeCalls.filter(function (itm) {
-                                return filterValues['programmeCall'] !== undefined && filterValues['programmeCall'].indexOf(itm.id.toString()) > -1;
+                                return facetValues['programmeCall'] !== undefined && facetValues['programmeCall'].indexOf(itm.id.toString()) > -1;
                             })
                         }
                         // getOptionLabel={(option) => `${option.name} (${option.amount})`}
@@ -175,7 +174,7 @@ const ProjectFacets: FC<Props> = ({filterValues, setFilter, updateFilter}) => {
                                 onChange={updateFilter}
                                 className={'filter'}
                                 checked={
-                                    filterValues.clusterGroups !== undefined && filterValues['clusterGroups'].indexOf(clusterGroup['id'].toString()) > -1
+                                    facetValues.clusterGroups !== undefined && facetValues['clusterGroups'].indexOf(clusterGroup['id'].toString()) > -1
                                 }
                             />
                             <Form.Check.Label>{clusterGroup['name']}</Form.Check.Label>

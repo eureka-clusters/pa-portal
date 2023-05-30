@@ -21,7 +21,12 @@ const PartnerTable: FC<Props> = ({project}) => {
     const {isLoading, isError, data} = useQuery({
         queryKey: ['projectPartners', filterOptions, project],
         keepPreviousData: true,
-        queryFn: () => getPartners({authAxios, filterOptions, project, page: 1})
+        queryFn: () => getPartners({
+            authAxios, filterOptions, project, paginationOptions: {
+                pageIndex: 0,
+                pageSize: 1000,
+            }
+        })
     });
 
     if (isLoading) {
@@ -47,7 +52,7 @@ const PartnerTable: FC<Props> = ({project}) => {
                 {data?.partners.map(
                     (partner: Partner, key: number) => (
                         <tr key={key}>
-                            <td><Link to={`/projects/partner/${partner.slug}`}>{partner.organisation.name}</Link>
+                            <td><Link to={`/project/partner/${partner.slug}`}>{partner.organisation.name}</Link>
                             </td>
                             <td>{partner.organisation.country.country}</td>
                             <td>{partner.organisation.type.type}</td>

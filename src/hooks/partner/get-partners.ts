@@ -4,7 +4,8 @@ import {Organisation} from '@/interface/organisation';
 import {Project} from '@/interface/project';
 import {Partner} from "@/interface/project/partner";
 import {AxiosInstance} from "axios";
-import {FilterValues} from "@/interface/statistics/filter-values";
+import {FacetValues} from "@/interface/statistics/facet-values";
+import {PaginationState, SortingState} from "@tanstack/react-table";
 
 interface PartnerResponse {
     _embedded: {
@@ -20,33 +21,43 @@ export const getPartners = (
     {
         authAxios,
         filterOptions,
-        filterValues,
+        facetValues,
+        paginationOptions,
+        sortingOptions,
         organisation,
         project,
-        page
     }: {
         authAxios: AxiosInstance,
         filterOptions: FilterOptions,
-        filterValues?: FilterValues
+        facetValues?: FacetValues,
+        paginationOptions: PaginationState,
+        sortingOptions?: SortingState
         organisation?: Organisation,
         project?: Project,
-        page: number
     }) => {
 
-    if (filterValues) {
-        filterOptions.filter = btoa(JSON.stringify(filterValues));
+    let searchParams = createSearchParams(filterOptions);
+
+    searchParams.append('page', (paginationOptions.pageIndex + 1).toString());
+    searchParams.append('pageSize', paginationOptions.pageSize.toString());
+
+    if (facetValues) {
+        searchParams.append('filter', btoa(JSON.stringify(facetValues)));
     }
 
-    let url = 'list/partner?' + createSearchParams(filterOptions).toString();
+    if (sortingOptions !== undefined && sortingOptions.length > 0) {
+        searchParams.append('order', sortingOptions[0].id);
+        searchParams.append('direction', sortingOptions[0].desc ? 'desc' : 'asc');
+    }
 
     if (organisation !== undefined) {
-        url += '&organisation=' + organisation.slug;
+        searchParams.append('organisation', organisation.slug);
     }
     if (project !== undefined) {
-        url += '&project=' + project.slug;
+        searchParams.append('project', project.slug);
     }
 
-    url += '&page=' + page;
+    let url = 'list/partner?' + createSearchParams(searchParams).toString();
 
     return authAxios.get<PartnerResponse>(url).then(response => {
         const {data} = response;
@@ -59,8 +70,8 @@ export const getPartners = (
             amountOfPages: data.page_count,
             currentPage: data.page,
             totalItems: data.total_items,
-            nextPage: hasNext ? page + 1 : undefined,
-            previousPage: hasPrevious ? page - 1 : undefined,
+            nextPage: hasNext ? paginationOptions.pageIndex + 1 : undefined,
+            previousPage: hasPrevious ? paginationOptions.pageIndex - 1 : undefined,
         };
     });
 

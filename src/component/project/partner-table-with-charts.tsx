@@ -26,7 +26,12 @@ const PartnerTableWithCharts: FC<Props> = ({project}) => {
     const {isLoading, isError, data} = useQuery({
         queryKey: ['projectPartners', filterOptions, project],
         keepPreviousData: true,
-        queryFn: () => getPartners({authAxios, filterOptions, project, page: 1})
+        queryFn: () => getPartners({
+            authAxios, filterOptions, project, paginationOptions: {
+                pageIndex: 0,
+                pageSize: 1000,
+            }
+        })
     });
 
     if (isLoading) {

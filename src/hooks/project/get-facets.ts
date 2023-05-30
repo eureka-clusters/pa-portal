@@ -1,13 +1,13 @@
 import {AxiosInstance} from "axios";
 import {Facets} from "@/interface/statistics/project/facets";
-import {FilterValues} from "@/interface/statistics/filter-values";
+import {FacetValues} from "@/interface/statistics/facet-values";
 
-export const getProjectFacets = ({authAxios, filterValues}: {
+export const getProjectFacets = ({authAxios, facetValues}: {
     authAxios: AxiosInstance,
-    filterValues: FilterValues
+    facetValues: FacetValues
 }) => {
 
-    const url = "/statistics/facets/project/" + btoa(JSON.stringify(filterValues));
+    const url = "/statistics/facets/project/" + btoa(JSON.stringify(facetValues));
     return authAxios.get<Facets>(url).then(response => {
         const {data} = response;
 

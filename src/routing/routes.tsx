@@ -7,15 +7,14 @@ import Account from "@/component/account";
 import ProtectedRoute from "@/routing/protected-route";
 import {useContext} from "react";
 import Search from "@/component/search";
-import ProjectStatistics from "@/component/statistics/projects";
-import PartnerStatistics from "@/component/statistics/partners";
-import Projects from "@/component/projects";
+import ProjectList from "@/component/projects";
+import Partner from "@/component/partner";
+import PartnerList from "@/component/partners";
 import Project from "@/component/project";
 import Contact from "@/component/contact";
 import {ActiveRoutePathTitleCallbackParams} from "@/routing/active-route-path-title-callback";
 import Organisations from "@/component/organisations";
 import Organisation from "@/component/organisation";
-import Partner from "@/component/partner";
 import {RoutePathDefinition} from "@/routing/route-part-definition";
 
 export default function pageRoutes(): RoutePathDefinition[] {
@@ -25,40 +24,17 @@ export default function pageRoutes(): RoutePathDefinition[] {
     return [
         {title: "Home", path: "/", element: authContext.isAuthenticated() ? <Page title="Home"/> : <Login/>, nav: true},
         {title: "Login", path: "/login", element: <Login/>, nav: false},
-
-        {
-            title: "Statistics",
-            path: "/statistics",
-            element: <Page title="Statistics" withOutlet/>,
-            nav: authContext.isAuthenticated(),
-            children: [
-                {
-                    title: 'Projects',
-                    path: "projects",
-                    element: <ProtectedRoute
-                        isAuthenticated={authContext.isAuthenticated()}><ProjectStatistics/></ProtectedRoute>,
-                    nav: true
-                },
-                {
-                    title: "Partners",
-                    path: "partners",
-                    element: <ProtectedRoute
-                        isAuthenticated={authContext.isAuthenticated()}><PartnerStatistics/></ProtectedRoute>,
-                    nav: true
-                },
-            ]
-        },
         {
             title: "Projects",
-            path: "/projects",
-            element: <Page title="Projects" withOutlet/>,
+            path: "/project",
+            element: <Page title="" withOutlet/>,
             nav: authContext.isAuthenticated(),
             children: [
                 {
                     title: "Project list",
                     path: "",
                     element: <ProtectedRoute
-                        isAuthenticated={authContext.isAuthenticated()}><Projects/></ProtectedRoute>,
+                        isAuthenticated={authContext.isAuthenticated()}><ProjectList/></ProtectedRoute>,
                     nav: true
                 },
                 {
@@ -67,6 +43,13 @@ export default function pageRoutes(): RoutePathDefinition[] {
                     element: <ProtectedRoute
                         isAuthenticated={authContext.isAuthenticated()}><Project/></ProtectedRoute>,
                     nav: true,
+                },
+                {
+                    title: "Project partner list",
+                    path: "partner",
+                    element: <ProtectedRoute
+                        isAuthenticated={authContext.isAuthenticated()}><PartnerList/></ProtectedRoute>,
+                    nav: true
                 },
                 {
                     title: ({match}: ActiveRoutePathTitleCallbackParams<'id'>) => `Project Partner`,

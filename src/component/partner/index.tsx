@@ -60,7 +60,7 @@ export default function Partner() {
                 <dd className="col-sm-9">
                     {String(partner.technicalContact.fullName)}
 
-                    {partner.technicalContact.email && !user.is_eureka_secretariat_staff_member ?
+                    {partner.technicalContact.email && !user.isEurekaSecretariatStaffMember ?
                         ` (${String(partner.technicalContact.email)})` : ''
                     }
                 </dd>
@@ -83,7 +83,7 @@ export default function Partner() {
                 <dd className="col-sm-9">
                     {String(partner.project.projectLeader.fullName)}
 
-                    {partner.project.projectLeader.email && !user.is_eureka_secretariat_staff_member ?
+                    {partner.project.projectLeader.email && !user.isEurekaSecretariatStaffMember ?
                         ` (${String(partner.project.projectLeader.email)})` : ''
                     }
                 </dd>
