@@ -19,6 +19,7 @@ import {
 import downloadBase64File from "@/functions/download-base64";
 import {Link} from "react-router-dom";
 import {CostsFormat, EffortFormat} from "@/functions/utils";
+import Moment from "react-moment";
 
 const ProjectTable = ({facetValues}: { facetValues?: FacetValues }) => {
 
@@ -78,9 +79,14 @@ const ProjectTable = ({facetValues}: { facetValues?: FacetValues }) => {
                 cell: ({row}) => row.original.secondaryCluster?.name
             },
             {
-                accessorKey: 'programme',
-                header: () => <span>Programme</span>,
-                cell: ({row}) => row.original.programme
+                accessorKey: 'programmeCall',
+                header: () => <span>Programme call</span>,
+                cell: ({row}) => row.original.programmeCall
+            },
+            {
+                accessorKey: 'labelDate',
+                header: () => <span>Label date</span>,
+                cell: ({row}) => <Moment format={'MM-YYYY'}>{row.original.labelDate}</Moment>,
             },
             {
                 accessorKey: 'status',
@@ -89,12 +95,18 @@ const ProjectTable = ({facetValues}: { facetValues?: FacetValues }) => {
             },
             {
                 accessorKey: 'latestVersionTotalEffort',
+                meta: {
+                    align: 'right'
+                },
                 header: () => <span>Latest version effort</span>,
                 cell: ({row}) => (<EffortFormat>{row.original.latestVersionTotalEffort}</EffortFormat>)
             },
             {
                 accessorKey: 'latestVersionTotalCosts',
-                header: () => <span>Latest version effort</span>,
+                meta: {
+                    align: 'right'
+                },
+                header: () => <span>Latest version costs</span>,
                 cell: ({row}) => (<CostsFormat>{row.original.latestVersionTotalCosts}</CostsFormat>)
             },
         ],
@@ -179,7 +191,7 @@ const ProjectTable = ({facetValues}: { facetValues?: FacetValues }) => {
                         <tr key={row.id}>
                             {row.getVisibleCells().map(cell => {
                                 return (
-                                    <td key={cell.id}>
+                                    <td key={cell.id} align={(cell.column.columnDef.meta as any)?.align}>
                                         {flexRender(
                                             cell.column.columnDef.cell,
                                             cell.getContext()

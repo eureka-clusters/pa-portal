@@ -14,16 +14,17 @@ interface CostsFormatProps {
 
 export const CostsFormat = ({showPrefix, showSuffix, children}: CostsFormatProps) => {
 
-    if (children === null ) {
+    if (children === null) {
         return null;
     }
 
     return (
         <NumericFormat
-            value={children}
-            thousandSeparator={','}
-            prefix={showPrefix ? '€ ' : ''}
-            suffix={showSuffix ? ' €' : ''}
+            className={'font-monospace'}
+            value={children / 1000}
+            thousandSeparator={' '}
+            prefix={showPrefix ? 'k€ ' : ''}
+            suffix={showSuffix ? ' k€' : ''}
             displayType={'text'}
             decimalScale={2}
             fixedDecimalScale={true}
@@ -50,6 +51,7 @@ export const EffortFormat = ({showPrefix, showSuffix, children}: EffortFormatPro
     return (
         <NumericFormat
             value={children}
+            className={'font-monospace'}
             thousandSeparator={','}
             prefix={showPrefix ? 'PY ' : ''}
             suffix={showSuffix ? ' PY' : ''}

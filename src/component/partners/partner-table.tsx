@@ -18,6 +18,7 @@ import {Partner} from "@/interface/project/partner";
 import {getPartners} from "@/hooks/partner/get-partners";
 import LoadingButton from "@/component/partial/loading-button";
 import downloadBase64File from "@/functions/download-base64";
+import {CostsFormat, EffortFormat} from "@/functions/utils";
 
 
 const PartnerTable = ({facetValues}: { facetValues?: FacetValues }) => {
@@ -70,6 +71,11 @@ const PartnerTable = ({facetValues}: { facetValues?: FacetValues }) => {
                 header: () => <span>Project</span>,
             },
             {
+                accessorKey: 'projectStatus',
+                cell: ({row}) => row.original.project.status.status,
+                header: () => <span>Project status</span>,
+            },
+            {
                 accessorKey: 'primaryCluster',
                 header: () => <span>Primary cluster</span>,
                 cell: ({row}) => row.original.project.primaryCluster.name
@@ -82,12 +88,22 @@ const PartnerTable = ({facetValues}: { facetValues?: FacetValues }) => {
             {
                 accessorKey: 'country',
                 header: () => <span>Country</span>,
-                cell: ({row}) => row.original.organisation.country.country
+                cell: ({row}) => row.original.organisation.country.iso3
             },
             {
                 accessorKey: 'type',
                 header: () => <span>Type</span>,
                 cell: ({row}) => row.original.organisation.type.type
+            },
+            {
+                accessorKey: 'latestVersionEffort',
+                header: () => <span>Latest version effort</span>,
+                cell: ({row}) => (<EffortFormat>{row.original.latestVersionEffort}</EffortFormat>)
+            },
+            {
+                accessorKey: 'latestVersionCosts',
+                header: () => <span>Latest version costs</span>,
+                cell: ({row}) => (<CostsFormat>{row.original.latestVersionCosts}</CostsFormat>)
             },
         ],
         []
