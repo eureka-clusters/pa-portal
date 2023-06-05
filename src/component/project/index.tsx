@@ -80,8 +80,20 @@ export default function Project() {
             <dt className="col-sm-3 text-end">TechnicalArea:</dt>
             <dd className="col-sm-9">{project.technicalArea}</dd>
 
-            <dt className="col-sm-3 text-end">Label date:</dt>
-            <dd className="col-sm-9">{moment(project.labelDate).format('LLL')}</dd>
+            {project.labelDate && <>
+                <dt className="col-sm-3 text-end">Label date:</dt>
+                <dd className="col-sm-9">{moment(project.labelDate).format('LLL')}</dd>
+            </>}
+
+            {project.officialStartDate && <>
+                <dt className="col-sm-3 text-end">Start date:</dt>
+                <dd className="col-sm-9">{moment(project.officialStartDate).format('LLL')}</dd>
+            </>}
+
+            {project.officialEndDate && <>
+                <dt className="col-sm-3 text-end">End date:</dt>
+                <dd className="col-sm-9">{moment(project.officialEndDate).format('LLL')}</dd>
+            </>}
 
             <dt className="col-sm-3 text-end">Total costs:</dt>
             <dd className="col-sm-9">

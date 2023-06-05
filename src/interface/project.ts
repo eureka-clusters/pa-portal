@@ -18,7 +18,9 @@ export interface Project {
     programmeCall: string,
     primaryCluster: Cluster,
     secondaryCluster?: Cluster,
-    labelDate: string,
+    labelDate?: string,
+    officialStartDate?: string,
+    officialEndDate?: string,
     status: Status,
     latestVersionTotalCosts: number,
     latestVersionTotalEffort: number

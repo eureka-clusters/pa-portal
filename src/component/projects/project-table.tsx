@@ -70,13 +70,11 @@ const ProjectTable = ({facetValues}: { facetValues?: FacetValues }) => {
             },
             {
                 accessorKey: 'primaryCluster',
-                header: () => <span>Primary cluster</span>,
-                cell: ({row}) => row.original.primaryCluster.name
-            },
-            {
-                accessorKey: 'secondaryCluster',
-                header: () => <span>Secondary cluster</span>,
-                cell: ({row}) => row.original.secondaryCluster?.name
+                header: () => <span>Primary cluster (secondary)</span>,
+                cell: ({row}) => (
+                    (row.original.secondaryCluster && <>{row.original.primaryCluster.name} ({row.original.secondaryCluster.name})</>) ||
+                    (!row.original.secondaryCluster && <>{row.original.primaryCluster.name}</>)
+                )
             },
             {
                 accessorKey: 'programmeCall',
@@ -84,9 +82,16 @@ const ProjectTable = ({facetValues}: { facetValues?: FacetValues }) => {
                 cell: ({row}) => row.original.programmeCall
             },
             {
-                accessorKey: 'labelDate',
-                header: () => <span>Label date</span>,
-                cell: ({row}) => <Moment format={'MM-YYYY'}>{row.original.labelDate}</Moment>,
+                accessorKey: 'officialStartDate',
+                header: () => <span>Start date</span>,
+                cell: ({row}) => (row.original.officialStartDate &&
+                    <Moment format={'MM-YYYY'}>{row.original?.officialStartDate}</Moment>),
+            },
+            {
+                accessorKey: 'officialEndDate',
+                header: () => <span>End date</span>,
+                cell: ({row}) => (row.original.officialEndDate &&
+                    <Moment format={'MM-YYYY'}>{row.original?.officialEndDate}</Moment>),
             },
             {
                 accessorKey: 'status',
