@@ -7,6 +7,7 @@ import PartnerTableWithCharts from "@/component/project/partner-table-with-chart
 import {AxiosContext} from "@/providers/axios-provider";
 import {useQuery} from "@tanstack/react-query";
 import {UserContext} from "@/providers/user-provider";
+import Moment from "react-moment";
 
 export default function Project() {
 
@@ -82,17 +83,17 @@ export default function Project() {
 
             {project.labelDate && <>
                 <dt className="col-sm-3 text-end">Label date:</dt>
-                <dd className="col-sm-9">{moment(project.labelDate).format('LLL')}</dd>
+                <dd className="col-sm-9"><Moment format={'DD MMM YYYY'}>{project.labelDate}</Moment></dd>
             </>}
 
             {project.officialStartDate && <>
                 <dt className="col-sm-3 text-end">Start date:</dt>
-                <dd className="col-sm-9">{moment(project.officialStartDate).format('LLL')}</dd>
+                <dd className="col-sm-9"><Moment format={'DD MMM YYYY'}>{project.officialStartDate}</Moment></dd>
             </>}
 
             {project.officialEndDate && <>
                 <dt className="col-sm-3 text-end">End date:</dt>
-                <dd className="col-sm-9">{moment(project.officialEndDate).format('LLL')}</dd>
+                <dd className="col-sm-9"><Moment format={'DD MMM YYYY'}>{project.officialEndDate}</Moment></dd>
             </>}
 
             <dt className="col-sm-3 text-end">Total costs:</dt>
