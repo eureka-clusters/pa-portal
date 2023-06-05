@@ -4,11 +4,9 @@ import {AuthProvider} from "@/providers/auth-provider";
 import {AxiosProvider} from "@/providers/axios-provider";
 import {UserProvider} from "@/providers/user-provider";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
-// import {ReactQueryDevtools} from "@tanstack/react-query-devtools";
 import {BrowserRouter} from "react-router-dom";
 import './App.scss';
 import Content from "@/component/content";
-import {ReactQueryDevtools} from "@tanstack/react-query-devtools";
 
 const queryClient = new QueryClient({
     defaultOptions: {
