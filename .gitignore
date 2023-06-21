@@ -10,7 +10,7 @@
 # testing
 /coverage
 
-.yarn/
+.yarn/cache
 
 # misc
 .DS_Store
