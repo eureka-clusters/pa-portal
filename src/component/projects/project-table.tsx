@@ -84,14 +84,14 @@ const ProjectTable = ({facetValues}: { facetValues?: FacetValues }) => {
             {
                 accessorKey: 'officialStartDate',
                 header: () => <span>Start date</span>,
-                cell: ({row}) => (row.original.officialStartDate &&
-                    <Moment format={'DD MMM YYYY'}>{row.original?.officialStartDate}</Moment>),
+                cell: ({row}) => (row.original.officialStartDate ?
+                    <Moment format={'DD MMM YYYY'}>{row.original?.officialStartDate}</Moment> : '-'),
             },
             {
                 accessorKey: 'officialEndDate',
                 header: () => <span>End date</span>,
-                cell: ({row}) => (row.original.officialEndDate &&
-                    <Moment format={'DD MMM YYYY'}>{row.original?.officialEndDate}</Moment>),
+                cell: ({row}) => (row.original.officialEndDate ?
+                    <Moment format={'DD MMM YYYY'}>{row.original?.officialEndDate}</Moment> : '-')
             },
             {
                 accessorKey: 'status',

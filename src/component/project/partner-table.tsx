@@ -18,7 +18,7 @@ const PartnerTable: FC<Props> = ({project}) => {
     const filterOptions = useGetFilterOptions();
     const authAxios = useContext(AxiosContext).authAxios;
 
-    const {isLoading, isError, data} = useQuery({
+    const {isLoading, data} = useQuery({
         queryKey: ['projectPartners', filterOptions, project],
         keepPreviousData: true,
         queryFn: () => getPartners({
@@ -39,8 +39,8 @@ const PartnerTable: FC<Props> = ({project}) => {
                 <thead>
                 <tr>
                     <th><SortableTableHeader order='name' filterOptions={filterOptions}>Name</SortableTableHeader></th>
-                    <th><SortableTableHeader order='country' filterOptions={filterOptions}>Country</SortableTableHeader>
-                    </th>
+                    <th>Coordinator</th>
+                    <th><SortableTableHeader order='country' filterOptions={filterOptions}>Country</SortableTableHeader></th>
                     <th><SortableTableHeader order='type' filterOptions={filterOptions}>Type</SortableTableHeader></th>
                     <th><SortableTableHeader order='latestVersionCosts' filterOptions={filterOptions}>Latest version
                         costs</SortableTableHeader></th>
@@ -52,8 +52,8 @@ const PartnerTable: FC<Props> = ({project}) => {
                 {data?.partners.map(
                     (partner: Partner, key: number) => (
                         <tr key={key}>
-                            <td><Link to={`/project/partner/${partner.slug}`}>{partner.organisation.name}</Link>
-                            </td>
+                            <td><Link to={`/project/partner/${partner.slug}`}>{partner.organisation.name}</Link></td>
+                            <td>{partner.isCoordinator ? 'Yes' : ''}</td>
                             <td>{partner.organisation.country.country}</td>
                             <td>{partner.organisation.type.type}</td>
                             <td><CostsFormat>{partner.latestVersionCosts}</CostsFormat></td>
