@@ -8,21 +8,23 @@ import {Project} from "@/interface/project";
 import {AxiosContext} from "@/providers/axios-provider";
 import {useQuery} from "@tanstack/react-query";
 import {CostsFormat, EffortFormat} from "@/functions/utils";
+import {Version} from "@/interface/project/version";
 
 interface Props {
-    project: Project
+    project: Project,
+    activeVersion?: Version
 }
 
-const PartnerTable: FC<Props> = ({project}) => {
+const PartnerTable: FC<Props> = ({project, activeVersion}) => {
 
     const filterOptions = useGetFilterOptions();
     const authAxios = useContext(AxiosContext).authAxios;
 
     const {isLoading, data} = useQuery({
-        queryKey: ['projectPartners', filterOptions, project],
+        queryKey: ['projectPartners', filterOptions, activeVersion, project],
         keepPreviousData: true,
         queryFn: () => getPartners({
-            authAxios, filterOptions, project, paginationOptions: {
+            authAxios, filterOptions, project, activeVersion, paginationOptions: {
                 pageIndex: 0,
                 pageSize: 1000,
             }
@@ -38,9 +40,10 @@ const PartnerTable: FC<Props> = ({project}) => {
             <table className="table table-striped table-sm">
                 <thead>
                 <tr>
-                    <th><SortableTableHeader order='name' filterOptions={filterOptions}>Name</SortableTableHeader></th>
+                    <th colSpan={2}><SortableTableHeader order='name' filterOptions={filterOptions}>Name</SortableTableHeader></th>
                     <th>Coordinator</th>
-                    <th><SortableTableHeader order='country' filterOptions={filterOptions}>Country</SortableTableHeader></th>
+                    <th><SortableTableHeader order='country' filterOptions={filterOptions}>Country</SortableTableHeader>
+                    </th>
                     <th><SortableTableHeader order='type' filterOptions={filterOptions}>Type</SortableTableHeader></th>
                     <th><SortableTableHeader order='latestVersionCosts' filterOptions={filterOptions}>Latest version
                         costs</SortableTableHeader></th>
@@ -52,6 +55,7 @@ const PartnerTable: FC<Props> = ({project}) => {
                 {data?.partners.map(
                     (partner: Partner, key: number) => (
                         <tr key={key}>
+                            <td><small className={'text-muted'}>{key+1}</small></td>
                             <td><Link to={`/project/partner/${partner.slug}`}>{partner.organisation.name}</Link></td>
                             <td>{partner.isCoordinator ? 'Yes' : ''}</td>
                             <td>{partner.organisation.country.country}</td>

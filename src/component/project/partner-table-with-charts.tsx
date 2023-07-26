@@ -12,22 +12,23 @@ import {useGetFilterOptions} from '@/functions/filter-functions';
 import {useQuery} from "@tanstack/react-query";
 import {AxiosContext} from "@/providers/axios-provider";
 import {Partner} from "@/interface/project/partner";
+import {Version} from "@/interface/project/version";
 
 interface Props {
     project: Project
+    activeVersion?: Version
 }
 
-const PartnerTableWithCharts: FC<Props> = ({project}) => {
+const PartnerTableWithCharts: FC<Props> = ({project, activeVersion}) => {
 
     const [activeTab, setActiveTab] = useState('table'); // default tab
     const filterOptions = useGetFilterOptions();
     const authAxios = useContext(AxiosContext).authAxios;
 
     const {isLoading, isError, data} = useQuery({
-        queryKey: ['projectPartners', filterOptions, project],
-        keepPreviousData: true,
+        queryKey: ['projectPartners', filterOptions, project, activeVersion],
         queryFn: () => getPartners({
-            authAxios, filterOptions, project, paginationOptions: {
+            authAxios, filterOptions, project, activeVersion, paginationOptions: {
                 pageIndex: 0,
                 pageSize: 1000,
             }
@@ -43,6 +44,8 @@ const PartnerTableWithCharts: FC<Props> = ({project}) => {
     return (
         <React.Fragment>
             <h2>Partners</h2>
+
+            <p>Dat is taken from {activeVersion ? activeVersion.type.description : 'Latest version'}</p>
 
             <Tabs
                 id="partner-tabs"
@@ -61,7 +64,7 @@ const PartnerTableWithCharts: FC<Props> = ({project}) => {
                 }}
             >
                 <Tab eventKey="table" title="Table">
-                    <PartnerTable project={project}/>
+                    <PartnerTable project={project} activeVersion={activeVersion}/>
                 </Tab>
                 <Tab eventKey="charts" title="Charts">
                     <Suspense fallback={<div>Loading...</div>}>

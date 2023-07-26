@@ -1,11 +1,26 @@
-import {useContext} from "react";
+import {useContext, useEffect, useState} from "react";
 import {UserContext} from "@/providers/user-provider";
+import {User} from "@/interface/auth/user";
 
 export default function Account() {
 
     let userContext = useContext(UserContext);
 
-    const userInfo = userContext.getUser();
+    const [userInfo, setUserInfo] = useState<User>({} as User);
+
+    useEffect(() => {
+        userContext.updateUser().then((user) => {
+            setUserInfo(user);
+        });
+
+    }, []);
+    //const userInfo = userContext.updateUser();
+
+    //Update the user info from the backend
+    // useEffect(() => {
+    //     userContext.updateUser();
+    // });
+
 
     return <>
         <h1>Account</h1>

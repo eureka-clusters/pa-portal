@@ -30,7 +30,7 @@ export default function Header() {
                                     <NavDropdown
                                         id="nav-dropdown-account"
                                         // title={`Account (${auth.UserInfo.email})`}  // we could also use auth.getUser() 
-                                        title={`Account (${userContext.getUser().email})`}
+                                        title={`${userContext.getUser().fullName}`}
                                         className={'ms-auto'}
                                         align="end"  // align menu to the right 
 
