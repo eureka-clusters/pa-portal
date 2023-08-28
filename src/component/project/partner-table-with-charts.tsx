@@ -25,7 +25,7 @@ const PartnerTableWithCharts: FC<Props> = ({project, activeVersion}) => {
     const filterOptions = useGetFilterOptions();
     const authAxios = useContext(AxiosContext).authAxios;
 
-    const {isLoading, isError, data} = useQuery({
+    const {isLoading, data} = useQuery({
         queryKey: ['projectPartners', filterOptions, project, activeVersion],
         queryFn: () => getPartners({
             authAxios, filterOptions, project, activeVersion, paginationOptions: {
@@ -44,8 +44,6 @@ const PartnerTableWithCharts: FC<Props> = ({project, activeVersion}) => {
     return (
         <React.Fragment>
             <h2>Partners</h2>
-
-            <p>Dat is taken from {activeVersion ? activeVersion.type.description : 'Latest version'}</p>
 
             <Tabs
                 id="partner-tabs"
@@ -67,6 +65,9 @@ const PartnerTableWithCharts: FC<Props> = ({project, activeVersion}) => {
                     <PartnerTable project={project} activeVersion={activeVersion}/>
                 </Tab>
                 <Tab eventKey="charts" title="Charts">
+
+                    <p>The data in these charts is taken from the latest version</p>
+
                     <Suspense fallback={<div>Loading...</div>}>
                         <div className="container">
                             <div className="row">

@@ -1,4 +1,4 @@
-name: Portal Backend Docker Image
+name: Portal PA Portal Docker Image
 
 on:
   push:

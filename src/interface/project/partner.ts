@@ -11,6 +11,10 @@ export interface Partner {
     isCoordinator: boolean,
     technicalContact: Contact,
     organisation: Organisation,
+    projectOutlineCosts: number,
+    projectOutlineEffort: number,
+    fullProjectProposalCosts: number,
+    fullProjectProposalEffort: number,
     latestVersionCosts: number,
     latestVersionEffort: number,
     year?: number

@@ -130,11 +130,16 @@ export default function Project() {
             </dd>
         </dl>
 
-        Select data from: {versionQuery.data?.versions.map((version) => {
-            return <div className={'p-2 me-3 btn ' + (version.id === activeVersion?.id ? 'btn-outline-primary': 'btn-primary')} key={version.id} onClick={() => {
-                setActiveVersion(version);
-            }}>{version.type.description} - ({version.effort} PY, <CostsFormat>{version.costs}</CostsFormat>)</div>
-        })}
+        This project has the following versions:
+        <ul>
+            {versionQuery.data?.versions.filter((version) => {
+                return !version.isLatestVersionAndIsFPP
+            }).map((version) => {
+                return <li key={version.id} onClick={() => {
+                    setActiveVersion(version);
+                }}>{version.type.description} - ({version.effort} PY, <CostsFormat>{version.costs}</CostsFormat>)</li>
+            })}
+        </ul>
 
         <PartnerTableWithCharts project={project} activeVersion={activeVersion}/>
     </>;

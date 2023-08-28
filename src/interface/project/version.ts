@@ -6,6 +6,7 @@ export interface Version {
     type: Type,
     status: Status,
     dateSubmitted: Date,
+    isLatestVersionAndIsFPP: boolean,
     effort: number,
     costs: number
 }
