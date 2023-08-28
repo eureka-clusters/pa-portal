@@ -133,7 +133,7 @@ export default function Project() {
         This project has the following versions:
         <ul>
             {versionQuery.data?.versions.filter((version) => {
-                return !version.isLatestVersionAndIsFPP
+                return true || !version.isLatestVersionAndIsFPP
             }).map((version) => {
                 return <li key={version.id} onClick={() => {
                     setActiveVersion(version);

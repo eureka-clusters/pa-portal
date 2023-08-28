@@ -45,8 +45,9 @@ const PartnerTable: FC<Props> = ({project, activeVersion}) => {
                     <th colSpan={5}></th>
                     <th colSpan={2} className={'text-end'}>Project Outline</th>
                     <th colSpan={2} className={'text-end'}>Full Project Proposal</th>
-                    {!project.latestVersion.isLatestVersionAndIsFPP &&
-                        <th colSpan={2} className={'text-end'}>Latest version</th>}
+                    {/*{!project.latestVersion.isLatestVersionAndIsFPP &&*/}
+                    <th colSpan={2} className={'text-end'}>Latest version</th>
+                    {/*}*/}
 
                 </tr>
                 <tr>
@@ -60,14 +61,14 @@ const PartnerTable: FC<Props> = ({project, activeVersion}) => {
                     <th className={'text-end'}>Effort</th>
                     <th className={'text-end'}>Costs</th>
                     <th className={'text-end'}>Effort</th>
-                    {!project.latestVersion.isLatestVersionAndIsFPP && <>
-                        <th className={'text-end'}><SortableTableHeader order='latestVersionCosts'
-                                                                        filterOptions={filterOptions}>Costs</SortableTableHeader>
-                        </th>
-                        <th className={'text-end'}><SortableTableHeader order='latestVersionEffort'
-                                                                        filterOptions={filterOptions}>Effort</SortableTableHeader>
-                        </th>
-                    </>}
+                    {/*{!project.latestVersion.isLatestVersionAndIsFPP && <>*/}
+                    <th className={'text-end'}><SortableTableHeader order='latestVersionCosts'
+                                                                    filterOptions={filterOptions}>Costs</SortableTableHeader>
+                    </th>
+                    <th className={'text-end'}><SortableTableHeader order='latestVersionEffort'
+                                                                    filterOptions={filterOptions}>Effort</SortableTableHeader>
+                    </th>
+                    {/*</>}*/}
                 </tr>
                 </thead>
                 <tfoot>
@@ -92,11 +93,13 @@ const PartnerTable: FC<Props> = ({project, activeVersion}) => {
                             </td>
                             <td className={'text-end'}><EffortFormat>{partner.fullProjectProposalEffort}</EffortFormat>
                             </td>
-                            {!project.latestVersion.isLatestVersionAndIsFPP && <>
-                                <td className={'text-end'}><CostsFormat>{partner.latestVersionCosts}</CostsFormat></td>
-                                <td className={'text-end'}><EffortFormat>{partner.latestVersionEffort}</EffortFormat>
-                                </td>
-                            </>}
+                            <td className={'text-end'}><CostsFormat>{partner.latestVersionCosts}</CostsFormat></td>
+                            <td className={'text-end'}><EffortFormat>{partner.latestVersionEffort}</EffortFormat></td>
+                            {/*{!project.latestVersion.isLatestVersionAndIsFPP && <>*/}
+                            {/*    <td className={'text-end'}><CostsFormat>{partner.latestVersionCosts}</CostsFormat></td>*/}
+                            {/*    <td className={'text-end'}><EffortFormat>{partner.latestVersionEffort}</EffortFormat>*/}
+                            {/*    </td>*/}
+                            {/*</>}*/}
                         </tr>
                     )
                 )}
