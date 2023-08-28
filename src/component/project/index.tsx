@@ -1,17 +1,19 @@
 import React, {useContext} from 'react';
-import moment from 'moment';
 import {getProject} from "@/hooks/project/get-project";
 import {CostsFormat, EffortFormat} from '@/functions/utils';
 import {useParams} from "react-router-dom";
 import PartnerTableWithCharts from "@/component/project/partner-table-with-charts";
 import {AxiosContext} from "@/providers/axios-provider";
-import {useQuery} from "@tanstack/react-query";
+import {useQueries} from "@tanstack/react-query";
 import {UserContext} from "@/providers/user-provider";
 import Moment from "react-moment";
+import {getProjectVersions} from "@/hooks/project/versions/get-versions";
+import {Version} from "@/interface/project/version";
 
 export default function Project() {
 
     const {slug} = useParams();
+    const [activeVersion, setActiveVersion] = React.useState<Version>();
 
     if (slug === undefined) {
         return <div>Error</div>;
@@ -20,21 +22,34 @@ export default function Project() {
     const authAxios = useContext(AxiosContext).authAxios;
     const user = useContext(UserContext).getUser();
 
-    const {isLoading, isError, data: project} = useQuery({
-        queryKey: ['project', slug],
-        keepPreviousData: true,
-        queryFn: () => getProject({authAxios, slug})
-    });
+    const [
+        projectQuery,
+        versionQuery,
+    ] = useQueries({
+        queries: [
+            {
+                queryKey: ['project', slug],
+                queryFn: () => getProject({authAxios, slug})
+            },
+            {
+                queryKey: ['versions', slug],
+                queryFn: () => getProjectVersions({authAxios, projectSlug: slug})
+            },
+        ]
+    })
 
-    if (isLoading) {
+    if (projectQuery.isLoading) {
         return <div>Loading...</div>;
     }
 
-    if (isError) {
+    if (projectQuery.isError) {
         return <div>Error</div>;
     }
 
+    const project = projectQuery.data;
+
     return <>
+        <h1>{project.name}</h1>
         <dl className="row">
             <dt className="col-sm-3 text-end">Identification Number:</dt>
             <dd className="col-sm-9">{project.number}</dd>
@@ -114,6 +129,18 @@ export default function Project() {
                 </details>
             </dd>
         </dl>
-        <PartnerTableWithCharts project={project}/>
+
+        This project has the following versions:
+        <ul>
+            {versionQuery.data?.versions.filter((version) => {
+                return !version.isLatestVersionAndIsFPP
+            }).map((version) => {
+                return <li key={version.id} onClick={() => {
+                    setActiveVersion(version);
+                }}>{version.type.description} - ({version.effort} PY, <CostsFormat>{version.costs}</CostsFormat>)</li>
+            })}
+        </ul>
+
+        <PartnerTableWithCharts project={project} activeVersion={activeVersion}/>
     </>;
 }

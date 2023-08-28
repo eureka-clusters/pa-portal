@@ -14,7 +14,7 @@ interface CostsFormatProps {
 
 export const CostsFormat = ({showPrefix, showSuffix, children}: CostsFormatProps) => {
 
-    if (children === null) {
+    if (children === null || children === 0.0) {
         return null;
     }
 
@@ -33,7 +33,7 @@ export const CostsFormat = ({showPrefix, showSuffix, children}: CostsFormatProps
 }
 CostsFormat.defaultProps = {
     showPrefix: false,
-    showSuffix: true,
+    showSuffix: false,
 };
 
 /******************    CostsFormat END   ******************/
@@ -47,6 +47,10 @@ interface EffortFormatProps {
 }
 
 export const EffortFormat = ({showPrefix, showSuffix, children}: EffortFormatProps) => {
+
+    if (children === null || children === 0.0) {
+        return null;
+    }
 
     return (
         <NumericFormat
@@ -63,7 +67,7 @@ export const EffortFormat = ({showPrefix, showSuffix, children}: EffortFormatPro
 }
 EffortFormat.defaultProps = {
     showPrefix: false,
-    showSuffix: true,
+    showSuffix: false,
 };
 
 /******************    BooleanIconFormat BEGIN   ******************/

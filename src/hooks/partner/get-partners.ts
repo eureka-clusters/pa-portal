@@ -6,6 +6,7 @@ import {Partner} from "@/interface/project/partner";
 import {AxiosInstance} from "axios";
 import {FacetValues} from "@/interface/statistics/facet-values";
 import {PaginationState, SortingState} from "@tanstack/react-table";
+import {Version} from "@/interface/project/version";
 
 interface PartnerResponse {
     _embedded: {
@@ -26,6 +27,7 @@ export const getPartners = (
         sortingOptions,
         organisation,
         project,
+        activeVersion
     }: {
         authAxios: AxiosInstance,
         filterOptions: FilterOptions,
@@ -34,6 +36,7 @@ export const getPartners = (
         sortingOptions?: SortingState
         organisation?: Organisation,
         project?: Project,
+        activeVersion?: Version
     }) => {
 
     let searchParams = createSearchParams(filterOptions);
@@ -53,8 +56,13 @@ export const getPartners = (
     if (organisation !== undefined) {
         searchParams.append('organisation', organisation.slug);
     }
-    if (project !== undefined) {
+
+    if (activeVersion === undefined && project !== undefined) {
         searchParams.append('project', project.slug);
+    }
+
+    if (activeVersion !== undefined) {
+        searchParams.append('version', activeVersion.id.toString());
     }
 
     let url = 'list/partner?' + createSearchParams(searchParams).toString();
