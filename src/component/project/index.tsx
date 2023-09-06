@@ -111,12 +111,12 @@ export default function Project() {
 
             <dt className="col-sm-3 text-end">Total costs:</dt>
             <dd className="col-sm-9">
-                <CostsFormat>{project.latestVersionTotalCosts}</CostsFormat>
+                <CostsFormat>{project.latestVersionCosts}</CostsFormat>
             </dd>
 
             <dt className="col-sm-3 text-end">Total effort:</dt>
             <dd className="col-sm-9">
-                <EffortFormat>{project.latestVersionTotalEffort}</EffortFormat>
+                <EffortFormat>{project.latestVersionEffort}</EffortFormat>
             </dd>
 
             <dt className="col-sm-3 text-end">Description:</dt>
