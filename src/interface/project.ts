@@ -22,8 +22,8 @@ export interface Project {
     officialStartDate?: string,
     officialEndDate?: string,
     status: Status,
-    projectOutlineTotalCosts?: number,
-    projectOutlineTotalEffort?: number
+    projectOutlineTotalCosts: number | null,
+    projectOutlineTotalEffort: number | null,
     fullProjectProposalTotalCosts: number,
     fullProjectProposalTotalEffort: number
     latestVersionTotalCosts: number,

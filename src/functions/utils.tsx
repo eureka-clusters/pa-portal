@@ -9,7 +9,7 @@ import {IconProp} from '@fortawesome/fontawesome-svg-core';
 interface CostsFormatProps {
     showPrefix?: boolean,
     showSuffix?: boolean,
-    children: number,
+    children: number | null,
 }
 
 export const CostsFormat = ({showPrefix, showSuffix, children}: CostsFormatProps) => {
@@ -43,7 +43,7 @@ CostsFormat.defaultProps = {
 interface EffortFormatProps {
     showPrefix?: boolean,
     showSuffix?: boolean,
-    children: number,
+    children: number | null
 }
 
 export const EffortFormat = ({showPrefix, showSuffix, children}: EffortFormatProps) => {

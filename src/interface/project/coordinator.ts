@@ -8,5 +8,6 @@ export interface Coordinator {
     isActive: boolean,
     isSelfFunded: boolean,
     isCoordinator: boolean,
-    technicalContact: Contact,
+    technicalContact: Contact
+
 }

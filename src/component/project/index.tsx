@@ -8,12 +8,10 @@ import {useQueries} from "@tanstack/react-query";
 import {UserContext} from "@/providers/user-provider";
 import Moment from "react-moment";
 import {getProjectVersions} from "@/hooks/project/versions/get-versions";
-import {Version} from "@/interface/project/version";
 
 export default function Project() {
 
     const {slug} = useParams();
-    const [activeVersion, setActiveVersion] = React.useState<Version>();
 
     if (slug === undefined) {
         return <div>Error</div>;
@@ -131,16 +129,32 @@ export default function Project() {
         </dl>
 
         This project has the following versions:
-        <ul>
+        <table className="table table-striped table-sm">
+            <thead>
+            <tr>
+                <th>Type</th>
+                <th>Status</th>
+                <th>Date submitted</th>
+                <th>Total costs</th>
+                <th>Total effort</th>
+            </tr>
+            </thead>
+            <tbody>
             {versionQuery.data?.versions.filter((version) => {
-                return true || !version.isLatestVersionAndIsFPP
+                return !version.isLatestVersionAndIsFPP
             }).map((version) => {
-                return <li key={version.id} onClick={() => {
-                    setActiveVersion(version);
-                }}>{version.type.description} - ({version.effort} PY, <CostsFormat>{version.costs}</CostsFormat>)</li>
+                return <tr key={version.id}>
+                    <td>
+                        {version.type.description}</td>
+                    <td>{version.status.status}</td>
+                    <td><Moment format={'DD MMM YYYY'}>{version.dateSubmitted}</Moment></td>
+                    <td><CostsFormat>{version.costs}</CostsFormat></td>
+                    <td><EffortFormat>{version.effort}</EffortFormat></td>
+                </tr>
             })}
-        </ul>
+            </tbody>
+        </table>
 
-        <PartnerTableWithCharts project={project} activeVersion={activeVersion}/>
+        <PartnerTableWithCharts project={project}/>
     </>;
 }
