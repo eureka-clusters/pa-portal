@@ -132,6 +132,7 @@ export default function Project() {
         <table className="table table-striped table-sm">
             <thead>
             <tr>
+                <th>Id</th>
                 <th>Type</th>
                 <th>Status</th>
                 <th>Date submitted</th>
@@ -142,8 +143,9 @@ export default function Project() {
             <tbody>
             {versionQuery.data?.versions.filter((version) => {
                 return !version.isLatestVersionAndIsFPP
-            }).map((version) => {
+            }).map((version, key) => {
                 return <tr key={version.id}>
+                    <td><small className={'text-muted'}>{ key + 1 }</small></td>
                     <td>
                         {version.type.description}</td>
                     <td>{version.status.status}</td>
