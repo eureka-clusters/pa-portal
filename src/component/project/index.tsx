@@ -8,12 +8,10 @@ import {useQueries} from "@tanstack/react-query";
 import {UserContext} from "@/providers/user-provider";
 import Moment from "react-moment";
 import {getProjectVersions} from "@/hooks/project/versions/get-versions";
-import {Version} from "@/interface/project/version";
 
 export default function Project() {
 
     const {slug} = useParams();
-    const [activeVersion, setActiveVersion] = React.useState<Version>();
 
     if (slug === undefined) {
         return <div>Error</div>;
@@ -113,12 +111,12 @@ export default function Project() {
 
             <dt className="col-sm-3 text-end">Total costs:</dt>
             <dd className="col-sm-9">
-                <CostsFormat>{project.latestVersionTotalCosts}</CostsFormat>
+                <CostsFormat>{project.latestVersionCosts}</CostsFormat>
             </dd>
 
             <dt className="col-sm-3 text-end">Total effort:</dt>
             <dd className="col-sm-9">
-                <EffortFormat>{project.latestVersionTotalEffort}</EffortFormat>
+                <EffortFormat>{project.latestVersionEffort}</EffortFormat>
             </dd>
 
             <dt className="col-sm-3 text-end">Description:</dt>
@@ -131,16 +129,34 @@ export default function Project() {
         </dl>
 
         This project has the following versions:
-        <ul>
+        <table className="table table-striped table-sm">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th>Date submitted</th>
+                <th>Total costs</th>
+                <th>Total effort</th>
+            </tr>
+            </thead>
+            <tbody>
             {versionQuery.data?.versions.filter((version) => {
-                return true || !version.isLatestVersionAndIsFPP
-            }).map((version) => {
-                return <li key={version.id} onClick={() => {
-                    setActiveVersion(version);
-                }}>{version.type.description} - ({version.effort} PY, <CostsFormat>{version.costs}</CostsFormat>)</li>
+                return !version.isLatestVersionAndIsFPP
+            }).map((version, key) => {
+                return <tr key={version.id}>
+                    <td><small className={'text-muted'}>{ key + 1 }</small></td>
+                    <td>
+                        {version.type.description}</td>
+                    <td>{version.status.status}</td>
+                    <td><Moment format={'DD MMM YYYY'}>{version.dateSubmitted}</Moment></td>
+                    <td><CostsFormat>{version.costs}</CostsFormat></td>
+                    <td><EffortFormat>{version.effort}</EffortFormat></td>
+                </tr>
             })}
-        </ul>
+            </tbody>
+        </table>
 
-        <PartnerTableWithCharts project={project} activeVersion={activeVersion}/>
+        <PartnerTableWithCharts project={project}/>
     </>;
 }

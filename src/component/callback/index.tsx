@@ -15,7 +15,7 @@ export default function Callback() {
     const [searchParams] = useSearchParams();
 
     useEffect(() => {
-
+        
         let token = '' + searchParams.get('token');
         let clientId = '' + searchParams.get('client_id');
 

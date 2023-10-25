@@ -3,7 +3,7 @@ import Chart from "react-google-charts";
 
 type Props = {
     name: string;
-    latestVersionTotalCosts: string;
+    latestVersionCosts: string;
 }
 
 const ResultChart = ({results}: { results: any }) => {
@@ -16,7 +16,7 @@ const ResultChart = ({results}: { results: any }) => {
     results.forEach((element: Props) => {
         $data.push([
             element.name,
-            element.latestVersionTotalCosts
+            element.latestVersionCosts
         ]);
     });
 

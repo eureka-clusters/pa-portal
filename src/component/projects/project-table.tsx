@@ -99,20 +99,20 @@ const ProjectTable = ({facetValues}: { facetValues?: FacetValues }) => {
                 cell: ({row}) => row.original.status.status
             },
             {
-                accessorKey: 'latestVersionTotalEffort',
+                accessorKey: 'latestVersionEffort',
                 meta: {
                     align: 'right'
                 },
                 header: () => <span>Latest version effort</span>,
-                cell: ({row}) => (<EffortFormat>{row.original.latestVersionTotalEffort}</EffortFormat>)
+                cell: ({row}) => (<EffortFormat>{row.original.latestVersionEffort}</EffortFormat>)
             },
             {
-                accessorKey: 'latestVersionTotalCosts',
+                accessorKey: 'latestVersionCosts',
                 meta: {
                     align: 'right'
                 },
                 header: () => <span>Latest version costs</span>,
-                cell: ({row}) => (<CostsFormat>{row.original.latestVersionTotalCosts}</CostsFormat>)
+                cell: ({row}) => (<CostsFormat>{row.original.latestVersionCosts}</CostsFormat>)
             },
         ],
         []

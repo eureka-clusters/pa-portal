@@ -22,10 +22,10 @@ export interface Project {
     officialStartDate?: string,
     officialEndDate?: string,
     status: Status,
-    projectOutlineTotalCosts?: number,
-    projectOutlineTotalEffort?: number
-    fullProjectProposalTotalCosts: number,
-    fullProjectProposalTotalEffort: number
-    latestVersionTotalCosts: number,
-    latestVersionTotalEffort: number
+    projectOutlineCosts: number | null,
+    projectOutlineEffort: number | null,
+    fullProjectProposalCosts: number,
+    fullProjectProposalEffort: number
+    latestVersionCosts: number,
+    latestVersionEffort: number
 }

@@ -12,23 +12,21 @@ import {useGetFilterOptions} from '@/functions/filter-functions';
 import {useQuery} from "@tanstack/react-query";
 import {AxiosContext} from "@/providers/axios-provider";
 import {Partner} from "@/interface/project/partner";
-import {Version} from "@/interface/project/version";
 
 interface Props {
     project: Project
-    activeVersion?: Version
 }
 
-const PartnerTableWithCharts: FC<Props> = ({project, activeVersion}) => {
+const PartnerTableWithCharts: FC<Props> = ({project}) => {
 
     const [activeTab, setActiveTab] = useState('table'); // default tab
     const filterOptions = useGetFilterOptions();
     const authAxios = useContext(AxiosContext).authAxios;
 
     const {isLoading, data} = useQuery({
-        queryKey: ['projectPartners', filterOptions, project, activeVersion],
+        queryKey: ['projectPartners', filterOptions, project],
         queryFn: () => getPartners({
-            authAxios, filterOptions, project, activeVersion, paginationOptions: {
+            authAxios, filterOptions, project, paginationOptions: {
                 pageIndex: 0,
                 pageSize: 1000,
             }
@@ -62,7 +60,7 @@ const PartnerTableWithCharts: FC<Props> = ({project, activeVersion}) => {
                 }}
             >
                 <Tab eventKey="table" title="Table">
-                    <PartnerTable project={project} activeVersion={activeVersion}/>
+                    <PartnerTable project={project}/>
                 </Tab>
                 <Tab eventKey="charts" title="Charts">
 
