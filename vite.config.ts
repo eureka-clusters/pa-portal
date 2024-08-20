@@ -6,9 +6,9 @@ import path from 'path'
 export default defineConfig({
   plugins: [react()],
   resolve: {
-    mainFields: [], //Needed for react-moment
     alias: {
       "@": path.join(__dirname, "./src"),
     },
+    mainFields: ["browser"],
   },
 })
