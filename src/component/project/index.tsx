@@ -46,6 +46,10 @@ export default function Project() {
 
     const project = projectQuery.data;
 
+    if (project === undefined) {
+        return <div>Loading</div>;
+    }
+
     return <>
         <h1>{project.name}</h1>
         <dl className="row">
@@ -145,7 +149,7 @@ export default function Project() {
                 return !version.isLatestVersionAndIsFPP
             }).map((version, key) => {
                 return <tr key={version.id}>
-                    <td><small className={'text-muted'}>{ key + 1 }</small></td>
+                    <td><small className={'text-muted'}>{key + 1}</small></td>
                     <td>
                         {version.type.description}</td>
                     <td>{version.status.status}</td>

@@ -6,7 +6,7 @@ import {getPartners} from "@/hooks/partner/get-partners";
 import {useGetFilterOptions} from '@/functions/filter-functions';
 import {AxiosContext} from "@/providers/axios-provider";
 import SortableTableHeader from '@/component/partial/sortable-table-header';
-import {useQuery} from "@tanstack/react-query";
+import {keepPreviousData, useQuery} from "@tanstack/react-query";
 
 interface Props {
     organisation: Organisation
@@ -20,7 +20,7 @@ const PartnerTable: FC<Props> = ({organisation}) => {
 
     const {isLoading, isError, data} = useQuery({
         queryKey: ['partner_projects', organisation, filterOptions],
-        keepPreviousData: true,
+        placeholderData: keepPreviousData,
         queryFn: () => getPartners({
             authAxios, filterOptions, organisation, paginationOptions: {
                 pageIndex: 0,

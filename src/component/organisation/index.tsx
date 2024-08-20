@@ -3,7 +3,7 @@ import {useParams} from "react-router-dom";
 import PartnerTable from "@/component/organisation/partner-table";
 import {getOrganisation} from "@/hooks/organisation/get-organisation";
 import {AxiosContext} from "@/providers/axios-provider";
-import {useQuery} from "@tanstack/react-query";
+import {keepPreviousData, useQuery} from "@tanstack/react-query";
 
 export default function Organisation() {
 
@@ -17,7 +17,7 @@ export default function Organisation() {
 
     const {isLoading, isError, data: organisation} = useQuery({
         queryKey: ['organisation', slug],
-        keepPreviousData: true,
+        placeholderData: keepPreviousData,
         queryFn: () => getOrganisation({authAxios, slug})
     });
 
@@ -27,6 +27,10 @@ export default function Organisation() {
 
     if (isError) {
         return <div>Error</div>;
+    }
+
+    if (organisation === undefined) {
+        return <div>Loading</div>;
     }
 
     return (

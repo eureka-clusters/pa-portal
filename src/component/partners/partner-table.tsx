@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {FacetValues} from "@/interface/statistics/facet-values";
 import {useGetFilterOptions} from '@/functions/filter-functions';
 import {AxiosContext} from "@/providers/axios-provider";
-import {useQuery} from "@tanstack/react-query";
+import {keepPreviousData, useQuery} from "@tanstack/react-query";
 import {
     ColumnDef,
     flexRender,
@@ -116,17 +116,19 @@ const PartnerTable = ({facetValues}: { facetValues?: FacetValues }) => {
         })
     const [sorting, setSorting] = React.useState<SortingState>([])
 
-    const dataQuery = useQuery(
-        ['project_partners', facetValues, filterOptions, pagination, sorting],
-        () => getPartners({
+    const dataQuery = useQuery({
+        queryKey: [
+            'project_partners', facetValues, filterOptions, pagination, sorting
+        ],
+        queryFn: () => getPartners({
             authAxios: authAxios,
             filterOptions: filterOptions,
             facetValues: facetValues,
             paginationOptions: pagination,
             sortingOptions: sorting,
         }),
-        {keepPreviousData: true}
-    )
+        placeholderData: keepPreviousData
+    })
 
     const table = useReactTable({
         data: dataQuery.data?.partners ?? defaultData,

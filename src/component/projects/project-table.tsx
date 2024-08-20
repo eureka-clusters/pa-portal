@@ -4,7 +4,7 @@ import {Project} from "@/interface/project";
 import {FacetValues} from "@/interface/statistics/facet-values";
 import {useGetFilterOptions} from '@/functions/filter-functions';
 import {AxiosContext} from "@/providers/axios-provider";
-import {useQuery} from "@tanstack/react-query";
+import {keepPreviousData, useQuery} from "@tanstack/react-query";
 import LoadingButton from "@/component/partial/loading-button";
 import {
     ColumnDef,
@@ -125,17 +125,17 @@ const ProjectTable = ({facetValues}: { facetValues?: FacetValues }) => {
         })
     const [sorting, setSorting] = React.useState<SortingState>([])
 
-    const dataQuery = useQuery(
-        ['project_data', facetValues, filterOptions, pagination, sorting],
-        () => getProjects({
+    const dataQuery = useQuery({
+        queryKey: ['project_data', facetValues, filterOptions, pagination, sorting],
+        queryFn: () => getProjects({
             authAxios: authAxios,
             filterOptions: filterOptions,
             facetValues: facetValues,
             paginationOptions: pagination,
             sortingOptions: sorting,
         }),
-        {keepPreviousData: true}
-    )
+        placeholderData: keepPreviousData
+    })
 
     const table = useReactTable({
         data: dataQuery.data?.projects ?? defaultData,

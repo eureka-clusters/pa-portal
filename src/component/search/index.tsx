@@ -5,7 +5,7 @@ import {getSearchResults} from "@/hooks/search/get-search-results";
 import SearchList from "@/component/search/search-list";
 import {Form} from "react-bootstrap";
 import {AxiosContext} from "@/providers/axios-provider";
-import {useQuery} from "@tanstack/react-query";
+import {keepPreviousData, useQuery} from "@tanstack/react-query";
 
 export default function Search() {
 
@@ -18,7 +18,7 @@ export default function Search() {
 
     const {isLoading, isError, data} = useQuery({
         queryKey: ['searchResults', filterOptions, searchText],
-        keepPreviousData: true,
+        placeholderData: keepPreviousData,
         enabled: !searching,
         queryFn: () => getSearchResults({authAxios, filterOptions, query: searchText, page: 1})
     });
@@ -46,7 +46,7 @@ export default function Search() {
     return (
         <>
             <h1>Search</h1>
-            <Form.Label htmlFor="search">Search query</Form.Label>
+            <Form.Label htmlFor="search" column={'sm'}>Search query</Form.Label>
             <Form.Control
                 type="search"
                 name="searchText"

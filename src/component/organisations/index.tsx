@@ -3,7 +3,7 @@ import {Organisation} from "@/interface/organisation";
 import {FacetValues} from "@/interface/statistics/facet-values";
 import {useGetFilterOptions} from '@/functions/filter-functions';
 import {AxiosContext} from "@/providers/axios-provider";
-import {useQuery} from "@tanstack/react-query";
+import {keepPreviousData, useQuery} from "@tanstack/react-query";
 import {
     ColumnDef,
     flexRender,
@@ -56,16 +56,17 @@ const organisationTable = ({facetValues}: { facetValues?: FacetValues }) => {
         })
     const [sorting, setSorting] = React.useState<SortingState>([])
 
-    const dataQuery = useQuery(
-        ['organisation_data', facetValues, filterOptions, pagination, sorting],
-        () => getOrganisations({
+    const dataQuery = useQuery({
+        queryKey: ['organisation_data', facetValues, filterOptions, pagination, sorting
+        ],
+        placeholderData: keepPreviousData,
+        queryFn: () => getOrganisations({
             authAxios: authAxios,
             filterOptions: filterOptions,
             paginationOptions: pagination,
             sortingOptions: sorting,
-        }),
-        {keepPreviousData: true}
-    )
+        })
+    })
 
     const table = useReactTable({
         data: dataQuery.data?.organisations ?? defaultData,

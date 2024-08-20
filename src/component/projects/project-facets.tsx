@@ -4,7 +4,7 @@ import {Form} from "react-bootstrap";
 import RS from 'react-select';
 import {FacetValues} from "@/interface/statistics/facet-values";
 import {Facets} from "@/interface/statistics/project/facets";
-import {useQuery} from "@tanstack/react-query";
+import {keepPreviousData, useQuery} from "@tanstack/react-query";
 import {AxiosContext} from "@/providers/axios-provider";
 import {getProjectFacets} from "@/hooks/project/get-facets";
 
@@ -21,7 +21,7 @@ const ProjectFacets: FC<Props> = ({facetValues, setFilter, updateFilter}) => {
 
     const {isLoading, isError, data} = useQuery({
         queryKey: ['projectFacets', facetValues],
-        keepPreviousData: true,
+        placeholderData: keepPreviousData,
         queryFn: () => getProjectFacets({authAxios, facetValues})
     });
 
@@ -36,7 +36,7 @@ const ProjectFacets: FC<Props> = ({facetValues, setFilter, updateFilter}) => {
     //https://github.com/vitejs/vite/issues/2139#issuecomment-1230773695
     const ReactSelect = (RS as any).default ? (RS as any).default : RS;
 
-    let facets: Facets = data;
+    let facets: Facets = data as Facets;
 
     return (
         data && <>

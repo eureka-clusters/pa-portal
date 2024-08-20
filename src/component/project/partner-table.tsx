@@ -6,7 +6,7 @@ import {useGetFilterOptions} from "@/functions/filter-functions";
 import {getPartners} from "@/hooks/partner/get-partners";
 import {Project} from "@/interface/project";
 import {AxiosContext} from "@/providers/axios-provider";
-import {useQuery} from "@tanstack/react-query";
+import {keepPreviousData, useQuery} from "@tanstack/react-query";
 import {CostsFormat, EffortFormat} from "@/functions/utils";
 
 interface PartnerTableProps {
@@ -20,7 +20,7 @@ const PartnerTable = ({project}: PartnerTableProps) => {
 
     const {isLoading, data} = useQuery({
         queryKey: ['projectPartners', filterOptions, project],
-        keepPreviousData: true,
+        placeholderData: keepPreviousData,
         queryFn: () => getPartners({
             authAxios, filterOptions, project, paginationOptions: {
                 pageIndex: 0,

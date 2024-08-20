@@ -3,7 +3,7 @@ import React, {useContext} from 'react';
 import {Link, useParams} from "react-router-dom";
 import {CostsFormat, EffortFormat} from '@/functions/utils';
 import {AxiosContext} from "@/providers/axios-provider";
-import {useQuery} from "@tanstack/react-query";
+import {keepPreviousData, useQuery} from "@tanstack/react-query";
 import {getPartner} from "@/hooks/partner/get-partner";
 import {UserContext} from "@/providers/user-provider";
 
@@ -19,11 +19,11 @@ export default function Partner() {
 
     const {isLoading, isError, data: partner} = useQuery({
         queryKey: ['partner', slug],
-        keepPreviousData: true,
+        placeholderData: keepPreviousData,
         queryFn: () => getPartner({authAxios, slug})
     });
 
-    if (isLoading) {
+    if (isLoading || partner === undefined) {
         return <div>Loading...</div>;
     }
 

@@ -5,7 +5,7 @@ import {FacetValues} from "@/interface/statistics/facet-values";
 import {getPartnerFacets} from "@/hooks/partner/get-facets";
 import {Facets} from "@/interface/statistics/partner/facets";
 import {AxiosContext} from "@/providers/axios-provider";
-import {useQuery} from "@tanstack/react-query";
+import {keepPreviousData, useQuery} from "@tanstack/react-query";
 
 interface Props {
     facetValues: FacetValues,
@@ -19,7 +19,7 @@ const PartnerFacets: FC<Props> = ({facetValues, setFilter, updateFilter}) => {
 
     const {isLoading, isError, data} = useQuery({
         queryKey: ['partnerFacets', facetValues],
-        keepPreviousData: true,
+        placeholderData: keepPreviousData,
         queryFn: () => getPartnerFacets({authAxios, facetValues})
     });
 
@@ -34,7 +34,7 @@ const PartnerFacets: FC<Props> = ({facetValues, setFilter, updateFilter}) => {
     //https://github.com/vitejs/vite/issues/2139#issuecomment-1230773695
     const ReactSelect = (RS as any).default ? (RS as any).default : RS;
 
-    let facets: Facets = data;
+    let facets: Facets = data as Facets;
 
     const yearsFilterOptions = facets.years?.map((year: number, index: number) => {
         return {
