@@ -31,6 +31,8 @@ export default function Partner() {
         return <div>Error</div>;
     }
 
+
+
     return (
         <React.Fragment>
             <h1>{partner.organisation.name} in {partner.project.name}</h1>
@@ -65,10 +67,12 @@ export default function Partner() {
                     }
                 </dd>
 
-                <dt className="col-sm-3 text-end">Total costs (latest version)</dt>
-                <dd className="col-sm-9">
-                    <CostsFormat>{partner.latestVersionCosts}</CostsFormat>
-                </dd>
+                {partner.latestVersionCosts === null ? '' : <>
+                    <dt className="col-sm-3 text-end">Total costs (latest version)</dt>
+                    <dd className="col-sm-9">
+                        <CostsFormat>{partner.latestVersionCosts}</CostsFormat>
+                    </dd>
+                </>}
 
                 <dt className="col-sm-3 text-end">Total effort (latest version)</dt>
                 <dd className="col-sm-9">
