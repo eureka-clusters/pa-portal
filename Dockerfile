@@ -1,7 +1,7 @@
-FROM node:18-alpine AS builder
-ENV NODE_ENV production
+FROM node:20-alpine AS builder
 
-ENV REACT_APP_SERVER_URI 'https://api.eurekaclusters.eu'
+ENV NODE_ENV=production
+ENV REACT_APP_SERVER_URI='https://api.eurekaclusters.eu'
 
 # Add a work directory
 WORKDIR /app
@@ -19,12 +19,12 @@ RUN yarn install
 RUN yarn build
 
 # Bundle static assets with nginx
-FROM nginx:alpine as production
+FROM nginx:alpine AS production
 
 LABEL maintainer="johan.van.der.heide@itea4.org"
-LABEL org.opencontainers.image.source = "https://github.com/eureka-clusters/portal-backend";
+LABEL org.opencontainers.image.source="https://github.com/eureka-clusters/portal-backend";
 
-ENV NODE_ENV production
+ENV NODE_ENV=production
 
 # Copy built assets from builder
 COPY --from=builder /app/dist /usr/share/nginx/html
