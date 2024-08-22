@@ -24,7 +24,7 @@ On the server a new container can be pulled with ```docker pull [containername]`
 The build stage of this container is in 2 steps, initiated by calling the production target in the docker-image.yml file
 
 ```yaml
-name: Portal Backend Docker Image
+name: Portal PA Portal Docker Image
 
 on:
   push:
@@ -42,23 +42,23 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
+        uses: docker/setup-qemu-action@v3
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
+        uses: docker/setup-buildx-action@v3
 
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.CR_PAT }}
 
       - name: Build and push frontend code
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v6
         with:
           context: .
           platforms: linux/amd64
