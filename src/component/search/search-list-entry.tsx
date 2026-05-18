@@ -1,7 +1,9 @@
-import React from 'react';
 import {Link} from "react-router-dom";
-import _ from 'lodash';
 import {NumericFormat} from "react-number-format"
+
+function escapeRegExp(value: string) {
+    return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
 
 function Capitalize(str: string) {
     return str.charAt(0).toUpperCase() + str.slice(1);
@@ -16,7 +18,7 @@ const Highlighted = ({text = '', highlight = ''}: { text: string; highlight: str
     const highlightArray = (highlight.match(highlightRegex) || []).map(m => m.replace(highlightRegex, '$1$2$3'));
 
     // join the escaped parts with | to a string
-    const regexpPart = highlightArray.map((a) => `${_.escapeRegExp(a)}`).join('|');
+    const regexpPart = highlightArray.map((a) => escapeRegExp(a)).join('|');
 
     // add the regular expression
     const regex = new RegExp(`(${regexpPart})`, 'gi')
@@ -25,7 +27,7 @@ const Highlighted = ({text = '', highlight = ''}: { text: string; highlight: str
     return (
         <span>
             {parts.filter(part => part).map((part, i) => (
-                regex.test(part) ? <mark key={i}>{part}</mark> : <span key={i}>{part}</span>
+                part.match(regex) ? <mark key={i}>{part}</mark> : <span key={i}>{part}</span>
             ))}
         </span>
     )
@@ -41,7 +43,7 @@ interface ScoreFormatProps {
 export const ScoreFormat = ({value, showPrefix, showSuffix}: ScoreFormatProps) => {
 
     if (typeof (value) === 'undefined' || value == null) {
-        return (<></>);
+        return null;
     }
 
     return (
@@ -55,10 +57,6 @@ export const ScoreFormat = ({value, showPrefix, showSuffix}: ScoreFormatProps) =
             fixedDecimalScale={true}
         />
     )
-}
-ScoreFormat.defaultProps = {
-    showPrefix: true,
-    showSuffix: false,
 };
 
 
@@ -73,7 +71,7 @@ export interface itemProps {
     score: number,
 }
 
-export default function searchListEntry({item, searchText}: { item: itemProps; searchText: string; }) {
+export default function SearchListEntry({item, searchText}: { item: itemProps; searchText: string; }) {
 
     let htmlType;
     let link;
@@ -133,10 +131,5 @@ export default function searchListEntry({item, searchText}: { item: itemProps; s
 
         default:
     }
-    return (
-        <>
-            {link}
-            {/* <pre className='debug'>{JSON.stringify(item, undefined, 2)}</pre>     */}
-        </>
-    );
+    return link ?? null;
 }

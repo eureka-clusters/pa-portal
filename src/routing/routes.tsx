@@ -1,107 +1,127 @@
+import {lazy, useMemo} from "react";
+import {Link} from "react-router-dom";
+
 import {Page} from "@/component/page";
-import Login from "@/component/login";
-import Logout from "@/component/logout";
-import Callback from "@/component/callback";
-import {AuthContext} from "@/providers/auth-provider";
-import Account from "@/component/account";
 import ProtectedRoute from "@/routing/protected-route";
-import {useContext} from "react";
-import Search from "@/component/search";
-import ProjectList from "@/component/projects";
-import Partner from "@/component/partner";
-import PartnerList from "@/component/partners";
-import Project from "@/component/project";
-import Contact from "@/component/contact";
-import {ActiveRoutePathTitleCallbackParams} from "@/routing/active-route-path-title-callback";
-import Organisations from "@/component/organisations";
-import Organisation from "@/component/organisation";
 import {RoutePathDefinition} from "@/routing/route-part-definition";
+import {useAuth} from "@/providers/auth-provider";
 
-export default function pageRoutes(): RoutePathDefinition[] {
+const Account = lazy(() => import("@/component/account"));
+const Callback = lazy(() => import("@/component/callback"));
+const Contact = lazy(() => import("@/component/contact"));
+const Login = lazy(() => import("@/component/login"));
+const Logout = lazy(() => import("@/component/logout"));
+const Organisation = lazy(() => import("@/component/organisation"));
+const Organisations = lazy(() => import("@/component/organisations"));
+const Partner = lazy(() => import("@/component/partner"));
+const PartnerList = lazy(() => import("@/component/partners"));
+const Project = lazy(() => import("@/component/project"));
+const ProjectList = lazy(() => import("@/component/projects"));
+const Search = lazy(() => import("@/component/search"));
 
-    const authContext = useContext(AuthContext);
+function withProtection(element: React.ReactNode) {
+    return <ProtectedRoute>{element}</ProtectedRoute>;
+}
 
+function createAppRoutes(isAuthenticated: boolean): RoutePathDefinition[] {
     return [
-        {title: "Home", path: "/", element: authContext.isAuthenticated() ? <Page title="Home"/> : <Login/>, nav: true},
+        {
+            title: "Home",
+            path: "/",
+            element: isAuthenticated ? (
+                <Page title="Home">
+                    <p>Welcome to the Eureka Clusters PA Portal.</p>
+                </Page>
+            ) : (
+                <Login/>
+            ),
+            nav: true,
+        },
         {title: "Login", path: "/login", element: <Login/>, nav: false},
         {
             title: "Projects",
             path: "/project",
-            element: <Page title="" withOutlet/>,
-            nav: authContext.isAuthenticated(),
+            element: <Page title="Projects" withOutlet/>,
+            nav: isAuthenticated,
             children: [
                 {
                     title: "Project list",
                     path: "",
-                    element: <ProtectedRoute
-                        isAuthenticated={authContext.isAuthenticated()}><ProjectList/></ProtectedRoute>,
-                    nav: true
+                    element: withProtection(<ProjectList/>),
+                    nav: true,
                 },
                 {
-                    title: ({match}: ActiveRoutePathTitleCallbackParams<'id'>) => `Project`,
+                    title: "Project",
                     path: ":slug",
-                    element: <ProtectedRoute
-                        isAuthenticated={authContext.isAuthenticated()}><Project/></ProtectedRoute>,
+                    element: withProtection(<Project/>),
                     nav: true,
                 },
                 {
                     title: "Project partner list",
                     path: "partner",
-                    element: <ProtectedRoute
-                        isAuthenticated={authContext.isAuthenticated()}><PartnerList/></ProtectedRoute>,
-                    nav: true
+                    element: withProtection(<PartnerList/>),
+                    nav: true,
                 },
                 {
-                    title: ({match}: ActiveRoutePathTitleCallbackParams<'id'>) => `Project Partner`,
+                    title: "Project partner",
                     path: "partner/:slug",
-                    element: <ProtectedRoute
-                        isAuthenticated={authContext.isAuthenticated()}><Partner/></ProtectedRoute>,
-                    nav: true
-                }
-            ]
+                    element: withProtection(<Partner/>),
+                    nav: true,
+                },
+            ],
         },
         {
             title: "Organisations",
             path: "/organisations",
             element: <Page title="Organisations" withOutlet/>,
-            nav: authContext.isAuthenticated(),
+            nav: isAuthenticated,
             children: [
                 {
                     title: "Organisation list",
                     path: "",
-                    element: <ProtectedRoute
-                        isAuthenticated={authContext.isAuthenticated()}><Organisations/></ProtectedRoute>,
-                    nav: true
+                    element: withProtection(<Organisations/>),
+                    nav: true,
                 },
                 {
-                    title: ({match}: ActiveRoutePathTitleCallbackParams<'id'>) => `Organisation`,
+                    title: "Organisation",
                     path: ":slug",
-                    element: <ProtectedRoute
-                        isAuthenticated={authContext.isAuthenticated()}><Organisation/></ProtectedRoute>,
-                    nav: true
+                    element: withProtection(<Organisation/>),
+                    nav: true,
                 },
-            ]
+            ],
         },
         {
             title: "Search",
             path: "/search",
-            element: <ProtectedRoute isAuthenticated={authContext.isAuthenticated()}><Search/></ProtectedRoute>,
-            nav: authContext.isAuthenticated()
+            element: withProtection(<Search/>),
+            nav: isAuthenticated,
         },
-        {title: "Logout", path: "/logout", element: <Logout/>, nav: authContext.isAuthenticated()},
+        {title: "Logout", path: "/logout", element: <Logout/>, nav: isAuthenticated},
         {title: "Contact", path: "/contact", element: <Contact/>, nav: true},
         {title: "Callback", path: "/callback", element: <Callback/>, nav: false},
         {
             title: "Account",
             path: "/account",
-            element: <ProtectedRoute isAuthenticated={authContext.isAuthenticated()}><Account/></ProtectedRoute>,
-            nav: authContext.isAuthenticated()
+            element: withProtection(<Account/>),
+            nav: isAuthenticated,
         },
-
         {
-            title: "Catch All - 404",
+            title: "404",
             path: "*",
-            element: <Page title="404"/>,
+            element: (
+                <Page title="404">
+                    <p>The page you requested could not be found.</p>
+                    <p>
+                        <Link to="/">Return to the homepage</Link>
+                    </p>
+                </Page>
+            ),
         },
     ];
-};
+}
+
+export function useAppRoutes() {
+    const {isAuthenticated} = useAuth();
+
+    return useMemo(() => createAppRoutes(isAuthenticated), [isAuthenticated]);
+}

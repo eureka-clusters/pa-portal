@@ -1,113 +1,35 @@
-import React from 'react';
 import Chart from "react-google-charts";
 
-const OrganisationTypeChart = ({results}: { results: any[] }) => {
+import {Partner} from "@/interface/project/partner";
 
-    const $data = [
-        [
-            'Organisation Type',
-            'Amount',
-            // 'Percentage'
-        ]
+const OrganisationTypeChart = ({results}: { results: Partner[] }) => {
+    const groupedTypes = results.reduce<Record<string, number>>((accumulator, partner) => {
+        const organisationType = partner.organisation.type.type;
+        accumulator[organisationType] = (accumulator[organisationType] ?? 0) + 1;
+        return accumulator;
+    }, {});
+
+    const data: (string | number)[][] = [
+        ["Organisation Type", "Amount"],
+        ...Object.entries(groupedTypes),
     ];
 
-    const Types = results
-        .map(dataItem => dataItem.organisation.type.type) // get all organisation types
-        .filter((Type, index, array) => array.indexOf(Type) === index); // filter out duplicates
-
-    const counts = Types
-        .map(Type => ({
-            type: Type,
-            count: results.filter(item => item.organisation.type.type === Type).length,
-            total: results.length
-        }));
-
-
-    counts.forEach(element => {
-        $data.push([
-            element.type,
-            element.count
-
-            // test calculate the percentage manually (only works with  pieSliceText: 'value',)
-            // instead of adding element.count  use one of these lines
-            // 100 / element.total * element.count  // needs formating for 2 digits
-            // percentageFormat(100 / element.total * element.count)
-
-            // doesn't work as the chart requires a value not a string.
-            // error thrown Uncaught (in promise) Error: Unknown type of value, [object Object] ?
-            // <NumberFormat
-            //     value={100 / element.total * element.count}
-            //     thousandSeparator = { ' '}
-            //     displayType = { 'text'}
-            //     prefix = { '%'}
-            // />
-        ]);
-    });
-
-
-    const pieOptions = {
-        title: "Partners by organisation type",
-        // pieHole: 0.6,
-        // different colors
-        // slices: [
-        //     {
-        //         color: "#2BB673"
-        //     },
-        //     {
-        //         color: "#d91e48"
-        //     },
-        //     {
-        //         color: "#007fad"
-        //     },
-        //     {
-        //         color: "#e9a227"
-        //     }
-        // ],
-
-        // bottom legend has a rendering issue (legend text isn't displayed) :(  
-        // first i thought it's the color (because on color change it is rendered correctly. but not on reload.)
-        // legend: {
-        //     position: "bottom",
-        //     alignment: "center",
-        //     textStyle: {
-        //         // color: "#233238",
-        //         // color: "#000000",
-        //         // color: "#2BB673",
-        //         fontSize: 14
-        //     }
-        // },
-        // chartArea: {
-        //     left: 0,
-        //     top: 0,
-        //     width: "100%",
-        //     height: "80%"
-        // },
-
-        tooltip: {
-            showColorCode: true
-        },
-
-        // test to display perceantage value directly        
-        // pieSliceText: 'value',
-    };
-
     return (
-        <React.Fragment>
-
-            {/* title by the chart or manual chart? */}
-            {/* <h3>Partners by organisation type</h3> */}
-            <Chart
-                width={'500px'}
-                height={'300px'}
-                chartType="PieChart"
-                loader={<div>Loading Chart</div>}
-                data={$data}
-                options={pieOptions}
-                // graphID="PartnersByOrganisationTypeChart"
-                rootProps={{'data-testid': '1'}}
-            />
-        </React.Fragment>
+        <Chart
+            width="500px"
+            height="300px"
+            chartType="PieChart"
+            loader={<div>Loading Chart</div>}
+            data={data}
+            options={{
+                title: "Partners by organisation type",
+                tooltip: {
+                    showColorCode: true,
+                },
+            }}
+            rootProps={{"data-testid": "1"}}
+        />
     );
-}
+};
 
 export default OrganisationTypeChart;

@@ -1,5 +1,48 @@
-$primary: rgb(51, 144, 65);
-$link-decoration: none;
+:root {
+  --portal-primary: rgb(51, 144, 65);
+  --portal-primary-hover: rgb(42, 120, 53);
+  --portal-primary-active: rgb(35, 102, 45);
+  --portal-primary-rgb: 51, 144, 65;
+  --bs-primary: var(--portal-primary);
+  --bs-primary-rgb: var(--portal-primary-rgb);
+  --bs-link-decoration: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+.text-primary {
+  color: var(--portal-primary) !important;
+}
+
+.bg-primary {
+  background-color: var(--portal-primary) !important;
+}
+
+.btn-primary {
+  --bs-btn-bg: var(--portal-primary);
+  --bs-btn-border-color: var(--portal-primary);
+  --bs-btn-hover-bg: var(--portal-primary-hover);
+  --bs-btn-hover-border-color: var(--portal-primary-hover);
+  --bs-btn-focus-shadow-rgb: var(--portal-primary-rgb);
+  --bs-btn-active-bg: var(--portal-primary-active);
+  --bs-btn-active-border-color: var(--portal-primary-active);
+  --bs-btn-disabled-bg: var(--portal-primary);
+  --bs-btn-disabled-border-color: var(--portal-primary);
+}
+
+.btn-outline-primary {
+  --bs-btn-color: var(--portal-primary);
+  --bs-btn-border-color: var(--portal-primary);
+  --bs-btn-hover-bg: var(--portal-primary);
+  --bs-btn-hover-border-color: var(--portal-primary);
+  --bs-btn-focus-shadow-rgb: var(--portal-primary-rgb);
+  --bs-btn-active-bg: var(--portal-primary-active);
+  --bs-btn-active-border-color: var(--portal-primary-active);
+  --bs-btn-disabled-color: var(--portal-primary);
+  --bs-btn-disabled-border-color: var(--portal-primary);
+}
 
 div.datatable-download {
   margin-bottom: 1.5em;
@@ -12,13 +55,11 @@ div.datatable-count {
 }
 
 .check-true {
-    color: green;
-    font-size: 1.2em;
+  color: green;
+  font-size: 1.2em;
 }
 
 .check-false {
-    color: lightgray;
-    font-size: 1.2em;
+  color: lightgray;
+  font-size: 1.2em;
 }
-
-@import "../node_modules/bootstrap/scss/bootstrap";

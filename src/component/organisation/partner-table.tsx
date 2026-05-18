@@ -1,12 +1,13 @@
-import React, {FC, useContext} from 'react';
+import {FC} from 'react';
 import {Link} from "react-router-dom";
 import {Partner} from "@/interface/project/partner";
 import {Organisation} from "@/interface/organisation";
 import {getPartners} from "@/hooks/partner/get-partners";
 import {useGetFilterOptions} from '@/functions/filter-functions';
-import {AxiosContext} from "@/providers/axios-provider";
 import SortableTableHeader from '@/component/partial/sortable-table-header';
 import {keepPreviousData, useQuery} from "@tanstack/react-query";
+import {QueryState} from "@/component/partial/query-state";
+import {useAxios} from "@/providers/axios-provider";
 
 interface Props {
     organisation: Organisation
@@ -15,8 +16,7 @@ interface Props {
 const PartnerTable: FC<Props> = ({organisation}) => {
 
     const filterOptions = useGetFilterOptions();
-
-    const authAxios = useContext(AxiosContext).authAxios;
+    const {authAxios} = useAxios();
 
     const {isLoading, isError, data} = useQuery({
         queryKey: ['partner_projects', organisation, filterOptions],
@@ -29,16 +29,18 @@ const PartnerTable: FC<Props> = ({organisation}) => {
         })
     });
 
-    if (isLoading) {
-        return <div>Loading...</div>;
-    }
-
-    if (isError) {
-        return <div>Error</div>;
+    if (isLoading || isError) {
+        return (
+            <QueryState
+                isLoading={isLoading}
+                isError={isError}
+                errorMessage="The organisation partners could not be loaded."
+            />
+        );
     }
 
     return (
-        <React.Fragment>
+        <>
             <h2>Partners</h2>
 
             <table className="table table-striped table-sm">
@@ -54,7 +56,7 @@ const PartnerTable: FC<Props> = ({organisation}) => {
                 </thead>
                 <tbody>
                 {data?.partners.map(
-                    (partner: Partner, key: number) => (
+                    (partner: Partner) => (
                         <tr key={partner.id}>
                             <td><Link
                                 to={`/project/partner/${partner.slug}`}>{partner.organisation.name}</Link>
@@ -67,7 +69,7 @@ const PartnerTable: FC<Props> = ({organisation}) => {
                 )}
                 </tbody>
             </table>
-        </React.Fragment>
+        </>
     );
 }
 

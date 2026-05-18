@@ -1,3 +1,5 @@
+import {ReactNode} from "react";
+
 import {FilterOptions} from "@/functions/filter-functions";
 import {Link} from "react-router-dom";
 
@@ -9,7 +11,7 @@ const SortableTableHeader = (
     }: {
         order: string,
         filterOptions: FilterOptions,
-        children: any
+        children: ReactNode
     }) => {
     return (
         <Link to={{

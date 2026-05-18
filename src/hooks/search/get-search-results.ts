@@ -1,12 +1,11 @@
 import {createSearchParams} from "react-router-dom";
 import {FilterOptions} from '@/functions/filter-functions';
 import {AxiosInstance} from "axios";
-import {Project} from "@/interface/project";
-import {Organisation} from "@/interface/organisation";
+import {itemProps} from "@/component/search/search-list-entry";
 
 interface SearchResponse {
     _embedded: {
-        items: Project[] | Organisation[]
+        items: itemProps[]
     },
     page_count: number,
     total_items: number,
@@ -20,10 +19,10 @@ export const getSearchResults = ({authAxios, filterOptions, query, page}: {
     query: string,
     page: number
 }) => {
-
-    filterOptions.query = query;
-
-    let url = 'search/result?' + createSearchParams(filterOptions).toString();
+    const url = `search/result?${createSearchParams({
+        ...filterOptions,
+        query,
+    }).toString()}`;
     return authAxios.get<SearchResponse>(url).then(response => {
         const {data} = response;
 

@@ -1,65 +1,55 @@
-import React, {useContext} from 'react';
 import {NavLink} from "react-router-dom";
-import {Container, Nav, Navbar, NavDropdown} from 'react-bootstrap';
-import Search from "@/component/header/search-form/search";
-import {AuthContext} from "@/providers/auth-provider";
-import {UserContext} from "@/providers/user-provider";
+import {Container, Nav, Navbar, NavDropdown} from "react-bootstrap";
 
+import Search from "@/component/header/search-form/search";
 import './header.scss';
 import {Navigation} from "@/component/partial/navigation";
-import pageRoutes from "@/routing/routes";
+import {useAuth} from "@/providers/auth-provider";
+import {useUser} from "@/providers/user-provider";
+import {RoutePathDefinition} from "@/routing/route-part-definition";
 
-export default function Header() {
-    // Get auth state and re-render anytime it changes
-    let authContext = useContext(AuthContext);
-    let userContext = useContext(UserContext);
-    let routes = pageRoutes();
+export default function Header({routes}: { routes: RoutePathDefinition[] }) {
+    const {isAuthenticated} = useAuth();
+    const {user} = useUser();
 
     return (
         <>
-            <Navbar variant="light" bg="light" className={'py-2 border-bottom'}>
-                <Container className={'d-flex flex-wrap'}>
+            <Navbar variant="light" bg="light" className="py-2 border-bottom">
+                <Container className="d-flex flex-wrap">
                     <Navbar.Toggle aria-controls="navbar-main"/>
                     <Navbar.Collapse id="navbar-main">
-                        <Nav className='d-flex w-100'>
-
+                        <Nav className="d-flex w-100">
                             <Navigation routes={routes}/>
 
-                            {authContext.isAuthenticated() ? (
-                                <React.Fragment>
-                                    <NavDropdown
-                                        id="nav-dropdown-account"
-                                        // title={`Account (${auth.UserInfo.email})`}  // we could also use auth.getUser() 
-                                        title={`${userContext.getUser().fullName}`}
-                                        className={'ms-auto'}
-                                        align="end"  // align menu to the right 
-
-                                    >
-                                        <NavDropdown.Item as={NavLink} to='/account'>Account</NavDropdown.Item>
+                            {isAuthenticated ? (
+                                <NavDropdown
+                                    id="nav-dropdown-account"
+                                    title={user?.fullName ?? "Account"}
+                                    className="ms-auto"
+                                    align="end"
+                                >
+                                        <NavDropdown.Item as={NavLink} to="/account">Account</NavDropdown.Item>
                                         <NavDropdown.Divider/>
-                                        <NavDropdown.Item as={NavLink} to='/logout'>Logout</NavDropdown.Item>
-                                        {/* <Button onClick={() => auth.logout()}>Logout via button</Button> */}
-                                    </NavDropdown>
-                                </React.Fragment>
+                                        <NavDropdown.Item as={NavLink} to="/logout">Logout</NavDropdown.Item>
+                                </NavDropdown>
                             ) : (
-                                <Nav.Link as={NavLink} to='/login' className={'ms-auto'}>Login</Nav.Link>
+                                <Nav.Link as={NavLink} to="/login" className="ms-auto">Login</Nav.Link>
                             )}
-
                         </Nav>
                     </Navbar.Collapse>
                 </Container>
             </Navbar>
             <header className="py-3 mb-4 border-bottom">
                 <div className="container d-flex flex-wrap justify-content-center">
-                    <a href="/"
-                       className="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto text-dark text-decoration-none">
-                        <img alt={"Eureka Logo"} className={'pe-2'}
-                             src={'/assets/img/logo.png'}/>
+                    <NavLink
+                        to="/"
+                        className="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto text-dark text-decoration-none"
+                    >
+                        <img alt="Eureka Logo" className="pe-2" src="/assets/img/logo.png"/>
                         <span className="fs-4">Eureka Clusters PA Portal</span>
-                    </a>
+                    </NavLink>
 
                     <Search/>
-
                 </div>
             </header>
         </>

@@ -1,78 +1,69 @@
-import React from 'react';
 import Chart from "react-google-charts";
 
-const BudgetByOrganisationTypeChart = ({results}: { results: any[] }) => {
+import {Partner} from "@/interface/project/partner";
 
-    //Do some stupid data formatting
-    const $data = [
-        ['Organisation Type', 'Budget']
-    ];
+type OrganisationTypeStats = {
+    type: string;
+    budget: number;
+    effort: number;
+};
 
-    const $data2 = [
-        ['Organisation Type', 'Effort']
-    ];
+const BudgetByOrganisationTypeChart = ({results}: { results: Partner[] }) => {
+    const stats = results.reduce<Record<string, OrganisationTypeStats>>((accumulator, partner) => {
+        const organisationType = partner.organisation.type.type;
 
-    const stats: any[] = [];
-    results.reduce(function (res, value) {
-        if (!res[value.organisation.type.type]) {
-            res[value.organisation.type.type] = {type: value.organisation.type.type, effort: 0, budget: 0};
-            stats.push(res[value.organisation.type.type])
-        }
-        res[value.organisation.type.type].budget += parseFloat(value.latestVersionCosts);
-        res[value.organisation.type.type].effort += parseFloat(value.latestVersionEffort);
-        return res;
+        accumulator[organisationType] ??= {
+            type: organisationType,
+            budget: 0,
+            effort: 0,
+        };
+
+        accumulator[organisationType].budget += Number(partner.latestVersionCosts ?? 0);
+        accumulator[organisationType].effort += Number(partner.latestVersionEffort ?? 0);
+
+        return accumulator;
     }, {});
 
-    stats.forEach(element => {
-        $data.push([
-            element.type,
-            element.budget
-        ]);
+    const dataBudget: (string | number)[][] = [
+        ["Organisation Type", "Budget"],
+        ...Object.values(stats).map((entry) => [entry.type, entry.budget]),
+    ];
 
-
-        $data2.push([
-            element.type,
-            element.effort
-        ]);
-    });
-
+    const dataEffort: (string | number)[][] = [
+        ["Organisation Type", "Effort"],
+        ...Object.values(stats).map((entry) => [entry.type, entry.effort]),
+    ];
 
     return (
-        <React.Fragment>
-            {/* <h2>Budget by organisation type</h2> */}
+        <>
             <div className="col">
                 <Chart
-                    width={'500px'}
-                    height={'300px'}
+                    width="500px"
+                    height="300px"
                     chartType="PieChart"
                     loader={<div>Loading Chart</div>}
-                    data={$data}
+                    data={dataBudget}
                     options={{
-                        title: 'Budget by Organisation Types',
+                        title: "Budget by Organisation Types",
                     }}
-                    // graphID="BudgetByOrganisationTypesChart"
-                    rootProps={{'data-testid': '1'}}
+                    rootProps={{"data-testid": "1"}}
                 />
-
-
-                {/* <h2>Effort by organisation type</h2> */}
             </div>
             <div className="col">
                 <Chart
-                    width={'500px'}
-                    height={'300px'}
+                    width="500px"
+                    height="300px"
                     chartType="PieChart"
                     loader={<div>Loading Chart</div>}
-                    data={$data2}
+                    data={dataEffort}
                     options={{
-                        title: 'Effort by Organisation Types',
+                        title: "Effort by Organisation Types",
                     }}
-                    // graphID="EffortByOrganisationTypesChart"
-                    rootProps={{'data-testid': '1'}}
+                    rootProps={{"data-testid": "1"}}
                 />
             </div>
-        </React.Fragment>
+        </>
     );
-}
+};
 
 export default BudgetByOrganisationTypeChart;

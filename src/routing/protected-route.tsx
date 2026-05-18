@@ -1,11 +1,14 @@
+import {ReactNode} from "react";
 import {Navigate} from "react-router-dom";
 
-export default function ProtectedRoute({isAuthenticated, children}: { isAuthenticated: boolean, children: any }) {
+import {useAuth} from "@/providers/auth-provider";
+
+export default function ProtectedRoute({children}: { children: ReactNode }) {
+    const {isAuthenticated} = useAuth();
+
     if (!isAuthenticated) {
-        return (
-            <Navigate to={{pathname: "/login"}} replace/>
-        );
+        return <Navigate to="/login" replace/>;
     }
 
-    return children;
+    return <>{children}</>;
 }

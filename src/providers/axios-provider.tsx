@@ -1,80 +1,97 @@
-import React, {createContext, useContext} from 'react';
-import axios, {AxiosInstance} from 'axios';
-import {AuthContext, AuthContextContent} from '@/providers/auth-provider';
-import createAuthRefreshInterceptor from 'axios-auth-refresh';
-import {getServerUri} from "@/functions/get-server-uri";
+import {createContext, ReactNode, useContext, useEffect, useMemo, useRef} from "react";
+import axios, {AxiosInstance, InternalAxiosRequestConfig} from "axios";
+import createAuthRefreshInterceptor from "axios-auth-refresh";
 
-const AxiosContext = createContext<AxiosContextContent>({} as AxiosContextContent);
-const {Provider} = AxiosContext;
+import {getServerUri} from "@/functions/get-server-uri";
+import {useAuth} from "@/providers/auth-provider";
 
 interface AxiosContextContent {
-    authAxios: AxiosInstance,
+    authAxios: AxiosInstance;
 }
 
-const AxiosProvider = ({children}: { children: any }) => {
-    const authContext = useContext<AuthContextContent>(AuthContext);
+const AxiosContext = createContext<AxiosContextContent | undefined>(undefined);
 
-    const authAxios = axios.create({
-        baseURL: getServerUri() + '/api',
-    });
+const AxiosProvider = ({children}: { children: ReactNode }) => {
+    const {authState, clientId, logout, saveAuthState, token} = useAuth();
+    const authStateRef = useRef(authState);
 
-    authAxios.interceptors.request.use(
-        (config: any) => {
-            if (!config.headers.Authorization) {
-                config.headers.Authorization = `Bearer ${authContext.getToken()}`;
+    const authAxios = useMemo(() => axios.create({
+        baseURL: `${getServerUri()}/api`,
+        headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+        },
+    }), []);
+
+    useEffect(() => {
+        authStateRef.current = authState;
+    }, [authState]);
+
+    useEffect(() => {
+        const requestInterceptor = authAxios.interceptors.request.use((config: InternalAxiosRequestConfig) => {
+            if (!config.headers.Authorization && token) {
+                config.headers.Authorization = `Bearer ${token}`;
             }
 
-            axios.defaults.headers.common["Accept"] = 'application/json';
-            axios.defaults.headers.common["Content-Type"] = 'application/json';
-
             return config;
-        },
-        error => {
-            return Promise.reject(error);
-        },
-    );
+        });
 
-    const refreshAuthLogic = (failedRequest: any) => {
-        const data = {
-            client_id: authContext.getClientId(),
-            token: authContext.getToken(),
-        };
+        const refreshInterceptor = createAuthRefreshInterceptor(authAxios, async (failedRequest) => {
+            if (!clientId || !token) {
+                logout();
+                throw new Error("Cannot refresh the session without a token and client id");
+            }
 
-        const options = {
-            method: 'POST',
-            data,
-            url: getServerUri() + '/oauth2/refresh.html',
-        };
+            const response = await axios.post<{ accessToken?: string; token?: string }>(
+                `${getServerUri()}/oauth2/refresh.html`,
+                {
+                    client_id: clientId,
+                    token,
+                },
+            );
 
-        return axios(options)
-            .then(async tokenRefreshResponse => {
-                failedRequest.response.config.headers.Authorization =
-                    'Bearer ' + tokenRefreshResponse.data.accessToken;
+            const refreshedToken = response.data.token ?? response.data.accessToken;
 
-                authContext.saveAuthState({
-                    ...authContext.getAuthState(),
-                    jwtToken: tokenRefreshResponse.data.token,
-                });
+            if (!refreshedToken) {
+                logout();
+                throw new Error("The refresh endpoint did not return a token");
+            }
 
-                return Promise.resolve();
-            })
-            .catch(e => {
-                authContext.saveAuthState({
-                    jwtToken: null,
-                    clientId: null,
-                    authenticated: false
-                });
+            failedRequest.response.config.headers = {
+                ...failedRequest.response.config.headers,
+                Authorization: `Bearer ${refreshedToken}`,
+            };
+
+            saveAuthState({
+                ...authStateRef.current,
+                jwtToken: refreshedToken,
+                authenticated: true,
             });
-    };
+        });
 
-    createAuthRefreshInterceptor(authAxios, refreshAuthLogic, {});
+        return () => {
+            authAxios.interceptors.request.eject(requestInterceptor);
+            authAxios.interceptors.response.eject(refreshInterceptor);
+        };
+    }, [authAxios, clientId, logout, saveAuthState, token]);
+
+    const value = useMemo(() => ({authAxios}), [authAxios]);
 
     return (
-        <Provider
-            value={{authAxios}}>
+        <AxiosContext.Provider value={value}>
             {children}
-        </Provider>
+        </AxiosContext.Provider>
     );
 };
 
-export {AxiosContext, AxiosProvider};
+function useAxios() {
+    const context = useContext(AxiosContext);
+
+    if (!context) {
+        throw new Error("useAxios must be used within an AxiosProvider");
+    }
+
+    return context;
+}
+
+export {AxiosContext, AxiosProvider, useAxios};

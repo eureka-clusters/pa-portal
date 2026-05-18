@@ -1,44 +1,53 @@
-import {useContext, useEffect, useState} from "react";
-import {UserContext} from "@/providers/user-provider";
-import {User} from "@/interface/auth/user";
+import {useQuery} from "@tanstack/react-query";
+
+import {QueryState} from "@/component/partial/query-state";
+import {useUser} from "@/providers/user-provider";
 
 export default function Account() {
+    const {refreshUser, user} = useUser();
 
-    let userContext = useContext(UserContext);
+    const accountQuery = useQuery({
+        queryKey: ["account"],
+        queryFn: refreshUser,
+        initialData: user ?? undefined,
+    });
 
-    const [userInfo, setUserInfo] = useState<User>({} as User);
+    if (accountQuery.isLoading || accountQuery.isError) {
+        return (
+            <QueryState
+                isLoading={accountQuery.isLoading}
+                isError={accountQuery.isError}
+                errorMessage="Your account details could not be loaded."
+            />
+        );
+    }
 
-    useEffect(() => {
-        userContext.updateUser().then((user) => {
-            setUserInfo(user);
-        });
+    const userInfo = accountQuery.data;
 
-    }, []);
-    //const userInfo = userContext.updateUser();
+    if (!userInfo) {
+        return <div>No account data is available.</div>;
+    }
 
-    //Update the user info from the backend
-    // useEffect(() => {
-    //     userContext.updateUser();
-    // });
+    return (
+        <>
+            <h1>Account</h1>
 
-
-    return <>
-        <h1>Account</h1>
-
-        <dl className="row">
-            <dt className="col-sm-3 text-end">Email:</dt>
-            <dd className="col-sm-9">{userInfo.email}</dd>
-            <dt className="col-sm-3 text-end">Name:</dt>
-            <dd className="col-sm-9">{userInfo.firstName} {userInfo.lastName}</dd>
-            <dt className="col-sm-3 text-end">Is Funder:</dt>
-            <dd className="col-sm-9">{userInfo.isFunder ? 'Yes' : 'No'}</dd>
-            {userInfo.funderCountry && <>
-                <dt className="col-sm-3 text-end">Funder Country:</dt>
-                <dd className="col-sm-9">{userInfo.funderCountry?.country}</dd>
-            </>
-            }
-            <dt className="col-sm-3 text-end">Is ESE Staff:</dt>
-            <dd className="col-sm-9">{userInfo.isEurekaSecretariatStaffMember ? 'Yes' : 'No'}</dd>
-        </dl>
-    </>;
+            <dl className="row">
+                <dt className="col-sm-3 text-end">Email:</dt>
+                <dd className="col-sm-9">{userInfo.email}</dd>
+                <dt className="col-sm-3 text-end">Name:</dt>
+                <dd className="col-sm-9">{userInfo.firstName} {userInfo.lastName}</dd>
+                <dt className="col-sm-3 text-end">Is Funder:</dt>
+                <dd className="col-sm-9">{userInfo.isFunder ? "Yes" : "No"}</dd>
+                {userInfo.funderCountry ? (
+                    <>
+                        <dt className="col-sm-3 text-end">Funder Country:</dt>
+                        <dd className="col-sm-9">{userInfo.funderCountry.country}</dd>
+                    </>
+                ) : null}
+                <dt className="col-sm-3 text-end">Is ESE Staff:</dt>
+                <dd className="col-sm-9">{userInfo.isEurekaSecretariatStaffMember ? "Yes" : "No"}</dd>
+            </dl>
+        </>
+    );
 }

@@ -1,10 +1,2 @@
-/* The following block can be included in a custom.scss */
-
-/* make the customizations */
-$theme-colors: (
-    "info": tomato,
-    "danger": teal
-);
-
-/* import bootstrap to set changes */
-@import "~bootstrap/scss/bootstrap";
+/* Unused scratch stylesheet kept for reference. Intentionally avoids Bootstrap Sass
+   imports so repository builds stay free of Sass deprecation warnings. */

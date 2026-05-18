@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from "react";
+import {ReactNode, useEffect, useState} from "react";
 import {Button} from "react-bootstrap";
 
 export default function LoadingButton({
@@ -6,11 +6,11 @@ export default function LoadingButton({
                                           loadingText = 'Loading...',
                                           onClick,
                                           children,
-                                      }: {
+                                       }: {
     isLoading: boolean,
     loadingText?: string,
-    onClick: () => any,
-    children: React.ReactNode
+    onClick: () => void | Promise<void>,
+    children: ReactNode
 }) {
     /* showLoader is used to stay in the "isLoading state" a bit longer to avoid loading flashes
      if the loading state is too short. */
@@ -34,13 +34,10 @@ export default function LoadingButton({
         }
     }, [isLoading, showLoader]);
 
-    const ref = useRef(null);
-
     return (
         <Button
             onClick={onClick}
             className="btn btn-primary"
-            ref={ref}
             disabled={showLoader}
         >
 
@@ -50,9 +47,7 @@ export default function LoadingButton({
                     &nbsp; {loadingText}
                 </>
             ) : (
-                <>
-                    {children}
-                </>
+                <>{children}</>
             )}
 
         </Button>

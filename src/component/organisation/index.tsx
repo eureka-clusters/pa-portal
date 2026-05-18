@@ -1,44 +1,45 @@
-import React, {useContext} from 'react';
+import {useQuery} from "@tanstack/react-query";
 import {useParams} from "react-router-dom";
+
 import PartnerTable from "@/component/organisation/partner-table";
+import {QueryState} from "@/component/partial/query-state";
 import {getOrganisation} from "@/hooks/organisation/get-organisation";
-import {AxiosContext} from "@/providers/axios-provider";
-import {keepPreviousData, useQuery} from "@tanstack/react-query";
+import {useAxios} from "@/providers/axios-provider";
 
 export default function Organisation() {
-
     const {slug} = useParams();
+    const {authAxios} = useAxios();
 
-    if (slug === undefined) {
-        return <div>Error</div>;
+    if (!slug) {
+        return <div>No organisation was selected.</div>;
     }
 
-    const authAxios = useContext(AxiosContext).authAxios;
-
-    const {isLoading, isError, data: organisation} = useQuery({
-        queryKey: ['organisation', slug],
-        placeholderData: keepPreviousData,
-        queryFn: () => getOrganisation({authAxios, slug})
+    const organisationQuery = useQuery({
+        queryKey: ["organisation", slug],
+        queryFn: () => getOrganisation({authAxios, slug}),
     });
 
-    if (isLoading) {
-        return <div>Loading...</div>;
+    if (organisationQuery.isLoading || organisationQuery.isError) {
+        return (
+            <QueryState
+                isLoading={organisationQuery.isLoading}
+                isError={organisationQuery.isError}
+                errorMessage="The organisation details could not be loaded."
+            />
+        );
     }
 
-    if (isError) {
-        return <div>Error</div>;
-    }
+    const organisation = organisationQuery.data;
 
-    if (organisation === undefined) {
-        return <div>Loading</div>;
+    if (!organisation) {
+        return <div>No organisation data is available.</div>;
     }
 
     return (
-        <React.Fragment>
+        <>
             <h1>{organisation.name}</h1>
 
             <dl className="row">
-
                 <dt className="col-sm-3 text-end">Organisation:</dt>
                 <dd className="col-sm-9">{organisation.name}</dd>
 
@@ -47,11 +48,9 @@ export default function Organisation() {
 
                 <dt className="col-sm-3 text-end">Country:</dt>
                 <dd className="col-sm-9">{organisation.country.country}</dd>
-
             </dl>
 
             <PartnerTable organisation={organisation}/>
-
-        </React.Fragment>
-    )
+        </>
+    );
 }

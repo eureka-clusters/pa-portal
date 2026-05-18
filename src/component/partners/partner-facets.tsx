@@ -1,244 +1,196 @@
-import {FC, useContext} from 'react';
-import {Form} from "react-bootstrap";
-import RS, {default as ReactSelect} from "react-select";
-import {FacetValues} from "@/interface/statistics/facet-values";
-import {getPartnerFacets} from "@/hooks/partner/get-facets";
-import {Facets} from "@/interface/statistics/partner/facets";
-import {AxiosContext} from "@/providers/axios-provider";
+import {ChangeEventHandler, Dispatch, FC, SetStateAction} from "react";
 import {keepPreviousData, useQuery} from "@tanstack/react-query";
+import {Form} from "react-bootstrap";
+import Select from "react-select";
+
+import {QueryState} from "@/component/partial/query-state";
+import {getPartnerFacets} from "@/hooks/partner/get-facets";
+import {FacetValues} from "@/interface/statistics/facet-values";
+import {Facets} from "@/interface/statistics/partner/facets";
+import {useAxios} from "@/providers/axios-provider";
+
+type FacetSetter = Dispatch<SetStateAction<FacetValues>>;
+type FacetChangeHandler = ChangeEventHandler<HTMLInputElement>;
+type SelectOption = { id: number | string; name: string; amount: number };
+type YearOption = { label: number; value: number; key: number };
 
 interface Props {
-    facetValues: FacetValues,
-    setFilter: (facetValues: (prevState: FacetValues) => FacetValues) => void,
-    updateFilter: (facetValues: any) => void,
+    facetValues: FacetValues;
+    setFilter: FacetSetter;
+    updateFilter: FacetChangeHandler;
 }
 
 const PartnerFacets: FC<Props> = ({facetValues, setFilter, updateFilter}) => {
-
-    const authAxios = useContext(AxiosContext).authAxios;
+    const {authAxios} = useAxios();
 
     const {isLoading, isError, data} = useQuery({
-        queryKey: ['partnerFacets', facetValues],
+        queryKey: ["partnerFacets", facetValues],
         placeholderData: keepPreviousData,
-        queryFn: () => getPartnerFacets({authAxios, facetValues})
+        queryFn: () => getPartnerFacets({authAxios, facetValues}),
     });
 
-    if (isLoading) {
-        return <div>Loading...</div>;
+    if (isLoading || isError || !data) {
+        return (
+            <QueryState
+                isLoading={isLoading}
+                isError={isError || !data}
+                errorMessage="The partner filters could not be loaded."
+            />
+        );
     }
 
-    if (isError) {
-        return <div>Error</div>;
-    }
-
-    //https://github.com/vitejs/vite/issues/2139#issuecomment-1230773695
-    const ReactSelect = (RS as any).default ? (RS as any).default : RS;
-
-    let facets: Facets = data as Facets;
-
-    const yearsFilterOptions = facets.years?.map((year: number, index: number) => {
-        return {
-            label: year,
-            value: year,
-            key: index
-        }
-    });
+    const facets: Facets = data;
+    const yearsFilterOptions = facets.years?.map((year, index): YearOption => ({
+        label: year,
+        value: year,
+        key: index,
+    }));
 
     return (
         <>
-
             {facets.countries ? (
                 <fieldset>
                     <legend><small>Countries</small></legend>
 
-                    <div style={{margin: '5px 0px'}}>
-                        <ReactSelect
+                    <div style={{margin: "5px 0"}}>
+                        <Select
                             isClearable={false}
                             isMulti
                             className="react-select"
                             classNamePrefix="select"
                             options={facets.countries}
-                            // components needs the complete filter objects therefore filter these by the filter country array
-                            value={
-                                facets.countries.filter(function (itm) {
-                                    return facetValues['country'] !== undefined && facetValues['country'].indexOf(itm.id) > -1;
-                                })
-                            }
-
-                            getOptionLabel={(option: { name: any; }) => `${option.name}`}
-                            getOptionValue={(option: { [x: string]: any; }) => `${option['id']}`}
-
+                            value={facets.countries.filter((item) => facetValues.country?.includes(item.id))}
+                            getOptionLabel={(option: SelectOption) => option.name}
+                            getOptionValue={(option: SelectOption) => `${option.id}`}
                             closeMenuOnSelect={false}
-                            onChange={(choices: any) => {
-                                let updatedValues: { [key: string]: Array<string> } = {};
-                                // get the names of the selected choices
-                                updatedValues['country'] = choices.map((choice: {
-                                    id: number;
-                                    name: string;
-                                    amount: number
-                                }) => choice.id);
-                                setFilter((prevState: any) => ({
-                                    ...prevState, ...updatedValues
-                                }))
+                            onChange={(choices) => {
+                                const selectedChoices = choices ?? [];
+                                setFilter((prevState) => ({
+                                    ...prevState,
+                                    country: selectedChoices.map((choice) => Number(choice.id)),
+                                }));
                             }}
                         />
                     </div>
                 </fieldset>
-            ) : ('')}
+            ) : null}
 
             {facets.organisationTypes ? (
                 <fieldset>
                     <legend><small>Organisation type</small></legend>
 
-                    {facets.organisationTypes && facets.organisationTypes.map((organisationType, i) => (
-                        <div key={i}>
-                            <Form.Check type={'checkbox'} id={`check-type-${i}`}>
+                    {facets.organisationTypes.map((organisationType) => (
+                        <div key={organisationType.id}>
+                            <Form.Check type="checkbox" id={`check-type-${organisationType.id}`}>
                                 <Form.Check.Input
                                     name="organisationType"
-                                    value={organisationType['id']}
-                                    className={'me-2'}
+                                    value={organisationType.id}
+                                    className="me-2"
                                     onChange={updateFilter}
-                                    checked={
-                                        facetValues['organisationType'] !== undefined && facetValues['organisationType'].indexOf(organisationType['id'].toString()) > -1
-                                    }
+                                    checked={facetValues.organisationType?.includes(organisationType.id.toString()) ?? false}
                                 />
-                                {/* <Form.Check.Label>{organisationType['name']} ({organisationType['amount']})</Form.Check.Label> */}
-                                <Form.Check.Label>{organisationType['name']}</Form.Check.Label>
+                                <Form.Check.Label>{organisationType.name}</Form.Check.Label>
                             </Form.Check>
                         </div>
                     ))}
                 </fieldset>
-            ) : ('')}
-
+            ) : null}
 
             {facets.projectStatus ? (
                 <fieldset>
                     <legend><small>Project Status</small></legend>
 
-                    {facets.projectStatus && facets.projectStatus.map((projectStatus, i) => (
-                        <div key={i}>
-                            <Form.Check type={'checkbox'} id={`check-project-status-${i}`}>
+                    {facets.projectStatus.map((projectStatus) => (
+                        <div key={projectStatus.id}>
+                            <Form.Check type="checkbox" id={`check-project-status-${projectStatus.id}`}>
                                 <Form.Check.Input
                                     name="projectStatus"
-                                    value={projectStatus['id']}
+                                    value={projectStatus.id}
                                     onChange={updateFilter}
-                                    className={'me-2'}
-                                    checked={
-                                        facetValues['projectStatus'] !== undefined && facetValues['projectStatus'].indexOf(projectStatus['id'].toString()) > -1
-                                    }
+                                    className="me-2"
+                                    checked={facetValues.projectStatus?.includes(projectStatus.id.toString()) ?? false}
                                 />
-                                {/* <Form.Check.Label>{projectStatus['name']} ({projectStatus['amount']})</Form.Check.Label> */}
-                                <Form.Check.Label>{projectStatus['name']}</Form.Check.Label>
+                                <Form.Check.Label>{projectStatus.name}</Form.Check.Label>
                             </Form.Check>
                         </div>
                     ))}
                 </fieldset>
-            ) : ('')}
-
+            ) : null}
 
             {facets.programmeCalls ? (
                 <fieldset>
                     <legend><small>Programme Call</small></legend>
 
-                    <div style={{margin: '5px 0px'}}>
-                        <ReactSelect
+                    <div style={{margin: "5px 0"}}>
+                        <Select
                             isClearable={false}
                             isMulti
                             className="react-select"
                             classNamePrefix="select"
                             options={facets.programmeCalls}
-                            // components needs the complete filter objects therefore filter these by the filter country array
-                            value={
-                                facets.programmeCalls.filter(function (item) {
-                                    return facetValues['programmeCall'] !== undefined && facetValues['programmeCall'].indexOf(item.name) > -1;
-                                })
-                            }
-                            // getOptionLabel={(option) => `${option.name} (${option.amount})`}
-                            getOptionLabel={(option: { name: any; }) => `${option.name}`}
-                            getOptionValue={(option: { [x: string]: any; }) => `${option['id']}`}
-                            // add the checkboxes
-                            // components={{
-                            //     Option
-                            // }}
-                            // hideSelectedOptions={false}
+                            value={facets.programmeCalls.filter((item) => facetValues.programmeCall?.includes(item.id.toString()))}
+                            getOptionLabel={(option: SelectOption) => option.name}
+                            getOptionValue={(option: SelectOption) => `${option.id}`}
                             closeMenuOnSelect={false}
-                            onChange={(choices: any) => {
-                                let updatedValues: { [key: string]: Array<string> } = {};
-                                // get the names of the selected choices
-                                updatedValues['programmeCall'] = choices.map((choice: {
-                                    id: string;
-                                    name: string;
-                                    amount: number
-                                }) => choice.id);
-                                setFilter((prevState: any) => ({
-                                    ...prevState, ...updatedValues
-                                }))
-
+                            onChange={(choices) => {
+                                const selectedChoices = choices ?? [];
+                                setFilter((prevState) => ({
+                                    ...prevState,
+                                    programmeCall: selectedChoices.map((choice) => `${choice.id}`),
+                                }));
                             }}
                         />
                     </div>
                 </fieldset>
-            ) : ('')}
+            ) : null}
 
             {facets.clusterGroups ? (
                 <fieldset>
                     <legend><small>Clusters</small></legend>
 
-                    {facets.clusterGroups && facets.clusterGroups.map((clusterGroup, i) => (
-                        <div key={i}>
-                            <Form.Check type={'checkbox'} id={`check-cluster-${i}`}>
+                    {facets.clusterGroups.map((clusterGroup) => (
+                        <div key={clusterGroup.id}>
+                            <Form.Check type="checkbox" id={`check-cluster-${clusterGroup.id}`}>
                                 <Form.Check.Input
                                     name="clusterGroups"
-                                    value={clusterGroup['id']}
+                                    value={clusterGroup.id}
                                     onChange={updateFilter}
-                                    className={'me-2'}
-                                    checked={
-                                        facetValues['clusterGroups'] !== undefined && facetValues['clusterGroups'].indexOf(clusterGroup['id'].toString()) > -1
-                                    }
+                                    className="me-2"
+                                    checked={facetValues.clusterGroups?.includes(clusterGroup.id.toString()) ?? false}
                                 />
-                                <Form.Check.Label>{clusterGroup['name']}</Form.Check.Label>
+                                <Form.Check.Label>{clusterGroup.name}</Form.Check.Label>
                             </Form.Check>
                         </div>
                     ))}
                 </fieldset>
-            ) : ('')}
+            ) : null}
 
             {yearsFilterOptions ? (
                 <fieldset>
                     <legend><small>Years</small></legend>
 
-                    <div style={{margin: '5px 0px'}}>
-                        <ReactSelect
+                    <div style={{margin: "5px 0"}}>
+                        <Select
                             isClearable={false}
                             isMulti
                             className="react-select"
                             classNamePrefix="select"
                             options={yearsFilterOptions}
-                            value={yearsFilterOptions.filter(function (option) {
-                                return facetValues['year'] !== undefined && facetValues['year'].indexOf(option.value) > -1;
-                            })}
+                            value={yearsFilterOptions.filter((option) => facetValues.year?.includes(option.value))}
                             closeMenuOnSelect={false}
-                            onChange={(choices: any) => {
-                                let updatedValues: { [key: string]: Array<string> } = {};
-                                // get the names of the selected choices
-                                updatedValues['year'] = choices.map((choice: {
-                                    label: string;
-                                    value: string;
-                                    key: number
-                                }) => choice.value);
-                                setFilter((prevState: any) => ({
-                                    ...prevState, ...updatedValues
-                                }))
-
+                            onChange={(choices) => {
+                                const selectedChoices = choices ?? [];
+                                setFilter((prevState) => ({
+                                    ...prevState,
+                                    year: selectedChoices.map((choice) => choice.value),
+                                }));
                             }}
                         />
                     </div>
                 </fieldset>
-            ) : ('')}
+            ) : null}
         </>
-    )
-
-
-}
+    );
+};
 
 export default PartnerFacets;

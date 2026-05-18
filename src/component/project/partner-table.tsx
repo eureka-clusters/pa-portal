@@ -1,13 +1,13 @@
-import React, {useContext} from 'react';
 import {Partner} from "@/interface/project/partner";
 import SortableTableHeader from "@/component/partial/sortable-table-header";
 import {Link} from "react-router-dom";
 import {useGetFilterOptions} from "@/functions/filter-functions";
 import {getPartners} from "@/hooks/partner/get-partners";
 import {Project} from "@/interface/project";
-import {AxiosContext} from "@/providers/axios-provider";
 import {keepPreviousData, useQuery} from "@tanstack/react-query";
 import {CostsFormat, EffortFormat} from "@/functions/utils";
+import {QueryState} from "@/component/partial/query-state";
+import {useAxios} from "@/providers/axios-provider";
 
 interface PartnerTableProps {
     project: Project,
@@ -16,9 +16,9 @@ interface PartnerTableProps {
 const PartnerTable = ({project}: PartnerTableProps) => {
 
     const filterOptions = useGetFilterOptions();
-    const authAxios = useContext(AxiosContext).authAxios;
+    const {authAxios} = useAxios();
 
-    const {isLoading, data} = useQuery({
+    const {isLoading, isError, data} = useQuery({
         queryKey: ['projectPartners', filterOptions, project],
         placeholderData: keepPreviousData,
         queryFn: () => getPartners({
@@ -29,14 +29,22 @@ const PartnerTable = ({project}: PartnerTableProps) => {
         })
     });
 
-    if (isLoading) {
-        return <div>Loading...</div>
+    if (isLoading || isError) {
+        return (
+            <QueryState
+                isLoading={isLoading}
+                isError={isError}
+                errorMessage="The project partners could not be loaded."
+            />
+        );
     }
 
-    console.log();
+    if (!data) {
+        return <div>No partner data is available.</div>;
+    }
 
     return (
-        <React.Fragment>
+        <>
             <table className="table table-striped table-sm">
                 <thead>
                 <tr>
@@ -88,9 +96,9 @@ const PartnerTable = ({project}: PartnerTableProps) => {
                 </tfoot>
                 <tbody>
                 {data?.partners.map(
-                    (partner: Partner, key: number) => (
-                        <tr key={key}>
-                            <td><small className={'text-muted'}>{key + 1}</small></td>
+                    (partner: Partner, index: number) => (
+                        <tr key={partner.id}>
+                            <td><small className={'text-muted'}>{index + 1}</small></td>
                             <td>
                                 <Link to={`/project/partner/${partner.slug}`}>{partner.organisation.name}</Link>
                                 {!partner.isActive && <span className={'badge bg-danger ms-2'}>Inactive</span>}
@@ -116,7 +124,7 @@ const PartnerTable = ({project}: PartnerTableProps) => {
             </table>
 
 
-        </React.Fragment>
+        </>
     );
 }
 

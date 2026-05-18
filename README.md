@@ -21,6 +21,21 @@ yarn upgrade-interactive [--latest]
 To publish a new version just push the code to GitHub. The ./github/workflows/docker-image.yml will launch the action which creates a new container.
 On the server a new container can be pulled with ```docker pull [containername]``` so docker pulls a new version of the container.
 
+### Run a hook after `git pull`
+
+Git does not provide a dedicated `post-pull` hook, so this repository uses:
+
+- `.githooks/post-merge` for a regular `git pull`
+- `.githooks/post-rewrite` for `git pull --rebase`
+
+Install the versioned hooks into your local clone with:
+
+```shell
+yarn hooks:install
+```
+
+The hook entrypoint is `scripts/on-pull.sh`. Put the commands there that should run after pulling from the remote.
+
 The build stage of this container is in 2 steps, initiated by calling the production target in the docker-image.yml file
 
 ```yaml

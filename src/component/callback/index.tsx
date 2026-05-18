@@ -1,43 +1,61 @@
-import {useContext, useEffect, useState} from 'react';
-import {AuthContext} from '@/providers/auth-provider';
+import {useEffect, useState} from "react";
 import {Navigate, useSearchParams} from "react-router-dom";
-import {UserContext} from "@/providers/user-provider";
 
-
-const LoadingComponent = () => <div> Waiting for login... </div>
+import {useAuth} from "@/providers/auth-provider";
+import {useUser} from "@/providers/user-provider";
 
 export default function Callback() {
-
-    const authContext = useContext(AuthContext);
-    const userContext = useContext(UserContext);
-    const [hasUser, setHasUser] = useState(false);
-
     const [searchParams] = useSearchParams();
+    const {isAuthenticated, saveAuthState} = useAuth();
+    const {loadUser, user} = useUser();
+    const [isComplete, setIsComplete] = useState(false);
+    const [hasError, setHasError] = useState(false);
+
+    const token = searchParams.get("token");
+    const clientId = searchParams.get("client_id");
 
     useEffect(() => {
-        
-        let token = '' + searchParams.get('token');
-        let clientId = '' + searchParams.get('client_id');
+        if (!token || !clientId) {
+            setHasError(true);
+            return;
+        }
 
-        authContext.saveAuthState(
-            {
-                jwtToken: token,
-                clientId: clientId,
-                authenticated: true
+        let cancelled = false;
+
+        const completeLogin = async () => {
+            try {
+                saveAuthState({
+                    jwtToken: token,
+                    clientId,
+                    authenticated: true,
+                });
+
+                await loadUser(token);
+
+                if (!cancelled) {
+                    setIsComplete(true);
+                }
+            } catch {
+                if (!cancelled) {
+                    setHasError(true);
+                }
             }
-        )
+        };
 
-        const user = userContext.loadUser(token);
+        void completeLogin();
 
-        user.then(() => {
-            setHasUser(true);
-        });
+        return () => {
+            cancelled = true;
+        };
+    }, [clientId, loadUser, saveAuthState, token]);
 
-    }, [searchParams]);
-
-    if (authContext.isAuthenticated() && hasUser) {
-        return <Navigate to={'/account'}/>
+    if (hasError) {
+        return <div>Unable to complete sign in.</div>;
     }
 
-    return <LoadingComponent/>
+    if (isAuthenticated && (isComplete || user)) {
+        return <Navigate to="/account" replace/>;
+    }
+
+    return <div>Waiting for login...</div>;
 }

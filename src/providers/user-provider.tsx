@@ -1,63 +1,109 @@
-import {createContext, useContext} from "react";
-import {User} from "@/interface/auth/user";
+import {createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useState} from "react";
 import axios from "axios";
+
 import {getServerUri} from "@/functions/get-server-uri";
-import {AxiosContext} from "@/providers/axios-provider";
+import {User} from "@/interface/auth/user";
+import {useAuth} from "@/providers/auth-provider";
+import {useAxios} from "@/providers/axios-provider";
 
-const UserContext = createContext<UserContextContent>({} as UserContextContent);
-
+const USER_STORAGE_KEY = "user";
 
 interface UserContextContent {
-    getUser: () => User,
-    loadUser: (token: string) => Promise<User>,
-    updateUser: () => Promise<User>
+    user: User | null;
+    loadUser: (token: string) => Promise<User>;
+    refreshUser: () => Promise<User>;
+    clearUser: () => void;
 }
 
+const UserContext = createContext<UserContextContent | undefined>(undefined);
 
-const UserProvider = ({children}: { children: any }) => {
-
-    let storage = localStorage;
-    const authAxios = useContext(AxiosContext).authAxios;
-
-    const loadUser = (token: string) => {
-
-        return axios.get<User>(getServerUri() + '/api/me', {
-            headers: {
-                'Authorization': 'Bearer ' + token
-            }
-        }).then(response => {
-            storage.setItem('user', JSON.stringify(response.data));
-
-            return response.data;
-        });
+function readStoredUser(): User | null {
+    if (typeof window === "undefined") {
+        return null;
     }
 
-    const updateUser = () => {
-        return authAxios.get<User>('/me').then(response => {
-            storage.setItem('user', JSON.stringify(response.data));
+    const rawUser = window.localStorage.getItem(USER_STORAGE_KEY);
 
-            return response.data;
-        });
+    if (!rawUser) {
+        return null;
     }
 
-    const getUser = (): User => {
+    try {
+        return JSON.parse(rawUser) as User;
+    } catch {
+        window.localStorage.removeItem(USER_STORAGE_KEY);
+        return null;
+    }
+}
 
-        const user = storage.getItem('user');
+const UserProvider = ({children}: { children: ReactNode }) => {
+    const {authAxios} = useAxios();
+    const {isAuthenticated} = useAuth();
+    const [user, setUser] = useState<User | null>(readStoredUser);
 
-        if (user) {
-            return JSON.parse(user);
+    useEffect(() => {
+        if (typeof window === "undefined") {
+            return;
         }
 
-        return {} as User;
-    }
+        if (user) {
+            window.localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user));
+            return;
+        }
+
+        window.localStorage.removeItem(USER_STORAGE_KEY);
+    }, [user]);
+
+    useEffect(() => {
+        if (!isAuthenticated) {
+            setUser(null);
+        }
+    }, [isAuthenticated]);
+
+    const clearUser = useCallback(() => {
+        setUser(null);
+    }, []);
+
+    const loadUser = useCallback(async (token: string) => {
+        const response = await axios.get<User>(`${getServerUri()}/api/me`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        setUser(response.data);
+        return response.data;
+    }, []);
+
+    const refreshUser = useCallback(async () => {
+        const response = await authAxios.get<User>("/me");
+
+        setUser(response.data);
+        return response.data;
+    }, [authAxios]);
+
+    const value = useMemo<UserContextContent>(() => ({
+        user,
+        loadUser,
+        refreshUser,
+        clearUser,
+    }), [clearUser, loadUser, refreshUser, user]);
 
     return (
-        <UserContext.Provider
-            value={{getUser, loadUser, updateUser}}>
+        <UserContext.Provider value={value}>
             {children}
         </UserContext.Provider>
     );
 };
 
-export {UserContext, UserProvider};
+function useUser() {
+    const context = useContext(UserContext);
 
+    if (!context) {
+        throw new Error("useUser must be used within a UserProvider");
+    }
+
+    return context;
+}
+
+export {UserContext, UserProvider, useUser};

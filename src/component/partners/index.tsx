@@ -1,4 +1,3 @@
-import React from 'react';
 import {Form} from "react-bootstrap";
 import PartnerTable from "@/component/partners/partner-table";
 import PartnerFacets from '@/component/partners/partner-facets';
@@ -10,7 +9,7 @@ export default function PartnerList() {
     const {updateFilter, facetValues, setFilter} = TableFilter();
 
     return (
-        <React.Fragment>
+        <>
             <Form>
                 <div className={'row'}>
                     <div className={'col-2'}>
@@ -24,5 +23,5 @@ export default function PartnerList() {
                     </div>
                 </div>
             </Form>
-        </React.Fragment>);
+        </>);
 }

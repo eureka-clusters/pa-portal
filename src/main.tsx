@@ -5,16 +5,11 @@ import {AxiosProvider} from "@/providers/axios-provider";
 import {UserProvider} from "@/providers/user-provider";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import {BrowserRouter} from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
 import './App.scss';
 import Content from "@/component/content";
 
-const queryClient = new QueryClient({
-    defaultOptions: {
-        queries: {
-            refetchOnWindowFocus: false, // default: true
-        },
-    },
-})
+const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <React.StrictMode>

@@ -1,21 +1,20 @@
-import {useState} from 'react';
+import {ChangeEvent, useCallback, useState} from "react";
+
 import {FacetValues} from "@/interface/statistics/facet-values";
 
+type FilterInputEvent = ChangeEvent<HTMLInputElement>;
 
-function TableFilter() {
+export function useFacetFilters() {
+    const [facetValues, setFilter] = useState<FacetValues>({});
 
-    const [facetValues, setFilter] = useState<FacetValues>({} as FacetValues);
-
-    const updateFilter = (event: any) => {
+    const updateFilter = useCallback((event: FilterInputEvent) => {
         const target = event.target;
-
-        let targetName = target.name;
+        const targetName = target.name as keyof FacetValues;
         const value = target.value;
-        const updatedValues: any = {...facetValues};
+        const updatedValues = {...facetValues};
 
         if (target.type === 'checkbox') {
-            // slice is required otherwise currentValue would be reference to filter[name] and any modification will change filter directly
-            const currentValue = updatedValues[targetName] !== undefined ? updatedValues[targetName].slice() : [];
+            const currentValue = Array.isArray(updatedValues[targetName]) ? [...updatedValues[targetName]] : [];
 
             if (target.checked) {
                 currentValue.push(value);
@@ -23,16 +22,15 @@ function TableFilter() {
                 const index = currentValue.indexOf(value);
                 currentValue.splice(index, 1);
             }
-            updatedValues[targetName] = currentValue;
+            updatedValues[targetName] = currentValue as never;
         } else {
-            updatedValues[targetName] = value;
+            updatedValues[targetName] = value as never;
         }
 
-        setFilter((prevState: any) => ({
+        setFilter((prevState) => ({
             ...prevState, ...updatedValues
-        }))
-    }
-
+        }));
+    }, [facetValues]);
 
     return {
         updateFilter,
@@ -41,4 +39,4 @@ function TableFilter() {
     };
 }
 
-export default TableFilter;
+export default useFacetFilters;
