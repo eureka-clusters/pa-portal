@@ -46,7 +46,7 @@ function addActiveRoutePathIfPossible(activeRoutePaths: ActiveRoutePath[], activ
 }
 
 function isResolvedAsActive(toPathname: string, locationPathname: string, definition: RoutePathDefinition) {
-    return isPathActiveForLocation(toPathname, locationPathname) && isNotCatchAll(definition.path || "");
+    return isPathActiveForLocation(toPathname, locationPathname) && isNotCatchAll(definition.path ?? "");
 }
 
 function canBeAddedToActiveRoutes(activeRoutePaths: ActiveRoutePath[], match: PathMatch<string>) {

@@ -3,13 +3,26 @@
 Johan van der Heide (johan.van.der.heide@itea4.org)
 Benjamin Hoft (hoft@eurescom.eu)
 
-### Install dependencies on host machine 
+### Install dependencies on host machine
+
 This command installs dependency all dependencies on the host machine
 When something is changed in the root of the application (for example different env params, run)
 
 ```shell
 yarn build
 ```
+
+### Local environment
+
+Copy `.env.example` to `.env.local` and put local-only values there.
+
+```shell
+cp .env.example .env.local
+```
+
+The login page now requires `VITE_SERVICE_LIST_TOKEN` so the frontend can authorize the `/api/list/service` request.
+
+For local development you can bypass OAuth entirely by setting `VITE_DEV_AUTH_TOKEN` in `.env.local`. When the Vite dev server is running, the app will use that token for authentication automatically and skip the OAuth login flow.
 
 As the root of the app is not mounted in the container (only /src)
 Update all packages in Yarn
@@ -18,8 +31,10 @@ Update all packages in Yarn
 yarn upgrade-interactive [--latest]
 ```
 
-To publish a new version just push the code to GitHub. The ./github/workflows/docker-image.yml will launch the action which creates a new container.
-On the server a new container can be pulled with ```docker pull [containername]``` so docker pulls a new version of the container.
+To publish a new version just push the code to GitHub. The ./github/workflows/docker-image.yml will launch the action
+which creates a new container.
+On the server a new container can be pulled with ```docker pull [containername]``` so docker pulls a new version of the
+container.
 
 ### Run a hook after `git pull`
 
@@ -82,4 +97,5 @@ jobs:
           tags: ghcr.io/eureka-clusters/frontend:latest
 ```
 
-This will create first a node container which builds the code and then a second (final) container is created in which the code is copied as static code
+This will create first a node container which builds the code and then a second (final) container is created in which
+the code is copied as static code

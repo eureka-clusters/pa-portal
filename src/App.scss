@@ -8,6 +8,13 @@
   --bs-link-decoration: none;
 }
 
+html,
+body,
+#root {
+  background-color: var(--bs-body-bg);
+  color: var(--bs-body-color);
+}
+
 a {
   text-decoration: none;
 }
@@ -55,11 +62,11 @@ div.datatable-count {
 }
 
 .check-true {
-  color: green;
+  color: var(--bs-success);
   font-size: 1.2em;
 }
 
 .check-false {
-  color: lightgray;
+  color: var(--bs-secondary-color);
   font-size: 1.2em;
 }

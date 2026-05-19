@@ -8,6 +8,7 @@ import {
     SortingState,
     useReactTable,
 } from "@tanstack/react-table";
+import {Spinner} from "react-bootstrap";
 
 import LoadingButton from "@/component/partial/loading-button";
 
@@ -191,7 +192,14 @@ export function PaginatedDataTable<TData>({
                         </LoadingButton>
                     </div>
                 ) : null}
-                <div>{isFetching ? "Loading..." : null}</div>
+                <div className="small text-body-secondary" aria-live="polite">
+                    {isFetching ? (
+                        <span className="d-inline-flex align-items-center gap-2">
+                            <Spinner animation="border" size="sm" aria-hidden="true"/>
+                            <span>Refreshing data...</span>
+                        </span>
+                    ) : null}
+                </div>
             </div>
         </div>
     );

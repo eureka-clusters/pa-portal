@@ -22,24 +22,22 @@ function Search() {
     };
 
     return (
-        <div className="col-12 col-lg-auto mb-3 mb-lg-0">
-            <form className="search-bar" onSubmit={handleSubmit}>
-                <div className="input-group">
-                    <input
-                        className="form-control"
-                        value={searchText}
-                        type="search"
-                        onChange={(event) => setSearchText(event.target.value)}
-                        placeholder="Search..."
-                        aria-label="Search"
-                        aria-describedby="search-button"
-                    />
-                    <button className="btn btn-outline-primary" type="submit" id="search-button">
-                        Search
-                    </button>
-                </div>
-            </form>
-        </div>
+        <form onSubmit={handleSubmit}>
+            <div className="input-group">
+                <input
+                    className="form-control"
+                    value={searchText}
+                    type="search"
+                    onChange={(event) => setSearchText(event.target.value)}
+                    placeholder="Search..."
+                    aria-label="Search"
+                    aria-describedby="search-button"
+                />
+                <button className="btn btn-outline-primary" type="submit" id="search-button">
+                    Search
+                </button>
+            </div>
+        </form>
     );
 }
 

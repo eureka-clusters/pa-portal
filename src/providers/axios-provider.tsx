@@ -12,7 +12,7 @@ interface AxiosContextContent {
 const AxiosContext = createContext<AxiosContextContent | undefined>(undefined);
 
 const AxiosProvider = ({children}: { children: ReactNode }) => {
-    const {authState, clientId, logout, saveAuthState, token} = useAuth();
+    const {authState, clientId, isDevelopmentAuth, logout, saveAuthState, token} = useAuth();
     const authStateRef = useRef(authState);
 
     const authAxios = useMemo(() => axios.create({
@@ -35,6 +35,12 @@ const AxiosProvider = ({children}: { children: ReactNode }) => {
 
             return config;
         });
+
+        if (isDevelopmentAuth) {
+            return () => {
+                authAxios.interceptors.request.eject(requestInterceptor);
+            };
+        }
 
         const refreshInterceptor = createAuthRefreshInterceptor(authAxios, async (failedRequest) => {
             if (!clientId || !token) {
@@ -73,7 +79,7 @@ const AxiosProvider = ({children}: { children: ReactNode }) => {
             authAxios.interceptors.request.eject(requestInterceptor);
             authAxios.interceptors.response.eject(refreshInterceptor);
         };
-    }, [authAxios, clientId, logout, saveAuthState, token]);
+    }, [authAxios, clientId, isDevelopmentAuth, logout, saveAuthState, token]);
 
     const value = useMemo(() => ({authAxios}), [authAxios]);
 

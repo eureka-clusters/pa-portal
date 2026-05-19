@@ -3,7 +3,7 @@ import { PathMatch, matchPath } from "react-router-dom";
 // https://github.com/remix-run/react-router/blob/f16c5490dfa75f15dcfb86d2a981a7c58a9d1a33/packages/react-router/index.tsx#L1369
 const joinPaths = (paths: string[]): string => paths.join("/").replace(/\/\/+/g, "/");
 
-export function concatPaths(parent: string, current: string) {
+export function concatPaths(parent: string, current: string = "") {
     const jointPaths = joinPaths([parent, current]);
     return jointPaths;
 }

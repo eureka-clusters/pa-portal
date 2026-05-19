@@ -1,6 +1,9 @@
 import {createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useState} from "react";
 
+import Config from "@/constants/config";
+
 const AUTH_STORAGE_KEY = "authState";
+const DEVELOPMENT_CLIENT_ID = "development";
 
 export interface AuthState {
     jwtToken: string | null;
@@ -11,8 +14,11 @@ export interface AuthState {
 export interface AuthContextContent {
     authState: AuthState;
     isAuthenticated: boolean;
+    isDevelopmentAuth: boolean;
+    isDevelopmentAuthEnabled: boolean;
     token: string | null;
     clientId: string | null;
+    loginWithDevelopmentToken: () => string | null;
     saveAuthState: (authState: AuthState) => void;
     logout: () => void;
 }
@@ -24,6 +30,34 @@ const emptyAuthState: AuthState = {
 };
 
 const AuthContext = createContext<AuthContextContent | undefined>(undefined);
+
+function normalizeJwtToken(token: string): string {
+    const trimmedToken = token.trim();
+
+    if (trimmedToken.startsWith("Bearer ")) {
+        return trimmedToken.slice("Bearer ".length).trim();
+    }
+
+    return trimmedToken;
+}
+
+function getDevelopmentAuthState(): AuthState | null {
+    if (!Config.DEV_AUTH_TOKEN) {
+        return null;
+    }
+
+    const jwtToken = normalizeJwtToken(Config.DEV_AUTH_TOKEN);
+
+    if (!jwtToken) {
+        return null;
+    }
+
+    return {
+        jwtToken,
+        clientId: DEVELOPMENT_CLIENT_ID,
+        authenticated: true,
+    };
+}
 
 function normalizeAuthState(authState: Partial<AuthState> | null | undefined): AuthState {
     const jwtToken = authState?.jwtToken ?? null;
@@ -38,6 +72,12 @@ function normalizeAuthState(authState: Partial<AuthState> | null | undefined): A
 }
 
 function readStoredAuthState(): AuthState {
+    const developmentAuthState = getDevelopmentAuthState();
+
+    if (developmentAuthState) {
+        return developmentAuthState;
+    }
+
     if (typeof window === "undefined") {
         return emptyAuthState;
     }
@@ -58,6 +98,9 @@ function readStoredAuthState(): AuthState {
 
 const AuthProvider = ({children}: { children: ReactNode }) => {
     const [authState, setAuthState] = useState<AuthState>(readStoredAuthState);
+    const developmentAuthState = useMemo(getDevelopmentAuthState, []);
+    const isDevelopmentAuthEnabled = developmentAuthState !== null;
+    const isDevelopmentAuth = isDevelopmentAuthEnabled && authState.clientId === DEVELOPMENT_CLIENT_ID;
 
     useEffect(() => {
         if (typeof window === "undefined") {
@@ -76,6 +119,15 @@ const AuthProvider = ({children}: { children: ReactNode }) => {
         setAuthState(normalizeAuthState(nextAuthState));
     }, []);
 
+    const loginWithDevelopmentToken = useCallback(() => {
+        if (!developmentAuthState) {
+            return null;
+        }
+
+        setAuthState(developmentAuthState);
+        return developmentAuthState.jwtToken;
+    }, [developmentAuthState]);
+
     const logout = useCallback(() => {
         setAuthState(emptyAuthState);
     }, []);
@@ -83,11 +135,14 @@ const AuthProvider = ({children}: { children: ReactNode }) => {
     const value = useMemo<AuthContextContent>(() => ({
         authState,
         isAuthenticated: authState.authenticated,
+        isDevelopmentAuth,
+        isDevelopmentAuthEnabled,
         token: authState.jwtToken,
         clientId: authState.clientId,
+        loginWithDevelopmentToken,
         saveAuthState,
         logout,
-    }), [authState, logout, saveAuthState]);
+    }), [authState, isDevelopmentAuth, isDevelopmentAuthEnabled, loginWithDevelopmentToken, logout, saveAuthState]);
 
     return (
         <AuthContext.Provider value={value}>

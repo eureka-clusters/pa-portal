@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
 import {Navigate, useSearchParams} from "react-router-dom";
 
+import {QueryState} from "@/component/partial/query-state";
 import {useAuth} from "@/providers/auth-provider";
 import {useUser} from "@/providers/user-provider";
 
@@ -50,12 +51,12 @@ export default function Callback() {
     }, [clientId, loadUser, saveAuthState, token]);
 
     if (hasError) {
-        return <div>Unable to complete sign in.</div>;
+        return <QueryState isLoading={false} isError errorMessage="Unable to complete sign in."/>;
     }
 
     if (isAuthenticated && (isComplete || user)) {
         return <Navigate to="/account" replace/>;
     }
 
-    return <div>Waiting for login...</div>;
+    return <QueryState isLoading isError={false} loadingMessage="Completing sign in..."/>;
 }

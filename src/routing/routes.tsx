@@ -1,4 +1,4 @@
-import {lazy, useMemo} from "react";
+import {lazy, ReactElement, useMemo} from "react";
 import {Link} from "react-router-dom";
 
 import {Page} from "@/component/page";
@@ -19,17 +19,74 @@ const Project = lazy(() => import("@/component/project"));
 const ProjectList = lazy(() => import("@/component/projects"));
 const Search = lazy(() => import("@/component/search"));
 
-function withProtection(element: React.ReactNode) {
+function withProtection(element: ReactElement) {
     return <ProtectedRoute>{element}</ProtectedRoute>;
 }
 
+function createLayoutRoute(
+    title: string,
+    path: string,
+    nav: boolean,
+    children: RoutePathDefinition[],
+): RoutePathDefinition {
+    return {
+        title,
+        path,
+        element: <Page withOutlet/>,
+        nav,
+        children,
+    };
+}
+
+function createProtectedRoute(
+    title: string,
+    element: ReactElement,
+    options: Pick<RoutePathDefinition, "path" | "index" | "nav">,
+): RoutePathDefinition {
+    return {
+        title,
+        ...options,
+        element: withProtection(element),
+    };
+}
+
 function createAppRoutes(isAuthenticated: boolean): RoutePathDefinition[] {
+    const projectRoutes: RoutePathDefinition[] = [
+        createProtectedRoute("Project list", <ProjectList/>, {
+            index: true,
+            nav: true,
+        }),
+        createProtectedRoute("Project", <Project/>, {
+            path: ":slug",
+            nav: true,
+        }),
+        createProtectedRoute("Project partner list", <PartnerList/>, {
+            path: "partner",
+            nav: true,
+        }),
+        createProtectedRoute("Project partner", <Partner/>, {
+            path: "partner/:slug",
+            nav: true,
+        }),
+    ];
+
+    const organisationRoutes: RoutePathDefinition[] = [
+        createProtectedRoute("Organisation list", <Organisations/>, {
+            index: true,
+            nav: true,
+        }),
+        createProtectedRoute("Organisation", <Organisation/>, {
+            path: ":slug",
+            nav: true,
+        }),
+    ];
+
     return [
         {
             title: "Home",
             path: "/",
             element: isAuthenticated ? (
-                <Page title="Home">
+                <Page>
                     <p>Welcome to the Eureka Clusters PA Portal.</p>
                 </Page>
             ) : (
@@ -38,78 +95,28 @@ function createAppRoutes(isAuthenticated: boolean): RoutePathDefinition[] {
             nav: true,
         },
         {title: "Login", path: "/login", element: <Login/>, nav: false},
-        {
-            title: "Projects",
-            path: "/project",
-            element: <Page title="Projects" withOutlet/>,
-            nav: isAuthenticated,
-            children: [
-                {
-                    title: "Project list",
-                    path: "",
-                    element: withProtection(<ProjectList/>),
-                    nav: true,
-                },
-                {
-                    title: "Project",
-                    path: ":slug",
-                    element: withProtection(<Project/>),
-                    nav: true,
-                },
-                {
-                    title: "Project partner list",
-                    path: "partner",
-                    element: withProtection(<PartnerList/>),
-                    nav: true,
-                },
-                {
-                    title: "Project partner",
-                    path: "partner/:slug",
-                    element: withProtection(<Partner/>),
-                    nav: true,
-                },
-            ],
-        },
-        {
-            title: "Organisations",
-            path: "/organisations",
-            element: <Page title="Organisations" withOutlet/>,
-            nav: isAuthenticated,
-            children: [
-                {
-                    title: "Organisation list",
-                    path: "",
-                    element: withProtection(<Organisations/>),
-                    nav: true,
-                },
-                {
-                    title: "Organisation",
-                    path: ":slug",
-                    element: withProtection(<Organisation/>),
-                    nav: true,
-                },
-            ],
-        },
+        createLayoutRoute("Projects", "/project", isAuthenticated, projectRoutes),
+        createLayoutRoute("Organisations", "/organisations", isAuthenticated, organisationRoutes),
         {
             title: "Search",
             path: "/search",
             element: withProtection(<Search/>),
             nav: isAuthenticated,
         },
-        {title: "Logout", path: "/logout", element: <Logout/>, nav: isAuthenticated},
+        {title: "Logout", path: "/logout", element: <Logout/>, nav: false},
         {title: "Contact", path: "/contact", element: <Contact/>, nav: true},
         {title: "Callback", path: "/callback", element: <Callback/>, nav: false},
         {
             title: "Account",
             path: "/account",
             element: withProtection(<Account/>),
-            nav: isAuthenticated,
+            nav: false,
         },
         {
             title: "404",
             path: "*",
             element: (
-                <Page title="404">
+                <Page>
                     <p>The page you requested could not be found.</p>
                     <p>
                         <Link to="/">Return to the homepage</Link>

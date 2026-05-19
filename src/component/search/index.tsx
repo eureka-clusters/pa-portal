@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import {keepPreviousData, useQuery} from "@tanstack/react-query";
-import {Form} from "react-bootstrap";
+import {Form, Spinner} from "react-bootstrap";
 
 import {QueryState} from "@/component/partial/query-state";
 import SearchList from "@/component/search/search-list";
@@ -45,7 +45,7 @@ export default function Search() {
 
     return (
         <>
-            <h1>Search</h1>
+            <h1 className={'fs-1'}>Search</h1>
             <Form.Label htmlFor="search" column="sm">Search query</Form.Label>
             <Form.Control
                 type="search"
@@ -59,7 +59,12 @@ export default function Search() {
                 Start typing to search
             </Form.Text>
 
-            {isSearching ? <p>Searching...</p> : null}
+            {isSearching ? (
+                <div className="d-flex align-items-center gap-2 mt-3 text-body-secondary" aria-live="polite">
+                    <Spinner animation="border" size="sm" aria-hidden="true"/>
+                    <span>Searching...</span>
+                </div>
+            ) : null}
             {queryState}
             {debouncedSearchText && searchQuery.data?.results ? (
                 <SearchList results={searchQuery.data.results} searchText={debouncedSearchText}/>

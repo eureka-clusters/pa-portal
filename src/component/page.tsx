@@ -1,17 +1,18 @@
+import {PropsWithChildren, ReactNode} from "react";
 import {Outlet} from "react-router-dom";
-import React from "react";
 
-interface PageProps {
-    title: string;
+interface PageProps extends PropsWithChildren {
     withOutlet?: boolean;
 }
 
-export function Page({title, withOutlet: hasOutlet = false, children}: React.PropsWithChildren<PageProps>) {
+export function Page({
+                         withOutlet: hasOutlet = false,
+                         children,
+                     }: PageProps) {
     return (
-        <>
-            <h1>{title}</h1>
+        <section className="py-2">
             {children}
-            {hasOutlet ? <Outlet/> : undefined}
-        </>
+            {hasOutlet ? <Outlet/> : null}
+        </section>
     );
 }

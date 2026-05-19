@@ -14,8 +14,8 @@ export default function Content() {
     return (
         <>
             <Header routes={routes}/>
-            <main role="main" className="flex-shrink-0">
-                <Container className="mb-4">
+            <main role="main" className="flex-grow-1">
+                <Container className="pb-4">
                     <Breadcrumbs routes={routes}/>
                     <section>
                         <Suspense fallback={<QueryState isLoading isError={false} loadingMessage="Loading page..."/>}>

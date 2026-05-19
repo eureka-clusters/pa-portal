@@ -49,7 +49,7 @@ export default function Project() {
 
     return (
         <>
-            <h1>{project.name}</h1>
+            <h1 className={'fs-1'}>{project.name}</h1>
             <dl className="row">
                 <dt className="col-sm-3 text-end">Identification Number:</dt>
                 <dd className="col-sm-9">{project.number}</dd>

@@ -10,6 +10,7 @@ export default function PartnerList() {
 
     return (
         <>
+            <h1 className={'fs-1'}>Partners</h1>
             <Form>
                 <div className={'row'}>
                     <div className={'col-2'}>

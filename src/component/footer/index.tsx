@@ -2,13 +2,13 @@ import {NavLink} from "react-router-dom";
 
 export default function Footer() {
     return (
-        <footer className="bg-light footer mt-auto py-2">
+        <footer className="footer mt-auto py-3 border-top bg-body-tertiary">
             <div className="container">
-                <div className="col-md-4 d-flex align-items-center">
-                    <NavLink to="/" className="mb-3 me-2 mb-md-0 text-muted text-decoration-none lh-1">
+                <div className="d-flex flex-column flex-md-row align-items-center gap-3">
+                    <NavLink to="/" className="me-2 text-body-secondary text-decoration-none lh-1">
                         <img alt="Eureka Logo" className="pe-2" src="/assets/img/logo.png"/>
                     </NavLink>
-                    <span className="text-muted">&copy; 2026 ITEA Office & Celtic-Next</span>
+                    <span className="text-body-secondary">&copy; 2026 ITEA Office & Celtic-Next</span>
                 </div>
             </div>
         </footer>

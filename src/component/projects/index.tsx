@@ -10,6 +10,7 @@ export default function ProjectList() {
 
     return (
         <>
+            <h1 className={'fs-1'}>Projects</h1>
             <Form>
                 <div className={'row'}>
                     <div className={'col-2'}>

@@ -1,5 +1,5 @@
 import {ReactNode, useEffect, useState} from "react";
-import {Button} from "react-bootstrap";
+import {Button, Spinner} from "react-bootstrap";
 
 export default function LoadingButton({
                                           isLoading,
@@ -42,10 +42,10 @@ export default function LoadingButton({
         >
 
             {showLoader ? (
-                <>
-                    <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                    &nbsp; {loadingText}
-                </>
+                <span className="d-inline-flex align-items-center gap-2">
+                    <Spinner animation="border" size="sm" aria-hidden="true"/>
+                    <span>{loadingText}</span>
+                </span>
             ) : (
                 <>{children}</>
             )}

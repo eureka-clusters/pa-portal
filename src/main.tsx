@@ -8,23 +8,26 @@ import {BrowserRouter} from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import './App.scss';
 import Content from "@/component/content";
+import {ThemeProvider} from "@/providers/theme-provider";
 
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <React.StrictMode>
-        <BrowserRouter>
-            <AuthProvider>
-                <AxiosProvider>
-                    <QueryClientProvider client={queryClient}>
-                        <UserProvider>
-                            {/*<Maintenance/>*/}
-                            <Content/>
-                            {/*<ReactQueryDevtools/>*/}
-                        </UserProvider>
-                    </QueryClientProvider>
-                </AxiosProvider>
-            </AuthProvider>
-        </BrowserRouter>
+        <ThemeProvider>
+            <BrowserRouter>
+                <AuthProvider>
+                    <AxiosProvider>
+                        <QueryClientProvider client={queryClient}>
+                            <UserProvider>
+                                {/*<Maintenance/>*/}
+                                <Content/>
+                                {/*<ReactQueryDevtools/>*/}
+                            </UserProvider>
+                        </QueryClientProvider>
+                    </AxiosProvider>
+                </AuthProvider>
+            </BrowserRouter>
+        </ThemeProvider>
     </React.StrictMode>,
 )

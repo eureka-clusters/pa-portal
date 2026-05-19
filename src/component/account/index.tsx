@@ -35,8 +35,10 @@ export default function Account() {
             <dl className="row">
                 <dt className="col-sm-3 text-end">Email:</dt>
                 <dd className="col-sm-9">{userInfo.email}</dd>
-                <dt className="col-sm-3 text-end">Name:</dt>
-                <dd className="col-sm-9">{userInfo.firstName} {userInfo.lastName}</dd>
+                {userInfo.firstName && <>
+                    <dt className="col-sm-3 text-end">Name:</dt>
+                    <dd className="col-sm-9">{userInfo.firstName} {userInfo.lastName}</dd>
+                </>}
                 <dt className="col-sm-3 text-end">Is Funder:</dt>
                 <dd className="col-sm-9">{userInfo.isFunder ? "Yes" : "No"}</dd>
                 {userInfo.funderCountry ? (

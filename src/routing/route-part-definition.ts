@@ -1,19 +1,9 @@
-import { IndexRouteObject, NonIndexRouteObject, RouteObject } from "react-router-dom";
-import { ActiveRoutePathTitleCallback } from '@/routing/active-route-path-title-callback';
-import React from "react";
+import {ActiveRoutePathTitleCallback} from '@/routing/active-route-path-title-callback';
+import {RouteObject} from "react-router-dom";
 
-// export type RoutePathDefinition = RouteObject & { //This does not work
-//     title: string | ActiveRoutePathTitleCallback;
-//     nav?: boolean;
-//     children?: RoutePathDefinition[];
-//     path: string;
-// };
-
-
-export type RoutePathDefinition = {
-    element?: React.ReactNode | null;
+export type RoutePathDefinition = Omit<RouteObject, "children" | "handle"> & {
     title: string | ActiveRoutePathTitleCallback;
     nav?: boolean;
     children?: RoutePathDefinition[];
-    path: string;
+    path?: string;
 };
