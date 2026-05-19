@@ -10,6 +10,8 @@ WORKDIR /app
 COPY package.json .
 COPY yarn.lock .
 
+RUN npm install -g corepack && corepack enable && corepack prepare yarn@4.14.1 --activate
+
 # Copy app files
 COPY . .
 
